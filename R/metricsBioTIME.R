@@ -4,6 +4,8 @@
 #' @param x (data.frame) First column has to be year
 #' @param id definition of id
 #' @param pivot should `x` be pivoted from long to wide? Default to FALSE.
+#' @importFrom vegan diversity
+#' @importFrom hillR hill_taxa
 #' @author Faye Moyes
 #' @examples
 #' x <- data.frame(
@@ -95,7 +97,7 @@ getAlphav2 <- function(x, id, pivot){
 #' Beta v2
 #' @rdname BioTIME-metrics
 #' @export
-#' @import vegan
+#' @importFrom vegan vegdist
 #' @author Faye Moyes
 #' @examples
 #' xd <- data.frame()
@@ -130,10 +132,18 @@ getBetav2 <- function(x, id, pivot) {
 
 #' Convert table long to wide
 #' @param x (data.frame) Has to have columns Species and Abundance
-#' @import tidyr
+#' @importFrom tidyr pivot_wider
+#' @importFrom checkmate assert_data_frame
+#' @importFrom checkmate assert_names
 #' @return Wide x with species in columns.
 #' @author Faye Moyes
+
 doPivot  <-  function(x) {
+  # Check input data
+  checkmate::assert_data_frame(x)
+  checkmate::assert_names(x = colnames(x),
+                          must.include = c("Year", "Species", "Abundance"))
+
   m1 <- as.data.frame(tidyr::pivot_wider(x, names_from = Species,
                                          values_from = Abundance))
   m1[is.na(m1)] <- 0

@@ -8,8 +8,6 @@ Authors@R: c(
         comment = c(ORCID = "0000-0002-3827-1063")),
   person("Faye", "Moyes", role = "aut",
         comment = c(ORCID = "0000-0001-9687-0593")),
-  person("Maria", "Dornelas", role = "fnd",
-        comment = c(ORCID = "0000-0003-2077-7055")),
   person("Shane A.", "Blowes", role = "ctb",
         comment = c(ORCID = "0000-0001-6310-3670")),
   person("Viviana", "Brambilla", role = "ctb",
@@ -17,7 +15,9 @@ Authors@R: c(
   person("Cher F. Y.", "Chow", role = "ctb",
         comment = c(ORCID = "0000-0002-1020-8409")),
   person("Jonathan M.", "Chase", role = "fnd",
-        comment = c(ORCID = "0000-0001-5580-4303"))
+        comment = c(ORCID = "0000-0001-5580-4303")),
+  person("Maria", "Dornelas", role = "fnd",
+        comment = c(ORCID = "0000-0003-2077-7055"))
 	)
 Maintainer: Alban Sagouis <alban.sagouis@idiv.de>
 License: MIT + file LICENSE
@@ -34,7 +34,8 @@ Imports:
     hillR,
     ggplot2,
     geosphere,
-    dggridR
+    dggridR,
+    checkmate
 Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
