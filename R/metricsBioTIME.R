@@ -3,6 +3,7 @@
 #' @export
 #' @param x (data.frame) First column has to be year
 #' @param id definition of id
+#' @param pivot should `x` be pivoted from long to wide? Default to FALSE.
 #' @author Faye Moyes
 #' @examples
 #' x <- data.frame(
@@ -18,13 +19,15 @@
 #' for (id in unique(x$ID)) {
 #'   t11 <- base::subset(x, ID == id)
 #'   t1 <- dplyr::select(t11, Year, Species, Abundance)
-#'   xr <- getAlphav1(doPivot(t1), id)
+#'   xr <- getAlphav1(t1, id, pivot = TRUE)
 #'   xd <- rbind(xd, xr)
 #' }
 #'
 
-getAlphav1 <- function(x, id) {
+getAlphav1 <- function(x, id, pivot) {
 
+  if (pivot)
+    x <- doPivot(x)
   yr <- unique(x[, 1L])
   x <- x[, -1L]
   getq1 <- vegan::diversity(x, "shannon")
@@ -61,11 +64,14 @@ getAlphav1 <- function(x, id) {
 #' for (id in unique(x$ID)) {
 #' t11 <- base::subset(x, ID == id)
 #' t1 <- dplyr::select(t11, Year, Species, Abundance)
-#' xr <- getAlphav2(doPivot(t1), id)
+#' xr <- getAlphav2(t1, id, pivot = TRUE)
 #' xd <- rbind(xd, xr)
 #' }
 
-getAlphav2 <- function(x, id){
+getAlphav2 <- function(x, id, pivot){
+
+  if (pivot)
+    x <- doPivot(x)
   yr <- unique(x[, 1])
   x <- x[, -1]
 
@@ -97,13 +103,15 @@ getAlphav2 <- function(x, id){
 #' for (id in unique(x$ID)) {
 #'   t11 <- subset(x, ID == id)
 #'   t1 <- dplyr::select(t11, Year, Species, Abundance)
-#'   xr <- getBetav2(doPivot(t1), id)
+#'   xr <- getBetav2(t1, id, pivot = TRUE)
 #'   xd <- rbind(xd, xr)
 #' }
 #'
 
-getBetav2 <- function(x, id) {
+getBetav2 <- function(x, id, pivot) {
 
+  if (pivot)
+    x <- doPivot(x)
   yr <- unique(x[, 1])
   x <- x[, -1]
   x2 <- x
@@ -121,7 +129,6 @@ getBetav2 <- function(x, id) {
 }
 
 #' Convert table long to wide
-#' @export
 #' @param x (data.frame) Has to have columns Species and Abundance
 #' @import tidyr
 #' @return Wide x with species in columns.

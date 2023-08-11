@@ -9,15 +9,11 @@
 
 ## gridBioTIME.R
 ### gridding
- - what does collect do? replaced by dplyr::collect()
 
 ## DESCRIPTION
 ### Authors
- - orcid
+ - discuss
 
 ### Imports
 For geosphere, import only `geomean` & `areaPolygon`
 For ggplopt2, import only `discrete_scale` & `scale_color_gradientn`
-
-## data/
-Data files should be prepared for a package and usable by examples.

@@ -6,16 +6,18 @@
 \alias{getBetav2}
 \title{Alpha v1}
 \usage{
-getAlphav1(x, id)
+getAlphav1(x, id, pivot)
 
-getAlphav2(x, id)
+getAlphav2(x, id, pivot)
 
-getBetav2(x, id)
+getBetav2(x, id, pivot)
 }
 \arguments{
 \item{x}{(data.frame) First column has to be year}
 
 \item{id}{definition of id}
+
+\item{pivot}{should `x` be pivoted from long to wide? Default to FALSE.}
 }
 \description{
 Alpha v1
@@ -38,7 +40,7 @@ xd <- data.frame()
 for (id in unique(x$ID)) {
   t11 <- base::subset(x, ID == id)
   t1 <- dplyr::select(t11, Year, Species, Abundance)
-  xr <- getAlphav1(doPivot(t1), id)
+  xr <- getAlphav1(t1, id, pivot = TRUE)
   xd <- rbind(xd, xr)
 }
 
@@ -47,7 +49,7 @@ xd <- data.frame()
 for (id in unique(x$ID)) {
 t11 <- base::subset(x, ID == id)
 t1 <- dplyr::select(t11, Year, Species, Abundance)
-xr <- getAlphav2(doPivot(t1), id)
+xr <- getAlphav2(t1, id, pivot = TRUE)
 xd <- rbind(xd, xr)
 }
 xd <- data.frame()
@@ -55,7 +57,7 @@ xd <- data.frame()
 for (id in unique(x$ID)) {
   t11 <- subset(x, ID == id)
   t1 <- dplyr::select(t11, Year, Species, Abundance)
-  xr <- getBetav2(doPivot(t1), id)
+  xr <- getBetav2(t1, id, pivot = TRUE)
   xd <- rbind(xd, xr)
 }
 
