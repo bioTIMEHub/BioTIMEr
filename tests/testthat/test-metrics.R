@@ -18,8 +18,7 @@ test_that("getAlphav1 returns the expected columns", {
 
 test_that("getAlphav1 returns correct number of rows", {
   result <- getAlphav1(x = pivot_data, id = "TestID", pivot = FALSE)
-  expected_rows <- length(unique(data$Year))
-  expect_equal(nrow(result), expected_rows)
+  expect_equal(object = nrow(result), expected = nrow(pivot_data))
 })
 
 test_that("getAlphav1 computes accurate biodiversity metrics", {
@@ -105,16 +104,16 @@ test_that("getBetav2 returns correct number of rows", {
   expect_equal(nrow(result), expected_rows)
 })
 
-# test_that("getBetav2 computes accurate biodiversity metrics", {
-#   result <- getBetav2(x = pivot_data, id = "TestID", pivot = FALSE)
-#
-#   # Calculate expected values using external libraries
-#   x2 <- pivot_data[, -1L]
-#   x2[x2 > 1] <- 1
-#   jacc_expected <- vegan::vegdist(x2, method = "jaccard")
-#   mh_expected <- vegan::vegdist(pivot_data[, -1L], method = "horn")
-#
-#   # Compare computed values with expected values
-#   expect_equal(result$jaccD, jacc_expected[-1], ignore_attr = TRUE)
-#   expect_equal(result$mhorn, mh_expected[-1], ignore_attr = TRUE)
-# })
+test_that("getBetav2 computes accurate biodiversity metrics", {
+  result <- getBetav2(x = pivot_data, id = "TestID", pivot = FALSE)
+
+  # Calculate expected values using external libraries
+  x2 <- pivot_data[, -1L]
+  x2[x2 > 1] <- 1
+  jacc_expected <- vegan::vegdist(x2, method = "jaccard")
+  mh_expected <- vegan::vegdist(pivot_data[, -1L], method = "horn")
+
+  # Compare computed values with expected values
+  expect_equal(result$jaccD[-2], jacc_expected, ignore_attr = TRUE)
+  expect_equal(result$mhorn[-2], mh_expected, ignore_attr = TRUE)
+})

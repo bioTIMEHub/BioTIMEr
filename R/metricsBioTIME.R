@@ -32,29 +32,23 @@ getAlphav1 <- function(x, id, pivot) {
     x <- doPivot(x)
   yr <- unique(x[, 1L])
   x <- x[, -1L]
-  getq1 <- vegan::diversity(x, "shannon")
-  getq2 <- vegan::diversity(x, "simpson")
-  getInvS <- vegan::diversity(x, "inv")
-  getH0 <- hillR::hill_taxa(x, q = 0)
-  getH1 <- hillR::hill_taxa(x, q = 1)
-  getH2 <- hillR::hill_taxa(x, q = 2)
 
-  q1 <- c(1, getq1[1:(nrow(x))])[-1L]
-  q2 <- c(1, getq2[1:(nrow(x))])[-1L]
-  invS <- c(1, getInvS[1:(nrow(x))])[-1L]
-  h0 <- c(1, getH0[1:(nrow(x))])[-1L]
-  h1 <- c(1, getH1[1:(nrow(x))])[-1L]
-  h2 <- c(1, getH2[1:(nrow(x))])[-1L]
+  q1    <- vegan::diversity(x, "shannon")
+  q2    <- vegan::diversity(x, "simpson")
+  invS  <- vegan::diversity(x, "inv")
+  h0    <- hillR::hill_taxa(x, q = 0)
+  h1    <- hillR::hill_taxa(x, q = 1)
+  h2    <- hillR::hill_taxa(x, q = 2)
 
   return(
-    data.frame(Year = yr, ID = id,
-               q1 = (exp(1/q1)),
-               q2 = (1/q2),
+    data.frame(Year = yr,
+               ID = id,
+               q1 = exp(1 / q1),
+               q2 = 1 / q2,
                invS = invS,
                h0 = h0, h1 = h1, h2 = h2)
   )
 }
-
 
 #' Alpha v2
 #' @rdname BioTIME-metrics
@@ -79,6 +73,31 @@ getAlphav2 <- function(x, id, pivot){
 
   return(
     data.frame(Year = yr, ID = id,
+               S    = base::rowSums(x > 0),
+               N    = base::rowSums(x),
+               mx   = apply(x, 1, max),
+               PIE  = apply(x, 1, function(s) {
+                 n <- sum(s)
+                 (n/(n - 1)) * (1 - sum((s/n)^2))}),
+               DomMc = apply(x, 1, function(s){
+                 y <- sort(s, decreasing = T)
+                 (y[1] + y[2]) / sum(y)}),
+               expShan = apply(x, 1, function(s) {
+                 n <- sum(s)
+                 exp(-sum(s/n*ifelse(s == 0, 0, log(s/n))))})
+    )
+  )
+}
+
+getAlphav22 <- function(x, id, pivot){
+
+  if (pivot)
+    x <- doPivot(x)
+  yr <- unique(x[, 1])
+  x <- x[, -1]
+
+  return(
+    data.frame(Year = yr, ID = id,
                S = apply(x > 0, 1, sum),
                N = apply(x, 1, sum),
                mx = apply(x, 1, max),
@@ -93,6 +112,7 @@ getAlphav2 <- function(x, id, pivot){
     )
   )
 }
+
 
 #' Beta v2
 #' @rdname BioTIME-metrics
@@ -138,14 +158,15 @@ getBetav2 <- function(x, id, pivot) {
 #' @return Wide x with species in columns.
 #' @author Faye Moyes
 
-doPivot  <-  function(x) {
+doPivot <- function(x) {
   # Check input data
   checkmate::assert_data_frame(x)
   checkmate::assert_names(x = colnames(x),
                           must.include = c("Year", "Species", "Abundance"))
 
-  m1 <- as.data.frame(tidyr::pivot_wider(x, names_from = Species,
-                                         values_from = Abundance))
-  m1[is.na(m1)] <- 0
-  return(m1)
+  # Pivot and replace NAs with 0
+  return(
+    tidyr::pivot_wider(data = x, names_from = Species,
+                       values_from = Abundance, values_fill = 0)
+  )
 }
