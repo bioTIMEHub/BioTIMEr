@@ -46,52 +46,35 @@
 #' }
 #' names(TSrf) <- rfIDs
 #'
-#' rf <- do.call(rbind, TSrf)
-#' rf <- data.frame(rf, rfID = rep(names(TSrf), times = unlist(lapply(TSrf, nrow))))
-#' rf <- rf[!is.na(rf$Year),-1]
-#' rownames(rf) <- NULL
-#' rf1 <- rf %>%
-#'   tidyr::separate(., rfID, into = c("STUDY_ID", "cell"),
-#'                   sep = "_", remove = FALSE) %>%
-#'   as.data.frame() %>%
-#'   dplyr:::select(rf1, Year, Species, Abundance, rfID, STUDY_ID)
-#' stats::setNames(rf1, c("Year", "Species", "Abundance", "rarefyID", "StudyID"))
-#'
-#' ## save file
-#' #saveRDS(rf1, "savedRarefyv1.rds")
-#' }
 
 rarefysamples <- function(Year, SampleID, Species, Abundance, resamps) {
+  # Checking arguments
+  checkmate::assertSetEqual(length(Year), c(length(SampleID), length(Species), length(Abundance)))
 
-  rareftab <- as.data.frame(array(NA, dim = c(0,3)))
-  nsamples <- c()
-  for (y in unique(Year)) {
-    nsamples <- c(nsamples, length(unique(SampleID[Year == y])))
-  }
-  t <- 1
-  minsample <- min(nsamples)
-  for (repeats in 1:resamps) {
-    raref <- as.data.frame(array(data = NA, dim = c(1, 3),
-                                 dimnames = list(c(), c("Year", "Species", "Abundance"))))
-    for (y in unique(Year)) {
-      samps <- unique(SampleID[Year == y])
-      sam <- as.character(sample(samps, minsample, replace = TRUE))
-      rarefyear <- data.frame(
-        SampleID =  SampleID[which(SampleID %in% sam & Year == y)],
-        Species = Species[which(SampleID %in% sam & Year == y)],
-        Abundance = Abundance[which(SampleID %in% sam & Year == y)])
+  minsample <- min(tapply(SampleID, Year, function(x) length(unique(x))))
 
-      spabun <- tapply(X = as.numeric(rarefyear[,3]),
-                       INDEX = as.character(rarefyear[,2]),
-                       FUN = sum)
-      spar <- data.frame(
-        Year = rep(y, length(spabun)),
-        Species = names(spabun),
-        Abundance = spabun, row.names = NULL)
-      raref <- rbind(raref,spar)
-    }
-    rareftab <- rbind(rareftab, cbind(rep(repeats, dim(raref)[1]), raref))
-  }
-  return(rareftab)
-}
+  rareftab_list <- lapply( # beginning loop on repetitions
+    X = seq_len(resamps),
+    FUN = function(i) {
+      selected_indices <- unlist(lapply( # beginning sub loop on years
+        X = unique(Year),
+        FUN = function(y) {
+          samps <- unique(SampleID[Year == y])
+          sam <- sample(samps, minsample, replace = TRUE)
+          return(which(SampleID %in% sam & Year == y))
+        })) # end of loop on years
 
+      tYear      <- Year[selected_indices]
+      tSpecies   <- Species[selected_indices]
+      tAbundance <- Abundance[selected_indices]
+
+      raref <- stats::aggregate(x = tAbundance, by = list(tYear, tSpecies), FUN = sum)
+      raref <- data.frame(i, raref)
+      return(raref)
+
+    }) # end of loop on repetitions
+
+  rareftab <- do.call(rbind, rareftab_list)
+  return(stats::setNames(rareftab, c("repeats", "Year", "Species", "Abundance")))
+
+} # end of function
