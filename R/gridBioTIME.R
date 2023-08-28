@@ -63,12 +63,12 @@ gridding <- function(meta, btf) {
     dplyr::summarise(n_cell = dplyr::n_distinct(cell))
 
   if (sum(dplyr::filter(check, StudyMethod == 'SL') %>% .$n_cell != 1) == 0) {
-    print("all SL studies have 1 grid cell")
-  } else { print("ERROR: some SL studies have > 1 grid cell") }
+    base::message("all SL studies have 1 grid cell")
+  } else { base::stop("ERROR: some SL studies have > 1 grid cell") }
 
-  check2 <- bt %>%
-    dplyr::group_by(StudyMethod, STUDY_ID, YEAR) %>%
-    dplyr::summarise(n_cell = dplyr::n_distinct(cell))
+  # check2 <- bt %>%
+  #   dplyr::group_by(StudyMethod, STUDY_ID, YEAR) %>%
+  #   dplyr::summarise(n_cell = dplyr::n_distinct(cell))
 
   # range(check2$n_cell)
 
@@ -81,7 +81,7 @@ gridding <- function(meta, btf) {
     dplyr::select(STUDY_ID, rarefyID, LONGITUDE, LATITUDE) %>%
     dplyr::distinct(rarefyID, LONGITUDE, LATITUDE, .keep_all = TRUE) %>%
     dplyr::group_by(rarefyID) %>%
-    dplyr::mutate(n_locations = dplyr::n_distinct(LONGITUDE,LATITUDE)) %>%
+    dplyr::mutate(n_locations = dplyr::n_distinct(LONGITUDE, LATITUDE)) %>%
     dplyr::ungroup() %>%
     dplyr::filter(n_locations > 1) %>%
     dplyr::select(-n_locations) %>%
