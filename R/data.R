@@ -22,7 +22,7 @@
 #'   \item{resolution}{Level of resolution, i.e. 'species' respresented by genus and species}
 #'   \item{taxon}{Higher level taxonomic grouping, i.e. Fish}
 #' }
-#' @source <https://github.com/bioTIMEHub/BioTIMEr/dev/R/data.R>
+#' @source <https://biotime.st-andrews.ac.uk/download.php>
 "subBTquery"
 
 #' BioTIME subset metadata
@@ -59,5 +59,5 @@
 #'   \item{BIOMASS_TYPE}{Type of biomass, i.e. weight}
 #'   \item{SAMPLE_DESC_NAME}{concatenation of descriptors comprising the unique sampling event}
 #' }
-#' @source <https://github.com/bioTIMEHub/BioTIMEr/dev/R/data.R>
+#' @source <https://biotime.st-andrews.ac.uk/download.php>
 "subBTmeta"
