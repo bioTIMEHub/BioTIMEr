@@ -3,14 +3,26 @@
 #' A subset of data from BioTIME temporal surveys.
 #'
 #' @format ## `subBTquery`
-#' A data frame with 7,240 rows and 60 columns:
+#' A data frame with 77,093 rows and 16 columns:
 #' \describe{
-#'   \item{country}{Country name}
-#'   \item{iso2, iso3}{2 & 3 letter ISO country codes}
-#'   \item{year}{Year}
-#'   ...
+#'   \item{ID_ALL_RAW_DATA}{Unique BioTIME identifier for record}
+#'   \item{ABUNDANCE}{Double representing the abundance for the record (see metadata for details of ABUNDANCE_TYPE}
+#'   \item{BIOMASS}{Double representing the biomass for the record (see metadata for details of BIOMASS_TYPE}
+#'   \item{ID_SPECIES}{Unique identifier linking to the species table}
+#'   \item{SAMPLE_DESC}{Concatenation of variables comprising unique sampling event}
+#'   \item{PLOT}{Name or identifier of plot field, only used for fixed plots such as forest quadrats}
+#'   \item{LATITUDE}{Latitude of record}
+#'   \item{LONGITUDE}{Longitude of record}
+#'   \item{DEPTH}{Depth or elevation of record if available}
+#'   \item{DAY}{Numerical day of record}
+#'   \item{MONTH}{Numerical value of month for record, i.e. January=1}
+#'   \item{YEAR}{Year of record}
+#'   \item{STUDY_ID}{BioTIME study unique identifier}
+#'   \item{valid_name}{Highest taxonomic resolution of individual, preferred is genus and species}
+#'   \item{resolution}{Level of resolution, i.e. 'species' respresented by genus and species}
+#'   \item{taxon}{Higher level taxonomic grouping, i.e. Fish}
 #' }
-#' @source <https://www.who.int/teams/global-tuberculosis-programme/data>
+#' @source <https://github.com/bioTIMEHub/BioTIMEr/dev/R/data.R>
 "subBTquery"
 
 #' BioTIME subset metadata
@@ -47,5 +59,5 @@
 #'   \item{BIOMASS_TYPE}{Type of biomass, i.e. weight}
 #'   \item{SAMPLE_DESC_NAME}{concatenation of descriptors comprising the unique sampling event}
 #' }
-#' @source <https://www.who.int/teams/global-tuberculosis-programme/data>
+#' @source <https://github.com/bioTIMEHub/BioTIMEr/dev/R/data.R>
 "subBTmeta"
