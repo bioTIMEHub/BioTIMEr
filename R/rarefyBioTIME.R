@@ -1,11 +1,11 @@
 #' rarefy BioTIME
 #'
 #' @export
-#' @param Year (character) string with latitude and longitude, one or more in a vector.
-#' @param SampleID A definition of SampleID
-#' @param Species A definition of Species
-#' @param Abundance A definition of Abundance. All the same length?
-#' @param resamps Number of repetition
+#' @param Year Integer representing year of record
+#' @param SampleID Description of unique sampling event, this is used to resample
+#' @param Species Highest resolution of taxonomic description available
+#' @param Abundance Numerical abundance
+#' @param resamps Number of repetitions
 #' @return A data.frame with rarefied abundances
 #' @examples
 #' \dontrun{
@@ -33,20 +33,27 @@
 #' df <- dplyr::select(dfr, YEAR, Species, ABUNDANCE, rarefyID, SAMPLE_DESC)
 #' stats::setNames(df, c("Year", "Species", "Abundance", "rarefyID", "Samp"))
 #'
-#' TS <- df
 #'
-#' TSrf <- list()
-#' rfIDs <- unique(TS$rarefyID)
-#' set.seed(123)
-#' for (i in 1:length(rfIDs)) {
-#'   data <- TS[TS$rarefyID == rfIDs[i],]
-#'   TSrf[[i]] <- rarefysamples(Year = data$Year, SampleID = data$Samp,
-#'                              Species = data$Species,
-#'                              Abundance = data$Abundance, resamps = 1)
-#' }
-#' names(TSrf) <- rfIDs
+runResampling<-function(df) {
+  TSrf<-list()
+  rfIDs<-unique(df$rarefyID)
+  for(i in 1:length(rfIDs)){
+    data<-df[df$rarefyID==rfIDs[i],]
+    TSrf[[i]]<-rarefysamples(data$Year, data$Samp, data$Species, data$Abundance, 1) 
+  }
+  names(TSrf)<-rfIDs
+  
+  rf<-do.call(rbind, TSrf)
+  rf<-data.frame(rf, rfID=rep(names(TSrf), times=unlist(lapply(TSrf, nrow))))
+  rf<-rf[!is.na(rf$Year),-1]
+  rownames(rf)<-NULL
+  rf1<-as.data.frame(rf %>% separate(., rfID, into= c("STUDY_ID", "cell"), 
+                                     sep="_", remove=F))
+  rf1<-select(rf1, Year, Species, Abundance, rfID, STUDY_ID)
+  return(stats::setNames(rf1, c("Year", "Species", "Abundance", "rarefyID", "StudyID")))
+}
 #'
-
+#'
 rarefysamples <- function(Year, SampleID, Species, Abundance, resamps) {
   # Checking arguments
   checkmate::assertSetEqual(length(Year), c(length(SampleID), length(Species), length(Abundance)))
