@@ -7,19 +7,49 @@
 rarefysamples(Year, SampleID, Species, Abundance, resamps)
 }
 \arguments{
-\item{Year}{(character) string with latitude and longitude, one or more in a vector.}
+\item{Year}{Integer representing year of record}
 
-\item{SampleID}{A definition of SampleID}
+\item{SampleID}{Description of unique sampling event, this is used to resample}
 
-\item{Species}{A definition of Species}
+\item{Species}{Highest resolution of taxonomic description available}
 
-\item{Abundance}{A definition of Abundance. All the same length?}
+\item{Abundance}{Numerical abundance}
 
-\item{resamps}{Number of repetition}
+\item{resamps}{Number of repetitions}
 }
 \value{
 A data.frame with rarefied abundances
 }
 \description{
 rarefy BioTIME
+}
+\examples{
+\dontrun{
+library(dplyr)
+
+## select chosen rds file
+dfr <- readRDS("savedFinalStage.rds")
+## do any filtering required here
+## for example:
+## by length of study
+rf <- subset(dfr, Abundance != 0)
+yrf2 <- rf \%>\%
+                        dplyr::group_by(rarefyID) \%>\%
+                        dplyr::summarise(yr = dplyr::n_distinct(YEAR))
+getYrs2 <- subset(yrf2, yr > 19)
+rf2 <- subset(rf, rarefyID \%in\% getYrs2$rarefyID)
+srf2 <- rf2 \%>\%
+                        dplyr::group_by(rarefyID) \%>\%
+                        dplyr::summarise(sp = dplyr::n_distinct(Species)) \%>\%
+                        as.data.frame()
+getSp2 <- subset(srf2, sp > 9)
+## by taxa
+## by realm
+## by number of species
+df <- dplyr::select(dfr, YEAR, Species, ABUNDANCE, rarefyID, SAMPLE_DESC)
+stats::setNames(df, c("Year", "Species", "Abundance", "rarefyID", "Samp"))
+}
+
+
+
 }

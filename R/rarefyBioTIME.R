@@ -32,26 +32,8 @@
 #' ## by number of species
 #' df <- dplyr::select(dfr, YEAR, Species, ABUNDANCE, rarefyID, SAMPLE_DESC)
 #' stats::setNames(df, c("Year", "Species", "Abundance", "rarefyID", "Samp"))
+#'}
 #'
-#'
-runResampling<-function(df) {
-  TSrf<-list()
-  rfIDs<-unique(df$rarefyID)
-  for(i in 1:length(rfIDs)){
-    data<-df[df$rarefyID==rfIDs[i],]
-    TSrf[[i]]<-rarefysamples(data$Year, data$Samp, data$Species, data$Abundance, 1) 
-  }
-  names(TSrf)<-rfIDs
-  
-  rf<-do.call(rbind, TSrf)
-  rf<-data.frame(rf, rfID=rep(names(TSrf), times=unlist(lapply(TSrf, nrow))))
-  rf<-rf[!is.na(rf$Year),-1]
-  rownames(rf)<-NULL
-  rf1<-as.data.frame(rf %>% separate(., rfID, into= c("STUDY_ID", "cell"), 
-                                     sep="_", remove=F))
-  rf1<-select(rf1, Year, Species, Abundance, rfID, STUDY_ID)
-  return(stats::setNames(rf1, c("Year", "Species", "Abundance", "rarefyID", "StudyID")))
-}
 #'
 #'
 rarefysamples <- function(Year, SampleID, Species, Abundance, resamps) {
@@ -85,3 +67,33 @@ rarefysamples <- function(Year, SampleID, Species, Abundance, resamps) {
   return(stats::setNames(rareftab, c("repeats", "Year", "Species", "Abundance")))
 
 } # end of function
+
+#' runResampling BioTIME
+#'
+#' @export
+#' @param df description of the df argument
+#' @return description of the object returned by runResampling
+#'
+
+runResampling <- function(df) {
+  TSrf <- list()
+  rfIDs <- unique(df$rarefyID)
+
+  for (i in 1:length(rfIDs)) {
+    data <- df[df$rarefyID == rfIDs[i],]
+    TSrf[[i]] <- rarefysamples(data$Year, data$Samp, data$Species, data$Abundance, 1)
+  }
+  names(TSrf) <- rfIDs
+
+  rf <- do.call(rbind, TSrf)
+  rf <- data.frame(rf, rfID = rep(names(TSrf), times = unlist(lapply(TSrf, nrow))))
+  rf <- rf[!is.na(rf$Year),-1]
+  rownames(rf) <- NULL
+  rf1 <- rf %>%
+    separate(., rfID, into =  c("STUDY_ID", "cell"),
+                                     sep = "_", remove = F) %>%
+    as.data.frame()
+
+  rf1 <- select(rf1, Year, Species, Abundance, rfID, STUDY_ID)
+  return(stats::setNames(rf1, c("Year", "Species", "Abundance", "rarefyID", "StudyID")))
+}

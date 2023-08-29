@@ -12,7 +12,7 @@ gridding(meta, btf)
 \item{btf}{(data.frame) BioTIME data}
 }
 \value{
-A data.frame with rarefied abundances
+A data.frame with studies split into 96km2 gridded cells (rarefyIDs)
 }
 \description{
 gridding BioTIME
