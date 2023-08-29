@@ -10,26 +10,8 @@
 #' @examples
 #' \dontrun{
 #' library(dplyr)
-#'
-#' ## select chosen rds file
-#' dfr <- readRDS("savedFinalStage.rds")
-#' ## do any filtering required here
-#' ## for example:
-#' ## by length of study
-#' rf <- subset(dfr, Abundance != 0)
-#' yrf2 <- rf %>%
-#'                         dplyr::group_by(rarefyID) %>%
-#'                         dplyr::summarise(yr = dplyr::n_distinct(YEAR))
-#' getYrs2 <- subset(yrf2, yr > 19)
-#' rf2 <- subset(rf, rarefyID %in% getYrs2$rarefyID)
-#' srf2 <- rf2 %>%
-#'                         dplyr::group_by(rarefyID) %>%
-#'                         dplyr::summarise(sp = dplyr::n_distinct(Species)) %>%
-#'                         as.data.frame()
-#' getSp2 <- subset(srf2, sp > 9)
-#' ## by taxa
-#' ## by realm
-#' ## by number of species
+#' 
+#' dfr <- # output from gridding process
 #' df <- dplyr::select(dfr, YEAR, Species, ABUNDANCE, rarefyID, SAMPLE_DESC)
 #' stats::setNames(df, c("Year", "Species", "Abundance", "rarefyID", "Samp"))
 #'}
