@@ -1,0 +1,50 @@
+---
+title: "BioTIMEr first vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{BioTIMEr first vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Subtitle: This vignette could introduce the package in general
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+# library(BioTIMEr)
+```
+
+
+Other vignettes could describe:
+
+* How to (download and) load BioTIME data
+* How to do the gridding
+* How to apply metrics (Hill numbers, Chow, etc) to the gridded dataset
+
+At first, all these steps could go together in a single document.
+
+```{r loading an object outside of the vignettes folder}
+# query <- system.file("data/subBTquery.Rdata", package = "BioTIMEr")
+# load(query)
+```
+
+```{r Loading an object that is inside vignettes/ folder}
+# weather <- as_tibble(read.csv("weather.csv", stringsAsFactors = FALSE))
+# weather
+```
+
+
+```{r Showing a figure that is saved inside, out.width = '70%', echo = FALSE}
+# the vignettes/img/ folder.
+# knitr::include_graphics("img/geometry.png")
+```
+
+
+

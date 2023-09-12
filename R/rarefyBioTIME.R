@@ -10,7 +10,7 @@
 #' @examples
 #' \dontrun{
 #' library(dplyr)
-#' 
+#'
 #' dfr <- # output from gridding process
 #' df <- dplyr::select(dfr, YEAR, Species, ABUNDANCE, rarefyID, SAMPLE_DESC)
 #' stats::setNames(df, c("Year", "Species", "Abundance", "rarefyID", "Samp"))
@@ -71,11 +71,12 @@ runResampling <- function(df) {
   rf <- data.frame(rf, rfID = rep(names(TSrf), times = unlist(lapply(TSrf, nrow))))
   rf <- rf[!is.na(rf$Year),-1]
   rownames(rf) <- NULL
-  rf1 <- rf %>%
-    separate(., rfID, into =  c("STUDY_ID", "cell"),
-                                     sep = "_", remove = F) %>%
-    as.data.frame()
 
-  rf1 <- select(rf1, Year, Species, Abundance, rfID, STUDY_ID)
-  return(stats::setNames(rf1, c("Year", "Species", "Abundance", "rarefyID", "StudyID")))
+  rf1 <- rf %>%
+    tidyr::separate(rfID, into =  c("STUDY_ID", "cell"),
+                                     sep = "_", remove = F) %>%
+    dplyr::select(Year, Species, Abundance, rfID, STUDY_ID) %>%
+    dplyr::rename(rfID = rarefyID, STUDY_ID = StudyID)
+
+  return(rf1)
 }

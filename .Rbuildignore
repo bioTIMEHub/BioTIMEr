@@ -3,3 +3,5 @@
 ^todo.md
 ^ignored
 ^\.github$
+^doc$
+^Meta$
