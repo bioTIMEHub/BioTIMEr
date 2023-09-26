@@ -1,4 +1,4 @@
-#' Alpha v1
+#' Alpha 
 #' @rdname BioTIME-metrics
 #' @export
 #' @param x (data.frame) First column has to be year
@@ -16,157 +16,102 @@
 #'   Abundance = rpois(24 * 8, 10),
 #'   ID = rep(LETTERS[1L:8L], each = 24)
 #' )
-#' xd <- data.frame()
+#' 
+#' res<-getAlphaMetrics(x)
 #'
-#' for (id in unique(x$ID)) {
-#'   t11 <- base::subset(x, ID == id)
-#'   t1 <- dplyr::select(t11, Year, Species, Abundance)
-#'   xr <- getAlphav1(t1, id, pivot = TRUE)
-#'   xd <- rbind(xd, xr)
-#' }
-#'
+#' returns a data frame with results for S (species richness), N (numerical abundance), maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson, 
+#' Inverse Simpson, PIE (probability of intraspecific encounter) and McNaughton's Dominance
 
-getAlphav1 <- function(x, id, pivot) {
+getAlpha<-function(x, getID){
+  
+  yr<-unique(x[, 1]) 
+  x<-x[,-1]
+  
+  q1<-diversity(x, "shannon")
+  q2<-diversity(x, "simpson")
+  invS<-diversity(x, "inv")
 
-  if (pivot)
-    x <- doPivot(x)
-  yr <- unique(x[, 1L])
-  x <- x[, -1L]
-
-  q1    <- vegan::diversity(x, "shannon")
-  q2    <- vegan::diversity(x, "simpson")
-  invS  <- vegan::diversity(x, "inv")
-  h0    <- hillR::hill_taxa(x, q = 0)
-  h1    <- hillR::hill_taxa(x, q = 1)
-  h2    <- hillR::hill_taxa(x, q = 2)
-
-  return(
-    data.frame(Year = yr,
-               ID = id,
-               q1 = exp(1 / q1),
-               q2 = 1 / q2,
-               invS = invS,
-               h0 = h0, h1 = h1, h2 = h2)
+  data.frame(rarefyID=getID, Year=yr, S=apply(x>0, 1, sum), 
+             N=apply(x, 1, sum), maxN=apply(x, 1, max),
+             Shannon=q1, Simpson=q2, InvSimpson=invS, 
+    PIE=apply(x, 1, function(s){n<-sum(s);(n/(n-1))*(1-sum((s/n)^2))}),
+    DomMc=apply(x, 1, function(s){y<-sort(s, decreasing=T);(y[1]+y[2])/sum(y)}),
+    expShannon=apply(x, 1, function(s){n<-sum(s);exp(-sum(s/n*ifelse(s==0,0,log(s/n))))})
   )
 }
 
-#' Alpha v2
+#' run the alpha function
 #' @rdname BioTIME-metrics
 #' @export
 #' @author Faye Moyes
 #' @examples
-#' xd <- data.frame()
 #'
-#' for (id in unique(x$ID)) {
-#' t11 <- base::subset(x, ID == id)
-#' t1 <- dplyr::select(t11, Year, Species, Abundance)
-#' xr <- getAlphav2(t1, id, pivot = TRUE)
-#' xd <- rbind(xd, xr)
-#' }
+#' res<-getAlphaMetrics(x)
 
-getAlphav2 <- function(x, id, pivot){
+getAlphaMetrics<-function(x) {
+ 
+  xd<-data.frame()
 
-  if (pivot)
-    x <- doPivot(x)
-  yr <- unique(x[, 1])
-  x <- x[, -1]
-
-  return(
-    data.frame(Year = yr, ID = id,
-               S    = base::rowSums(x > 0),
-               N    = base::rowSums(x),
-               mx   = apply(x, 1, max),
-               PIE  = apply(x, 1, function(s) {
-                 n <- sum(s)
-                 (n/(n - 1)) * (1 - sum((s/n)^2))}),
-               DomMc = apply(x, 1, function(s){
-                 y <- sort(s, decreasing = T)
-                 (y[1] + y[2]) / sum(y)}),
-               expShan = apply(x, 1, function(s) {
-                 n <- sum(s)
-                 exp(-sum(s/n*ifelse(s == 0, 0, log(s/n))))})
-    )
-  )
-}
-
-getAlphav22 <- function(x, id, pivot){
-
-  if (pivot)
-    x <- doPivot(x)
-  yr <- unique(x[, 1])
-  x <- x[, -1]
-
-  return(
-    data.frame(Year = yr, ID = id,
-               S = apply(x > 0, 1, sum),
-               N = apply(x, 1, sum),
-               mx = apply(x, 1, max),
-               PIE = apply(x, 1, function(s) {
-                 n <- sum(s);(n/(n - 1)) * (1 - sum((s/n)^2))}),
-               DomMc = apply(x, 1, function(s){
-                 y <- sort(s, decreasing = T)
-                 (y[1] + y[2]) / sum(y)}),
-               expShan = apply(x, 1, function(s) {
-                 n <- sum(s)
-                 exp(-sum(s/n*ifelse(s == 0, 0, log(s/n))))})
-    )
-  )
+  for(getID in unique(x$rarefyID)) {
+   df<-subset(x, rarefyID==getID)
+   df<-select(df, Year, Species, Abundance)
+   y<-as.data.frame(pivot_wider(df, names_from=Species, 
+                                values_from=Abundance))
+   y[is.na(y)]<-0
+   xr<-getAlpha(y, getID)
+   xd<-rbind(xd, xr)
+ }
+  return(xd)
 }
 
 
-#' Beta v2
+#' Beta 
 #' @rdname BioTIME-metrics
 #' @export
 #' @importFrom vegan vegdist
 #' @author Faye Moyes
 #' @examples
-#' xd <- data.frame()
 #'
-#' for (id in unique(x$ID)) {
-#'   t11 <- subset(x, ID == id)
-#'   t1 <- dplyr::select(t11, Year, Species, Abundance)
-#'   xr <- getBetav2(t1, id, pivot = TRUE)
-#'   xd <- rbind(xd, xr)
-#' }
-#'
+#' res<-getBetaDissimilarity(x) 
+#' where x is a long form data frame
 
-getBetav2 <- function(x, id, pivot) {
+getBeta<-function(x, id) {
+  
+  yr<-unique(x[, 1]) 
+  x<-x[,-1]
+  xb<-x
+  xb[xb>1]<-1
+  getj<-vegdist(xb, "jaccard")
+  getmh<-vegdist(x, "horn")
+  getbc<-vegdist(x, "bray")
+  
+  jacc<-c(1, getj[1:(nrow(x))])[-1]
+  mh<-c(1, getmh[1:(nrow(x))])[-1]
+  bc<-c(1, getbc[1:(nrow(x))])[-1]
+  
+  xf<-data.frame(Year=yr, rarefyID=id, JaccardDiss=jacc, 
+                 MorisitaHornDiss=mh, BrayCurtisDiss=bc)
+  return(xf)
+} 
 
-  if (pivot)
-    x <- doPivot(x)
-  yr <- unique(x[, 1])
-  x <- x[, -1]
-  x2 <- x
-  x2[x2 > 1] <- 1
-  getj <- vegan::vegdist(x2, "jaccard")
-  getmh <- vegan::vegdist(x, "horn")
 
-  jacc <- c(1, getj[1:(nrow(x))])[-1]
-  mh <- c(1, getmh[1:(nrow(x))])[-1]
-
-  return(
-    data.frame(Year = yr, ID = id,
-               jaccD = jacc, mhorn = mh)
-  )
-}
-
-#' Convert table long to wide
+#' run the beta function
 #' @param x (data.frame) Has to have columns Species and Abundance
-#' @importFrom tidyr pivot_wider
-#' @importFrom checkmate assert_data_frame
-#' @importFrom checkmate assert_names
-#' @return Wide x with species in columns.
+#' @return long with results for three beta metrics
 #' @author Faye Moyes
 
-doPivot <- function(x) {
-  # Check input data
-  checkmate::assert_data_frame(x)
-  checkmate::assert_names(x = colnames(x),
-                          must.include = c("Year", "Species", "Abundance"))
+getBetaDissimilarity<-function(x) {
+  
+  xd<-data.frame()
 
-  # Pivot and replace NAs with 0
-  return(
-    tidyr::pivot_wider(data = x, names_from = Species,
-                       values_from = Abundance, values_fill = 0)
-  )
+  for(id in unique(x$rarefyID)) {
+    df<-subset(x, rarefyID==id)
+    df<-select(df, Year, Species, Abundance)
+    y<-as.data.frame(pivot_wider(df, names_from=Species, 
+                                  values_from=Abundance))
+    y[is.na(y)]<-0
+    xr<-getBeta(y, id)
+    xd<-rbind(xd, xr)
+  }
+  return(xd)
 }
