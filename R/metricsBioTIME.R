@@ -5,7 +5,6 @@
 #' @param id definition of id
 #' @param pivot should `x` be pivoted from long to wide? Default to FALSE.
 #' @importFrom vegan diversity
-#' @importFrom hillR hill_taxa
 #' @author Faye Moyes
 #' @examples
 #' x <- data.frame(
