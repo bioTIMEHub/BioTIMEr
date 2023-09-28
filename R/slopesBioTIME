@@ -1,0 +1,86 @@
+library(tidyverse)
+
+getLinearRegressions<-function(x, divType) {
+  
+  suppressWarnings({
+    
+    dft<-data.frame()
+    
+    if (divType=="alpha") {
+      
+      x<-subset(x, S!=1)
+      
+      y<-as.data.frame(x %>% group_by(rarefyID) %>% 
+                         summarise(nsp=n_distinct(Year)))
+      y2<-subset(y, nsp<3)
+      x<-subset(x, !rarefyID %in% y2$rarefyID)
+      
+      for(id in unique(x$rarefyID)){
+        dfits<-c()
+        f1<-subset(x, rarefyID==id)
+        fitd<-lm(f1$S~f1$Year)
+        fits<-lm(f1$N~f1$Year)
+        fitt<-lm(f1$Simpson~f1$Year)
+        fite<-lm(f1$InvSimpson~f1$Year)
+        fitf<-lm(f1$DomMc~f1$Year)
+        fitg<-lm(f1$PIE~f1$Year)
+        fith<-lm(f1$expShannon~f1$Year)
+        fiti<-lm(f1$Shannon~f1$Year)
+        dfits<-c(dfits, id, fitd$coef[2], summary(fitd)$coefficients[2,4], 
+                 fits$coef[2], summary(fits)$coefficients[2,4], fitt$coef[2],
+                 summary(fitt)$coefficients[2,4], fite$coef[2], summary(fite)$coefficients[2,4], 
+                 fitf$coef[2], summary(fitf)$coefficients[2,4], fitg$coef[2],
+                 summary(fitg)$coefficients[2,4], fith$coef[2], summary(fith)$coefficients[2,4], 
+                 fiti$coef[2],summary(fiti)$coefficients[2,4])
+        dft<-rbind(dft, dfits)
+        
+        colnames(dft)<-c("rarefyID", "SSl", "SPval", "NS", "NPval", 
+                         "simpS", "simpPval", "invSSl", "invSPval", "domMS", 
+                         "domMPval", "PIES", "PIEPval", "expShS", "expShPval", 
+                         "shanS", "shanPval")
+      }
+      k<-c(2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17)
+      dft[,k]<-apply(dft[,k], 2, function(x) as.numeric(as.character(x)))
+      dft$sp<-ifelse(dft$SPval<.05, 0, 1)
+      dft$np<-ifelse(dft$NPval<.05, 0, 1)
+      dft$sip<-ifelse(dft$simpPval<.05, 0, 1)
+      dft$isp<-ifelse(dft$invSPval<.05, 0, 1)
+      dft$dmp<-ifelse(dft$domMPval<.05, 0, 1)
+      dft$pp<-ifelse(dft$PIEPval<.05, 0, 1)
+      dft$esp<-ifelse(dft$expShPval<.05, 0, 1)
+      dft$shp<-ifelse(dft$shanPval<.05, 0, 1)
+    }
+    
+    if (divType=="beta") {
+      
+      x<-subset(x, !is.na(JaccardDiss))
+      
+      y<-as.data.frame(x %>% group_by(rarefyID) %>% 
+                         summarise(nsp=n_distinct(Year)))
+      y2<-subset(y, nsp<3)
+      x<-subset(x, !rarefyID %in% y2$rarefyID)
+      
+      for(id in unique(x$rarefyID)){
+        dfits<-c()
+        f1<-subset(x, rarefyID==id)
+        fitd<-lm(f1$JaccardDiss~f1$Year)
+        fits<-lm(f1$MorisitaHornDiss~f1$Year)
+        fitt<-lm(f1$BrayCurtisDiss~f1$Year)
+        dfits<-c(dfits, id, fitd$coef[2], summary(fitd)$coefficients[2,4], 
+                 fits$coef[2], summary(fits)$coefficients[2,4], fitt$coef[2],
+                 summary(fitt)$coefficients[2,4])
+        dft<-rbind(dft, dfits)
+        
+        colnames(dft)<-c("rarefyID", "jdS", "jdPval", "mhS", "mhPval", 
+                         "bcS", "bcPval")
+      }
+      k<-c(2,3,4,5,6,7)
+      dft[,k]<-apply(dft[,k], 2, function(x) as.numeric(as.character(x)))
+      dft$jdp<-ifelse(dft$jdPval<.05, 0, 1)
+      dft$mhp<-ifelse(dft$mhPval<.05, 0, 1)
+      dft$bcp<-ifelse(dft$bcPval<.05, 0, 1)
+    }
+    return(dft)
+  })
+}
+
