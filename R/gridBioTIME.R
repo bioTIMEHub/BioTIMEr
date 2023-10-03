@@ -170,6 +170,8 @@ gridding <- function(meta, btf) {
                   cell, Species, DAY, MONTH, ABUNDANCE, BIOMASS, taxon,
                   resolution) %>%
     tidyr::unite(col = rarefyID, STUDY_ID, cell, sep = "_", remove = FALSE)
+  k<-c(15,16)
+  bt_grid[,k]<-apply(bt_grid[,k], 2, function(x) as.numeric(as.character(x)))
 
   return(bt_grid)
 }
