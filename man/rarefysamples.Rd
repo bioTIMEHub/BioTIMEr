@@ -4,7 +4,7 @@
 \alias{rarefysamples}
 \title{rarefy BioTIME}
 \usage{
-rarefysamples(Year, SampleID, Species, Abundance, resamps)
+rarefysamples(Year, SampleID, Species, currency, resamps)
 }
 \arguments{
 \item{Year}{Integer representing year of record}
@@ -13,12 +13,12 @@ rarefysamples(Year, SampleID, Species, Abundance, resamps)
 
 \item{Species}{Highest resolution of taxonomic description available}
 
-\item{Abundance}{Numerical abundance}
+\item{currency}{- set to either Numerical abundance or biomass}
 
 \item{resamps}{Number of repetitions}
 }
 \value{
-A data.frame with rarefied abundances
+A data.frame with rarefied abundances/biomasses
 }
 \description{
 rarefy BioTIME

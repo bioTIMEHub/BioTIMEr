@@ -4,13 +4,15 @@
 \alias{runResampling}
 \title{runResampling BioTIME}
 \usage{
-runResampling(df)
+runResampling(df, ab)
 }
 \arguments{
-\item{df}{description of the df argument}
+\item{df}{dataframe to be resampled (in the format of the output of the gridding() function}
+
+\item{ab}{set to "A" for abundance and "B" for biomass}
 }
 \value{
-description of the object returned by runResampling
+dataframe containing rarefied studies
 }
 \description{
 runResampling BioTIME

@@ -39,7 +39,6 @@ Imports:
     dplyr,
     tidyr,
     vegan,
-    hillR,
     ggplot2,
     geosphere,
     dggridR,
