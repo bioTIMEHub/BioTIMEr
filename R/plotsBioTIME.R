@@ -7,7 +7,7 @@
 #' @param taxa Parameter description
 #' @param method Parameter description
 #' @param rf Parameter description
-#' @param ab Parameter description
+#' @param divType Parameter description
 #' @return A plot
 #' @examples
 #' \dontrun{
@@ -40,13 +40,13 @@
 #' }
 
 
-plotSlopes <- function(x, metric, cols, taxa, method, rf, ab) {
+plotSlopes <- function(x, metric, cols, taxa, method, rf, divType) {
 
   checkmate::assertChoice(method, choices = c("metric", "taxa", "ind"))
-  checkmate::assertChoice(ab, choices = c("beta", "alpha"))
+  checkmate::assertChoice(divType, choices = c("beta", "alpha"))
 
   switch(
-    ab,
+    divType,
     beta = switch(
       method,
       metric = {
