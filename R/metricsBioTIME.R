@@ -77,7 +77,7 @@ getAlphaMetrics<-function(x) {
 #' res<-getBetaDissimilarity(x)
 #' where x is a long form data frame
 
-getBeta<-function(x, id) {
+getBeta<-function(x, getID) {
 
   yr<-unique(x[, 1])
   x<-x[,-1]
@@ -91,7 +91,7 @@ getBeta<-function(x, id) {
   mh<-c(1, getmh[1:(nrow(x))])[-1]
   bc<-c(1, getbc[1:(nrow(x))])[-1]
 
-  xf<-data.frame(Year=yr, rarefyID=id, JaccardDiss=jacc,
+  xf<-data.frame(Year=yr, rarefyID=getID, JaccardDiss=jacc,
                  MorisitaHornDiss=mh, BrayCurtisDiss=bc)
   return(xf)
 }
@@ -106,13 +106,13 @@ getBetaDissimilarity<-function(x) {
 
   xd<-data.frame()
 
-  for(id in unique(x$rarefyID)) {
+  for(getID in unique(x$rarefyID)) {
     df<-subset(x, rarefyID==id)
     df<-select(df, Year, Species, Abundance)
     y<-as.data.frame(pivot_wider(df, names_from=Species,
                                   values_from=Abundance))
     y[is.na(y)]<-0
-    xr<-getBeta(y, id)
+    xr<-getBeta(y, getID)
     xd<-rbind(xd, xr)
   }
   return(xd)
