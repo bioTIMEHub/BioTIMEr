@@ -1,9 +1,9 @@
 #' Get Linear Regressions BioTIME
 #'
 #' @export
-#' @param x Parameter description
-#' @param divType Parameter description
-#' @return A plot
+#' @param x output from getAlphaMetrics() or getBetaDissimilarity() functions
+#' @param divType calculate regressions of alpha or beta results
+#' @return a dataframe with yearly diversity results merged with results of linear regressions (intercept, slope, p-value, significance)
 
 
 getLinearRegressions<-function(x, divType) {
