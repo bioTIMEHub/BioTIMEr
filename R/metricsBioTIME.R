@@ -22,46 +22,68 @@
 #' maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
 #' Inverse Simpson, PIE (probability of intraspecific encounter) and McNaughton's Dominance
 
-getAlpha<-function(x, getID){
-
-  yr<-unique(x[, 1])
+getAlpha<-function(x, id){
+  
+  yr<-unique(x[, 1]) 
   x<-x[,-1]
-
+  
   q1<-diversity(x, "shannon")
   q2<-diversity(x, "simpson")
   invS<-diversity(x, "inv")
-
-  data.frame(rarefyID=getID, Year=yr, S=apply(x>0, 1, sum),
+  
+  data.frame(rarefyID=id, Year=yr, S=apply(x>0, 1, sum), 
              N=apply(x, 1, sum), maxN=apply(x, 1, max),
-             Shannon=q1, Simpson=q2, InvSimpson=invS,
-    PIE=apply(x, 1, function(s){n<-sum(s);(n/(n-1))*(1-sum((s/n)^2))}),
-    DomMc=apply(x, 1, function(s){y<-sort(s, decreasing=T);(y[1]+y[2])/sum(y)}),
-    expShannon=apply(x, 1, function(s){n<-sum(s);exp(-sum(s/n*ifelse(s==0,0,log(s/n))))})
+             Shannon=q1, Simpson=q2, InvSimpson=invS, 
+             PIE=apply(x, 1, function(s){n<-sum(s);(n/(n-1))*(1-sum((s/n)^2))}),
+             DomMc=apply(x, 1, function(s){y<-sort(s, decreasing=T);(y[1]+y[2])/sum(y)}),
+             expShannon=apply(x, 1, function(s){n<-sum(s);exp(-sum(s/n*ifelse(s==0,0,log(s/n))))})
   )
 }
 
 #' run the alpha function
 #' @rdname BioTIME-metrics
 #' @param x (data.frame) First column has to be year
-#' @export
+#' @param ab character input for chosen currency - "A"=Abundance or "B"=Biomass
+#' @export data frame with nine alpha diversity metrics
 #' @author Faye Moyes
 #' @examples
 #'
-#' res<-getAlphaMetrics(x)
+#' res<-getAlphaMetrics(x, "B")
 
-getAlphaMetrics<-function(x) {
-
+getAlphaMetrics<-function(x, ab) {
+  
   xd<-data.frame()
-
-  for(getID in unique(x$rarefyID)) {
-   df<-subset(x, rarefyID==getID)
-   df<-select(df, Year, Species, Abundance)
-   y<-as.data.frame(pivot_wider(df, names_from=Species,
-                                values_from=Abundance))
-   y[is.na(y)]<-0
-   xr<-getAlpha(y, getID)
-   xd<-rbind(xd, xr)
- }
+  
+  if(ab=="A") {
+    x<-subset(x, !is.na(Abundance))
+    for(id in unique(x$rarefyID)) {
+      df<-subset(x, rarefyID==id)
+      nsp<-n_distinct(df$Species)
+      if(length(unique(df$Year))>1 & nsp>1) {
+        df<-select(df, Year, Species, Abundance)
+        y<-as.data.frame(pivot_wider(df, names_from=Species, 
+                                 values_from=Abundance))
+        y[is.na(y)]<-0
+        xr<-getAlpha(y, id)
+        xd<-rbind(xd, xr)
+      }
+    }
+  }
+  if(ab=="B") {
+    x<-subset(x, !is.na(Biomass))
+    for(id in unique(x$rarefyID)) {
+      df<-subset(x, rarefyID==id)
+      nsp<-n_distinct(df$Species)
+      if(length(unique(df$Year))>1 & nsp>1) {
+        df<-select(df, Year, Species, Biomass)
+        y<-as.data.frame(pivot_wider(df, names_from=Species, 
+                                   values_from=Biomass))
+        y[is.na(y)]<-0
+        xr<-getAlpha(y, id)
+        xd<-rbind(xd, xr)
+      }
+    }
+  }
   return(xd)
 }
 
@@ -74,46 +96,77 @@ getAlphaMetrics<-function(x) {
 #' @author Faye Moyes
 #' @examples
 #'
-#' res<-getBetaDissimilarity(x)
+#' res<-getBetaDissimilarity(x, "A")
 #' where x is a long form data frame
 
-getBeta<-function(x, getID) {
-
-  yr<-unique(x[, 1])
+getBeta<-function(x, id) {
+  
+  yr<-unique(x[, 1]) 
   x<-x[,-1]
   xb<-x
   xb[xb>1]<-1
   getj<-vegdist(xb, "jaccard")
   getmh<-vegdist(x, "horn")
   getbc<-vegdist(x, "bray")
-
+  
   jacc<-c(1, getj[1:(nrow(x))])[-1]
   mh<-c(1, getmh[1:(nrow(x))])[-1]
   bc<-c(1, getbc[1:(nrow(x))])[-1]
-
-  xf<-data.frame(Year=yr, rarefyID=getID, JaccardDiss=jacc,
+  
+  xf<-data.frame(Year=yr, rarefyID=id, JaccardDiss=jacc, 
                  MorisitaHornDiss=mh, BrayCurtisDiss=bc)
   return(xf)
-}
-
+} 
 
 #' run the beta function
 #' @param x (data.frame) Has to have columns Species and Abundance
+#' @param ab character input for chosen currency - "A"=Abundance or "B"=Biomass
 #' @return long with results for three beta metrics
 #' @author Faye Moyes
 
-getBetaDissimilarity<-function(x) {
-
+getBetaDissimilarity<-function(x, ab) {
+  
   xd<-data.frame()
-
-  for(getID in unique(x$rarefyID)) {
-    df<-subset(x, rarefyID==id)
-    df<-select(df, Year, Species, Abundance)
-    y<-as.data.frame(pivot_wider(df, names_from=Species,
-                                  values_from=Abundance))
-    y[is.na(y)]<-0
-    xr<-getBeta(y, getID)
-    xd<-rbind(xd, xr)
+  
+  if(ab=="A") {
+    x<-subset(x, !is.na(Abundance))
+    for(id in unique(x$rarefyID)) {
+      df<-subset(x, rarefyID==id)
+      nsp<-n_distinct(df$Species)
+      if(length(unique(df$Year))<2 | nsp<2) {
+        xr<-c(NA, id, NA, NA, NA)
+      }
+      if(length(unique(df$Year))>1 & nsp>1) {
+        df<-select(df, Year, Species, Abundance)
+        y<-as.data.frame(pivot_wider(df, names_from=Species, 
+                                 values_from=Abundance))
+        y[is.na(y)]<-0
+        xr<-getBeta(y, id)
+        xd<-rbind(xd, xr)
+      }
+    }
   }
+  if(ab=="B") {
+    x<-subset(x, !is.na(Biomass))
+    for(id in unique(x$rarefyID)) {
+      df<-subset(x, rarefyID==id)
+      nsp<-n_distinct(df$Species)
+      if(length(unique(df$Year))<2 | nsp<2) {
+        xr<-c(NA, id, NA, NA, NA)
+      }
+      if(length(unique(df$Year))>1 & nsp>1) {
+        df<-subset(x, rarefyID==id)
+        df<-select(df, Year, Species, Biomass)
+        y<-as.data.frame(pivot_wider(df, names_from=Species, 
+                                   values_from=Biomass))
+        y[is.na(y)]<-0
+        xr<-getBeta(y, id)
+        xd<-rbind(xd, xr)
+      }
+    }
+  }
+  
+  xd<-subset(xd, !is.na(JaccardDiss))
   return(xd)
 }
+
