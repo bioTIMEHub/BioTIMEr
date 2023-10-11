@@ -112,3 +112,25 @@ plotSlopes <- function(x, metric, cols, taxa, method, rf, divType) {
       })
   )
 }
+
+#'
+#'
+#' theme for BioTIME
+
+themeBioTIME<-function(lp, fontSize, colx, coly) {
+  theme_bw()+
+    theme(axis.text=element_text(size=fontSize,color=colx),
+          axis.title=element_text(size=fontSize+1,face="bold"),
+          legend.position=lp, 
+          legend.text=element_text(size=fontSize),
+          legend.title=element_text(size=fontSize+1),
+          legend.direction="vertical",
+          plot.title=element_text(size=fontSize+2,face="bold", hjust=0.5), 
+          plot.background=element_blank(),
+          panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),
+          strip.text=element_text(size=fontSize-2),
+          strip.background=element_rect(fill=coly),
+          axis.line=element_line(color=colx)
+    )
+}
