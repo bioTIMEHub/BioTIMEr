@@ -4,25 +4,34 @@
 \alias{getAlpha}
 \alias{getAlphaMetrics}
 \alias{getBeta}
+\alias{getBetaDissimilarity}
 \title{Alpha}
 \usage{
-getAlpha(x, getID)
+getAlpha(x, id)
 
-getAlphaMetrics(x)
+getAlphaMetrics(x, ab)
 
 getBeta(x, id)
+
+getBetaDissimilarity(x, ab)
 }
 \arguments{
 \item{x}{(data.frame) Has to have columns Species and Abundance}
 
 \item{id}{definition of id}
 
-\item{pivot}{should `x` be pivoted from long to wide? Default to FALSE.}
+\item{ab}{character input for chosen currency - "A"=Abundance or "B"=Biomass}
 }
 \value{
 A data frame with results for S (species richness), N (numerical abundance),
-maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
-Inverse Simpson, PIE (probability of intraspecific encounter) and McNaughton's Dominance
+  maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
+  Inverse Simpson, PIE (probability of intraspecific encounter) and McNaughton's Dominance
+
+data.frame with nine alpha diversity metrics
+
+data.frame with three beta diversity dissimilarity metrics
+
+long with results for three beta metrics
 }
 \description{
 Alpha
@@ -30,8 +39,11 @@ Alpha
 run the alpha function
 
 Beta
+
+run the beta function
 }
 \examples{
+\dontrun{
 x <- data.frame(
   Year = rep(rep(2010:2015, each = 4), times = 4),
   Species = unlist(lapply(
@@ -42,12 +54,15 @@ x <- data.frame(
 )
 
 res<-getAlphaMetrics(x)
+}
 
-
-res<-getAlphaMetrics(x)
-
-res<-getBetaDissimilarity(x)
+\dontrun{
+res<-getAlphaMetrics(x, "B")
+}
+\dontrun{
+res<-getBetaDissimilarity(x, "A")
 where x is a long form data frame
+}
 }
 \author{
 Faye Moyes

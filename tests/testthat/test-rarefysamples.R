@@ -15,7 +15,7 @@ test_that("rarefysamples returns a data frame", {
 
 test_that("rarefysamples returns the expected column names", {
   result <- rarefysamples(Year, SampleID, Species, Abundance, resamps)
-  expect_equal(colnames(result), c("repeats", "Year", "Species", "Abundance"))
+  expect_equal(colnames(result), c("repeats", "Year", "Species", "currency"))
 })
 
 test_that("rarefysamples returns non-empty data frame", {
@@ -37,5 +37,5 @@ test_that("rarefysamples returns consistent 'Species' values", {
 
 test_that("rarefysamples returns positive 'Abundance' values", {
   result <- rarefysamples(Year, SampleID, Species, Abundance, resamps)
-  checkmate::expect_integerish(result$Abundance, lower = 0L)
+  checkmate::expect_integerish(result$currency, lower = 0L)
 })

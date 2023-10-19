@@ -7,12 +7,12 @@
 getLinearRegressions(x, divType)
 }
 \arguments{
-\item{x}{Parameter description}
+\item{x}{output from getAlphaMetrics() or getBetaDissimilarity() functions}
 
-\item{divType}{Parameter description}
+\item{divType}{calculate regressions of alpha or beta results}
 }
 \value{
-A plot
+a dataframe with yearly diversity results merged with results of linear regressions (intercept, slope, p-value, significance)
 }
 \description{
 Get Linear Regressions BioTIME

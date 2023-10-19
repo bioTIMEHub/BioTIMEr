@@ -9,6 +9,13 @@
 
 ## gridBioTIME.R
 ### gridding
+Add an argument to allow users to choose the gridsize.
+
+### runResampling
+Add a third method: presence absence
+
+### Add more data
+
 
 ## DESCRIPTION
 ### Authors

@@ -2,9 +2,12 @@
 % Please edit documentation in R/plotsBioTIME.R
 \name{plotSlopes}
 \alias{plotSlopes}
+\alias{themeBioTIME}
 \title{Plot slopes BioTIME}
 \usage{
-plotSlopes(x, metric, cols, taxa, method, rf, ab)
+plotSlopes(x, metric, cols, taxa, method, rf, divType)
+
+themeBioTIME(lp, fontSize, colx, coly)
 }
 \arguments{
 \item{x}{Parameter description}
@@ -19,13 +22,23 @@ plotSlopes(x, metric, cols, taxa, method, rf, ab)
 
 \item{rf}{Parameter description}
 
-\item{ab}{Parameter description}
+\item{divType}{Parameter description}
+
+\item{lp}{description}
+
+\item{fontSize}{description}
+
+\item{colx}{description}
+
+\item{coly}{description}
 }
 \value{
 A plot
 }
 \description{
 Plot slopes BioTIME
+
+theme for BioTIME
 }
 \examples{
 \dontrun{
@@ -54,5 +67,9 @@ plm <- plotSlopes(bmeta, "JaccardDiss", bioCol, "Fish", "metric", "18_9044316", 
 plt <- plotSlopes(ameta, "N", bio, "Fish", "taxa","18_9044316", "alpha")
 
 plrf <- plotSlopes(bmeta, "N", bioCol, "Fish", "ind","18_9044316", "beta")
+}
+\dontrun{
+fig1 <- ggplot2::ggplot() +
+          themeBioTIME()
 }
 }

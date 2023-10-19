@@ -4,7 +4,7 @@
 #' @param meta (data.frame) BioTIME metadata
 #' @param btf (data.frame) BioTIME data
 #'
-#' @return A data.frame with studies split into 96km2 gridded cells (rarefyIDs)
+#' @returns A data.frame with studies split into 96km2 gridded cells (rarefyIDs)
 #' @examples
 #' \dontrun{
 #' base::load("data/subBTquery.RData")

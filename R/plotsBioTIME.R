@@ -1,6 +1,7 @@
 #' Plot slopes BioTIME
 #'
 #' @export
+#' @rdname BioTIME-plots
 #' @param x Parameter description
 #' @param metric Parameter description
 #' @param cols Parameter description
@@ -8,7 +9,7 @@
 #' @param method Parameter description
 #' @param rf Parameter description
 #' @param divType Parameter description
-#' @return A plot
+#' @returns A plot
 #' @examples
 #' \dontrun{
 #' library(dplyr)
@@ -116,21 +117,32 @@ plotSlopes <- function(x, metric, cols, taxa, method, rf, divType) {
 #'
 #'
 #' theme for BioTIME
+#' @export
+#' @rdname BioTIME-plots
+#' @param lp description
+#' @param fontSize description
+#' @param colx description
+#' @param coly description
+#' @examples
+#' \dontrun{
+#' fig1 <- ggplot2::ggplot() +
+#'           themeBioTIME()
+#' }
 
 themeBioTIME<-function(lp, fontSize, colx, coly) {
-  theme_bw()+
-    theme(axis.text=element_text(size=fontSize,color=colx),
-          axis.title=element_text(size=fontSize+1,face="bold"),
-          legend.position=lp, 
-          legend.text=element_text(size=fontSize),
-          legend.title=element_text(size=fontSize+1),
+  ggplot2::theme_bw()+
+    ggplot2::theme(axis.text=ggplot2::element_text(size=fontSize,color=colx),
+          axis.title=ggplot2::element_text(size=fontSize+1,face="bold"),
+          legend.position=lp,
+          legend.text=ggplot2::element_text(size=fontSize),
+          legend.title=ggplot2::element_text(size=fontSize+1),
           legend.direction="vertical",
-          plot.title=element_text(size=fontSize+2,face="bold", hjust=0.5), 
-          plot.background=element_blank(),
-          panel.grid.major=element_blank(),
-          panel.grid.minor=element_blank(),
-          strip.text=element_text(size=fontSize-2),
-          strip.background=element_rect(fill=coly),
-          axis.line=element_line(color=colx)
+          plot.title=ggplot2::element_text(size=fontSize+2,face="bold", hjust=0.5),
+          plot.background=ggplot2::element_blank(),
+          panel.grid.major=ggplot2::element_blank(),
+          panel.grid.minor=ggplot2::element_blank(),
+          strip.text=ggplot2::element_text(size=fontSize-2),
+          strip.background=ggplot2::element_rect(fill=coly),
+          axis.line=ggplot2::element_line(color=colx)
     )
 }
