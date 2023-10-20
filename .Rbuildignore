@@ -1,2 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^todo.md
+^ignored
+^\.github$
+^doc$
+^Meta$
