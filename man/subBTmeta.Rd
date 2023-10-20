@@ -15,7 +15,7 @@ A data frame with 10 rows and 26 columns:
   \item{PROTECTED_AREA}{binary variable indicating if the study is within a protected area}
   \item{AREA}{total area of study}
   \item{BIOME_MAP}{Biome of study location (taken from the WWF biomes, i.e. Temperate broadleaf and mixed forests}
-  \item{TAXA}{High level taxomonic identity of study species, i.e. Fish}
+  \item{TAXA}{High level taxonomic identity of study species, i.e. Fish}
   \item{ORGANISMS}{More detailed information on taxonomy, i.e. woody plants}
   \item{TITLE}{Title of study as identified in original source}
   \item{AB_BIO}{A, B or AB to designate abundance only, biomass only or both}

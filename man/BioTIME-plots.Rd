@@ -38,7 +38,7 @@ A plot
 \description{
 Plot slopes BioTIME
 
-theme for BioTIME
+ggplot2 theme for BioTIME plots
 }
 \examples{
 \dontrun{

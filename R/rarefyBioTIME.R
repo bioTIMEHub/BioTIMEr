@@ -60,11 +60,11 @@ rarefysamples <- function(Year, SampleID, Species, currency, resamps) {
 
 runResampling <- function(df, ab) {
 
-  if(ab=="A") {
+  if (ab == "A") {
     TSrf <- list()
     rfIDs <- unique(df$rarefyID)
 
-    for (i in 1:length(rfIDs)) {
+    for (i in seq_len(length(rfIDs))) {
       data <- df[df$rarefyID == rfIDs[i],]
       TSrf[[i]] <- rarefysamples(data$YEAR, data$SAMPLE_DESC, data$Species, data$ABUNDANCE, 1)
     }
@@ -72,15 +72,15 @@ runResampling <- function(df, ab) {
 
     rf <- do.call(rbind, TSrf)
     rf <- data.frame(rf, rfID = rep(names(TSrf), times = unlist(lapply(TSrf, nrow))))
-    rf <- rf[!is.na(rf$Year),-1]
+    rf <- rf[!is.na(rf$Year), -1]
     rownames(rf) <- NULL
 
     rf1 <- rf %>%
-      tidyr::separate(rfID, into =  c("STUDY_ID", "cell"), sep = "_", remove = F) %>%
+      tidyr::separate(rfID, into =  c("STUDY_ID", "cell"), sep = "_", remove = FALSE) %>%
       dplyr::select(Year, Species, currency, rfID, STUDY_ID)
-      colnames(rf1)<-c("Year", "Species", "Abundance", "rarefyID", "StudyID")
+      colnames(rf1) <- c("Year", "Species", "Abundance", "rarefyID", "StudyID")
   }
-  if(ab=="B") {
+  if (ab == "B") {
     TSrf <- list()
     rfIDs <- unique(df$rarefyID)
 
@@ -96,9 +96,9 @@ runResampling <- function(df, ab) {
     rownames(rf) <- NULL
 
     rf1 <- rf %>%
-      tidyr::separate(rfID, into =  c("STUDY_ID", "cell"), sep = "_", remove = F) %>%
+      tidyr::separate(rfID, into =  c("STUDY_ID", "cell"), sep = "_", remove = FALSE) %>%
       dplyr::select(Year, Species, currency, rfID, STUDY_ID)
-    colnames(rf1)<-c("Year", "Species", "Biomass", "rarefyID", "StudyID")
+    colnames(rf1) <- c("Year", "Species", "Biomass", "rarefyID", "StudyID")
   }
   return(rf1)
 }
