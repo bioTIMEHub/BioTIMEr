@@ -55,7 +55,8 @@ rarefysamples <- function(Year, SampleID, Species, currency, resamps) {
 #' @export
 #' @param df dataframe to be resampled (in the format of the output of the gridding() function
 #' @param ab set to "A" for abundance and "B" for biomass
-#' @returns dataframe containing rarefied studies
+#' @returns data.frame containing rarefied studies
+#' @importFrom dplyr %>%
 #'
 
 runResampling <- function(df, ab) {

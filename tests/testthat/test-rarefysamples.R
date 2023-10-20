@@ -1,10 +1,10 @@
 # Create example data for testing
-Year = rep(rep(2010:2015, each = 4), times = 8)
-SampleID = rep(LETTERS[1L:8L], each = 24)
-Species = unlist(lapply(
+Year <- rep(rep(2010:2015, each = 4), times = 8)
+SampleID <- rep(LETTERS[1L:8L], each = 24)
+Species <- unlist(lapply(
   X = 1L:8L,
   function(x) letters[sample(length(letters), 24L, replace = FALSE)]))
-Abundance = rpois(24 * 8, 10)
+Abundance <- rpois(24 * 8, 10)
 
 resamps <- 5
 
