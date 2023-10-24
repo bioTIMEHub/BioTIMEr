@@ -5,10 +5,11 @@
 #' @param btf (data.frame) BioTIME data
 #'
 #' @returns A data.frame with studies split into 96km2 gridded cells (rarefyIDs)
+#' @importFrom dplyr %>%
 #' @examples
 #' \dontrun{
-#' base::load("data/subBTquery.RData")
-#' base::load("data/subBTmeta.RData")
+#' data("subBTquery.RData")
+#' data("subBTmeta.RData")
 #' gridding(subBTmeta, subBTquery)
 #' }
 
@@ -56,14 +57,15 @@ gridding <- function(meta, btf) {
   dgg <- dggridR::dgsetres(dgg, res)
   bt <- as.data.frame(bt)
 
-  bt$cell <- dggridR::dgGEO_to_SEQNUM(dgg, bt$lon_to_grid, bt$lat_to_grid)$seqnum
+  bt$cell <- dggridR::dgGEO_to_SEQNUM(dgg, bt$lon_to_grid, bt$lat_to_grid)$seqnum %>%
+    as.integer()
 
   check <- bt %>%
     dplyr::group_by(StudyMethod, STUDY_ID) %>%
     dplyr::summarise(n_cell = dplyr::n_distinct(cell))
 
   if (sum(dplyr::filter(check, StudyMethod == "SL") %>% .$n_cell != 1) == 0) {
-    base::message("all SL studies have 1 grid cell")
+    base::message("OK: all SL studies have 1 grid cell")
   } else {
     base::stop("ERROR: some SL studies have > 1 grid cell")
   }

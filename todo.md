@@ -13,6 +13,7 @@ Add an argument to allow users to choose the gridsize.
 
 ### runResampling
 Add a third method: presence absence
+Make the column names capitalising consistent with gridding()
 
 ### Add more data
 

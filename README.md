@@ -32,8 +32,9 @@ There are several long-form articles that can help get you started:
 Most BioTIME users are interested in standardising the extent of the datasets. Here using the data subset included inside the package.
 
 ```r 
-base::load("data/subBTquery.RData")
-base::load("data/subBTmeta.RData")
+library(BioTIMEr)
+data("subBTquery.RData")
+data("subBTmeta.RData")
 gridding(subBTmeta, subBTquery)
 ```
 

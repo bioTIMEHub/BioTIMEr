@@ -12,7 +12,7 @@ runResampling(df, ab)
 \item{ab}{set to "A" for abundance and "B" for biomass}
 }
 \value{
-dataframe containing rarefied studies
+data.frame containing rarefied studies
 }
 \description{
 runResampling BioTIME

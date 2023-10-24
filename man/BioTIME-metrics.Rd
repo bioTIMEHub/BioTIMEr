@@ -20,12 +20,12 @@ getBetaDissimilarity(x, ab)
 
 \item{id}{definition of id}
 
-\item{ab}{character input for chosen currency - "A"=Abundance or "B"=Biomass}
+\item{ab}{character input for chosen currency - "A" = Abundance or "B" = Biomass}
 }
 \value{
 A data frame with results for S (species richness), N (numerical abundance),
-  maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
-  Inverse Simpson, PIE (probability of intraspecific encounter) and McNaughton's Dominance
+maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
+Inverse Simpson, PIE (probability of intraspecific encounter) and McNaughton's Dominance
 
 data.frame with nine alpha diversity metrics
 
@@ -44,23 +44,23 @@ run the beta function
 }
 \examples{
 \dontrun{
-x <- data.frame(
-  Year = rep(rep(2010:2015, each = 4), times = 4),
-  Species = unlist(lapply(
-    X = 1L:8L,
-    function(x) letters[sample(length(letters), 24L, replace = FALSE)])),
-  Abundance = rpois(24 * 8, 10),
-  ID = rep(LETTERS[1L:8L], each = 24)
+x<-data.frame(
+Year=rep(rep(2010:2015, each=4), times=4),
+Species=unlist(lapply(
+X=1L:8L,
+function(x) letters[sample(length(letters), 24L, replace=FALSE)])),
+Abundance=rpois(24  *  8, 10),
+ID=rep(LETTERS[1L:8L], each=24)
 )
 
-res<-getAlphaMetrics(x)
+res <- getAlphaMetrics(x)
 }
 
 \dontrun{
-res<-getAlphaMetrics(x, "B")
+res <- getAlphaMetrics(x, "B")
 }
 \dontrun{
-res<-getBetaDissimilarity(x, "A")
+res <- getBetaDissimilarity(x, "A")
 where x is a long form data frame
 }
 }

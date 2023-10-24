@@ -19,8 +19,8 @@ gridding BioTIME
 }
 \examples{
 \dontrun{
-base::load("data/subBTquery.RData")
-base::load("data/subBTmeta.RData")
+data("subBTquery.RData")
+data("subBTmeta.RData")
 gridding(subBTmeta, subBTquery)
 }
 }

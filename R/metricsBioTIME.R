@@ -66,10 +66,9 @@ getAlphaMetrics <- function(x, ab) {
     x <- subset(x, !is.na(Abundance))
     for(id in unique(x$rarefyID)) {
       df <- subset(x, rarefyID = id)
-      nsp <- n_distinct(df$Species)
-      if(length(unique(df$Year)) > 1 & nsp > 1) {
-        df <- select(df, Year, Species, Abundance)
-        y <- as.data.frame(pivot_wider(df, names_from = Species,
+      if (dplyr::n_distinct(df$Year) > 1L && dplyr::n_distinct(df$Species) > 1L) {
+        df <- dplyr::select(df, Year, Species, Abundance)
+        y <- as.data.frame(tidyr::pivot_wider(df, names_from = Species,
                                        values_from = Abundance))
         y[is.na(y)] <- 0
         xr <- getAlpha(y, id)
@@ -77,14 +76,13 @@ getAlphaMetrics <- function(x, ab) {
       }
     }
   }
-  if(ab == "B") {
+  if (ab == "B") {
     x <- subset(x, !is.na(Biomass))
     for(id in unique(x$rarefyID)) {
       df <- subset(x, rarefyID == id)
-      nsp <- n_distinct(df$Species)
-      if(length(unique(df$Year)) > 1 & nsp > 1) {
-        df <- select(df, Year, Species, Biomass)
-        y <- as.data.frame(pivot_wider(df, names_from = Species,
+      if (dplyr::n_distinct(df$Year) > 1L && dplyr::n_distinct(df$Species) > 1L) {
+        df <- dplyr::select(df, Year, Species, Biomass)
+        y <- as.data.frame(tidyr::pivot_wider(df, names_from = Species,
                                        values_from = Biomass))
         y[is.na(y)] <- 0
         xr <- getAlpha(y, id)
@@ -145,13 +143,14 @@ getBetaDissimilarity <- function(x, ab) {
     x <- subset(x, !is.na(Abundance))
     for (id in unique(x$rarefyID)) {
       df <- subset(x, rarefyID == id)
-      nsp <- n_distinct(df$Species)
-      if (length(unique(df$Year)) < 2 | nsp < 2) {
+      nyear <- dplyr::n_distinct(df$Year)
+      nsp <- dplyr::n_distinct(df$Species)
+      if (nyear < 2L || nsp < 2L) {
         xr <- c(NA, id, NA, NA, NA)
       }
-      if (length(unique(df$Year)) > 1 & nsp > 1) {
-        df <- select(df, Year, Species, Abundance)
-        y <- as.data.frame(pivot_wider(df, names_from = Species,
+      if (nyear > 1L && nsp > 1L) {
+        df <- dplyr::select(df, Year, Species, Abundance)
+        y <- as.data.frame(tidyr::pivot_wider(df, names_from = Species,
                                        values_from = Abundance))
         y[is.na(y)] <- 0
         xr <- getBeta(y, id)
@@ -163,14 +162,15 @@ getBetaDissimilarity <- function(x, ab) {
     x <- subset(x, !is.na(Biomass))
     for (id in unique(x$rarefyID)) {
       df <- subset(x, rarefyID == id)
-      nsp <- n_distinct(df$Species)
-      if (length(unique(df$Year))<2 | nsp<2) {
+      nyear <- dplyr::n_distinct(df$Species)
+      nsp <- dplyr::n_distinct(df$Species)
+      if (nyear < 2L || nsp < 2L) {
         xr <- c(NA, id, NA, NA, NA)
       }
-      if (length(unique(df$Year)) > 1 & nsp > 1) {
+      if (nyear > 1L && nsp > 1L) {
         df <- subset(x, rarefyID == id)
-        df <- select(df, Year, Species, Biomass)
-        y <- as.data.frame(pivot_wider(df, names_from = Species,
+        df <- dplyr::select(df, Year, Species, Biomass)
+        y <- as.data.frame(tidyr::pivot_wider(df, names_from = Species,
                                        values_from = Biomass))
         y[is.na(y)] <- 0
         xr <- getBeta(y, id)
