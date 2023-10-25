@@ -1,5 +1,5 @@
 #' Alpha
-#' @rdname BioTIME-metrics
+#' @rdname BioTIME-alpha-metrics
 #' @export
 #' @param x (data.frame) First column has to be year
 #' @param id definition of id
@@ -21,7 +21,7 @@
 #'
 #' @returns A data frame with results for S (species richness), N (numerical abundance),
 #' maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
-#' Inverse Simpson, PIE (probability of intraspecific encounter) and McNaughton's Dominance
+#' Inverse Simpson, PIE (probability of intraspecific encounter) and McNaughton's Dominance.
 
 getAlpha <- function(x, id) {
 
@@ -48,10 +48,10 @@ getAlpha <- function(x, id) {
 }
 
 #' run the alpha function
-#' @rdname BioTIME-metrics
+#' @rdname BioTIME-alpha-metrics
 #' @param x (data.frame) First column has to be year
 #' @param ab character input for chosen currency - "A" = Abundance or "B" = Biomass
-#' @returns data.frame with nine alpha diversity metrics
+#' @returns getAlphaMetrics returns a data.frame with nine alpha diversity metrics
 #' @author Faye Moyes
 #' @examples
 #' \dontrun{
@@ -95,11 +95,11 @@ getAlphaMetrics <- function(x, ab) {
 
 
 #' Beta
-#' @rdname BioTIME-metrics
+#' @rdname BioTIME-beta-metrics
 #' @export
 #' @param x (data.frame) Has to have columns Species and Abundance
 #' @param id definition of id
-#' @returns data.frame with three beta diversity dissimilarity metrics
+#' @returns getBeta returns a data.frame with three beta diversity dissimilarity metrics
 #' @importFrom vegan vegdist
 #' @author Faye Moyes
 #' @examples
@@ -129,10 +129,10 @@ getBeta <- function(x, id) {
 
 #' run the beta function
 #' @export
-#' @rdname BioTIME-metrics
+#' @rdname BioTIME-beta-metrics
 #' @param x (data.frame) Has to have columns Species and Abundance
 #' @param ab character input for chosen currency - "A" = Abundance or "B" = Biomass
-#' @returns long with results for three beta metrics
+#' @returns getBetaDissimilarity returns a long data.frame with results for three beta metrics
 #' @author Faye Moyes
 
 getBetaDissimilarity <- function(x, ab) {
@@ -182,4 +182,3 @@ getBetaDissimilarity <- function(x, ab) {
   xd <- subset(xd, !is.na(JaccardDiss))
   return(xd)
 }
-

@@ -37,7 +37,7 @@ rarefysamples <- function(Year, SampleID, Species, currency, resamps) {
 
       tYear      <- Year[selected_indices]
       tSpecies   <- Species[selected_indices]
-      tcurrency <- currency[selected_indices]
+      tcurrency  <- currency[selected_indices]
 
       raref <- stats::aggregate(x = tcurrency, by = list(tYear, tSpecies), FUN = sum)
       raref <- data.frame(i, raref)
@@ -46,7 +46,7 @@ rarefysamples <- function(Year, SampleID, Species, currency, resamps) {
     }) # end of loop on repetitions
 
   rareftab <- do.call(rbind, rareftab_list)
-  return(stats::setNames(rareftab, c("repeats", "Year", "Species", "currency")))
+  return(stats::setNames(rareftab, c("repeats", "YEAR", "Species", "currency")))
 
 } # end of function
 
@@ -78,8 +78,8 @@ runResampling <- function(df, ab) {
 
     rf1 <- rf %>%
       tidyr::separate(rfID, into =  c("STUDY_ID", "cell"), sep = "_", remove = FALSE) %>%
-      dplyr::select(Year, Species, currency, rfID, STUDY_ID)
-      colnames(rf1) <- c("Year", "Species", "Abundance", "rarefyID", "StudyID")
+      dplyr::select(YEAR, Species, currency, rfID, STUDY_ID)
+      colnames(rf1) <- c("YEAR", "Species", "Abundance", "rarefyID", "STUDY_ID")
   }
   if (ab == "B") {
     TSrf <- list()
@@ -98,8 +98,8 @@ runResampling <- function(df, ab) {
 
     rf1 <- rf %>%
       tidyr::separate(rfID, into =  c("STUDY_ID", "cell"), sep = "_", remove = FALSE) %>%
-      dplyr::select(Year, Species, currency, rfID, STUDY_ID)
-    colnames(rf1) <- c("Year", "Species", "Biomass", "rarefyID", "StudyID")
+      dplyr::select(YEAR, Species, currency, rfID, STUDY_ID)
+    colnames(rf1) <- c("YEAR", "Species", "Biomass", "rarefyID", "STUDY_ID")
   }
   return(rf1)
 }

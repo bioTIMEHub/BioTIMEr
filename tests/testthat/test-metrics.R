@@ -1,3 +1,5 @@
+# Load data
+example_df <- base::readRDS(testthat::test_path("testdata", "data-query.rds"))
 # # Create example data for testing
 # Species <- c("Species1", "Species2", "Species1", "Species2")
 # Abundance <- c(5, 8, 3, 6)
@@ -5,7 +7,7 @@
 # data <- data.frame(Year, Species, Abundance)
 #
 # test_that("getAlpha returns a data frame", {
-#   result <- getAlpha(x = data, getID = "TestID")
+#   result <- getAlpha(x = example_df, id = "TestID")
 #   expect_s3_class(result, "data.frame")
 # })
 #

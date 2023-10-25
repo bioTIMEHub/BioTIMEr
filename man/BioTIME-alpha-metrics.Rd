@@ -3,20 +3,14 @@
 \name{getAlpha}
 \alias{getAlpha}
 \alias{getAlphaMetrics}
-\alias{getBeta}
-\alias{getBetaDissimilarity}
 \title{Alpha}
 \usage{
 getAlpha(x, id)
 
 getAlphaMetrics(x, ab)
-
-getBeta(x, id)
-
-getBetaDissimilarity(x, ab)
 }
 \arguments{
-\item{x}{(data.frame) Has to have columns Species and Abundance}
+\item{x}{(data.frame) First column has to be year}
 
 \item{id}{definition of id}
 
@@ -25,22 +19,14 @@ getBetaDissimilarity(x, ab)
 \value{
 A data frame with results for S (species richness), N (numerical abundance),
 maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
-Inverse Simpson, PIE (probability of intraspecific encounter) and McNaughton's Dominance
+Inverse Simpson, PIE (probability of intraspecific encounter) and McNaughton's Dominance.
 
-data.frame with nine alpha diversity metrics
-
-data.frame with three beta diversity dissimilarity metrics
-
-long with results for three beta metrics
+getAlphaMetrics returns a data.frame with nine alpha diversity metrics
 }
 \description{
 Alpha
 
 run the alpha function
-
-Beta
-
-run the beta function
 }
 \examples{
 \dontrun{
@@ -58,10 +44,6 @@ res <- getAlphaMetrics(x)
 
 \dontrun{
 res <- getAlphaMetrics(x, "B")
-}
-\dontrun{
-res <- getBetaDissimilarity(x, "A")
-where x is a long form data frame
 }
 }
 \author{
