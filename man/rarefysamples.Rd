@@ -32,6 +32,4 @@ df <- dplyr::select(dfr, YEAR, Species, ABUNDANCE, rarefyID, SAMPLE_DESC)
 stats::setNames(df, c("Year", "Species", "Abundance", "rarefyID", "Samp"))
 }
 
-
-
 }

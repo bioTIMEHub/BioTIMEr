@@ -1,3 +1,75 @@
+#' runResampling BioTIME
+#'
+#' @export
+#' @param df dataframe to be resampled (in the format of the output of the \code{\link{gridding}} function
+#' @param ab set to "A" for abundance and "B" for biomass
+#' @param resamps Not implemented at the moment.
+#'    Number of repetitions passed to \code{\link{rarefysamples}}. 1 by default.
+#' @returns data.frame containing rarefied studies
+#' @importFrom dplyr %>%
+#' @examples
+#' \dontrun{
+#' library(dplyr)
+#' library(BioTIMEr)
+#' data("subBTmeta")
+#' data("subBTquery")
+#' df<-gridding(subBTmeta, subBTquery)
+#' runResampling(df, ab = "A")
+#'}
+#'
+
+runResampling <- function(df, ab, resamps = 1L) {
+  checkmate::assertChoice(ab, choices = c("A", "B"))
+  if (resamps != 1L)
+    message("You entered a resamps value different from 1, this option is not implemented at the moment.
+runResampling will run with only one repetition.
+Use rarefysamples directly if more repetitions are needed.")
+
+  switch(
+    ab,
+    A = {
+      rfIDs <- unique(df$rarefyID)
+      TSrf <- sapply(
+        X = rfIDs,
+        FUN = function(i) {
+          temp_data <- df[df$rarefyID == i, ]
+          rarefysamples(Year = temp_data$YEAR, SampleID = temp_data$SAMPLE_DESC,
+                        Species = temp_data$Species, currency = temp_data$ABUNDANCE,
+                        resamps = resamps)},
+        USE.NAMES = TRUE, simplify = FALSE)
+
+      dplyr::bind_rows(TSrf) %>%
+        dplyr::filter(!is.na(YEAR)) %>%
+        dplyr::mutate(rfID = rep(rfIDs, times = sapply(TSrf, nrow))) %>%
+        tidyr::separate(rfID, into =  c("STUDY_ID", "cell"), sep = "_", remove = FALSE) %>%
+        # dplyr::mutate(STUDY_ID = as.integer(STUDY_ID)) %>%
+        dplyr::select(-repeats, YEAR, Species, currency, rfID, STUDY_ID) %>%
+        dplyr::rename(Abundance = currency, rarefyID = rfID) %>%
+        return()
+    },
+    B = {
+      rfIDs <- unique(df$rarefyID)
+      TSrf <- sapply(
+        X = rfIDs,
+        FUN = function(i) {
+          temp_data <- df[df$rarefyID == i, ]
+          rarefysamples(Year = temp_data$YEAR, SampleID = temp_data$SAMPLE_DESC,
+                        Species = temp_data$Species, currency = temp_data$BIOMASS,
+                        resamps = resamps)},
+        USE.NAMES = TRUE, simplify = FALSE)
+
+      dplyr::bind_rows(TSrf) %>%
+        dplyr::filter(!is.na(YEAR)) %>%
+        dplyr::mutate(rfID = rep(rfIDs, times = sapply(TSrf, nrow))) %>%
+        tidyr::separate(rfID, into =  c("STUDY_ID", "cell"), sep = "_", remove = FALSE) %>%
+        # dplyr::mutate(STUDY_ID = as.integer(STUDY_ID)) %>%
+        dplyr::select(-repeats, YEAR, Species, currency, rfID, STUDY_ID) %>%
+        dplyr::rename(Biomass = currency, rarefyID = rfID) %>%
+        return()
+    }) # end switch
+}
+
+
 #' rarefy BioTIME
 #'
 #' @export
@@ -10,18 +82,22 @@
 #' @examples
 #' \dontrun{
 #' library(dplyr)
-#'
-#' dfr <- # output from gridding process
-#' df <- dplyr::select(dfr, YEAR, Species, ABUNDANCE, rarefyID, SAMPLE_DESC)
-#' stats::setNames(df, c("Year", "Species", "Abundance", "rarefyID", "Samp"))
+#' library(BioTIMEr)
+#' data("subBTmeta")
+#' data("subBTquery")
+#' df <- gridding(subBTmeta, subBTquery) %>%
+#'   filter(rarefyID == "431_128327318")
+#' rarefysamples(Year = df$YEAR, SampleID = df$SAMPLE_DESC,
+#'   Species = df$Species, currency = df$ABUNDANCE,
+#'   resamps = 3L)
 #'}
 #'
-#'
-#'
+
 rarefysamples <- function(Year, SampleID, Species, currency, resamps) {
   # Checking arguments
   checkmate::assertSetEqual(length(Year), c(length(SampleID), length(Species), length(currency)))
 
+  # Computing minimal effort per year in this rarefyID
   minsample <- min(tapply(SampleID, Year, function(x) length(unique(x))))
 
   rareftab_list <- lapply( # beginning loop on repetitions
@@ -40,66 +116,40 @@ rarefysamples <- function(Year, SampleID, Species, currency, resamps) {
       tcurrency  <- currency[selected_indices]
 
       raref <- stats::aggregate(x = tcurrency, by = list(tYear, tSpecies), FUN = sum)
-      raref <- data.frame(i, raref)
+      raref$repeats <- i
       return(raref)
 
     }) # end of loop on repetitions
 
   rareftab <- do.call(rbind, rareftab_list)
-  return(stats::setNames(rareftab, c("repeats", "YEAR", "Species", "currency")))
+  return(stats::setNames(rareftab, c("YEAR", "Species", "currency", "repeats")))
 
 } # end of function
 
-#' runResampling BioTIME
-#'
-#' @export
-#' @param df dataframe to be resampled (in the format of the output of the gridding() function
-#' @param ab set to "A" for abundance and "B" for biomass
-#' @returns data.frame containing rarefied studies
-#' @importFrom dplyr %>%
-#'
+rarefysamples2 <- function(Year, SampleID, Species, currency, resamps) {
+  # Checking arguments
+  checkmate::assertSetEqual(length(Year), c(length(SampleID), length(Species), length(currency)))
 
-runResampling <- function(df, ab) {
+  # Computing minimal effort per year in this rarefyID
+  minsample <- min(tapply(SampleID, Year, function(x) length(unique(x))))
 
-  if (ab == "A") {
-    TSrf <- list()
-    rfIDs <- unique(df$rarefyID)
+  selected_indices <- unlist(lapply( # beginning loop on years
+    X = unique(Year),
+    FUN = function(y) {
+      samps <- unique(SampleID[Year == y])
+      sam <- replicate(resamps, sample(samps, minsample, replace = TRUE))
+      return(match(sam, SampleID))
+    })) # end of loop on years
+  # n_matches <- sapply(selected_indices, length, simplify = TRUE)
 
-    for (i in seq_len(length(rfIDs))) {
-      data <- df[df$rarefyID == rfIDs[i],]
-      TSrf[[i]] <- rarefysamples(data$YEAR, data$SAMPLE_DESC, data$Species, data$ABUNDANCE, 1)
-    }
-    names(TSrf) <- rfIDs
+  tYear      <- Year[selected_indices]
+  tSpecies   <- Species[selected_indices]
+  tcurrency  <- currency[selected_indices]
+  tRepeats   <- rep(seq_len(resamps), each = minsample * length(unique(Year)))
 
-    rf <- do.call(rbind, TSrf)
-    rf <- data.frame(rf, rfID = rep(names(TSrf), times = unlist(lapply(TSrf, nrow))))
-    rf <- rf[!is.na(rf$YEAR), -1L]
-    rownames(rf) <- NULL
+  raref <- stats::aggregate(x = tcurrency, by = list(tYear, tSpecies, tRepeats), FUN = sum)
 
-    rf1 <- rf %>%
-      tidyr::separate(rfID, into =  c("STUDY_ID", "cell"), sep = "_", remove = FALSE) %>%
-      dplyr::select(YEAR, Species, currency, rfID, STUDY_ID)
-      colnames(rf1) <- c("YEAR", "Species", "Abundance", "rarefyID", "STUDY_ID")
-  }
-  if (ab == "B") {
-    TSrf <- list()
-    rfIDs <- unique(df$rarefyID)
+  return(stats::setNames(raref, c("YEAR", "Species", "repeats", "currency")))
 
-    for (i in 1:length(rfIDs)) {
-      data <- df[df$rarefyID == rfIDs[i],]
-      TSrf[[i]] <- rarefysamples(data$YEAR, data$SAMPLE_DESC, data$Species, data$BIOMASS, 1)
-    }
-    names(TSrf) <- rfIDs
+} # end of function
 
-    rf <- do.call(rbind, TSrf)
-    rf <- data.frame(rf, rfID = rep(names(TSrf), times = unlist(lapply(TSrf, nrow))))
-    rf <- rf[!is.na(rf$YEAR),-1]
-    rownames(rf) <- NULL
-
-    rf1 <- rf %>%
-      tidyr::separate(rfID, into =  c("STUDY_ID", "cell"), sep = "_", remove = FALSE) %>%
-      dplyr::select(YEAR, Species, currency, rfID, STUDY_ID)
-    colnames(rf1) <- c("YEAR", "Species", "Biomass", "rarefyID", "STUDY_ID")
-  }
-  return(rf1)
-}

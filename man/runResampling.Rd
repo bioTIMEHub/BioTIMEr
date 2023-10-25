@@ -4,12 +4,15 @@
 \alias{runResampling}
 \title{runResampling BioTIME}
 \usage{
-runResampling(df, ab)
+runResampling(df, ab, resamps = 1L)
 }
 \arguments{
-\item{df}{dataframe to be resampled (in the format of the output of the gridding() function}
+\item{df}{dataframe to be resampled (in the format of the output of the \code{\link{gridding}} function}
 
 \item{ab}{set to "A" for abundance and "B" for biomass}
+
+\item{resamps}{Not implemented at the moment.
+Number of repetitions in the \code{\link{rarefysamples}} function. 1 by default.}
 }
 \value{
 data.frame containing rarefied studies
