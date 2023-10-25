@@ -1,5 +1,10 @@
 # Load data
 example_df <- base::readRDS(testthat::test_path("testdata", "data-query.rds"))
+# example_df %>%
+#   dplyr::filter(STUDY_ID == 10L) %>%
+#   tidyr::pivot_wider(id_cols = c(STUDY_ID, SAMPLE_DESC, YEAR), names_from = ID_SPECIES,
+#                      values_from = ABUNDANCE, values_fn = sum)
+
 # # Create example data for testing
 # Species <- c("Species1", "Species2", "Species1", "Species2")
 # Abundance <- c(5, 8, 3, 6)
@@ -7,7 +12,7 @@ example_df <- base::readRDS(testthat::test_path("testdata", "data-query.rds"))
 # data <- data.frame(Year, Species, Abundance)
 #
 # test_that("getAlpha returns a data frame", {
-#   result <- getAlpha(x = example_df, id = "TestID")
+#   result <- getAlpha(x = example_df, id = 10)
 #   expect_s3_class(result, "data.frame")
 # })
 #

@@ -1,7 +1,7 @@
 #' Alpha
 #' @rdname BioTIME-alpha-metrics
 #' @export
-#' @param x (data.frame) First column has to be year
+#' @param x (data.frame) First column has to be year and following columns contain species abundances.
 #' @param id definition of id
 #' @importFrom vegan diversity
 #' @author Faye Moyes
@@ -25,8 +25,8 @@
 
 getAlpha <- function(x, id) {
 
-  yr <- unique(x[, 1])
-  x <- x[, -1]
+  yr <- unique(x[, 1L])
+  x <- x[, -1L]
 
   q1 <- diversity(x, "shannon")
   q2 <- diversity(x, "simpson")
@@ -43,7 +43,7 @@ getAlpha <- function(x, id) {
                (y[1] + y[2]) / sum(y)}),
              expShannon = apply(x, 1, function(s) {
                n <- sum(s)
-             exp(-sum(s / n * ifelse(s == 0, 0, log(s / n))))})
+               exp(-sum(s / n * ifelse(s == 0, 0, log(s / n))))})
   )
 }
 
@@ -62,34 +62,36 @@ getAlphaMetrics <- function(x, ab) {
 
   xd <- data.frame()
 
-  if (ab == "A") {
-    x <- subset(x, !is.na(Abundance))
-    for(id in unique(x$rarefyID)) {
-      df <- subset(x, rarefyID = id)
-      if (dplyr::n_distinct(df$Year) > 1L && dplyr::n_distinct(df$Species) > 1L) {
-        df <- dplyr::select(df, Year, Species, Abundance)
-        y <- as.data.frame(tidyr::pivot_wider(df, names_from = Species,
-                                       values_from = Abundance))
-        y[is.na(y)] <- 0
-        xr <- getAlpha(y, id)
-        xd <- rbind(xd, xr)
+  switch(
+    ab,
+    A = {
+      x <- subset(x, !is.na(Abundance))
+      for (id in unique(x$rarefyID)) {
+        df <- subset(x, rarefyID = id)
+        if (dplyr::n_distinct(df$Year) > 1L && dplyr::n_distinct(df$Species) > 1L) {
+          df <- dplyr::select(df, Year, Species, Abundance)
+          y <- tidyr::pivot_wider(df, names_from = Species,
+                                                values_from = Abundance)
+          y[is.na(y)] <- 0
+          xr <- getAlpha(y, id)
+          xd <- rbind(xd, xr)
+        }
       }
-    }
-  }
-  if (ab == "B") {
-    x <- subset(x, !is.na(Biomass))
-    for(id in unique(x$rarefyID)) {
-      df <- subset(x, rarefyID == id)
-      if (dplyr::n_distinct(df$Year) > 1L && dplyr::n_distinct(df$Species) > 1L) {
-        df <- dplyr::select(df, Year, Species, Biomass)
-        y <- as.data.frame(tidyr::pivot_wider(df, names_from = Species,
-                                       values_from = Biomass))
-        y[is.na(y)] <- 0
-        xr <- getAlpha(y, id)
-        xd <- rbind(xd, xr)
+    },
+    B = {
+      x <- subset(x, !is.na(Biomass))
+      for(id in unique(x$rarefyID)) {
+        df <- subset(x, rarefyID == id)
+        if (dplyr::n_distinct(df$Year) > 1L && dplyr::n_distinct(df$Species) > 1L) {
+          df <- dplyr::select(df, Year, Species, Biomass)
+          y <- tidyr::pivot_wider(df, names_from = Species,
+                                                values_from = Biomass)
+          y[is.na(y)] <- 0
+          xr <- getAlpha(y, id)
+          xd <- rbind(xd, xr)
+        }
       }
-    }
-  }
+    }) # end switch
   return(xd)
 }
 
@@ -97,7 +99,7 @@ getAlphaMetrics <- function(x, ab) {
 #' Beta
 #' @rdname BioTIME-beta-metrics
 #' @export
-#' @param x (data.frame) Has to have columns Species and Abundance
+#' @param x (data.frame) First column has to contain year values and following columns contain species abundances
 #' @param id definition of id
 #' @returns getBeta returns a data.frame with three beta diversity dissimilarity metrics
 #' @importFrom vegan vegdist
@@ -110,8 +112,8 @@ getAlphaMetrics <- function(x, ab) {
 
 getBeta <- function(x, id) {
 
-  yr <- unique(x[, 1])
-  x <- x[,-1]
+  yr <- unique(x[, 1L])
+  x <- x[, -1L]
   xb <- x
   xb[xb > 1] <- 1
   getj <- vegdist(xb, "jaccard")
@@ -130,54 +132,65 @@ getBeta <- function(x, id) {
 #' run the beta function
 #' @export
 #' @rdname BioTIME-beta-metrics
-#' @param x (data.frame) Has to have columns Species and Abundance
+#' @param x (data.frame) Has to have columns Species, Year and Abundance or Biomass
 #' @param ab character input for chosen currency - "A" = Abundance or "B" = Biomass
 #' @returns getBetaDissimilarity returns a long data.frame with results for three beta metrics
 #' @author Faye Moyes
+#' @examples
+#' \dontrun{
+#' x<-data.frame(
+#' Year=rep(rep(2010:2015, each=4), times=4),
+#' Species=unlist(lapply(
+#' X=1L:8L,
+#' function(x) letters[sample(length(letters), 24L, replace=FALSE)])),
+#' Abundance=rpois(24  *  8, 10),
+#' rarefyID=rep(LETTERS[1L:8L], each=24)
+#' )
+#'
+#' res <- getBetaDissimilarity(x, "A")
+#' }
 
 getBetaDissimilarity <- function(x, ab) {
 
   xd <- data.frame()
+  nyear <- tapply(x$Year, x$rarefyID, dplyr::n_distinct)
+  nsp   <- tapply(x$Species, x$rarefyID, dplyr::n_distinct)
 
-  if (ab == "A") {
-    x <- subset(x, !is.na(Abundance))
-    for (id in unique(x$rarefyID)) {
-      df <- subset(x, rarefyID == id)
-      nyear <- dplyr::n_distinct(df$Year)
-      nsp <- dplyr::n_distinct(df$Species)
-      if (nyear < 2L || nsp < 2L) {
-        xr <- c(NA, id, NA, NA, NA)
-      }
-      if (nyear > 1L && nsp > 1L) {
-        df <- dplyr::select(df, Year, Species, Abundance)
-        y <- as.data.frame(tidyr::pivot_wider(df, names_from = Species,
-                                       values_from = Abundance))
-        y[is.na(y)] <- 0
-        xr <- getBeta(y, id)
-        xd <- rbind(xd, xr)
-      }
-    }
-  }
-  if (ab == "B") {
-    x <- subset(x, !is.na(Biomass))
-    for (id in unique(x$rarefyID)) {
-      df <- subset(x, rarefyID == id)
-      nyear <- dplyr::n_distinct(df$Species)
-      nsp <- dplyr::n_distinct(df$Species)
-      if (nyear < 2L || nsp < 2L) {
-        xr <- c(NA, id, NA, NA, NA)
-      }
-      if (nyear > 1L && nsp > 1L) {
+  switch(
+    ab,
+    A = {
+      x <- subset(x, !is.na(Abundance))
+      for (id in unique(x$rarefyID)) {
         df <- subset(x, rarefyID == id)
-        df <- dplyr::select(df, Year, Species, Biomass)
-        y <- as.data.frame(tidyr::pivot_wider(df, names_from = Species,
-                                       values_from = Biomass))
-        y[is.na(y)] <- 0
-        xr <- getBeta(y, id)
-        xd <- rbind(xd, xr)
+        if (nyear[[id]] < 2L || nsp[[id]] < 2L) {
+          xr <- c(NA, id, NA, NA, NA)
+        } else if (nyear[[id]] > 1L && nsp[[id]] > 1L) {
+          df <- dplyr::select(df, Year, Species, Abundance)
+          y <- tidyr::pivot_wider(df, names_from = Species,
+                                  values_from = Abundance)
+          y[is.na(y)] <- 0
+          xr <- getBeta(y, id)
+          xd <- rbind(xd, xr)
+        }
       }
-    }
-  }
+    },
+    B = {
+      x <- subset(x, !is.na(Biomass))
+      for (id in unique(x$rarefyID)) {
+        df <- subset(x, rarefyID == id)
+        if (nyear[[id]] < 2L || nsp[[id]] < 2L) {
+          xr <- c(NA, id, NA, NA, NA)
+        } else if (nyear[[id]] > 1L && nsp[[id]] > 1L) {
+          df <- subset(x, rarefyID == id)
+          df <- dplyr::select(df, Year, Species, Biomass)
+          y <- tidyr::pivot_wider(df, names_from = Species,
+                                  values_from = Biomass)
+          y[is.na(y)] <- 0
+          xr <- getBeta(y, id)
+          xd <- rbind(xd, xr)
+        }
+      }
+    }) # end switch
 
   xd <- subset(xd, !is.na(JaccardDiss))
   return(xd)
