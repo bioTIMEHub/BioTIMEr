@@ -73,7 +73,7 @@ runResampling <- function(df, ab) {
 
     rf <- do.call(rbind, TSrf)
     rf <- data.frame(rf, rfID = rep(names(TSrf), times = unlist(lapply(TSrf, nrow))))
-    rf <- rf[!is.na(rf$Year), -1]
+    rf <- rf[!is.na(rf$YEAR), -1L]
     rownames(rf) <- NULL
 
     rf1 <- rf %>%
@@ -93,7 +93,7 @@ runResampling <- function(df, ab) {
 
     rf <- do.call(rbind, TSrf)
     rf <- data.frame(rf, rfID = rep(names(TSrf), times = unlist(lapply(TSrf, nrow))))
-    rf <- rf[!is.na(rf$Year),-1]
+    rf <- rf[!is.na(rf$YEAR),-1]
     rownames(rf) <- NULL
 
     rf1 <- rf %>%
