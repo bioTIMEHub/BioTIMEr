@@ -5,6 +5,7 @@
 #' @param divType calculate regressions of alpha or beta results
 #' @returns a dataframe with yearly diversity results merged with results of linear regressions (intercept, slope, p-value, significance)
 #' @importFrom dplyr %>%
+#' @importFrom stats lm
 
 getLinearRegressions <- function(x, divType) {
 

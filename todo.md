@@ -21,6 +21,7 @@ Make the column names capitalising consistent with gridding()
 ## DESCRIPTION
 ### Authors
  - discuss
+ - check that title and authors are identical between inst/CITATION and DESCRIPTION
 
 ### Imports
 For geosphere, import only `geomean` & `areaPolygon`
