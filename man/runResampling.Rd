@@ -12,11 +12,22 @@ runResampling(df, ab, resamps = 1L)
 \item{ab}{set to "A" for abundance and "B" for biomass}
 
 \item{resamps}{Not implemented at the moment.
-Number of repetitions in the \code{\link{rarefysamples}} function. 1 by default.}
+Number of repetitions passed to \code{\link{rarefysamples}}. 1 by default.}
 }
 \value{
 data.frame containing rarefied studies
 }
 \description{
 runResampling BioTIME
+}
+\examples{
+\dontrun{
+library(dplyr)
+library(BioTIMEr)
+data("subBTmeta")
+data("subBTquery")
+df<-gridding(subBTmeta, subBTquery)
+runResampling(df, ab = "A")
+}
+
 }

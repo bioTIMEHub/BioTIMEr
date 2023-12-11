@@ -1,10 +1,2 @@
-citHeader("To cite BioTIMEr in publications use:")
-
-citEntry(
-  entry    = "Manual",
-  title    = "BioTIMEr: exploring and standardising the BioTIME database",
-  author   = "Alban Sagouis and Faye Moyes and Shane A. Blowes and Viviana Brambilla and Cher F. Y. Chow and Ada Fontrodona-Eslava and Jonathan M. Chase and Maria Dornelas and Anne E. Magurran",
-  year     = "2023",
-  url      = "https://github.com/bioTIMEHub/BioTIMEr",
-  textVersion = "Sagouis A., Moyes F., Blowes S.A., Brambilla V., Chow C.F.Y., Fontrodona-Eslava A., Chase J.M., Dornelas M. & Magurran A.E., 2023. BioTIMEr: exploring and standardising the BioTIME database. https://github.com/bioTIMEHub/BioTIMEr"
-)
+bibentry(  "Manual",  title = "BioTIMEr: exploring, standardising the BioTIME database",  author = "Alban Sagouis, Faye Moyes, Shane A. Blowes, Viviana Brambilla, Cher F. Y. Chow, Ada Fontrodona-Eslava, Jonathan M. Chase, Maria Dornelas, Anne E. Magurran",  year = 2023,
+  url = "https://github.com/bioTIMEHub/BioTIMEr")

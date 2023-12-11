@@ -10,7 +10,7 @@ getBeta(x, id)
 getBetaDissimilarity(x, ab)
 }
 \arguments{
-\item{x}{(data.frame) Has to have columns Species and Abundance}
+\item{x}{(data.frame) Has to have columns Species, Year and Abundance or Biomass}
 
 \item{id}{definition of id}
 
@@ -30,6 +30,18 @@ run the beta function
 \dontrun{
 res <- getBetaDissimilarity(x, "A")
 where x is a long form data frame
+}
+\dontrun{
+x<-data.frame(
+Year=rep(rep(2010:2015, each=4), times=4),
+Species=unlist(lapply(
+X=1L:8L,
+function(x) letters[sample(length(letters), 24L, replace=FALSE)])),
+Abundance=rpois(24  *  8, 10),
+rarefyID=rep(LETTERS[1L:8L], each=24)
+)
+
+res <- getBetaDissimilarity(x, "A")
 }
 }
 \author{

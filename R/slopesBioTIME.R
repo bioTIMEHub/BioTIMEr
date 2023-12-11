@@ -5,7 +5,6 @@
 #' @param divType calculate regressions of alpha or beta results
 #' @returns a dataframe with yearly diversity results merged with results of linear regressions (intercept, slope, p-value, significance)
 #' @importFrom dplyr %>%
-#' @importFrom stats lm
 
 getLinearRegressions <- function(x, divType) {
 
@@ -29,14 +28,14 @@ getLinearRegressions <- function(x, divType) {
       for (id in unique(x$rarefyID)) {
         dfits <- c()
         f1 <- subset(x, rarefyID == id)
-        fitd <- lm(f1$S ~ f1$Year)
-        fits <- lm(f1$N ~ f1$Year)
-        fitt <- lm(f1$Simpson ~ f1$Year)
-        fite <- lm(f1$InvSimpson ~ f1$Year)
-        fitf <- lm(f1$DomMc ~ f1$Year)
-        fitg <- lm(f1$PIE ~ f1$Year)
-        fith <- lm(f1$expShannon ~ f1$Year)
-        fiti <- lm(f1$Shannon ~ f1$Year)
+        fitd <- stats::lm(f1$S ~ f1$Year)
+        fits <- stats::lm(f1$N ~ f1$Year)
+        fitt <- stats::lm(f1$Simpson ~ f1$Year)
+        fite <- stats::lm(f1$InvSimpson ~ f1$Year)
+        fitf <- stats::lm(f1$DomMc ~ f1$Year)
+        fitg <- stats::lm(f1$PIE ~ f1$Year)
+        fith <- stats::lm(f1$expShannon ~ f1$Year)
+        fiti <- stats::lm(f1$Shannon ~ f1$Year)
         dfits <- c(dfits, id, fitd$coef[2], summary(fitd)$coefficients[2,4],
                    fits$coef[2], summary(fits)$coefficients[2,4], fitt$coef[2],
                    summary(fitt)$coefficients[2,4], fite$coef[2], summary(fite)$coefficients[2,4],
@@ -110,9 +109,9 @@ getLinearRegressions <- function(x, divType) {
       for (id in unique(x$rarefyID)){
         dfits <- c()
         f1 <- subset(x, rarefyID == id)
-        fitd <- lm(f1$JaccardDiss ~ f1$Year)
-        fits <- lm(f1$MorisitaHornDiss ~ f1$Year)
-        fitt <- lm(f1$BrayCurtisDiss ~ f1$Year)
+        fitd <- stats::lm(f1$JaccardDiss ~ f1$Year)
+        fits <- stats::lm(f1$MorisitaHornDiss ~ f1$Year)
+        fitt <- stats::lm(f1$BrayCurtisDiss ~ f1$Year)
         dfits <- c(dfits, id, fitd$coef[2], summary(fitd)$coefficients[2,4],
                    fits$coef[2], summary(fits)$coefficients[2,4], fitt$coef[2],
                    summary(fitt)$coefficients[2,4], fitd$coef[1], fits$coef[1],

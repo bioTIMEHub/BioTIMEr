@@ -26,10 +26,14 @@ rarefy BioTIME
 \examples{
 \dontrun{
 library(dplyr)
-
-dfr <- # output from gridding process
-df <- dplyr::select(dfr, YEAR, Species, ABUNDANCE, rarefyID, SAMPLE_DESC)
-stats::setNames(df, c("Year", "Species", "Abundance", "rarefyID", "Samp"))
+library(BioTIMEr)
+data("subBTmeta")
+data("subBTquery")
+df <- gridding(subBTmeta, subBTquery) \%>\%
+  filter(rarefyID == "431_128327318")
+rarefysamples(Year = df$YEAR, SampleID = df$SAMPLE_DESC,
+  Species = df$Species, currency = df$ABUNDANCE,
+  resamps = 3L)
 }
 
 }
