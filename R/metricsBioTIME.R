@@ -28,9 +28,9 @@ getAlpha <- function(x, id) {
   yr <- unique(x[, 1L])
   x <- x[, -1L]
 
-  q1 <- diversity(x, "shannon")
-  q2 <- diversity(x, "simpson")
-  invS <- diversity(x, "inv")
+  q1 <- vegan::diversity(x, "shannon")
+  q2 <- vegan::diversity(x, "simpson")
+  invS <- vegan::diversity(x, "inv")
 
   data.frame(rarefyID = id, Year = yr, S = apply(x > 0, 1, sum),
              N = apply(x, 1, sum), maxN = apply(x, 1, max),
@@ -62,7 +62,7 @@ getAlphaMetrics <- function(x, ab) {
 
   xd <- data.frame()
 
-  switch(
+  base::switch(
     ab,
     A = {
       x <- subset(x, !is.na(Abundance))
@@ -91,7 +91,7 @@ getAlphaMetrics <- function(x, ab) {
           xd <- rbind(xd, xr)
         }
       }
-    }) # end switch
+    }) # end base::switch
   return(xd)
 }
 
@@ -116,9 +116,9 @@ getBeta <- function(x, id) {
   x <- x[, -1L]
   xb <- x
   xb[xb > 1] <- 1
-  getj <- vegdist(xb, "jaccard")
-  getmh <- vegdist(x, "horn")
-  getbc <- vegdist(x, "bray")
+  getj <- vegan::vegdist(xb, "jaccard")
+  getmh <- vegan::vegdist(x, "horn")
+  getbc <- vegan::vegdist(x, "bray")
 
   jacc <- c(1, getj[1:(nrow(x))])[-1]
   mh <- c(1, getmh[1:(nrow(x))])[-1]
@@ -156,7 +156,7 @@ getBetaDissimilarity <- function(x, ab) {
   nyear <- tapply(x$Year, x$rarefyID, dplyr::n_distinct)
   nsp   <- tapply(x$Species, x$rarefyID, dplyr::n_distinct)
 
-  switch(
+  base::switch(
     ab,
     A = {
       x <- subset(x, !is.na(Abundance))
@@ -190,7 +190,7 @@ getBetaDissimilarity <- function(x, ab) {
           xd <- rbind(xd, xr)
         }
       }
-    }) # end switch
+    }) # end base::switch
 
   xd <- subset(xd, !is.na(JaccardDiss))
   return(xd)

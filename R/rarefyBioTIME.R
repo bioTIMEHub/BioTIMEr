@@ -19,13 +19,13 @@
 #'
 
 runResampling <- function(df, ab, resamps = 1L) {
-  checkmate::assertChoice(ab, choices = c("A", "B"))
+  checkmate::assertChoice(x = ab, choices = c("A", "B"))
   if (resamps != 1L)
     message("You entered a resamps value different from 1, this option is not implemented at the moment.
 runResampling will run with only one repetition.
 Use rarefysamples directly if more repetitions are needed.")
 
-  switch(
+  base::switch(
     ab,
     A = {
       rfIDs <- unique(df$rarefyID)
@@ -66,7 +66,7 @@ Use rarefysamples directly if more repetitions are needed.")
         dplyr::select(-repeats, YEAR, Species, currency, rfID, STUDY_ID) %>%
         dplyr::rename(Biomass = currency, rarefyID = rfID) %>%
         return()
-    }) # end switch
+    }) # end base::switch
 }
 
 
@@ -95,7 +95,8 @@ Use rarefysamples directly if more repetitions are needed.")
 
 rarefysamples <- function(Year, SampleID, Species, currency, resamps) {
   # Checking arguments
-  checkmate::assertSetEqual(length(Year), c(length(SampleID), length(Species), length(currency)))
+  checkmate::assertSetEqual(x = length(Year),
+                            y = c(length(SampleID), length(Species), length(currency)))
 
   # Computing minimal effort per year in this rarefyID
   minsample <- min(tapply(SampleID, Year, function(x) length(unique(x))))
@@ -128,7 +129,8 @@ rarefysamples <- function(Year, SampleID, Species, currency, resamps) {
 
 rarefysamples2 <- function(Year, SampleID, Species, currency, resamps) {
   # Checking arguments
-  checkmate::assertSetEqual(length(Year), c(length(SampleID), length(Species), length(currency)))
+  checkmate::assertSetEqual(x = length(Year),
+                            y = c(length(SampleID), length(Species), length(currency)))
 
   # Computing minimal effort per year in this rarefyID
   minsample <- min(tapply(SampleID, Year, function(x) length(unique(x))))
@@ -147,7 +149,9 @@ rarefysamples2 <- function(Year, SampleID, Species, currency, resamps) {
   tcurrency  <- currency[selected_indices]
   tRepeats   <- rep(seq_len(resamps), each = minsample * length(unique(Year)))
 
-  raref <- stats::aggregate(x = tcurrency, by = list(tYear, tSpecies, tRepeats), FUN = sum)
+  raref <- stats::aggregate(x = tcurrency,
+                            by = list(tYear, tSpecies, tRepeats),
+                            FUN = sum)
 
   return(stats::setNames(raref, c("YEAR", "Species", "repeats", "currency")))
 
