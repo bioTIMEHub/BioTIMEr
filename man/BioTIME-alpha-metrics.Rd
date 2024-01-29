@@ -19,7 +19,8 @@ getAlphaMetrics(x, ab)
 \value{
 A data frame with results for S (species richness), N (numerical abundance),
 maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
-Inverse Simpson, PIE (probability of intraspecific encounter) and McNaughton's Dominance.
+Inverse Simpson, PIE (probability of intraspecific encounter) and
+McNaughton's Dominance.
 
 getAlphaMetrics returns a data.frame with nine alpha diversity metrics
 }
@@ -30,20 +31,23 @@ run the alpha function
 }
 \examples{
 \dontrun{
-x<-data.frame(
-Year=rep(rep(2010:2015, each=4), times=4),
-Species=unlist(lapply(
-X=1L:8L,
-function(x) letters[sample(length(letters), 24L, replace=FALSE)])),
-Abundance=rpois(24  *  8, 10),
-ID=rep(LETTERS[1L:8L], each=24)
-)
-
-res <- getAlphaMetrics(x)
+x <- data.frame(
+  Year = rep(rep(2010:2015, each = 4), times = 4),
+  matrix(data = rpois(384, 10), ncol = 4)
+  )
+  res <- getAlpha(x, rarefyID = 34)
 }
 
 \dontrun{
-res <- getAlphaMetrics(x, "B")
+x <- data.frame(
+  Year = rep(rep(2010:2015, each = 4), times = 4),
+  Species = c(replicate(
+   n = 8L,
+   sample(letters, 24L, replace = FALSE))),
+  Abundance = rpois(24 * 8, 10),
+  rarefyID = rep(LETTERS[1L:8L], each = 24)
+  )
+  res <- getAlphaMetrics(x, "A")
 }
 }
 \author{

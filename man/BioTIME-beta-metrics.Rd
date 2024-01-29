@@ -17,7 +17,8 @@ getBetaDissimilarity(x, ab)
 \item{ab}{character input for chosen currency - "A" = Abundance or "B" = Biomass}
 }
 \value{
-getBeta returns a data.frame with three beta diversity dissimilarity metrics
+getBeta returns a data.frame with three beta diversity dissimilarity
+metrics
 
 getBetaDissimilarity returns a long data.frame with results for three beta metrics
 }
@@ -28,18 +29,25 @@ run the beta function
 }
 \examples{
 \dontrun{
-res <- getBetaDissimilarity(x, "A")
-where x is a long form data frame
+x <- data.frame(
+  Year = rep(rep(2010:2015, each = 4), times = 4),
+  Species = c(replicate(
+   n = 8L,
+   sample(letters, 24L, replace = FALSE))),
+  Abundance = rpois(24 * 8, 10),
+  ID = rep(LETTERS[1L:8L], each = 24)
+  )
+  res <- getBeta(x, "A")
 }
 \dontrun{
-x<-data.frame(
-Year=rep(rep(2010:2015, each=4), times=4),
-Species=unlist(lapply(
-X=1L:8L,
-function(x) letters[sample(length(letters), 24L, replace=FALSE)])),
-Abundance=rpois(24  *  8, 10),
-rarefyID=rep(LETTERS[1L:8L], each=24)
-)
+x <- data.frame(
+  Year = rep(rep(2010:2015, each = 4), times = 4),
+  Species = c(replicate(
+   n = 8L,
+   sample(letters, 24L, replace = FALSE))),
+  Abundance = rpois(24 * 8, 10),
+  rarefyID = rep(LETTERS[1L:8L], each = 24)
+  )
 
 res <- getBetaDissimilarity(x, "A")
 }
