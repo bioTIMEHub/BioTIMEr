@@ -1,7 +1,8 @@
 #' runResampling BioTIME
 #'
 #' @export
-#' @param df dataframe to be resampled (in the format of the output of the \code{\link{gridding}} function
+#' @param df dataframe to be resampled (in the format of the output of the
+#'  \code{\link{gridding}} function
 #' @param ab set to "A" for abundance and "B" for biomass
 #' @param resamps Not implemented at the moment.
 #'    Number of repetitions passed to \code{\link{rarefysamples}}. 1 by default.
@@ -19,7 +20,7 @@
 #'
 
 runResampling <- function(df, ab, resamps = 1L) {
-  checkmate::assertChoice(x = ab, choices = c("A", "B"))
+  checkmate::assert_choice(x = ab, choices = c("A", "B"))
   if (resamps != 1L)
     message("You entered a resamps value different from 1, this option is not implemented at the moment.
 runResampling will run with only one repetition.
@@ -46,7 +47,7 @@ Use rarefysamples directly if more repetitions are needed.")
         dplyr::select(-repeats, YEAR, Species, currency, rfID, STUDY_ID) %>%
         dplyr::rename(Abundance = currency, rarefyID = rfID) %>%
         return()
-    },
+    }, # end of switch
     B = {
       rfIDs <- unique(df$rarefyID)
       TSrf <- sapply(
@@ -66,7 +67,7 @@ Use rarefysamples directly if more repetitions are needed.")
         dplyr::select(-repeats, YEAR, Species, currency, rfID, STUDY_ID) %>%
         dplyr::rename(Biomass = currency, rarefyID = rfID) %>%
         return()
-    }) # end base::switch
+    }) # end of base::switch
 }
 
 
@@ -76,20 +77,20 @@ Use rarefysamples directly if more repetitions are needed.")
 #' @param Year Integer representing year of record
 #' @param SampleID Description of unique sampling event, this is used to resample
 #' @param Species Highest resolution of taxonomic description available
-#' @param currency - set to either Numerical abundance or biomass
+#' @param currency Set to either Numerical abundance or biomass
 #' @param resamps Number of repetitions
 #' @returns A data.frame with rarefied abundances/biomasses
 #' @examples
 #' \dontrun{
-#' library(dplyr)
-#' library(BioTIMEr)
-#' data("subBTmeta")
-#' data("subBTquery")
-#' df <- gridding(subBTmeta, subBTquery) %>%
-#'   filter(rarefyID == "431_128327318")
-#' rarefysamples(Year = df$YEAR, SampleID = df$SAMPLE_DESC,
-#'   Species = df$Species, currency = df$ABUNDANCE,
-#'   resamps = 3L)
+#'   library(dplyr)
+#'   library(BioTIMEr)
+#'   data("subBTmeta")
+#'   data("subBTquery")
+#'   df <- gridding(subBTmeta, subBTquery) %>%
+#'     filter(rarefyID == "431_128327318")
+#'   rarefysamples(Year = df$YEAR, SampleID = df$SAMPLE_DESC,
+#'     Species = df$Species, currency = df$ABUNDANCE,
+#'     resamps = 3L)
 #'}
 #'
 

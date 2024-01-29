@@ -3,14 +3,13 @@
 #' @export
 #' @param meta (data.frame) BioTIME metadata
 #' @param btf (data.frame) BioTIME data
-#'
 #' @returns A data.frame with studies split into 96km2 gridded cells (rarefyIDs)
 #' @importFrom dplyr %>%
 #' @examples
 #' \dontrun{
-#' data("subBTquery.RData")
-#' data("subBTmeta.RData")
-#' gridding(subBTmeta, subBTquery)
+#'   data("subBTquery.RData")
+#'   data("subBTmeta.RData")
+#'   gridding(subBTmeta, subBTquery)
 #' }
 
 gridding <- function(meta, btf) {

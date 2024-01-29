@@ -290,7 +290,7 @@ getAlpha<-function(x, id){
   
   data.frame(rarefyID=id, Year=yr, S=apply(x>0, 1, sum), 
              N=apply(x, 1, sum), maxN=apply(x, 1, max),
-             Shannon=q1, Simpson=q2, InvSimpson=invS, 
+             Shannon=q1, Simpson=q2, invSimpson=invS, 
              PIE=apply(x, 1, function(s){n<-sum(s);(n/(n-1))*(1-sum((s/n)^2))}),
              DomMc=apply(x, 1, function(s){y<-sort(s, decreasing=T);(y[1]+y[2])/sum(y)}),
              expShannon=apply(x, 1, function(s){n<-sum(s);exp(-sum(s/n*ifelse(s==0,0,log(s/n))))})
@@ -445,7 +445,7 @@ getLinearRegressions<-function(x, divType) {
         fitd<-lm(f1$S~f1$Year)
         fits<-lm(f1$N~f1$Year)
         fitt<-lm(f1$Simpson~f1$Year)
-        fite<-lm(f1$InvSimpson~f1$Year)
+        fite<-lm(f1$invSimpson~f1$Year)
         fitf<-lm(f1$DomMc~f1$Year)
         fitg<-lm(f1$PIE~f1$Year)
         fith<-lm(f1$expShannon~f1$Year)
@@ -479,26 +479,26 @@ getLinearRegressions<-function(x, divType) {
       ###############################################
       b1<-select(dft, rarefyID, SSl, NS, simpS, invSSl, domMS, 
                  PIES, expShS, shanS)
-      colnames(b1)<-c("rarefyID", "S", "N", "Simpson", "InvSimpson",
+      colnames(b1)<-c("rarefyID", "S", "N", "Simpson", "invSimpson",
                       "DomMc", "PIE", "expShannon", "Shannon")
       d1<-as.data.frame(pivot_longer(b1, -rarefyID, names_to="metric", 
                                      values_to="slopes"))
       b2<-select(dft, rarefyID, SPval, NPval, simpPval, invSPval, domMPval, 
                  PIEPval, expShPval, shanPval)
-      colnames(b2)<-c("rarefyID", "S", "N", "Simpson", "InvSimpson",
+      colnames(b2)<-c("rarefyID", "S", "N", "Simpson", "invSimpson",
                       "DomMc", "PIE", "expShannon", "Shannon")
       d2<-as.data.frame(pivot_longer(b2, -rarefyID, names_to="metric", 
                                      values_to="p-values"))
       d3<-merge(d1, d2, by=c("rarefyID", "metric"))
       b3<-select(dft, rarefyID, sp, np, sip, isp, dmp, pp, esp, shp)
-      colnames(b3)<-c("rarefyID", "S", "N", "Simpson", "InvSimpson",
+      colnames(b3)<-c("rarefyID", "S", "N", "Simpson", "invSimpson",
                       "DomMc", "PIE", "expShannon", "Shannon")
       d4<-as.data.frame(pivot_longer(b3, -rarefyID, names_to="metric", 
                                      values_to="significance"))
       d5<-merge(d3, d4, by=c("rarefyID", "metric"))
       b4<-select(dft, rarefyID, SSI, NI, simpI, invSI, domMI, 
                  PIEI, expShI, shanI)
-      colnames(b4)<-c("rarefyID", "S", "N", "Simpson", "InvSimpson",
+      colnames(b4)<-c("rarefyID", "S", "N", "Simpson", "invSimpson",
                       "DomMc", "PIE", "expShannon", "Shannon")
       d8<-as.data.frame(pivot_longer(b4, -rarefyID, names_to="metric", 
                                      values_to="intercept"))

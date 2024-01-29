@@ -20,7 +20,7 @@ test_that("getAlpha returns a data frame", {
 test_that("getAlpha returns the expected columns", {
   result <- getAlpha(x = data, id = "TestID")
   expected_cols <- c("rarefyID","Year", "S", "N", "maxN", "Shannon","Simpson",
-                     "InvSimpson","PIE","DomMc","expShannon")
+                     "invSimpson","PIE","DomMc","expShannon")
   expect_equal(colnames(result), expected_cols)
 })
 
@@ -41,7 +41,7 @@ test_that("getAlpha computes accurate biodiversity metrics", {
   expect_equal(result$Shannon, shannon_expected, ignore_attr = FALSE)
   expect_equal(result$expShannon, exp(shannon_expected), ignore_attr = FALSE)
   expect_equal(result$Simpson, simpson_expected, ignore_attr = FALSE)
-  expect_equal(result$InvSimpson, inv_expected, ignore_attr = FALSE)
+  expect_equal(result$invSimpson, inv_expected, ignore_attr = FALSE)
 })
 
 test_that("getAlpha works consistently", {

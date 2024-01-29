@@ -8,11 +8,11 @@
 #' @author Faye Moyes
 #' @examples
 #' \dontrun{
-#' x <- data.frame(
-#'   Year = rep(rep(2010:2015, each = 4), times = 4),
-#'   matrix(data = rpois(384, 10), ncol = 4)
-#'   )
-#'   res <- getAlpha(x, rarefyID = 34)
+#'   x <- data.frame(
+#'     Year = rep(rep(2010:2015, each = 4), times = 4),
+#'     matrix(data = rpois(384, 10), ncol = 4)
+#'     )
+#'     res <- getAlpha(x, rarefyID = 34)
 #' }
 #'
 #' @returns A data frame with results for S (species richness), N (numerical abundance),
@@ -34,7 +34,7 @@ getAlpha <- function(x, id) {
                     maxN = apply(x, 1, max),
                     Shannon = vegan::diversity(x, "shannon"),
                     Simpson = vegan::diversity(x, "simpson"),
-                    InvSimpson = vegan::diversity(x, "inv"),
+                    invSimpson = vegan::diversity(x, "inv"),
                     PIE = apply(x, 1, function(s) {
                       n <- sum(s)
                       (n / (n - 1)) * (1 - sum((s / n)^2))}),
@@ -57,13 +57,11 @@ getAlpha <- function(x, id) {
 #' @export
 #' @examples
 #' \dontrun{
-#' x <- data.frame(
-#'   Year = rep(rep(2010:2015, each = 4), times = 4),
-#'   Species = c(replicate(
-#'    n = 8L,
-#'    sample(letters, 24L, replace = FALSE))),
-#'   Abundance = rpois(24 * 8, 10),
-#'   rarefyID = rep(LETTERS[1L:8L], each = 24)
+#'   x <- data.frame(
+#'     Year = rep(rep(2010:2015, each = 4), times = 4),
+#'     Species = c(replicate(n = 8L, sample(letters, 24L, replace = FALSE))),
+#'     Abundance = rpois(24 * 8, 10),
+#'     rarefyID = rep(LETTERS[1L:8L], each = 24)
 #'   )
 #'   res <- getAlphaMetrics(x, "A")
 #' }

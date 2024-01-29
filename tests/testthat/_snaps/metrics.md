@@ -3,7 +3,7 @@
     Code
       getAlpha(x = data, id = "TestID")
     Output
-         rarefyID Year S  N maxN  Shannon   Simpson InvSimpson       PIE     DomMc
+         rarefyID Year S  N maxN  Shannon   Simpson invSimpson       PIE     DomMc
       1    TestID 2010 4 51   15 1.374722 0.7443291   3.911278 0.7592157 0.5686275
       2    TestID 2011 4 47   22 1.259384 0.6808511   3.133333 0.6956522 0.7021277
       3    TestID 2012 4 41   13 1.368895 0.7412255   3.864368 0.7597561 0.5853659
@@ -203,7 +203,7 @@
     Code
       getAlphaMetrics(x = dataMetrics, ab = "A")
     Output
-         rarefyID Year S  N maxN  Shannon   Simpson InvSimpson       PIE     DomMc
+         rarefyID Year S  N maxN  Shannon   Simpson invSimpson       PIE     DomMc
       1         A 2010 4 34   14 1.318024 0.7128028   3.481928 0.7344029 0.6470588
       2         A 2011 4 40   15 1.344075 0.7275000   3.669725 0.7461538 0.6000000
       3         A 2012 4 35   12 1.355920 0.7346939   3.769231 0.7563025 0.6000000
@@ -307,7 +307,7 @@
     Code
       getAlphaMetrics(x = dataMetrics, ab = "B")
     Output
-         rarefyID Year S    N maxN  Shannon   Simpson InvSimpson       PIE     DomMc
+         rarefyID Year S    N maxN  Shannon   Simpson invSimpson       PIE     DomMc
       1         A 2010 4 4051 1034 1.386206 0.7499555   3.999288 0.7501406 0.5055542
       2         A 2011 4 4064 1049 1.385816 0.7497608   3.996177 0.7499454 0.5152559
       3         A 2012 4 4107 1076 1.385474 0.7495905   3.993459 0.7497731 0.5191137
