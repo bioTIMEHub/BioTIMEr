@@ -20,7 +20,7 @@ Get Linear Regressions BioTIME
 }
 \examples{
   x <- data.frame(
-    Year = rep(rep(2010:2015, each = 4), times = 4),
+    YEAR = rep(rep(2010:2015, each = 4), times = 4),
     Species = c(replicate(n = 8L, sample(letters, 24L, replace = FALSE))),
     Abundance = rpois(24 * 8, 10),
     rarefyID = rep(LETTERS[1L:8L], each = 24)

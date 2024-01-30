@@ -10,17 +10,19 @@
 #' @importFrom dplyr %>%
 #' @examples
 #' \dontrun{
-#' library(dplyr)
 #' library(BioTIMEr)
-#' data("subBTmeta")
-#' data("subBTquery")
 #' df<-gridding(subBTmeta, subBTquery)
 #' runResampling(df, ab = "A")
-#'}
+#' }
 #'
 
 runResampling <- function(df, ab, resamps = 1L) {
   checkmate::assert_choice(x = ab, choices = c("A", "B"))
+  checkmate::assert_names(
+    x = colnames(df),
+    must.include = c("YEAR", "SAMPLE_DESC", "Species"),
+    what = "colnames")
+
   if (resamps != 1L)
     message("You entered a resamps value different from 1, this option is not implemented at the moment.
 runResampling will run with only one repetition.
@@ -42,7 +44,8 @@ Use rarefysamples directly if more repetitions are needed.")
       dplyr::bind_rows(TSrf) %>%
         dplyr::filter(!is.na(YEAR)) %>%
         dplyr::mutate(rfID = rep(rfIDs, times = sapply(TSrf, nrow))) %>%
-        tidyr::separate(rfID, into =  c("STUDY_ID", "cell"), sep = "_", remove = FALSE) %>%
+        tidyr::separate(rfID, into =  c("STUDY_ID", "cell"),
+                        sep = "_", remove = FALSE) %>%
         # dplyr::mutate(STUDY_ID = as.integer(STUDY_ID)) %>%
         dplyr::select(-repeats, YEAR, Species, currency, rfID, STUDY_ID) %>%
         dplyr::rename(Abundance = currency, rarefyID = rfID) %>%
@@ -62,7 +65,8 @@ Use rarefysamples directly if more repetitions are needed.")
       dplyr::bind_rows(TSrf) %>%
         dplyr::filter(!is.na(YEAR)) %>%
         dplyr::mutate(rfID = rep(rfIDs, times = sapply(TSrf, nrow))) %>%
-        tidyr::separate(rfID, into =  c("STUDY_ID", "cell"), sep = "_", remove = FALSE) %>%
+        tidyr::separate(rfID, into =  c("STUDY_ID", "cell"),
+                        sep = "_", remove = FALSE) %>%
         # dplyr::mutate(STUDY_ID = as.integer(STUDY_ID)) %>%
         dplyr::select(-repeats, YEAR, Species, currency, rfID, STUDY_ID) %>%
         dplyr::rename(Biomass = currency, rarefyID = rfID) %>%
@@ -72,7 +76,6 @@ Use rarefysamples directly if more repetitions are needed.")
 
 
 #' rarefy BioTIME
-#'
 #' @export
 #' @param Year Integer representing year of record
 #' @param SampleID Description of unique sampling event, this is used to resample
@@ -97,7 +100,8 @@ Use rarefysamples directly if more repetitions are needed.")
 rarefysamples <- function(Year, SampleID, Species, currency, resamps) {
   # Checking arguments
   checkmate::assertSetEqual(x = length(Year),
-                            y = c(length(SampleID), length(Species), length(currency)))
+                            y = c(length(SampleID), length(Species),
+                                  length(currency)))
 
   # Computing minimal effort per year in this rarefyID
   minsample <- min(tapply(SampleID, Year, function(x) length(unique(x))))
@@ -117,7 +121,9 @@ rarefysamples <- function(Year, SampleID, Species, currency, resamps) {
       tSpecies   <- Species[selected_indices]
       tcurrency  <- currency[selected_indices]
 
-      raref <- stats::aggregate(x = tcurrency, by = list(tYear, tSpecies), FUN = sum)
+      raref <- stats::aggregate(x = tcurrency,
+                                by = list(tYear, tSpecies),
+                                FUN = sum)
       raref$repeats <- i
       return(raref)
 
@@ -127,34 +133,3 @@ rarefysamples <- function(Year, SampleID, Species, currency, resamps) {
   return(stats::setNames(rareftab, c("YEAR", "Species", "currency", "repeats")))
 
 } # end of function
-
-rarefysamples2 <- function(Year, SampleID, Species, currency, resamps) {
-  # Checking arguments
-  checkmate::assertSetEqual(x = length(Year),
-                            y = c(length(SampleID), length(Species), length(currency)))
-
-  # Computing minimal effort per year in this rarefyID
-  minsample <- min(tapply(SampleID, Year, function(x) length(unique(x))))
-
-  selected_indices <- unlist(lapply( # beginning loop on years
-    X = unique(Year),
-    FUN = function(y) {
-      samps <- unique(SampleID[Year == y])
-      sam <- replicate(resamps, sample(samps, minsample, replace = TRUE))
-      return(match(sam, SampleID))
-    })) # end of loop on years
-  # n_matches <- sapply(selected_indices, length, simplify = TRUE)
-
-  tYear      <- Year[selected_indices]
-  tSpecies   <- Species[selected_indices]
-  tcurrency  <- currency[selected_indices]
-  tRepeats   <- rep(seq_len(resamps), each = minsample * length(unique(Year)))
-
-  raref <- stats::aggregate(x = tcurrency,
-                            by = list(tYear, tSpecies, tRepeats),
-                            FUN = sum)
-
-  return(stats::setNames(raref, c("YEAR", "Species", "repeats", "currency")))
-
-} # end of function
-

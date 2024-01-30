@@ -10,7 +10,7 @@ getBeta(x, id)
 getBetaDissimilarity(x, ab)
 }
 \arguments{
-\item{x}{(data.frame) Has to have columns Species, Year and Abundance or Biomass}
+\item{x}{(data.frame) Has to have columns Species, YEAR and Abundance or Biomass}
 
 \item{id}{definition of id}
 
@@ -30,7 +30,7 @@ run the beta function
 \examples{
 \dontrun{
 x <- data.frame(
-  Year = rep(rep(2010:2015, each = 4), times = 4),
+  YEAR = rep(rep(2010:2015, each = 4), times = 4),
   Species = c(replicate(
    n = 8L,
    sample(letters, 24L, replace = FALSE))),
@@ -41,7 +41,7 @@ x <- data.frame(
 }
 \dontrun{
 x <- data.frame(
-  Year = rep(rep(2010:2015, each = 4), times = 4),
+  YEAR = rep(rep(2010:2015, each = 4), times = 4),
   Species = c(replicate(
    n = 8L,
    sample(letters, 24L, replace = FALSE))),

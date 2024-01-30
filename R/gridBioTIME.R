@@ -97,8 +97,8 @@ gridding <- function(meta, btf) {
 
   for (i in seq_len(nrow(rarefyID_coords_nest))) {
     ## check what it is doing
-    print(paste('rarefyID', i, 'of',
-                length(unique(rarefyID_coords_nest$rarefyID))))
+    base::message('rarefyID ', i, ' of ',
+                dplyr::n_distinct(rarefyID_coords_nest$rarefyID))
     ################################################################
     hull <- grDevices::chull(
       x = unlist(rarefyID_coords_nest$data[[i]][, "LONGITUDE"]),

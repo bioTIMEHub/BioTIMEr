@@ -1,5 +1,4 @@
 ---
-title: "BioTIMEr first vignette"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{BioTIMEr first vignette}

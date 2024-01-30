@@ -3,7 +3,7 @@
     Code
       getLinearRegressions(x = alpham, divType = "alpha")
     Output
-          rarefyID Year     metric  diversity        slopes    p-values significance
+          rarefyID YEAR     metric  diversity        slopes    p-values significance
       1          A 2010          S  4.0000000 -3.231300e-16 0.158302423            0
       2          A 2010          N 34.0000000  1.200000e+00 0.296748456            0
       3          A 2010       maxN 14.0000000            NA          NA           NA
@@ -875,7 +875,7 @@
     Code
       getLinearRegressions(x = betam, divType = "beta")
     Output
-          Year rarefyID           metric dissimilarity        slopes  p-values
+          YEAR rarefyID           metric dissimilarity        slopes  p-values
       1   2010        A      JaccardDiss             1 -8.078249e-17 0.1583024
       2   2010        A MorisitaHornDiss             1 -8.078249e-17 0.1583024
       3   2010        A   BrayCurtisDiss             1 -8.078249e-17 0.1583024

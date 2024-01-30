@@ -1,10 +1,10 @@
 ---
-title: "BioTIMEr"
+title: "Introduction to BioTIMEr"
 author: ""
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{BioTIMEr first vignette}
+  %\VignetteIndexEntry{Introduction to BioTIMEr}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -26,10 +26,14 @@ by R at the same time BioTIMEr was installed.
 
 ```{r bt_package_loading, warning=FALSE, message=FALSE, eval=TRUE}
 library(dplyr)
+library(tidyr)
 library(BioTIMEr)
 ```
 
-When loading the BioTIMEr package, the BioTIME data is automatically loaded too.
+When loading the BioTIMEr package, a subset of BioTIME data is automatically
+loaded too.
+The whole BioTIME database is accessible [here](https://biotime.st-andrews.ac.uk/)
+
 There are two files: 
 
 - subBTmeta: 
@@ -48,9 +52,8 @@ file.exists("data/subBTquery.RData")
 ```
 
 
-## These are the functions available in the package
+### These are the functions available in the package
 
--------------------------------------------------------------------
 - gridding
 - rarefysamples
 - runResampling
@@ -63,15 +66,16 @@ file.exists("data/subBTquery.RData")
 - plotSlopes
 
 ----------------------------------------------------------------------
-
-```{r eval=FALSE} 
-gridding(subBTmeta, subBTquery) 
+### Gridding
+Where `meta` represents a long form data frame containing the meta data information for BioTIME studies and `btf` is a data frame containing long form data from the main BioTIME query.
+```{r gridding_ex, eval=TRUE, cache=TRUE, echo=FALSE, message=FALSE, tidy=TRUE, include=TRUE} 
+gridding(meta = subBTmeta, btf = subBTquery) %>% 
+  head() %>% 
+  kable()
 ```
 
-where meta represents a long form data frame containing the meta data information for BioTIME studies and btf is a data frame containing long form data from the main BioTIME query (here a small representative subset) but downloadable in full at 'link for biotime'
-
 ```{r eval=FALSE} 
-runResampling(df, ab) 
+runResampling(df, ab)
 ```
 
 where df is the data frame output from the `gridding()` function and ab is a character input indicating whether chosen currency for rarefaction and resampling is abundance or biomass, i.e. "A"=Abundance and "B"=Biomass. This function calls the `rarefysamples()` function which performs a single run of the chosen input by randomly resampling the minimum number of sampling events per year per study. This function can be run once and then used for further analyses as described here or fitted into a simple loop to run and record metrics for multiple iterations before choosing the mean (as in vignette 3). The output is a single long form data frame containing rarefied time series.
@@ -104,71 +108,65 @@ where x is the output from the `getLinearRegressions()` function, metric is a ch
 
 ## Now try to run some things
 
-```{r code_examples, eval=FALSE}
-
-df <- gridding(subBTmeta, subBTquery)
+```{r code_workflow, eval=TRUE, message = FALSE, cache = TRUE}
+df <- gridding(meta = subBTmeta, btf = subBTquery)
 
 kable(head(df[6:11]))
+dim(df)
 
-rf <- runResampling(df, "A")
+rf <- runResampling(df = df, ab = "A")
 
 kable(head(rf))
 
-alpha <- getAlphaMetrics(rf, "A")
+alpha <- getAlphaMetrics(x = rf, ab = "A")
 
 kable(head(alpha))
 
-beta <- getBetaDissimilarity(rf, "A")
+beta <- getBetaDissimilarity(x = rf, ab = "A")
 
 kable(head(beta))
 
-alSl <- getLinearRegressions(alpha, "alpha")
+alSl <- getLinearRegressions(x = alpha, divType = "alpha")
 
-beSl <- getLinearRegressions(beta, "beta")
+beSl <- getLinearRegressions(x = beta, divType = "beta")
 
 meta2 <- select(subBTmeta, STUDY_ID, TAXA, REALM)
 
 
-alphaSl <- alSl %>% separate(rarefyID, 
+alphaSl <- alSl %>% separate(rarefyID,
                              into = c("STUDY_ID", "cell"),
-                             sep = "_", remove = FALSE) %>% 
+                             sep = "_", remove = FALSE) %>%
   as.data.frame()
 
-ameta <- left_join(alphaSl, meta2, by = "STUDY_ID")
+ameta <- merge(alphaSl, meta2, by = "STUDY_ID")
 
 
-betaSl <- beSl %>% separate(rarefyID, 
+betaSl <- beSl %>% separate(rarefyID,
                             into = c("STUDY_ID", "cell"),
-                            sep = "_", remove = FALSE) %>% 
+                            sep = "_", remove = FALSE) %>%
   as.data.frame()
 
-bmeta <- left_join(betaSl, meta2, by = "STUDY_ID")
+bmeta <- merge(betaSl, meta2, by = "STUDY_ID")
 
 ```
 
-```{r fig.width=12, fig.height=10, eval=FALSE}
-
-plotSlopes(ameta, "Shannon", bio, "Fish", "ind", "53_10639590", "alpha")
-
+```{r plot_alpha_shannon_ind, fig.width=12, fig.height=10, eval=FALSE, cache = TRUE, tidy=TRUE}
+plotSlopes(x = ameta, metric = "Shannon", cols = scale_color_biotime(),
+           taxa = "Fish", method = "ind", rf = "53_10639590", divType = "alpha")
 ```
 
 
-```{r fig.width=8, fig.height=6, eval=FALSE}
-
-plotSlopes(ameta, "Shannon", bioCol, "Fish", "metric", "53_10639590", "alpha")
-
+```{r plot_alpha_shannon_metric, fig.width=8, fig.height=6, eval=FALSE, cache = TRUE, tidy=TRUE}
+plotSlopes(x = ameta, metric = "Shannon", cols = bioCol, taxa = "Fish", 
+           method = "metric", rf = "53_10639590", divType = "alpha")
 ```
 
-
-```{r fig.width=8, fig.height=4, eval=FALSE}
-
-plotSlopes(bmeta, "JaccardDiss", bioCol, "Fish", "taxa", "53_10639590", "alpha")
-
+```{r plot_beta_jaccard_ind, fig.width=9, fig.height=6, eval=FALSE, cache = TRUE, tidy=TRUE}
+plotSlopes(x = bmeta, metric = "JaccardDiss", cols = bioCol, taxa = "Fish",
+           method = "ind", rf = "18_9044316", divType = "beta")
 ```
 
-
-```{r fig.width=9, fig.height=6, eval=FALSE}
-
-plotSlopes(bmeta, "JaccardDiss", bioCol, "Fish", "ind", "18_9044316", "beta")
-
+```{r plot_beta_jaccard_taxa, fig.width=8, fig.height=4, eval=FALSE, cache = TRUE, tidy=TRUE}
+plotSlopes(x = bmeta, metric = "JaccardDiss", cols = bioCol, taxa = "Fish",
+           method = "taxa", rf = "53_10639590", divType = "alpha")
 ```

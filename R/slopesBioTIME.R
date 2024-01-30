@@ -8,7 +8,7 @@
 #' @importFrom dplyr %>%
 #' @examples
 #'   x <- data.frame(
-#'     Year = rep(rep(2010:2015, each = 4), times = 4),
+#'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
 #'     Species = c(replicate(n = 8L, sample(letters, 24L, replace = FALSE))),
 #'     Abundance = rpois(24 * 8, 10),
 #'     rarefyID = rep(LETTERS[1L:8L], each = 24)
@@ -28,7 +28,7 @@ getLinearRegressions <- function(x, divType) {
     alpha = {
       checkmate::assert_names(
         x = colnames(x),
-        must.include = c("rarefyID", "Year", "S", "N", "Simpson",
+        must.include = c("rarefyID", "YEAR", "S", "N", "Simpson",
                          "invSimpson", "DomMc", "PIE", "expShannon",
                          "Shannon"))
 
@@ -36,7 +36,7 @@ getLinearRegressions <- function(x, divType) {
 
       y <- x %>%
         dplyr::group_by(rarefyID) %>%
-        dplyr::summarise(nsp = dplyr::n_distinct(Year)) %>%
+        dplyr::summarise(nsp = dplyr::n_distinct(YEAR)) %>%
         dplyr::filter(nsp < 3)
 
       x <- dplyr::anti_join(x, y, by = "rarefyID")
@@ -45,14 +45,14 @@ getLinearRegressions <- function(x, divType) {
       for (id in unique(x$rarefyID)) {
         dfits <- c()
         f1 <- subset(x, rarefyID == id)
-        fitd <- stats::lm(f1$S ~ f1$Year, )
-        fits <- stats::lm(f1$N ~ f1$Year)
-        fitt <- stats::lm(f1$Simpson ~ f1$Year)
-        fite <- stats::lm(f1$invSimpson ~ f1$Year)
-        fitf <- stats::lm(f1$DomMc ~ f1$Year)
-        fitg <- stats::lm(f1$PIE ~ f1$Year)
-        fith <- stats::lm(f1$expShannon ~ f1$Year)
-        fiti <- stats::lm(f1$Shannon ~ f1$Year)
+        fitd <- stats::lm(f1$S ~ f1$YEAR, )
+        fits <- stats::lm(f1$N ~ f1$YEAR)
+        fitt <- stats::lm(f1$Simpson ~ f1$YEAR)
+        fite <- stats::lm(f1$invSimpson ~ f1$YEAR)
+        fitf <- stats::lm(f1$DomMc ~ f1$YEAR)
+        fitg <- stats::lm(f1$PIE ~ f1$YEAR)
+        fith <- stats::lm(f1$expShannon ~ f1$YEAR)
+        fiti <- stats::lm(f1$Shannon ~ f1$YEAR)
 
         suppressWarnings({
           dfits <- c(dfits, id,
@@ -114,7 +114,7 @@ getLinearRegressions <- function(x, divType) {
         tidyr::pivot_longer(-rarefyID, names_to = "metric",
                             values_to = "intercept")
 
-      d6 <- tidyr::pivot_longer(x, -c(rarefyID, Year),
+      d6 <- tidyr::pivot_longer(x, -c(rarefyID, YEAR),
                                 names_to = "metric",
                                 values_to = "diversity")
 
@@ -128,14 +128,14 @@ getLinearRegressions <- function(x, divType) {
     beta = {
       checkmate::assert_names(
         x = colnames(x),
-        must.include = c("Year", "rarefyID", "JaccardDiss", "MorisitaHornDiss",
+        must.include = c("YEAR", "rarefyID", "JaccardDiss", "MorisitaHornDiss",
                          "BrayCurtisDiss"))
 
       x <- dplyr::filter(x, !is.na(JaccardDiss))
 
       y <- x %>%
         dplyr::group_by(rarefyID) %>%
-        dplyr::summarise(nsp = dplyr::n_distinct(Year)) %>%
+        dplyr::summarise(nsp = dplyr::n_distinct(YEAR)) %>%
         dplyr::filter(nsp < 3)
 
       x <- dplyr::anti_join(x, y, by = "rarefyID")
@@ -144,9 +144,9 @@ getLinearRegressions <- function(x, divType) {
       for (id in unique(x$rarefyID)) {
         dfits <- c()
         f1 <- dplyr::filter(x, rarefyID == id)
-        fitd <- stats::lm(f1$JaccardDiss ~ f1$Year)
-        fits <- stats::lm(f1$MorisitaHornDiss ~ f1$Year)
-        fitt <- stats::lm(f1$BrayCurtisDiss ~ f1$Year)
+        fitd <- stats::lm(f1$JaccardDiss ~ f1$YEAR)
+        fits <- stats::lm(f1$MorisitaHornDiss ~ f1$YEAR)
+        fitt <- stats::lm(f1$BrayCurtisDiss ~ f1$YEAR)
 
         suppressWarnings({
           dfits <- c(dfits, id,
@@ -190,7 +190,7 @@ getLinearRegressions <- function(x, divType) {
         tidyr::pivot_longer(-rarefyID, names_to = "metric",
                             values_to = "intercept")
 
-      d6 <- tidyr::pivot_longer(x, -c(rarefyID, Year),
+      d6 <- tidyr::pivot_longer(x, -c(rarefyID, YEAR),
                                 names_to = "metric",
                                 values_to = "dissimilarity")
 

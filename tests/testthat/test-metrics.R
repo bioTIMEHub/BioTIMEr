@@ -8,7 +8,7 @@
 # Create example data for testing
 set.seed(42)
 data <- data.frame(
-  Year = rep(rep(2010:2015, each = 4), times = 4),
+  YEAR = rep(rep(2010:2015, each = 4), times = 4),
   matrix(data = rpois(384, 10), ncol = 4)
 )
 
@@ -19,7 +19,7 @@ test_that("getAlpha returns a data frame", {
 
 test_that("getAlpha returns the expected columns", {
   result <- getAlpha(x = data, id = "TestID")
-  expected_cols <- c("rarefyID","Year", "S", "N", "maxN", "Shannon","Simpson",
+  expected_cols <- c("rarefyID","YEAR", "S", "N", "maxN", "Shannon","Simpson",
                      "invSimpson","PIE","DomMc","expShannon")
   expect_equal(colnames(result), expected_cols)
 })
@@ -50,7 +50,7 @@ test_that("getAlpha works consistently", {
 
 set.seed(42)
 dataMetrics <- data.frame(
-  Year = rep(rep(2010:2015, each = 4), times = 4),
+  YEAR = rep(rep(2010:2015, each = 4), times = 4),
   Species = c(replicate(
     n = 8L,
     sample(letters, 24L, replace = FALSE))),
@@ -78,13 +78,13 @@ test_that("getAlphaMetrics works correctly for Biomass", {
 #
 # test_that("getBeta returns the expected columns", {
 #   result <- getBeta(x = pivot_data, id = "TestID")
-#   expected_cols <- c("Year", "ID", "jaccD", "mhorn")
+#   expected_cols <- c("YEAR", "ID", "jaccD", "mhorn")
 #   expect_equal(colnames(result), expected_cols)
 # })
 #
 # test_that("getBeta returns correct number of rows", {
 #   result <- getBeta(x = pivot_data, id = "TestID")
-#   expected_rows <- length(unique(data$Year))
+#   expected_rows <- length(unique(data$YEAR))
 #   expect_equal(nrow(result), expected_rows)
 # })
 #
