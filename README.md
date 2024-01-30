@@ -9,7 +9,10 @@
 
 **BioTIMEr** is an R package which gives you functions to work with BioTIME communities and provides an subset of [the BioTIME database](https://biotime.st-andrews.ac.uk/).
 
-**BioTIME** (the Global database of assemblage time series for quantifying and understanding biodiversity change) is an international network and an open access database, free to anyone, anywhere in the world to use for education, research, and conservation.
+**BioTIME** (the Global database of assemblage time series for quantifying and
+understanding biodiversity change) is an international network and an open access
+database, free to anyone, anywhere in the world to use for education, research, 
+and conservation.
 
 ## Installation
 
@@ -29,7 +32,8 @@ There are several long-form articles that can help get you started:
 * [Getting Occurrence Data From GBIF](https://docs.ropensci.org/rgbif/articles/getting_occurrence_data.html)
 * [Working With Taxonomic Names](https://docs.ropensci.org/rgbif/articles/taxonomic_names.html)
 
-Most BioTIME users are interested in standardising the extent of the datasets. Here using the data subset included inside the package.
+Most BioTIME users are interested in standardising the extent of the datasets.
+Here using the data subset included inside the package.
 
 ```r 
 library(BioTIMEr)

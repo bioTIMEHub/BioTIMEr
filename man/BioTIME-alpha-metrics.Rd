@@ -31,21 +31,19 @@ run the alpha function
 }
 \examples{
 \dontrun{
-x <- data.frame(
-  Year = rep(rep(2010:2015, each = 4), times = 4),
-  matrix(data = rpois(384, 10), ncol = 4)
-  )
-  res <- getAlpha(x, rarefyID = 34)
+  x <- data.frame(
+    Year = rep(rep(2010:2015, each = 4), times = 4),
+    matrix(data = rpois(384, 10), ncol = 4)
+    )
+    res <- getAlpha(x, rarefyID = 34)
 }
 
 \dontrun{
-x <- data.frame(
-  Year = rep(rep(2010:2015, each = 4), times = 4),
-  Species = c(replicate(
-   n = 8L,
-   sample(letters, 24L, replace = FALSE))),
-  Abundance = rpois(24 * 8, 10),
-  rarefyID = rep(LETTERS[1L:8L], each = 24)
+  x <- data.frame(
+    Year = rep(rep(2010:2015, each = 4), times = 4),
+    Species = c(replicate(n = 8L, sample(letters, 24L, replace = FALSE))),
+    Abundance = rpois(24 * 8, 10),
+    rarefyID = rep(LETTERS[1L:8L], each = 24)
   )
   res <- getAlphaMetrics(x, "A")
 }

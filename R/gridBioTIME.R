@@ -7,8 +7,7 @@
 #' @importFrom dplyr %>%
 #' @examples
 #' \dontrun{
-#'   data("subBTquery.RData")
-#'   data("subBTmeta.RData")
+#'   library(BioTIMEr)
 #'   gridding(subBTmeta, subBTquery)
 #' }
 

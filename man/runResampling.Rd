@@ -7,7 +7,8 @@
 runResampling(df, ab, resamps = 1L)
 }
 \arguments{
-\item{df}{dataframe to be resampled (in the format of the output of the \code{\link{gridding}} function}
+\item{df}{dataframe to be resampled (in the format of the output of the
+\code{\link{gridding}} function}
 
 \item{ab}{set to "A" for abundance and "B" for biomass}
 

@@ -3,7 +3,8 @@
 #' @export
 #' @param x output from getAlphaMetrics() or getBetaDissimilarity() functions
 #' @param divType calculate regressions of alpha or beta results
-#' @returns a dataframe with yearly diversity results merged with results of linear regressions (intercept, slope, p-value, significance)
+#' @returns a dataframe with yearly diversity results merged with results of
+#' linear regressions (intercept, slope, p-value, significance)
 #' @importFrom dplyr %>%
 #' @examples
 #'   x <- data.frame(
@@ -13,7 +14,9 @@
 #'     rarefyID = rep(LETTERS[1L:8L], each = 24)
 #'   )
 #'   alpham <- getAlphaMetrics(x, "A")
-#'   getLinearRegressions(alpham, "alpha")
+#'   getLinearRegressions(x = alpham, divType = "alpha")
+#'   betam <- getBetaDissimilarity(x = x, "A")
+#'   getLinearRegressions(x = betam, divType = "beta")
 #'
 
 getLinearRegressions <- function(x, divType) {

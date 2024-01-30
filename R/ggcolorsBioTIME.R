@@ -16,10 +16,12 @@
 #' @importFrom ggplot2 discrete_scale
 #' @importFrom ggplot2 scale_fill_gradientn
 
-scale_color_biotime <- function(palette = "realms", discrete = TRUE, reverse = FALSE, ...) {
+scale_color_biotime <- function(palette = "realms", discrete = TRUE,
+                                reverse = FALSE, ...) {
   pal <- biotime_cols(palette = palette, reverse = reverse)
   if (discrete) {
-    ggplot2::discrete_scale("color", paste("biotime_", palette, sep = ''), palette = pal, ...)
+    ggplot2::discrete_scale("color", paste("biotime_", palette, sep = ''),
+                            palette = pal, ...)
   } else {
     ggplot2::scale_color_gradientn(colours = pal(256), ...)
   }

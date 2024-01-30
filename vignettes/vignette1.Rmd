@@ -1,678 +1,71 @@
 ---
-title: "BioTIME"
+title: "BioTIMEr"
 author: ""
 date: "`r Sys.Date()`"
-output: word_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{BioTIMEr first vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-BioTIMEr requires the following packages to run
-
-*This section also loads the data but needs changed for the proper GitHub vignette*
-
-```{r warning=FALSE, message=F}
-library(tidyverse)
-library(dggridR)
-library(vegan)
 library(knitr)
-
-btf<-read.csv("subBTquery.csv")
-meta<-read.csv("subBTmeta.csv")
-
+opts_chunk$set(echo = TRUE)
 ```
+
+BioTIMEr requires the following packages to run and, if needed, they were installed
+by R at the same time BioTIMEr was installed.
+
+- [dplyr](https://dplyr.tidyverse.org/)
+- [tidyr](https://tidyr.tidyverse.org/)
+- [ggplot2](https://ggplot2.tidyverse.org/)
+- [dggridR](https://rdrr.io/cran/dggridR/)
+- [vegan](https://vegandevs.github.io/vegan/)
+- [geosphere](https://github.com/rspatial/geosphere)
+
+```{r bt_package_loading, warning=FALSE, message=FALSE, eval=TRUE}
+library(dplyr)
+library(BioTIMEr)
+```
+
+When loading the BioTIMEr package, the BioTIME data is automatically loaded too.
+There are two files: 
+
+- subBTmeta: 
+- subBTquery: 
+
+```{r data_description, warning=FALSE, message=FALSE, eval=TRUE, include=TRUE}
+?subBTmeta
+?subBTquery
+```
+
+
+```{r filename_check, include=FALSE, echo=FALSE}
+# Just checking that the file names given above in the vignette are still correct
+file.exists("data/subBTmeta.RData")
+file.exists("data/subBTquery.RData")
+```
+
 
 ## These are the functions available in the package
 
 -------------------------------------------------------------------
-
-
-```{r echo=F}
-
-gridding <- function(meta, btf) {
-  bt <- dplyr::inner_join(meta, btf, by = 'STUDY_ID') %>%
-    dplyr::rename(Species = valid_name)
-  
-  meta <- meta %>%
-    dplyr::mutate(StudyMethod = dplyr::if_else(NUMBER_LAT_LONG == 1, "SL", NA))
-  bt <- bt %>%
-    dplyr::mutate(StudyMethod = dplyr::if_else(NUMBER_LAT_LONG == 1, 'SL', 'ML'))
-  
-  SL_extent_mean <- meta %>%
-    dplyr::filter(StudyMethod == 'SL' & AREA_SQ_KM <= 500) %>%
-    dplyr::summarise(extent_mean = mean(AREA_SQ_KM, na.rm = TRUE)) %>%
-    dplyr::pull(extent_mean)
-  SL_extent_sd <- meta %>%
-    dplyr::filter(StudyMethod == 'SL' & AREA_SQ_KM <= 500) %>%
-    dplyr::summarise(extent_sd = stats::sd(AREA_SQ_KM, na.rm = TRUE)) %>%
-    dplyr::pull(extent_sd)
-  
-  bt <- bt %>% dplyr::mutate(
-    StudyMethod = dplyr::if_else(
-      condition = AREA_SQ_KM < (SL_extent_mean + SL_extent_sd),
-      true = 'SL',
-      false = StudyMethod)
-  )
-  
-  bt <- bt %>%
-    dplyr::mutate(
-      lon_to_grid = dplyr::if_else(StudyMethod == 'SL', CENT_LONG, LONGITUDE),
-      lat_to_grid = dplyr::if_else(StudyMethod == 'SL', CENT_LAT, LATITUDE))
-  
-  oneyear <- bt %>%
-    dplyr::group_by(STUDY_ID) %>%
-    dplyr::filter(max(YEAR) - min(YEAR) == 0) %>%
-    dplyr::summarise() %>%
-    dplyr::collect() %>%
-    dplyr::pull(STUDY_ID)
-  
-  bt <- bt %>% dplyr::filter(!(STUDY_ID %in% oneyear))
-  
-  dgg <- dggridR::dgconstruct(res = 12)
-  res <- dggridR::dg_closest_res_to_area(dgg, SL_extent_mean + SL_extent_sd)
-  dgg <- dggridR::dgsetres(dgg, res)
-  bt <- as.data.frame(bt)
-  
-  bt$cell <- dggridR::dgGEO_to_SEQNUM(dgg, bt$lon_to_grid, bt$lat_to_grid)$seqnum
-  
-  check <- bt %>%
-    dplyr::group_by(StudyMethod, STUDY_ID) %>%
-    dplyr::summarise(n_cell = dplyr::n_distinct(cell))
-  
-  if (sum(dplyr::filter(check, StudyMethod == 'SL') %>% .$n_cell != 1) == 0) {
-    print("all SL studies have 1 grid cell")
-  } else { print("ERROR: some SL studies have > 1 grid cell") }
-  
-  check2 <- bt %>%
-    dplyr::group_by(StudyMethod, STUDY_ID, YEAR) %>%
-    dplyr::summarise(n_cell = dplyr::n_distinct(cell))
-  
-  # range(check2$n_cell)
-  
-  bt <- bt %>%
-    tidyr::unite(col = rarefyID, STUDY_ID, cell, sep = "_", remove = FALSE)
-  
-  rarefyID_coords_nest <- bt %>%
-    dplyr::ungroup() %>%
-    dplyr::filter(StudyMethod != 'SL') %>%
-    dplyr::select(STUDY_ID, rarefyID, LONGITUDE, LATITUDE) %>%
-    dplyr::distinct(rarefyID, LONGITUDE, LATITUDE, .keep_all = TRUE) %>%
-    dplyr::group_by(rarefyID) %>%
-    dplyr::mutate(n_locations = dplyr::n_distinct(LONGITUDE,LATITUDE)) %>%
-    dplyr::ungroup() %>%
-    dplyr::filter(n_locations > 1) %>%
-    dplyr::select(-n_locations) %>%
-    dplyr::group_by(STUDY_ID, rarefyID) %>%
-    tidyr::nest()
-  
-  cell_extent <- numeric()
-  centre_rarefyID_x <- numeric()
-  centre_rarefyID_y <- numeric()
-  vertices_check <- data.frame()
-  
-  for (i in 1:nrow(rarefyID_coords_nest)) {
-    ## check what it is doing
-    #print(paste('rarefyID', i, 'of',
-    #            length(unique(rarefyID_coords_nest$rarefyID))))
-    ################################################################
-    hull <- grDevices::chull(
-      x = unlist(rarefyID_coords_nest$data[[i]][,'LONGITUDE']),
-      y = unlist(rarefyID_coords_nest$data[[i]][,'LATITUDE']))
-    
-    vertices <- rarefyID_coords_nest$data[[i]][hull, c('LONGITUDE', 'LATITUDE')]
-    info <- cbind.data.frame(
-      Realm = rep(x = rarefyID_coords_nest$STUDY_ID[i],
-                  times = nrow(vertices)),
-      rarefyID = rep(x = rarefyID_coords_nest$rarefyID[i],
-                     times = nrow(vertices)),
-      vertices)
-    vertices_check <- rbind.data.frame(vertices_check, info)
-    
-    ## get the extent of cells in km2
-    cell_extent[i] = geosphere::areaPolygon(data.frame(
-      x = vertices$LONGITUDE,
-      y = vertices$LATITUDE))
-    ## get the centre points of the cells
-    centre_rarefyID_x[i] = geosphere::geomean(
-      cbind(x = vertices$LONGITUDE,
-            y = vertices$LATITUDE))[1]
-    centre_rarefyID_y[i] = geosphere::geomean(
-      cbind(x = vertices$LONGITUDE,
-            y = vertices$LATITUDE))[2]
-  }
-  
-  rarefyID_cell_centre <- cbind.data.frame(
-    rarefyID_coords_nest[, 1:2],
-    cell_extent,
-    rarefyID_x = centre_rarefyID_x,
-    rarefyID_y = centre_rarefyID_y)
-  rarefyID_cell_centre <- dplyr::as_tibble(rarefyID_cell_centre)
-  
-  ## can save here for large studies
-  #saveRDS(as.data.frame(rarefyID_cell_centre), "savedStage2.rds")
-  
-  ## combine these with the other studies
-  
-  SL_coords <- bt %>%
-    dplyr::ungroup() %>%
-    dplyr::filter(StudyMethod == 'SL') %>%
-    dplyr::select(STUDY_ID, rarefyID, CENT_LONG, CENT_LAT) %>%
-    ## cell extent = 0, need to rename the centre points to merge
-    dplyr::mutate(cell_extent = 0,
-                  rarefyID_x = CENT_LONG,
-                  rarefyID_y = CENT_LAT) %>%
-    dplyr::select(-CENT_LONG, -CENT_LAT)
-  
-  ML_coords <- dplyr::ungroup(bt) %>%
-    dplyr::filter(StudyMethod != 'SL') %>%
-    dplyr::select(STUDY_ID, rarefyID, LONGITUDE, LATITUDE) %>%
-    dplyr::distinct(rarefyID, LONGITUDE, LATITUDE, .keep_all = TRUE) %>%
-    dplyr::group_by(rarefyID) %>%
-    dplyr::mutate(n_locations = dplyr::n_distinct(LONGITUDE,LATITUDE)) %>%
-    dplyr::ungroup() %>%
-    dplyr::filter(n_locations == 1) %>%
-    dplyr::mutate(cell_extent = 0,
-                  rarefyID_x = LONGITUDE,
-                  rarefyID_y = LATITUDE) %>%
-    dplyr::select(-LONGITUDE, -LATITUDE, -n_locations)
-  
-  ## join everything
-  rarefyID_cell_centre <- dplyr::bind_rows(rarefyID_cell_centre,
-                                           SL_coords, ML_coords) %>%
-    dplyr::distinct(STUDY_ID, rarefyID, cell_extent, rarefyID_x, rarefyID_y)
-  
-  bt_grid <- bt %>%
-    dplyr::select(CLIMATE, REALM, TAXA, StudyMethod, SAMPLE_DESC,
-                  ABUNDANCE_TYPE, BIOMASS_TYPE, STUDY_ID, YEAR, PLOT,
-                  cell, Species, DAY, MONTH, ABUNDANCE, BIOMASS, taxon,
-                  resolution) %>%
-    tidyr::unite(col = rarefyID, STUDY_ID, cell, sep = "_", remove = FALSE)
-  k<-c(15,16)
-  bt_grid[,k]<-apply(bt_grid[,k], 2, function(x) as.numeric(as.character(x)))
-  
-  return(bt_grid)
-}
-
-rarefysamples <- function(Year, SampleID, Species, currency, resamps) {
-  # Checking arguments
-  checkmate::assertSetEqual(length(Year), c(length(SampleID), length(Species), length(currency)))
-  
-  minsample <- min(tapply(SampleID, Year, function(x) length(unique(x))))
-  
-  rareftab_list <- lapply( # beginning loop on repetitions
-    X = seq_len(resamps),
-    FUN = function(i) {
-      selected_indices <- unlist(lapply( # beginning sub loop on years
-        X = unique(Year),
-        FUN = function(y) {
-          samps <- unique(SampleID[Year == y])
-          sam <- sample(samps, minsample, replace = TRUE)
-          return(which(SampleID %in% sam & Year == y))
-        })) # end of loop on years
-      
-      tYear      <- Year[selected_indices]
-      tSpecies   <- Species[selected_indices]
-      tcurrency <- currency[selected_indices]
-      
-      raref <- stats::aggregate(x = tcurrency, by = list(tYear, tSpecies), FUN = sum)
-      raref <- data.frame(i, raref)
-      return(raref)
-      
-    }) # end of loop on repetitions
-  
-  rareftab <- do.call(rbind, rareftab_list)
-  return(stats::setNames(rareftab, c("repeats", "Year", "Species", "currency")))
-  
-} # end of function
-
-#' runResampling BioTIME
-#'
-#' @export
-#' @param df description of the df argument
-#' @return description of the object returned by runResampling
-#'
-
-runResampling <- function(df, ab) {
-  
-  if(ab=="A") {
-    TSrf <- list()
-    rfIDs <- unique(df$rarefyID)
-  
-    for (i in 1:length(rfIDs)) {
-      data <- df[df$rarefyID == rfIDs[i],]
-      TSrf[[i]] <- rarefysamples(data$YEAR, data$SAMPLE_DESC, data$Species, data$ABUNDANCE, 1)
-    }
-    names(TSrf) <- rfIDs
-  
-    rf <- do.call(rbind, TSrf)
-    rf <- data.frame(rf, rfID = rep(names(TSrf), times = unlist(lapply(TSrf, nrow))))
-    rf <- rf[!is.na(rf$Year),-1]
-    rownames(rf) <- NULL
-  
-    rf1 <- rf %>%
-      tidyr::separate(rfID, into =  c("STUDY_ID", "cell"), sep = "_", remove = F) %>%
-      dplyr::select(Year, Species, currency, rfID, STUDY_ID)
-      colnames(rf1)<-c("Year", "Species", "Abundance", "rarefyID", "StudyID")
-  }
-  if(ab=="B") {
-    TSrf <- list()
-    rfIDs <- unique(df$rarefyID)
-    
-    for (i in 1:length(rfIDs)) {
-      data <- df[df$rarefyID == rfIDs[i],]
-      TSrf[[i]] <- rarefysamples(data$YEAR, data$SAMPLE_DESC, data$Species, data$BIOMASS, 1)
-    }
-    names(TSrf) <- rfIDs
-    
-    rf <- do.call(rbind, TSrf)
-    rf <- data.frame(rf, rfID = rep(names(TSrf), times = unlist(lapply(TSrf, nrow))))
-    rf <- rf[!is.na(rf$Year),-1]
-    rownames(rf) <- NULL
-    
-    rf1 <- rf %>%
-      tidyr::separate(rfID, into =  c("STUDY_ID", "cell"), sep = "_", remove = F) %>%
-      dplyr::select(Year, Species, currency, rfID, STUDY_ID)
-    colnames(rf1)<-c("Year", "Species", "Biomass", "rarefyID", "StudyID")
-  }
-  return(rf1)
-}
-
-getAlpha<-function(x, id){
-  
-  yr<-unique(x[, 1]) 
-  x<-x[,-1]
-  
-  q1<-diversity(x, "shannon")
-  q2<-diversity(x, "simpson")
-  invS<-diversity(x, "inv")
-  
-  data.frame(rarefyID=id, Year=yr, S=apply(x>0, 1, sum), 
-             N=apply(x, 1, sum), maxN=apply(x, 1, max),
-             Shannon=q1, Simpson=q2, invSimpson=invS, 
-             PIE=apply(x, 1, function(s){n<-sum(s);(n/(n-1))*(1-sum((s/n)^2))}),
-             DomMc=apply(x, 1, function(s){y<-sort(s, decreasing=T);(y[1]+y[2])/sum(y)}),
-             expShannon=apply(x, 1, function(s){n<-sum(s);exp(-sum(s/n*ifelse(s==0,0,log(s/n))))})
-  )
-}
-
-#' run the alpha function
-#' @rdname BioTIME-metrics
-#' @export
-#' @author Faye Moyes
-#' @examples
-#'
-#' res<-getAlphaMetrics(x)
-
-getAlphaMetrics<-function(x, ab) {
-  
-  xd<-data.frame()
-  
-  if(ab=="A") {
-    x<-subset(x, !is.na(Abundance))
-    for(id in unique(x$rarefyID)) {
-      df<-subset(x, rarefyID==id)
-      nsp<-n_distinct(df$Species)
-      if(length(unique(df$Year))>1 & nsp>1) {
-        df<-select(df, Year, Species, Abundance)
-        y<-as.data.frame(pivot_wider(df, names_from=Species, 
-                                 values_from=Abundance))
-        y[is.na(y)]<-0
-        xr<-getAlpha(y, id)
-        xd<-rbind(xd, xr)
-      }
-    }
-  }
-  if(ab=="B") {
-    x<-subset(x, !is.na(Biomass))
-    for(id in unique(x$rarefyID)) {
-      df<-subset(x, rarefyID==id)
-      nsp<-n_distinct(df$Species)
-      if(length(unique(df$Year))>1 & nsp>1) {
-        df<-select(df, Year, Species, Biomass)
-        y<-as.data.frame(pivot_wider(df, names_from=Species, 
-                                   values_from=Biomass))
-        y[is.na(y)]<-0
-        xr<-getAlpha(y, id)
-        xd<-rbind(xd, xr)
-      }
-    }
-  }
-  return(xd)
-}
-
-
-#' Beta 
-#' @rdname BioTIME-metrics
-#' @export
-#' @importFrom vegan vegdist
-#' @author Faye Moyes
-#' @examples
-#'
-#' res<-getBetaDissimilarity(x) 
-#' where x is a long form data frame
-
-getBeta<-function(x, id) {
-  
-  yr<-unique(x[, 1]) 
-  x<-x[,-1]
-  xb<-x
-  xb[xb>1]<-1
-  getj<-vegdist(xb, "jaccard")
-  getmh<-vegdist(x, "horn")
-  getbc<-vegdist(x, "bray")
-  
-  jacc<-c(1, getj[1:(nrow(x))])[-1]
-  mh<-c(1, getmh[1:(nrow(x))])[-1]
-  bc<-c(1, getbc[1:(nrow(x))])[-1]
-  
-  xf<-data.frame(Year=yr, rarefyID=id, JaccardDiss=jacc, 
-                 MorisitaHornDiss=mh, BrayCurtisDiss=bc)
-  return(xf)
-} 
-
-
-#' run the beta function
-#' @param x (data.frame) Has to have columns Species and Abundance
-#' @return long with results for three beta metrics
-#' @author Faye Moyes
-
-getBetaDissimilarity<-function(x, ab) {
-  
-  xd<-data.frame()
-  
-  if(ab=="A") {
-    x<-subset(x, !is.na(Abundance))
-    for(id in unique(x$rarefyID)) {
-      df<-subset(x, rarefyID==id)
-      nsp<-n_distinct(df$Species)
-      if(length(unique(df$Year))<2 | nsp<2) {
-        xr<-c(NA, id, NA, NA, NA)
-      }
-      if(length(unique(df$Year))>1 & nsp>1) {
-        df<-select(df, Year, Species, Abundance)
-        y<-as.data.frame(pivot_wider(df, names_from=Species, 
-                                 values_from=Abundance))
-        y[is.na(y)]<-0
-        xr<-getBeta(y, id)
-        xd<-rbind(xd, xr)
-      }
-    }
-  }
-  if(ab=="B") {
-    x<-subset(x, !is.na(Biomass))
-    for(id in unique(x$rarefyID)) {
-      df<-subset(x, rarefyID==id)
-      nsp<-n_distinct(df$Species)
-      if(length(unique(df$Year))<2 | nsp<2) {
-        xr<-c(NA, id, NA, NA, NA)
-      }
-      if(length(unique(df$Year))>1 & nsp>1) {
-        df<-subset(x, rarefyID==id)
-        df<-select(df, Year, Species, Biomass)
-        y<-as.data.frame(pivot_wider(df, names_from=Species, 
-                                   values_from=Biomass))
-        y[is.na(y)]<-0
-        xr<-getBeta(y, id)
-        xd<-rbind(xd, xr)
-      }
-    }
-  }
-  
-  xd<-subset(xd, !is.na(JaccardDiss))
-  return(xd)
-}
-
-getLinearRegressions<-function(x, divType) {
-  
-  suppressWarnings({
-    
-    dft<-data.frame()
-    
-    if (divType=="alpha") {
-      
-      x<-subset(x, S!=1)
-      
-      y<-as.data.frame(x %>% group_by(rarefyID) %>% 
-                         summarise(nsp=n_distinct(Year)))
-      y2<-subset(y, nsp<3)
-      x<-subset(x, !rarefyID %in% y2$rarefyID)
-      
-      for(id in unique(x$rarefyID)){
-        dfits<-c()
-        f1<-subset(x, rarefyID==id)
-        fitd<-lm(f1$S~f1$Year)
-        fits<-lm(f1$N~f1$Year)
-        fitt<-lm(f1$Simpson~f1$Year)
-        fite<-lm(f1$invSimpson~f1$Year)
-        fitf<-lm(f1$DomMc~f1$Year)
-        fitg<-lm(f1$PIE~f1$Year)
-        fith<-lm(f1$expShannon~f1$Year)
-        fiti<-lm(f1$Shannon~f1$Year)
-        dfits<-c(dfits, id, fitd$coef[2], summary(fitd)$coefficients[2,4], 
-                 fits$coef[2], summary(fits)$coefficients[2,4], fitt$coef[2],
-                 summary(fitt)$coefficients[2,4], fite$coef[2], summary(fite)$coefficients[2,4], 
-                 fitf$coef[2], summary(fitf)$coefficients[2,4], fitg$coef[2],
-                 summary(fitg)$coefficients[2,4], fith$coef[2], summary(fith)$coefficients[2,4], 
-                 fiti$coef[2],summary(fiti)$coefficients[2,4], fitd$coef[1],
-                 fits$coef[1], fitt$coef[1], fite$coef[1], fitf$coef[1],
-                 fitg$coef[1], fith$coef[1], fiti$coef[1])
-        dft<-rbind(dft, dfits)
-        
-        colnames(dft)<-c("rarefyID", "SSl", "SPval", "NS", "NPval", 
-                         "simpS", "simpPval", "invSSl", "invSPval", "domMS", 
-                         "domMPval", "PIES", "PIEPval", "expShS", "expShPval", 
-                         "shanS", "shanPval", "SSI", "NI", "simpI",  
-                         "invSI", "domMI", "PIEI", "expShI", "shanI")
-      }
-      k<-c(2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25)
-      dft[,k]<-apply(dft[,k], 2, function(x) as.numeric(as.character(x)))
-      dft$sp<-ifelse(dft$SPval<.05, 1, 0)
-      dft$np<-ifelse(dft$NPval<.05, 1, 0)
-      dft$sip<-ifelse(dft$simpPval<.05, 1, 0)
-      dft$isp<-ifelse(dft$invSPval<.05, 1, 0)
-      dft$dmp<-ifelse(dft$domMPval<.05, 1, 0)
-      dft$pp<-ifelse(dft$PIEPval<.05, 1, 0)
-      dft$esp<-ifelse(dft$expShPval<.05, 1, 0)
-      dft$shp<-ifelse(dft$shanPval<.05, 1, 0)
-      ###############################################
-      b1<-select(dft, rarefyID, SSl, NS, simpS, invSSl, domMS, 
-                 PIES, expShS, shanS)
-      colnames(b1)<-c("rarefyID", "S", "N", "Simpson", "invSimpson",
-                      "DomMc", "PIE", "expShannon", "Shannon")
-      d1<-as.data.frame(pivot_longer(b1, -rarefyID, names_to="metric", 
-                                     values_to="slopes"))
-      b2<-select(dft, rarefyID, SPval, NPval, simpPval, invSPval, domMPval, 
-                 PIEPval, expShPval, shanPval)
-      colnames(b2)<-c("rarefyID", "S", "N", "Simpson", "invSimpson",
-                      "DomMc", "PIE", "expShannon", "Shannon")
-      d2<-as.data.frame(pivot_longer(b2, -rarefyID, names_to="metric", 
-                                     values_to="p-values"))
-      d3<-merge(d1, d2, by=c("rarefyID", "metric"))
-      b3<-select(dft, rarefyID, sp, np, sip, isp, dmp, pp, esp, shp)
-      colnames(b3)<-c("rarefyID", "S", "N", "Simpson", "invSimpson",
-                      "DomMc", "PIE", "expShannon", "Shannon")
-      d4<-as.data.frame(pivot_longer(b3, -rarefyID, names_to="metric", 
-                                     values_to="significance"))
-      d5<-merge(d3, d4, by=c("rarefyID", "metric"))
-      b4<-select(dft, rarefyID, SSI, NI, simpI, invSI, domMI, 
-                 PIEI, expShI, shanI)
-      colnames(b4)<-c("rarefyID", "S", "N", "Simpson", "invSimpson",
-                      "DomMc", "PIE", "expShannon", "Shannon")
-      d8<-as.data.frame(pivot_longer(b4, -rarefyID, names_to="metric", 
-                                     values_to="intercept"))
-      d7<-merge(d5, d8, by=c("rarefyID", "metric"))
-      d6<-as.data.frame(pivot_longer(x, -c(rarefyID, Year), 
-                                     names_to="metric", values_to="diversity"))
-      dftx<-merge(d6, d7, by=c("rarefyID", "metric"))
-      ###############################################
-    }
-    
-    if (divType=="beta") {
-      
-      x<-subset(x, !is.na(JaccardDiss))
-      
-      y<-as.data.frame(x %>% group_by(rarefyID) %>% 
-                         summarise(nsp=n_distinct(Year)))
-      y2<-subset(y, nsp<3)
-      x<-subset(x, !rarefyID %in% y2$rarefyID)
-      
-      for(id in unique(x$rarefyID)){
-        dfits<-c()
-        f1<-subset(x, rarefyID==id)
-        fitd<-lm(f1$JaccardDiss~f1$Year)
-        fits<-lm(f1$MorisitaHornDiss~f1$Year)
-        fitt<-lm(f1$BrayCurtisDiss~f1$Year)
-        dfits<-c(dfits, id, fitd$coef[2], summary(fitd)$coefficients[2,4], 
-                 fits$coef[2], summary(fits)$coefficients[2,4], fitt$coef[2],
-                 summary(fitt)$coefficients[2,4], fitd$coef[1], fits$coef[1],
-                 fitt$coef[1])
-        dft<-rbind(dft, dfits)
-        
-        colnames(dft)<-c("rarefyID", "jdS", "jdPval", "mhS", "mhPval", 
-                         "bcS", "bcPval", "jdI", "mhI", "bcI")
-      }
-      k<-c(2,3,4,5,6,7,8,9,10)
-      dft[,k]<-apply(dft[,k], 2, function(x) as.numeric(as.character(x)))
-      dft$jdp<-ifelse(dft$jdPval<.05, 1, 0)
-      dft$mhp<-ifelse(dft$mhPval<.05, 1, 0)
-      dft$bcp<-ifelse(dft$bcPval<.05, 1, 0)
-      #####################################
-      b1<-select(dft, rarefyID, jdS, mhS, bcS)
-      colnames(b1)<-c("rarefyID", "JaccardDiss", "MorisitaHornDiss", 
-                      "BrayCurtisDiss")
-      d1<-as.data.frame(pivot_longer(b1, -rarefyID, names_to="metric", 
-                                     values_to="slopes"))
-      b2<-select(dft, rarefyID, jdPval, mhPval, bcPval)
-      colnames(b2)<-c("rarefyID", "JaccardDiss", "MorisitaHornDiss", 
-                      "BrayCurtisDiss")
-      d2<-as.data.frame(pivot_longer(b2, -rarefyID, names_to="metric", 
-                                     values_to="p-values"))
-      d3<-merge(d1, d2, by=c("rarefyID", "metric"))
-      b3<-select(dft, rarefyID, jdp, mhp, bcp)
-      colnames(b3)<-c("rarefyID", "JaccardDiss", "MorisitaHornDiss", 
-                      "BrayCurtisDiss")
-      d4<-as.data.frame(pivot_longer(b3, -rarefyID, names_to="metric", 
-                                     values_to="significance"))
-      d5<-merge(d3, d4, by=c("rarefyID", "metric"))
-      b4<-select(dft, rarefyID, jdI, mhI, bcI)
-      colnames(b4)<-c("rarefyID", "JaccardDiss", "MorisitaHornDiss", 
-                      "BrayCurtisDiss")
-      d8<-as.data.frame(pivot_longer(b4, -rarefyID, names_to="metric", 
-                                     values_to="intercept"))
-      d7<-merge(d5, d8, by=c("rarefyID", "metric"))
-      d6<-as.data.frame(pivot_longer(x, -c(rarefyID, Year), 
-                                     names_to="metric", values_to="dissimilarity"))
-      dftx<-merge(d6, d7, by=c("rarefyID", "metric"))
-      #####################################
-    }
-    return(dftx)
-  })
-}
-
-themeBioTIME<-function(lp, fontSize, colx, coly) {
-  theme_bw()+
-    theme(axis.text=element_text(size=fontSize,color=colx),
-          axis.title=element_text(size=fontSize+1,face="bold"),
-          legend.position=lp, 
-          legend.text=element_text(size=fontSize),
-          legend.title=element_text(size=fontSize+1),
-          legend.direction="vertical",
-          plot.title=element_text(size=fontSize+2,face="bold", hjust=0.5), 
-          plot.background=element_blank(),
-          panel.grid.major=element_blank(),
-          panel.grid.minor=element_blank(),
-          strip.text=element_text(size=fontSize-2),
-          strip.background=element_rect(fill=coly),
-          axis.line=element_line(color=colx)
-    )
-}
-
-plotSlopes <- function(x, metric, cols, taxa, method, rf, divType) {
-  
-  checkmate::assertChoice(method, choices = c("metric", "taxa", "ind"))
-  checkmate::assertChoice(divType, choices = c("beta", "alpha"))
-  
-  switch(
-    divType,
-    beta = switch(
-      method,
-      metric = {
-        xy <- subset(x, metric == metric)
-        p <- ggplot(xy, aes(x = slopes)) +
-          geom_histogram(bins = 25, colour = "grey70", aes(fill = TAXA)) +
-          geom_vline(xintercept = 0, linetype = 2, colour = "firebrick") +
-          scale_fill_manual(values = cols) + ggtitle(metric) +
-          themeBioTIME("none", 12, "black", "grey90") +
-          facet_wrap(~TAXA, scale = "free_y")
-        return(p)
-      },
-      taxa = {
-        xy <- subset(x, TAXA == taxa)
-        p <- ggplot(xy, aes(x = slopes)) +
-          geom_histogram(bins = 25, colour = "grey70", aes(fill = metric)) +
-          geom_vline(xintercept = 0, linetype = 2, colour = "firebrick") +
-          scale_fill_manual(values = cols) + ggtitle(taxa) +
-          themeBioTIME("none", 12, "black", "grey90") +
-          facet_wrap(~metric)
-        return(p)
-      },
-      ind = {
-        xy <- subset(x, rarefyID == rf)
-        p <- ggplot(xy, aes(x = Year, y = dissimilarity)) + ggtitle(rf) +
-          geom_point(colour = "#155f49", size = 3) + ylab("Dissimilarity") +
-          stat_smooth(method = "lm", se = FALSE, linetype = 2, colour = "black") +
-          themeBioTIME("none", 12, "black", "#86db9c") +
-          facet_wrap(~metric)
-        return(p)
-      }),
-    
-    alpha = switch(
-      method,
-      metric = {
-        xy <- subset(x, metric == metric)
-        p <- ggplot(xy, aes(x = slopes)) + ggtitle(metric) +
-          geom_histogram(bins = 25, colour = "grey70", aes(fill = TAXA)) +
-          geom_vline(xintercept = 0, linetype = 2, colour = "firebrick") +
-          scale_fill_manual(values = cols) +
-          themeBioTIME("none", 12, "black", "grey90") +
-          facet_wrap(~TAXA, scales = "free")
-        return(p)
-      },
-      taxa = {
-        xy <- subset(x, TAXA == taxa)
-        p <- ggplot(xy, aes(x = slopes)) + ggtitle(taxa) +
-          geom_histogram(bins = 25, colour = "grey70", aes(fill = metric)) +
-          geom_vline(xintercept = 0, linetype = 2, colour = "firebrick") +
-          scale_fill_manual(values = cols) +
-          themeBioTIME("none", 12, "black", "grey90") +
-          facet_wrap(~metric, scale = "free")
-        return(p)
-      },
-      ind = {
-        xy <- subset(x, rarefyID == rf)
-        p <- ggplot(xy, aes(x = Year, y = diversity)) + ggtitle(rf) +
-          geom_point(colour = "#00483d", size = 3) + ylab("Diversity") +
-          stat_smooth(method = "lm", se = FALSE, linetype = 2, colour = "black") +
-          themeBioTIME("none", 12, "black", "#d9d956") +
-          facet_wrap(~metric, scales = "free")
-        return(p)
-      })
-  )
-}
-
-
-bio<-c("#00483d","#127c8e","#31b9c2","#86db9c","#d9d956" ,"#c0f176","#ffff67", "#cf7941")
-bioCol<-c("#cf7941", "#127c8e","#86db9c","#d9d956")
-
-
-```
+- gridding
+- rarefysamples
+- runResampling
+- getAlpha
+- getAlphaMetrics
+- getBeta
+- getBetaDissimilarity
+- getLinearRegressions
+- themeBioTIME
+- plotSlopes
 
 ----------------------------------------------------------------------
 
 ```{r eval=FALSE} 
-gridding(meta, btf) 
+gridding(subBTmeta, subBTquery) 
 ```
 
 where meta represents a long form data frame containing the meta data information for BioTIME studies and btf is a data frame containing long form data from the main BioTIME query (here a small representative subset) but downloadable in full at 'link for biotime'
@@ -697,85 +90,85 @@ where x is the output of the `runResampling()` function and ab is a character in
 
 
 ```{r eval=FALSE} 
-getLinearRegressions<-function(x, divType)
-  
+getLinearRegressions(x, divType)
 ```
 
 where x is the output of one of the metric functions, either `getAlphaMetrics()` or `getBetaDissimilarity()` and divType is a string input indicating whether the input is for "alpha" or "beta". The function returns a data frame containing the original input of yearly diversity metrics for each study merged with the results of a simple linear regression (OLS) on each metric for each time series, i.e. a single slope, intercept and p-value for each study.
 
 
 ```{r eval=FALSE} 
-plotSlopes <- function(x, metric, cols, taxa, method, rf, divType)
-  
+plotSlopes(x, metric, cols, taxa, method, rf, divType)
 ```
 
 where x is the output from the `getLinearRegressions()` function, metric is a chosen metric, i.e. Jaccard dissimilarity, cols is a colour palette, taxa is chosen taxon, i.e. fish or birds, method is the type of plot required, this is taken from "ind" (single study), "taxa" (all studies from a taxon) or "metric" (chosen metric), rf is the identity of a single time series, i.e. "53_10639590", divType is whether the user wishes to examine "alpha" or "beta" results.
 
 ## Now try to run some things
 
-```{r}
+```{r code_examples, eval=FALSE}
 
-df<-gridding(meta, btf)
+df <- gridding(subBTmeta, subBTquery)
 
 kable(head(df[6:11]))
 
-rf<-runResampling(df, "A")
+rf <- runResampling(df, "A")
 
 kable(head(rf))
 
-alpha<-getAlphaMetrics(rf, "A")
+alpha <- getAlphaMetrics(rf, "A")
 
 kable(head(alpha))
 
-beta<-getBetaDissimilarity(rf, "A")
+beta <- getBetaDissimilarity(rf, "A")
 
 kable(head(beta))
 
-alSl<-getLinearRegressions(alpha, "alpha")
+alSl <- getLinearRegressions(alpha, "alpha")
 
-beSl<-getLinearRegressions(beta, "beta")
+beSl <- getLinearRegressions(beta, "beta")
 
-meta2<-select(meta, STUDY_ID, TAXA, REALM)
-
-
-alphaSl<-as.data.frame(alSl %>% separate(., rarefyID, 
-                                            into= c("STUDY_ID", "cell"), sep="_", remove=F))
-
-ameta<-merge(alphaSl, meta2, by="STUDY_ID")
+meta2 <- select(subBTmeta, STUDY_ID, TAXA, REALM)
 
 
-betaSl<-as.data.frame(beSl %>% separate(., rarefyID, 
-                                          into= c("STUDY_ID", "cell"), sep="_", remove=F))
+alphaSl <- alSl %>% separate(rarefyID, 
+                             into = c("STUDY_ID", "cell"),
+                             sep = "_", remove = FALSE) %>% 
+  as.data.frame()
 
-bmeta<-merge(betaSl, meta2, by="STUDY_ID")
+ameta <- left_join(alphaSl, meta2, by = "STUDY_ID")
+
+
+betaSl <- beSl %>% separate(rarefyID, 
+                            into = c("STUDY_ID", "cell"),
+                            sep = "_", remove = FALSE) %>% 
+  as.data.frame()
+
+bmeta <- left_join(betaSl, meta2, by = "STUDY_ID")
 
 ```
 
-```{r fig.width=12, fig.height=10}
+```{r fig.width=12, fig.height=10, eval=FALSE}
 
 plotSlopes(ameta, "Shannon", bio, "Fish", "ind", "53_10639590", "alpha")
 
 ```
 
 
-```{r fig.width=8, fig.height=6}
+```{r fig.width=8, fig.height=6, eval=FALSE}
 
 plotSlopes(ameta, "Shannon", bioCol, "Fish", "metric", "53_10639590", "alpha")
 
 ```
 
 
-```{r fig.width=8, fig.height=4}
+```{r fig.width=8, fig.height=4, eval=FALSE}
 
 plotSlopes(bmeta, "JaccardDiss", bioCol, "Fish", "taxa", "53_10639590", "alpha")
 
 ```
 
 
-```{r fig.width=9, fig.height=6}
+```{r fig.width=9, fig.height=6, eval=FALSE}
 
 plotSlopes(bmeta, "JaccardDiss", bioCol, "Fish", "ind", "18_9044316", "beta")
 
 ```
-
-

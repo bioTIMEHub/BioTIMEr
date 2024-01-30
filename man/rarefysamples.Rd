@@ -13,7 +13,7 @@ rarefysamples(Year, SampleID, Species, currency, resamps)
 
 \item{Species}{Highest resolution of taxonomic description available}
 
-\item{currency}{- set to either Numerical abundance or biomass}
+\item{currency}{Set to either Numerical abundance or biomass}
 
 \item{resamps}{Number of repetitions}
 }
@@ -25,15 +25,15 @@ rarefy BioTIME
 }
 \examples{
 \dontrun{
-library(dplyr)
-library(BioTIMEr)
-data("subBTmeta")
-data("subBTquery")
-df <- gridding(subBTmeta, subBTquery) \%>\%
-  filter(rarefyID == "431_128327318")
-rarefysamples(Year = df$YEAR, SampleID = df$SAMPLE_DESC,
-  Species = df$Species, currency = df$ABUNDANCE,
-  resamps = 3L)
+  library(dplyr)
+  library(BioTIMEr)
+  data("subBTmeta")
+  data("subBTquery")
+  df <- gridding(subBTmeta, subBTquery) \%>\%
+    filter(rarefyID == "431_128327318")
+  rarefysamples(Year = df$YEAR, SampleID = df$SAMPLE_DESC,
+    Species = df$Species, currency = df$ABUNDANCE,
+    resamps = 3L)
 }
 
 }
