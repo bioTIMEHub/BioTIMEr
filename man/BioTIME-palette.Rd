@@ -27,7 +27,7 @@ Scale construction for ggplot use
 Scale construction for filling in ggplot
 }
 \details{
-USAGE NOTE: Remember to change these arguments when plotting colors continuously.
+USAGE NOTE: Remember to change these arguments when plotting colours continuously.
 }
 \author{
 Cher F. Y. Chow

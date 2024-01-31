@@ -150,23 +150,23 @@ bmeta <- merge(betaSl, meta2, by = "STUDY_ID")
 
 ```
 
-```{r plot_alpha_shannon_ind, fig.width=12, fig.height=10, eval=FALSE, cache = TRUE, tidy=TRUE}
+```{r plot_alpha_shannon_ind, fig.width=12, fig.height=10, eval=TRUE, cache = TRUE, tidy=TRUE}
 plotSlopes(x = ameta, metric = "Shannon", cols = scale_color_biotime(),
-           taxa = "Fish", method = "ind", rf = "53_10639590", divType = "alpha")
+           taxa = "Fish", method = "ind", rf = "10_9675315", divType = "alpha")
 ```
 
 
 ```{r plot_alpha_shannon_metric, fig.width=8, fig.height=6, eval=FALSE, cache = TRUE, tidy=TRUE}
-plotSlopes(x = ameta, metric = "Shannon", cols = bioCol, taxa = "Fish", 
-           method = "metric", rf = "53_10639590", divType = "alpha")
+plotSlopes(x = ameta, metric = "Shannon", cols = scale_color_biotime(), taxa = "Fish", method = "metric", rf = "10_9675315", divType = "alpha")
 ```
 
-```{r plot_beta_jaccard_ind, fig.width=9, fig.height=6, eval=FALSE, cache = TRUE, tidy=TRUE}
-plotSlopes(x = bmeta, metric = "JaccardDiss", cols = bioCol, taxa = "Fish",
-           method = "ind", rf = "18_9044316", divType = "beta")
+```{r plot_beta_jaccard_ind, fig.width=9, fig.height=6, eval=TRUE, cache = TRUE, tidy=TRUE}
+plotSlopes(x = bmeta, metric = "JaccardDiss", cols = scale_color_biotime(), taxa = "Fish",
+           method = "ind", rf = "10_9675315", divType = "beta")
 ```
 
 ```{r plot_beta_jaccard_taxa, fig.width=8, fig.height=4, eval=FALSE, cache = TRUE, tidy=TRUE}
-plotSlopes(x = bmeta, metric = "JaccardDiss", cols = bioCol, taxa = "Fish",
-           method = "taxa", rf = "53_10639590", divType = "alpha")
+plotSlopes(x = bmeta, metric = "JaccardDiss", cols = scale_color_biotime(),
+           taxa = "Fish",
+           method = "taxa", rf = "10_9675315", divType = "beta")
 ```
