@@ -22,7 +22,9 @@
 
 getAlpha <- function(x, id) {
   base::stopifnot(!is.null(id))
-  checkmate::assert_names(x = colnames(x)[[1L]], identical.to = "YEAR")
+  checkmate::assert_names(x = colnames(x)[[1L]],
+                          identical.to = "YEAR",
+                          what = "colnames")
 
   yr <- unique(x[, 1L])
   x <- x[, -1L]
@@ -91,12 +93,11 @@ getAlphaMetrics <- function(x, ab) {
       for (id in unique(x$rarefyID)) {
         df <- subset(x, rarefyID == id)
         if (dplyr::n_distinct(df$YEAR) > 1L && dplyr::n_distinct(df$Species) > 1L) {
-          df <- dplyr::select(df, YEAR, Species, Abundance)
-          y <- tidyr::pivot_wider(df, names_from = Species,
-                                  values_from = Abundance)
-          y[is.na(y)] <- 0
-          xr <- getAlpha(y, id)
-          xd <- rbind(xd, xr)
+          y <- dplyr::select(df, YEAR, Species, Abundance) %>%
+            tidyr::pivot_wider(names_from = Species,
+                               values_from = Abundance,
+                               values_fill = 0)
+          xd <- rbind(xd, getAlpha(x = y, id = id))
         } # end if
       } # end for
     }, # end base::switch
@@ -105,12 +106,11 @@ getAlphaMetrics <- function(x, ab) {
       for (id in unique(x$rarefyID)) {
         df <- subset(x, rarefyID == id)
         if (dplyr::n_distinct(df$YEAR) > 1L && dplyr::n_distinct(df$Species) > 1L) {
-          df <- dplyr::select(df, YEAR, Species, Biomass)
-          y <- tidyr::pivot_wider(df, names_from = Species,
-                                  values_from = Biomass)
-          y[is.na(y)] <- 0
-          xr <- getAlpha(y, id)
-          xd <- rbind(xd, xr)
+          y <- dplyr::select(df, YEAR, Species, Biomass) %>%
+            tidyr::pivot_wider(names_from = Species,
+                               values_from = Biomass,
+                               values_fill = 0)
+          xd <- rbind(xd, getAlpha(x = y, id = id))
         } # end if
       } # end for
     }) # end base::switch
@@ -151,9 +151,9 @@ getBeta <- function(x, id) {
   getmh <- vegan::vegdist(x, "horn")
   getbc <- vegan::vegdist(x, "bray")
 
-  jacc <- c(1, getj[1:(nrow(x))])[-1]
-  mh <- c(1, getmh[1:(nrow(x))])[-1]
-  bc <- c(1, getbc[1:(nrow(x))])[-1]
+  jacc <- c(1, getj[1L:nrow(x)])[-1]
+  mh <-  c(1, getmh[1L:nrow(x)])[-1]
+  bc <-  c(1, getbc[1L:nrow(x)])[-1]
 
   xf <- data.frame(YEAR = yr, rarefyID = id, JaccardDiss = jacc,
                    MorisitaHornDiss = mh, BrayCurtisDiss = bc)
@@ -196,12 +196,11 @@ getBetaDissimilarity <- function(x, ab) {
         if (nyear[[id]] < 2L || nsp[[id]] < 2L) {
           xr <- c(NA, id, NA, NA, NA)
         } else if (nyear[[id]] > 1L && nsp[[id]] > 1L) {
-          df <- dplyr::select(df, YEAR, Species, Abundance)
-          y <- tidyr::pivot_wider(df, names_from = Species,
-                                  values_from = Abundance)
-          y[is.na(y)] <- 0
-          xr <- getBeta(y, id)
-          xd <- rbind(xd, xr)
+          y <- dplyr::select(df, YEAR, Species, Abundance) %>%
+            tidyr::pivot_wider(names_from = Species,
+                               values_from = Abundance,
+                               values_fill = 0)
+          xd <- rbind(xd, getBeta(x = y, id = id))
         } # end if
       } # end for
     }, # end switch
@@ -212,13 +211,12 @@ getBetaDissimilarity <- function(x, ab) {
         if (nyear[[id]] < 2L || nsp[[id]] < 2L) {
           xr <- c(NA, id, NA, NA, NA)
         } else if (nyear[[id]] > 1L && nsp[[id]] > 1L) {
-          df <- subset(x, rarefyID == id)
-          df <- dplyr::select(df, YEAR, Species, Biomass)
-          y <- tidyr::pivot_wider(df, names_from = Species,
-                                  values_from = Biomass)
-          y[is.na(y)] <- 0
-          xr <- getBeta(y, id)
-          xd <- rbind(xd, xr)
+          y <- subset(x, rarefyID == id) %>%
+            dplyr::select(YEAR, Species, Biomass) %>%
+            tidyr::pivot_wider(names_from = Species,
+                               values_from = Biomass,
+                               values_fill = 0)
+          xd <- rbind(xd, getBeta(x = y, id = id))
         } # end if
       } # end for
     }) # end base::switch
