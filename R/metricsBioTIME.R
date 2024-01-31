@@ -77,12 +77,10 @@ getAlpha <- function(x, id) {
 
 getAlphaMetrics <- function(x, ab) {
   checkmate::assert_choice(ab, c("A","B"))
-  checkmate::assert_names(x = colnames(x),
+  checkmate::assert_names(x = colnames(x), what = "colnames",
                           must.include = c("YEAR","Species","rarefyID"),
-                          what = "colnames",
                           subset.of = c("YEAR","Species","rarefyID",
-                                        "Abundance","Biomass",
-                                        "STUDY_ID", "cell"))
+                                        "Abundance","Biomass"))
 
   xd <- data.frame()
 
@@ -182,6 +180,11 @@ getBeta <- function(x, id) {
 #' }
 
 getBetaDissimilarity <- function(x, ab) {
+  checkmate::assert_choice(ab, c("A","B"))
+  checkmate::assert_names(x = colnames(x), what = "colnames",
+                          must.include = c("YEAR","Species","rarefyID"),
+                          subset.of = c("YEAR","Species","rarefyID",
+                                        "Abundance","Biomass"))
 
   xd <- data.frame()
   nyear <- tapply(x$YEAR, x$rarefyID, dplyr::n_distinct)

@@ -10,18 +10,17 @@
 #' @importFrom dplyr %>%
 #' @examples
 #' \dontrun{
-#' library(BioTIMEr)
-#' df<-gridding(subBTmeta, subBTquery)
-#' runResampling(df, ab = "A")
+#'   library(BioTIMEr)
+#'   df<-gridding(subBTmeta, subBTquery)
+#'   runResampling(df, ab = "A")
 #' }
 #'
 
 runResampling <- function(df, ab, resamps = 1L) {
   checkmate::assert_choice(x = ab, choices = c("A", "B"))
   checkmate::assert_names(
-    x = colnames(df),
-    must.include = c("YEAR", "SAMPLE_DESC", "Species"),
-    what = "colnames")
+    x = colnames(df), what = "colnames",
+    must.include = c("YEAR", "SAMPLE_DESC", "Species"))
 
   if (resamps != 1L)
     message("You entered a resamps value different from 1, this option is not implemented at the moment.
@@ -50,7 +49,7 @@ Use rarefysamples directly if more repetitions are needed.")
         dplyr::select(-repeats, YEAR, Species, currency, rfID, STUDY_ID) %>%
         dplyr::rename(Abundance = currency, rarefyID = rfID) %>%
         return()
-    }, # end of switch
+    }, # end of ab == A
     B = {
       rfIDs <- unique(df$rarefyID)
       TSrf <- sapply(
@@ -71,7 +70,7 @@ Use rarefysamples directly if more repetitions are needed.")
         dplyr::select(-repeats, YEAR, Species, currency, rfID, STUDY_ID) %>%
         dplyr::rename(Biomass = currency, rarefyID = rfID) %>%
         return()
-    }) # end of base::switch
+    })  # end of ab == B
 }
 
 

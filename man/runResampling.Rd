@@ -23,9 +23,9 @@ runResampling BioTIME
 }
 \examples{
 \dontrun{
-library(BioTIMEr)
-df<-gridding(subBTmeta, subBTquery)
-runResampling(df, ab = "A")
+  library(BioTIMEr)
+  df<-gridding(subBTmeta, subBTquery)
+  runResampling(df, ab = "A")
 }
 
 }

@@ -27,12 +27,12 @@ getLinearRegressions <- function(x, divType) {
     divType,
     alpha = {
       checkmate::assert_names(
-        x = colnames(x),
+        x = colnames(x), what = "colnames",
         must.include = c("rarefyID", "YEAR", "S", "N", "Simpson",
                          "invSimpson", "DomMc", "PIE", "expShannon",
                          "Shannon"))
 
-      x <- dplyr::filter(x, S != 1)
+      x <- subset(x, S != 1)
 
       y <- x %>%
         dplyr::group_by(rarefyID) %>%
@@ -56,14 +56,14 @@ getLinearRegressions <- function(x, divType) {
 
         suppressWarnings({
           dfits <- c(dfits, id,
-                     fitd$coef[[2L]], summary(fitd)$coefficients[2, 4],
-                     fits$coef[[2L]], summary(fits)$coefficients[2, 4],
-                     fitt$coef[[2L]], summary(fitt)$coefficients[2, 4],
-                     fite$coef[[2L]], summary(fite)$coefficients[2, 4],
-                     fitf$coef[[2L]], summary(fitf)$coefficients[2, 4],
-                     fitg$coef[[2L]], summary(fitg)$coefficients[2, 4],
-                     fith$coef[[2L]], summary(fith)$coefficients[2, 4],
-                     fiti$coef[[2L]], summary(fiti)$coefficients[2, 4],
+                     fitd$coef[[2L]], summary(fitd)$coefficients[2L, 4L],
+                     fits$coef[[2L]], summary(fits)$coefficients[2L, 4L],
+                     fitt$coef[[2L]], summary(fitt)$coefficients[2L, 4L],
+                     fite$coef[[2L]], summary(fite)$coefficients[2L, 4L],
+                     fitf$coef[[2L]], summary(fitf)$coefficients[2L, 4L],
+                     fitg$coef[[2L]], summary(fitg)$coefficients[2L, 4L],
+                     fith$coef[[2L]], summary(fith)$coefficients[2L, 4L],
+                     fiti$coef[[2L]], summary(fiti)$coefficients[2L, 4L],
                      fitd$coef[[1L]], fits$coef[[1L]], fitt$coef[[1L]],
                      fite$coef[[1L]], fitf$coef[[1L]], fitg$coef[[1L]],
                      fith$coef[[1L]], fiti$coef[[1L]])
@@ -127,7 +127,7 @@ getLinearRegressions <- function(x, divType) {
     ###############################################
     beta = {
       checkmate::assert_names(
-        x = colnames(x),
+        x = colnames(x), what = "colnames",
         must.include = c("YEAR", "rarefyID", "JaccardDiss", "MorisitaHornDiss",
                          "BrayCurtisDiss"))
 
@@ -150,9 +150,9 @@ getLinearRegressions <- function(x, divType) {
 
         suppressWarnings({
           dfits <- c(dfits, id,
-                     fitd$coef[[2L]], summary(fitd)$coefficients[2, 4],
-                     fits$coef[[2L]], summary(fits)$coefficients[2, 4],
-                     fitt$coef[[2L]], summary(fitt)$coefficients[2, 4],
+                     fitd$coef[[2L]], summary(fitd)$coefficients[2L, 4L],
+                     fits$coef[[2L]], summary(fits)$coefficients[2L, 4L],
+                     fitt$coef[[2L]], summary(fitt)$coefficients[2L, 4L],
                      fitd$coef[[1L]], fits$coef[[1L]], fitt$coef[[1L]])
           dft <- rbind(dft, dfits)
         })
@@ -199,7 +199,6 @@ getLinearRegressions <- function(x, divType) {
         dplyr::left_join(d4, by = c("rarefyID", "metric")) %>%
         dplyr::left_join(d8, by = c("rarefyID", "metric")) %>%
         as.data.frame()
-      #####################################
     })
   return(dftx)
 }

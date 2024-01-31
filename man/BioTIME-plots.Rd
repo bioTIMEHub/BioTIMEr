@@ -70,6 +70,6 @@ plrf <- plotSlopes(bmeta, "N", bioCol, "Fish", "ind","18_9044316", "beta")
 }
 \dontrun{
 fig1 <- ggplot2::ggplot() +
-          themeBioTIME()
+          themeBioTIME("none", 12, "black", "grey90")
 }
 }

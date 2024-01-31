@@ -153,7 +153,7 @@ plotSlopes <- function(x, metric, cols, taxa, method, rf, divType) {
 #' @examples
 #' \dontrun{
 #' fig1 <- ggplot2::ggplot() +
-#'           themeBioTIME()
+#'           themeBioTIME("none", 12, "black", "grey90")
 #' }
 
 themeBioTIME <- function(lp, fontSize, colx, coly) {
