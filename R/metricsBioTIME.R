@@ -1,6 +1,5 @@
 #' Alpha
 #' @rdname BioTIME-alpha-metrics
-#' @export
 #' @param x (data.frame) First column has to be year and following columns
 #' contain species abundances.
 #' @param id definition of id
@@ -126,7 +125,6 @@ getAlphaMetrics <- function(x, ab) {
 #' metrics
 #' @importFrom vegan vegdist
 #' @author Faye Moyes
-#' @export
 #' @examples
 #' \dontrun{
 #' x <- data.frame(

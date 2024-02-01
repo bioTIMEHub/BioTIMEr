@@ -1,11 +1,11 @@
 #' runResampling BioTIME
-#'
+#' Uses the output of `gridding` and applies the `rarefysamples` function.
 #' @export
 #' @param df dataframe to be resampled (in the format of the output of the
 #'  \code{\link{gridding}} function
 #' @param ab set to "A" for abundance and "B" for biomass
-#' @param resamps Not implemented at the moment.
-#'    Number of repetitions passed to \code{\link{rarefysamples}}. 1 by default.
+#' @param resamps Number of repetitions passed to \code{\link{rarefysamples}}.
+#'    1 by default.
 #' @returns data.frame containing rarefied studies
 #' @importFrom dplyr %>%
 #' @examples
@@ -21,11 +21,6 @@ runResampling <- function(df, ab, resamps = 1L) {
   checkmate::assert_names(
     x = colnames(df), what = "colnames",
     must.include = c("YEAR", "SAMPLE_DESC", "Species"))
-
-  if (resamps != 1L)
-    message("You entered a resamps value different from 1, this option is not implemented at the moment.
-runResampling will run with only one repetition.
-Use rarefysamples directly if more repetitions are needed.")
 
   base::switch(
     ab,
@@ -74,25 +69,39 @@ Use rarefysamples directly if more repetitions are needed.")
 }
 
 
-#' rarefy BioTIME
-#' @export
+#' Rarefy BioTIME
+#' Applies sample-based rarefaction to standardize the number of samples per year
+#'    within a cell-level time-series.
 #' @param Year Integer representing year of record
 #' @param SampleID Description of unique sampling event, this is used to resample
 #' @param Species Highest resolution of taxonomic description available
-#' @param currency Set to either Numerical abundance or biomass
-#' @param resamps Number of repetitions
-#' @returns A data.frame with rarefied abundances/biomasses
+#' @param currency Set to either (numeric) abundance or biomass
+#' @param resamps Number of times the function randomly draws among the samples.
+#' @returns Returns a single long form data frame containing the total currency
+#'    of interest (sum) for each species in each year.
+#' @details
+#'    Sample-based rarefaction prevents temporal variation in sampling effort
+#'    from affecting diversity estimates [REF]. `rarefysamples()` is a function
+#'    used to count the number of samples taken in each year, identify the
+#'    minimum number of samples, and then use this minimum to randomly
+#'    resample each year down to that number of samples, after which standard
+#'    biodiversity metrics (e.g. \code{\link{getAlpha}}, \code{\link{getBeta}})
+#'    can be calculated. Here sampling effort is defined as the number of
+#'    samples (SampleID) taken in each year. `currency` is a numerical column
+#'    with the variable (abundance or biomass) to be retained during the
+#'    sample-based rarefaction, while `resamps` can be used to define multiple
+#'    iterations (see examples). To apply directly to the output from the
+#'    \code{\link{gridding}} function use \code{\link{runResampling}}.
+#'
 #' @examples
 #' \dontrun{
 #'   library(dplyr)
 #'   library(BioTIMEr)
-#'   data("subBTmeta")
-#'   data("subBTquery")
 #'   df <- gridding(subBTmeta, subBTquery) %>%
-#'     filter(assemblageID == "431_128327318")
+#'     filter(assemblageID == "10_358678")
 #'   rarefysamples(Year = df$YEAR, SampleID = df$SAMPLE_DESC,
 #'     Species = df$Species, currency = df$ABUNDANCE,
-#'     resamps = 3L)
+#'     resamps = 3)
 #'}
 #'
 
@@ -101,6 +110,8 @@ rarefysamples <- function(Year, SampleID, Species, currency, resamps) {
   checkmate::assertSetEqual(x = length(Year),
                             y = c(length(SampleID), length(Species),
                                   length(currency)))
+  checkmate::assert_integerish(x = resamps, lower = 1,
+                               any.missing = FALSE, len = 1L)
 
   # Computing minimal effort per year in this assemblageID
   minsample <- min(tapply(SampleID, Year, function(x) length(unique(x))))
