@@ -3,7 +3,6 @@
 #' @param x (data.frame) First column has to be year and following columns
 #' contain species abundances.
 #' @param id definition of id
-#' @importFrom vegan diversity
 #' @author Faye Moyes
 #' @examples
 #' \dontrun{
@@ -11,7 +10,7 @@
 #'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
 #'     matrix(data = rpois(384, 10), ncol = 4)
 #'     )
-#'     res <- getAlpha(x, assemblageID = 34)
+#'     res <- getAlpha(x, id = 34)
 #' }
 #'
 #' @returns A data frame with results for S (species richness), N (numerical abundance),
@@ -28,30 +27,36 @@ getAlpha <- function(x, id) {
   yr <- unique(x[, 1L])
   x <- x[, -1L]
 
+  S <-     apply(x > 0, 1, sum)
+  N <-     apply(x, 1, sum)
+  maxN <-  apply(x, 1, max)
+
+  DomMc = apply(x, 1, function(s) {
+    y <- sort(s, decreasing = TRUE)
+    (y[[1L]] + y[[2L]]) / sum(y)})
+
+  PIE = apply(x, 1, function(s) {
+    n <- sum(s)
+    (n / (n - 1)) * (1 - sum((s / n)^2))})
+
+  x <- base::sweep(x, 1, N, "/")
+  Shannon <- apply( -x * log(x), 1, sum, na.rm = TRUE)
+  H <- apply(x * x, 1, sum, na.rm = TRUE)
+
   return(
     data.frame(
       assemblageID = id,
       YEAR = yr,
+      S,
+      N,
+      maxN,
 
-      S = apply(x > 0, 1, sum),
-      N = apply(x, 1, sum),
-      maxN = apply(x, 1, max),
-
-      Shannon = vegan::diversity(x, "shannon"),
-      Simpson = vegan::diversity(x, "simpson"),
-      invSimpson = vegan::diversity(x, "inv"),
-
-      PIE = apply(x, 1, function(s) {
-        n <- sum(s)
-        (n / (n - 1)) * (1 - sum((s / n)^2))}),
-
-      DomMc = apply(x, 1, function(s) {
-        y <- sort(s, decreasing = TRUE)
-        (y[1] + y[2]) / sum(y)}),
-
-      expShannon = apply(x, 1, function(s) {
-        n <- sum(s)
-        exp(-sum(s / n * ifelse(s == 0, 0, log(s / n))))})
+      Shannon,
+      Simpson = 1 - H,
+      invSimpson = 1 / H,
+      PIE,
+      DomMc,
+      expShannon = exp(Shannon)
     )
   )
 }
@@ -76,6 +81,8 @@ getAlpha <- function(x, id) {
 
 getAlphaMetrics <- function(x, ab) {
   checkmate::assert_choice(ab, c("A","B"))
+  checkmate::assert_numeric(x = base::ifelse(ab == "A", x$Abundance, x$Biomass),
+                            lower = 0, any.missing = FALSE)
   checkmate::assert_names(x = colnames(x), what = "colnames",
                           must.include = c("YEAR","Species","assemblageID"),
                           subset.of = c("YEAR","Species","assemblageID",
@@ -127,13 +134,9 @@ getAlphaMetrics <- function(x, ab) {
 #' @author Faye Moyes
 #' @examples
 #' \dontrun{
-#' x <- data.frame(
-#'   YEAR = rep(rep(2010:2015, each = 4), times = 4),
-#'   Species = c(replicate(
-#'    n = 8L,
-#'    sample(letters, 24L, replace = FALSE))),
-#'   Abundance = rpois(24 * 8, 10),
-#'   ID = rep(LETTERS[1L:8L], each = 24)
+#'   x <- data.frame(
+#'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
+#'     matrix(data = rpois(384, 2), ncol = 4)
 #'   )
 #'   res <- getBeta(x, "A")
 #' }
@@ -144,9 +147,9 @@ getBeta <- function(x, id) {
   x <- x[, -1L]
   xb <- x
   xb[xb > 1] <- 1
-  getj <- vegan::vegdist(xb, "jaccard")
-  getmh <- vegan::vegdist(x, "horn")
-  getbc <- vegan::vegdist(x, "bray")
+  getj <- vegan::vegdist(xb, "jaccard") #10
+  getmh <- vegan::vegdist(x, "horn") #8
+  getbc <- vegan::vegdist(x, "bray") #4
 
   jacc <- c(1, getj[1L:nrow(x)])[-1]
   mh <-  c(1, getmh[1L:nrow(x)])[-1]
@@ -160,9 +163,11 @@ getBeta <- function(x, id) {
 #' run the beta function
 #' @export
 #' @rdname BioTIME-beta-metrics
-#' @param x (data.frame) Has to have columns Species, YEAR and Abundance or Biomass
+#' @param x (data.frame) Has to have columns Species, YEAR, assemblageID,
+#'   STUDY_ID, cell and Abundance or Biomass
 #' @param ab character input for chosen currency - "A" = Abundance or "B" = Biomass
-#' @returns getBetaMetrics returns a long data.frame with results for three beta metrics
+#' @returns getBetaMetrics returns a long data.frame with results for three beta
+#'   metrics.
 #' @author Faye Moyes
 #' @examples
 #' \dontrun{
@@ -180,6 +185,8 @@ getBeta <- function(x, id) {
 
 getBetaMetrics <- function(x, ab) {
   checkmate::assert_choice(ab, c("A","B"))
+  checkmate::assert_numeric(x = base::ifelse(ab == "A", x$Abundance, x$Biomass),
+                            lower = 0, any.missing = FALSE)
   checkmate::assert_names(x = colnames(x), what = "colnames",
                           must.include = c("YEAR","Species","assemblageID"),
                           subset.of = c("YEAR","Species","assemblageID",

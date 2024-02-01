@@ -10,7 +10,8 @@ getBeta(x, id)
 getBetaMetrics(x, ab)
 }
 \arguments{
-\item{x}{(data.frame) Has to have columns Species, YEAR and Abundance or Biomass}
+\item{x}{(data.frame) Has to have columns Species, YEAR, assemblageID,
+STUDY_ID, cell and Abundance or Biomass}
 
 \item{id}{definition of id}
 
@@ -20,7 +21,8 @@ getBetaMetrics(x, ab)
 getBeta returns a data.frame with three beta diversity dissimilarity
 metrics
 
-getBetaMetrics returns a long data.frame with results for three beta metrics
+getBetaMetrics returns a long data.frame with results for three beta
+  metrics.
 }
 \description{
 Beta
@@ -29,13 +31,9 @@ run the beta function
 }
 \examples{
 \dontrun{
-x <- data.frame(
-  YEAR = rep(rep(2010:2015, each = 4), times = 4),
-  Species = c(replicate(
-   n = 8L,
-   sample(letters, 24L, replace = FALSE))),
-  Abundance = rpois(24 * 8, 10),
-  ID = rep(LETTERS[1L:8L], each = 24)
+  x <- data.frame(
+    YEAR = rep(rep(2010:2015, each = 4), times = 4),
+    matrix(data = rpois(384, 2), ncol = 4)
   )
   res <- getBeta(x, "A")
 }

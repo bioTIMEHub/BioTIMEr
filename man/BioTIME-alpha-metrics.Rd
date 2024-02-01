@@ -35,7 +35,7 @@ run the alpha function
     YEAR = rep(rep(2010:2015, each = 4), times = 4),
     matrix(data = rpois(384, 10), ncol = 4)
     )
-    res <- getAlpha(x, assemblageID = 34)
+    res <- getAlpha(x, id = 34)
 }
 
 \dontrun{
