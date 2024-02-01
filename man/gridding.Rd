@@ -17,7 +17,7 @@ gridding(meta, btf, res = 12L)
 \value{
 Returns a data.frame, with selected columns from the btf and meta
   data.frames, an extra integer column called cell and two character columns
-  called StudyMethod and AssemblageID (concatenation of study_ID and cell).
+  called StudyMethod and assemblageID (concatenation of study_ID and cell).
 }
 \description{
 gridding BioTIME

@@ -2,7 +2,8 @@
 % Please edit documentation in R/rarefyBioTIME.R
 \name{runResampling}
 \alias{runResampling}
-\title{runResampling BioTIME}
+\title{runResampling BioTIME
+Uses the output of `gridding` and applies the `rarefysamples` function.}
 \usage{
 runResampling(df, ab, resamps = 1L)
 }
@@ -12,14 +13,15 @@ runResampling(df, ab, resamps = 1L)
 
 \item{ab}{set to "A" for abundance and "B" for biomass}
 
-\item{resamps}{Not implemented at the moment.
-Number of repetitions passed to \code{\link{rarefysamples}}. 1 by default.}
+\item{resamps}{Number of repetitions passed to \code{\link{rarefysamples}}.
+1 by default.}
 }
 \value{
 data.frame containing rarefied studies
 }
 \description{
 runResampling BioTIME
+Uses the output of `gridding` and applies the `rarefysamples` function.
 }
 \examples{
 \dontrun{

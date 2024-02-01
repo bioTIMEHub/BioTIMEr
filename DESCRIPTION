@@ -1,13 +1,15 @@
 Package: BioTIMEr
 Type: Package
 Title: Helper functions to explore, standardise and analyse the BioTIME database
-Version: 0.1.9011
+Version: 0.1.9012
 Authors@R: c(
   person("Alban", "Sagouis", role = c("aut","cre"),
         email = "alban.sagouis@idiv.de",
         comment = c(ORCID = "0000-0002-3827-1063")),
   person("Faye", "Moyes", role = c("aut","cph"),
         comment = c(ORCID = "0000-0001-9687-0593")),
+  person("Santos Martins", "Inés", role = "aut",
+        comment = c(ORCID = "0000-0003-4328-7286")),
   person("Shane A.", "Blowes", role = "ctb",
         comment = c(ORCID = "0000-0001-6310-3670")),
   person("Viviana", "Brambilla", role = "ctb",

@@ -6,7 +6,7 @@
 #' @param res (integer) XXXthe resolution for the grid sizeXXX
 #' @returns Returns a data.frame, with selected columns from the btf and meta
 #'   data.frames, an extra integer column called cell and two character columns
-#'   called StudyMethod and AssemblageID (concatenation of study_ID and cell).
+#'   called StudyMethod and assemblageID (concatenation of study_ID and cell).
 #' @details
 #' Each BioTIME study contains distinct samples measured (with a
 #'   consistent methodology) over time, which could be fixed plots (i.e. SL or
