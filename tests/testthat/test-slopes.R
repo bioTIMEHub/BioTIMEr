@@ -17,7 +17,7 @@ test_that("slopes works consistently", {
     Abundance = stats::rpois(24 * 8, 2),
     assemblageID = base::rep(LETTERS[1L:8L], each = 24)
   )
-  betam <- getBetaDissimilarity(xb, "A")
+  betam <- getBetaMetrics(xb, "A")
 
   # Tests
   expect_snapshot(getLinearRegressions(x = alpham, divType = "alpha"))

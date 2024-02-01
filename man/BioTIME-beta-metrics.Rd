@@ -2,12 +2,12 @@
 % Please edit documentation in R/metricsBioTIME.R
 \name{getBeta}
 \alias{getBeta}
-\alias{getBetaDissimilarity}
+\alias{getBetaMetrics}
 \title{Beta}
 \usage{
 getBeta(x, id)
 
-getBetaDissimilarity(x, ab)
+getBetaMetrics(x, ab)
 }
 \arguments{
 \item{x}{(data.frame) Has to have columns Species, YEAR and Abundance or Biomass}
@@ -20,7 +20,7 @@ getBetaDissimilarity(x, ab)
 getBeta returns a data.frame with three beta diversity dissimilarity
 metrics
 
-getBetaDissimilarity returns a long data.frame with results for three beta metrics
+getBetaMetrics returns a long data.frame with results for three beta metrics
 }
 \description{
 Beta
@@ -49,7 +49,7 @@ x <- data.frame(
   assemblageID = rep(LETTERS[1L:8L], each = 24)
   )
 
-res <- getBetaDissimilarity(x, "A")
+res <- getBetaMetrics(x, "A")
 }
 }
 \author{

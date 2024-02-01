@@ -1,7 +1,7 @@
 #' Get Linear Regressions BioTIME
 #'
 #' @export
-#' @param x output from getAlphaMetrics() or getBetaDissimilarity() functions
+#' @param x output from getAlphaMetrics() or getBetaMetrics() functions
 #' @param divType calculate regressions of alpha or beta results
 #' @returns a dataframe with yearly diversity results merged with results of
 #' linear regressions (intercept, slope, p-value, significance)
@@ -15,7 +15,7 @@
 #'   )
 #'   alpham <- getAlphaMetrics(x, "A")
 #'   getLinearRegressions(x = alpham, divType = "alpha")
-#'   betam <- getBetaDissimilarity(x = x, "A")
+#'   betam <- getBetaMetrics(x = x, "A")
 #'   getLinearRegressions(x = betam, divType = "beta")
 #'
 

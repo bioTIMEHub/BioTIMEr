@@ -162,7 +162,7 @@ getBeta <- function(x, id) {
 #' @rdname BioTIME-beta-metrics
 #' @param x (data.frame) Has to have columns Species, YEAR and Abundance or Biomass
 #' @param ab character input for chosen currency - "A" = Abundance or "B" = Biomass
-#' @returns getBetaDissimilarity returns a long data.frame with results for three beta metrics
+#' @returns getBetaMetrics returns a long data.frame with results for three beta metrics
 #' @author Faye Moyes
 #' @examples
 #' \dontrun{
@@ -175,10 +175,10 @@ getBeta <- function(x, id) {
 #'   assemblageID = rep(LETTERS[1L:8L], each = 24)
 #'   )
 #'
-#' res <- getBetaDissimilarity(x, "A")
+#' res <- getBetaMetrics(x, "A")
 #' }
 
-getBetaDissimilarity <- function(x, ab) {
+getBetaMetrics <- function(x, ab) {
   checkmate::assert_choice(ab, c("A","B"))
   checkmate::assert_names(x = colnames(x), what = "colnames",
                           must.include = c("YEAR","Species","assemblageID"),

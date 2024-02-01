@@ -7,7 +7,7 @@
 getLinearRegressions(x, divType)
 }
 \arguments{
-\item{x}{output from getAlphaMetrics() or getBetaDissimilarity() functions}
+\item{x}{output from getAlphaMetrics() or getBetaMetrics() functions}
 
 \item{divType}{calculate regressions of alpha or beta results}
 }
@@ -27,7 +27,7 @@ Get Linear Regressions BioTIME
   )
   alpham <- getAlphaMetrics(x, "A")
   getLinearRegressions(x = alpham, divType = "alpha")
-  betam <- getBetaDissimilarity(x = x, "A")
+  betam <- getBetaMetrics(x = x, "A")
   getLinearRegressions(x = betam, divType = "beta")
 
 }
