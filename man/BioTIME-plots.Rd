@@ -5,7 +5,7 @@
 \alias{themeBioTIME}
 \title{Plot slopes BioTIME}
 \usage{
-plotSlopes(x, metric, cols, taxa, method, rf, divType)
+plotSlopes(x, metric, cols, taxa, method, assemblageID, divType)
 
 themeBioTIME(lp, fontSize, colx, coly)
 }
@@ -20,7 +20,7 @@ themeBioTIME(lp, fontSize, colx, coly)
 
 \item{method}{Parameter description}
 
-\item{rf}{Parameter description}
+\item{assemblageID}{Parameter description}
 
 \item{divType}{Parameter description}
 

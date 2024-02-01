@@ -7,7 +7,7 @@
 #' @param cols Parameter description
 #' @param taxa Parameter description
 #' @param method Parameter description
-#' @param rf Parameter description
+#' @param assemblageID Parameter description
 #' @param divType Parameter description
 #' @returns A plot
 #' @examples
@@ -41,14 +41,14 @@
 #' }
 
 
-plotSlopes <- function(x, metric, cols, taxa, method, rf, divType) {
+plotSlopes <- function(x, metric, cols, taxa, method, assemblageID, divType) {
 
   checkmate::assertChoice(x = taxa,
                           choices = c("Amphibians & reptiles", "Birds", "Chromista",
                                       "Fish", "Fungi", "Mammals", "Plants"))
   checkmate::assertChoice(x = method, choices = c("metric", "taxa", "ind"))
   checkmate::assertChoice(x = divType, choices = c("beta", "alpha"))
-  base::stopifnot("The provided rf is not in assemblageID" = base::is.element(rf, x$assemblageID))
+  base::stopifnot("The provided assemblageID is not in assemblageID" = base::is.element(assemblageID, x$assemblageID))
 
   base::switch(
     divType,
@@ -84,9 +84,9 @@ plotSlopes <- function(x, metric, cols, taxa, method, rf, divType) {
           return(p)
         }, # end method == taxa
         ind = {
-          xy <- subset(x, assemblageID == rf)
+          xy <- subset(x, assemblageID == assemblageID)
           p <- ggplot2::ggplot(xy, ggplot2::aes(x = YEAR, y = diversity)) +
-            ggplot2::ggtitle(rf) +
+            ggplot2::ggtitle(assemblageID) +
             ggplot2::geom_point(colour = "#00483d", size = 3) +
             ggplot2::ylab("Diversity") +
             ggplot2::stat_smooth(method = "lm", se = FALSE,
@@ -127,9 +127,9 @@ plotSlopes <- function(x, metric, cols, taxa, method, rf, divType) {
           return(p)
         }, # end method == taxa
         ind = {
-          xy <- subset(x, assemblageID == rf)
+          xy <- subset(x, assemblageID == assemblageID)
           p <- ggplot2::ggplot(xy, ggplot2::aes(x = YEAR, y = dissimilarity)) +
-            ggplot2::ggtitle(rf) +
+            ggplot2::ggtitle(assemblageID) +
             ggplot2::geom_point(colour = "#155f49", size = 3) +
             ggplot2::ylab("Dissimilarity") +
             ggplot2::stat_smooth(method = "lm", se = FALSE,
