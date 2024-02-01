@@ -105,7 +105,7 @@ gridding <- function(meta, btf, res = 12L) {
                   ABUNDANCE_TYPE, BIOMASS_TYPE, STUDY_ID, YEAR, PLOT,
                   cell, Species, DAY, MONTH, ABUNDANCE, BIOMASS, taxon,
                   resolution) %>%
-    tidyr::unite(col = rarefyID, STUDY_ID, cell, sep = "_", remove = FALSE)
+    tidyr::unite(col = assemblageID, STUDY_ID, cell, sep = "_", remove = FALSE)
 
   return(bt_grid)
 }

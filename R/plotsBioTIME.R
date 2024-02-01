@@ -20,12 +20,12 @@
 #' meta  <-  subBTmeta
 #' meta2 <- select(meta, STUDY_ID, TAXA, REALM)
 #'
-#' alphaSl <- as.data.frame(alphaSl %>% separate(., rarefyID,
+#' alphaSl <- as.data.frame(alphaSl %>% separate(., assemblageID,
 #'                                             into= c("STUDY_ID", "cell"), sep="_", remove=F))
 #'
 #' ameta <- merge(alphaSl, meta2, by="STUDY_ID")
 #'
-#' betaSl <- as.data.frame(betaSl %>% separate(., rarefyID,
+#' betaSl <- as.data.frame(betaSl %>% separate(., assemblageID,
 #'                                           into= c("STUDY_ID", "cell"), sep="_", remove=F))
 #'
 #' bmeta <- merge(betaSl, meta2, by="STUDY_ID")
@@ -48,7 +48,7 @@ plotSlopes <- function(x, metric, cols, taxa, method, rf, divType) {
                                       "Fish", "Fungi", "Mammals", "Plants"))
   checkmate::assertChoice(x = method, choices = c("metric", "taxa", "ind"))
   checkmate::assertChoice(x = divType, choices = c("beta", "alpha"))
-  base::stopifnot("The provided rf is not in rarefyID" = base::is.element(rf, x$rarefyID))
+  base::stopifnot("The provided rf is not in assemblageID" = base::is.element(rf, x$assemblageID))
 
   base::switch(
     divType,
@@ -84,7 +84,7 @@ plotSlopes <- function(x, metric, cols, taxa, method, rf, divType) {
           return(p)
         }, # end method == taxa
         ind = {
-          xy <- subset(x, rarefyID == rf)
+          xy <- subset(x, assemblageID == rf)
           p <- ggplot2::ggplot(xy, ggplot2::aes(x = YEAR, y = diversity)) +
             ggplot2::ggtitle(rf) +
             ggplot2::geom_point(colour = "#00483d", size = 3) +
@@ -127,7 +127,7 @@ plotSlopes <- function(x, metric, cols, taxa, method, rf, divType) {
           return(p)
         }, # end method == taxa
         ind = {
-          xy <- subset(x, rarefyID == rf)
+          xy <- subset(x, assemblageID == rf)
           p <- ggplot2::ggplot(xy, ggplot2::aes(x = YEAR, y = dissimilarity)) +
             ggplot2::ggtitle(rf) +
             ggplot2::geom_point(colour = "#155f49", size = 3) +

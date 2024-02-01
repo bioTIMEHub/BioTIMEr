@@ -30,7 +30,7 @@ rarefy BioTIME
   data("subBTmeta")
   data("subBTquery")
   df <- gridding(subBTmeta, subBTquery) \%>\%
-    filter(rarefyID == "431_128327318")
+    filter(assemblageID == "431_128327318")
   rarefysamples(Year = df$YEAR, SampleID = df$SAMPLE_DESC,
     Species = df$Species, currency = df$ABUNDANCE,
     resamps = 3L)

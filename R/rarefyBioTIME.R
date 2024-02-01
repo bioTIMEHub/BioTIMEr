@@ -30,11 +30,11 @@ Use rarefysamples directly if more repetitions are needed.")
   base::switch(
     ab,
     A = {
-      rfIDs <- unique(df$rarefyID)
+      rfIDs <- unique(df$assemblageID)
       TSrf <- sapply(
         X = rfIDs,
         FUN = function(i) {
-          temp_data <- df[df$rarefyID == i, ]
+          temp_data <- df[df$assemblageID == i, ]
           rarefysamples(Year = temp_data$YEAR, SampleID = temp_data$SAMPLE_DESC,
                         Species = temp_data$Species, currency = temp_data$ABUNDANCE,
                         resamps = resamps)},
@@ -47,15 +47,15 @@ Use rarefysamples directly if more repetitions are needed.")
                         sep = "_", remove = FALSE) %>%
         # dplyr::mutate(STUDY_ID = as.integer(STUDY_ID)) %>%
         dplyr::select(-repeats, YEAR, Species, currency, rfID, STUDY_ID) %>%
-        dplyr::rename(Abundance = currency, rarefyID = rfID) %>%
+        dplyr::rename(Abundance = currency, assemblageID = rfID) %>%
         return()
     }, # end of ab == A
     B = {
-      rfIDs <- unique(df$rarefyID)
+      rfIDs <- unique(df$assemblageID)
       TSrf <- sapply(
         X = rfIDs,
         FUN = function(i) {
-          temp_data <- df[df$rarefyID == i, ]
+          temp_data <- df[df$assemblageID == i, ]
           rarefysamples(Year = temp_data$YEAR, SampleID = temp_data$SAMPLE_DESC,
                         Species = temp_data$Species, currency = temp_data$BIOMASS,
                         resamps = resamps)},
@@ -68,7 +68,7 @@ Use rarefysamples directly if more repetitions are needed.")
                         sep = "_", remove = FALSE) %>%
         # dplyr::mutate(STUDY_ID = as.integer(STUDY_ID)) %>%
         dplyr::select(-repeats, YEAR, Species, currency, rfID, STUDY_ID) %>%
-        dplyr::rename(Biomass = currency, rarefyID = rfID) %>%
+        dplyr::rename(Biomass = currency, assemblageID = rfID) %>%
         return()
     })  # end of ab == B
 }
@@ -89,7 +89,7 @@ Use rarefysamples directly if more repetitions are needed.")
 #'   data("subBTmeta")
 #'   data("subBTquery")
 #'   df <- gridding(subBTmeta, subBTquery) %>%
-#'     filter(rarefyID == "431_128327318")
+#'     filter(assemblageID == "431_128327318")
 #'   rarefysamples(Year = df$YEAR, SampleID = df$SAMPLE_DESC,
 #'     Species = df$Species, currency = df$ABUNDANCE,
 #'     resamps = 3L)
@@ -102,7 +102,7 @@ rarefysamples <- function(Year, SampleID, Species, currency, resamps) {
                             y = c(length(SampleID), length(Species),
                                   length(currency)))
 
-  # Computing minimal effort per year in this rarefyID
+  # Computing minimal effort per year in this assemblageID
   minsample <- min(tapply(SampleID, Year, function(x) length(unique(x))))
 
   rareftab_list <- lapply( # beginning loop on repetitions

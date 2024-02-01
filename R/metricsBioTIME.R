@@ -12,7 +12,7 @@
 #'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
 #'     matrix(data = rpois(384, 10), ncol = 4)
 #'     )
-#'     res <- getAlpha(x, rarefyID = 34)
+#'     res <- getAlpha(x, assemblageID = 34)
 #' }
 #'
 #' @returns A data frame with results for S (species richness), N (numerical abundance),
@@ -31,7 +31,7 @@ getAlpha <- function(x, id) {
 
   return(
     data.frame(
-      rarefyID = id,
+      assemblageID = id,
       YEAR = yr,
 
       S = apply(x > 0, 1, sum),
@@ -70,7 +70,7 @@ getAlpha <- function(x, id) {
 #'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
 #'     Species = c(replicate(n = 8L, sample(letters, 24L, replace = FALSE))),
 #'     Abundance = rpois(24 * 8, 10),
-#'     rarefyID = rep(LETTERS[1L:8L], each = 24)
+#'     assemblageID = rep(LETTERS[1L:8L], each = 24)
 #'   )
 #'   res <- getAlphaMetrics(x, "A")
 #' }
@@ -78,8 +78,8 @@ getAlpha <- function(x, id) {
 getAlphaMetrics <- function(x, ab) {
   checkmate::assert_choice(ab, c("A","B"))
   checkmate::assert_names(x = colnames(x), what = "colnames",
-                          must.include = c("YEAR","Species","rarefyID"),
-                          subset.of = c("YEAR","Species","rarefyID",
+                          must.include = c("YEAR","Species","assemblageID"),
+                          subset.of = c("YEAR","Species","assemblageID",
                                         "STUDY_ID", "cell",
                                         "Abundance","Biomass"))
 
@@ -89,8 +89,8 @@ getAlphaMetrics <- function(x, ab) {
     ab,
     A = {
       x <- subset(x, !is.na(Abundance))
-      for (id in unique(x$rarefyID)) {
-        df <- subset(x, rarefyID == id)
+      for (id in unique(x$assemblageID)) {
+        df <- subset(x, assemblageID == id)
         if (dplyr::n_distinct(df$YEAR) > 1L && dplyr::n_distinct(df$Species) > 1L) {
           y <- dplyr::select(df, YEAR, Species, Abundance) %>%
             tidyr::pivot_wider(names_from = Species,
@@ -102,8 +102,8 @@ getAlphaMetrics <- function(x, ab) {
     }, # end base::switch
     B = {
       x <- subset(x, !is.na(Biomass))
-      for (id in unique(x$rarefyID)) {
-        df <- subset(x, rarefyID == id)
+      for (id in unique(x$assemblageID)) {
+        df <- subset(x, assemblageID == id)
         if (dplyr::n_distinct(df$YEAR) > 1L && dplyr::n_distinct(df$Species) > 1L) {
           y <- dplyr::select(df, YEAR, Species, Biomass) %>%
             tidyr::pivot_wider(names_from = Species,
@@ -154,7 +154,7 @@ getBeta <- function(x, id) {
   mh <-  c(1, getmh[1L:nrow(x)])[-1]
   bc <-  c(1, getbc[1L:nrow(x)])[-1]
 
-  xf <- data.frame(YEAR = yr, rarefyID = id, JaccardDiss = jacc,
+  xf <- data.frame(YEAR = yr, assemblageID = id, JaccardDiss = jacc,
                    MorisitaHornDiss = mh, BrayCurtisDiss = bc)
   return(xf)
 }
@@ -174,7 +174,7 @@ getBeta <- function(x, id) {
 #'    n = 8L,
 #'    sample(letters, 24L, replace = FALSE))),
 #'   Abundance = rpois(24 * 8, 10),
-#'   rarefyID = rep(LETTERS[1L:8L], each = 24)
+#'   assemblageID = rep(LETTERS[1L:8L], each = 24)
 #'   )
 #'
 #' res <- getBetaDissimilarity(x, "A")
@@ -183,21 +183,21 @@ getBeta <- function(x, id) {
 getBetaDissimilarity <- function(x, ab) {
   checkmate::assert_choice(ab, c("A","B"))
   checkmate::assert_names(x = colnames(x), what = "colnames",
-                          must.include = c("YEAR","Species","rarefyID"),
-                          subset.of = c("YEAR","Species","rarefyID",
+                          must.include = c("YEAR","Species","assemblageID"),
+                          subset.of = c("YEAR","Species","assemblageID",
                                         "STUDY_ID", "cell",
                                         "Abundance","Biomass"))
 
   xd <- data.frame()
-  nyear <- tapply(x$YEAR, x$rarefyID, dplyr::n_distinct)
-  nsp   <- tapply(x$Species, x$rarefyID, dplyr::n_distinct)
+  nyear <- tapply(x$YEAR, x$assemblageID, dplyr::n_distinct)
+  nsp   <- tapply(x$Species, x$assemblageID, dplyr::n_distinct)
 
   base::switch(
     ab,
     A = {
       x <- subset(x, !is.na(Abundance))
-      for (id in unique(x$rarefyID)) {
-        df <- subset(x, rarefyID == id)
+      for (id in unique(x$assemblageID)) {
+        df <- subset(x, assemblageID == id)
         if (nyear[[id]] < 2L || nsp[[id]] < 2L) {
           xr <- c(NA, id, NA, NA, NA)
         } else if (nyear[[id]] > 1L && nsp[[id]] > 1L) {
@@ -211,12 +211,12 @@ getBetaDissimilarity <- function(x, ab) {
     }, # end switch
     B = {
       x <- subset(x, !is.na(Biomass))
-      for (id in unique(x$rarefyID)) {
-        df <- subset(x, rarefyID == id)
+      for (id in unique(x$assemblageID)) {
+        df <- subset(x, assemblageID == id)
         if (nyear[[id]] < 2L || nsp[[id]] < 2L) {
           xr <- c(NA, id, NA, NA, NA)
         } else if (nyear[[id]] > 1L && nsp[[id]] > 1L) {
-          y <- subset(x, rarefyID == id) %>%
+          y <- subset(x, assemblageID == id) %>%
             dplyr::select(YEAR, Species, Biomass) %>%
             tidyr::pivot_wider(names_from = Species,
                                values_from = Biomass,

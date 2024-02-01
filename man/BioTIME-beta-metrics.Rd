@@ -46,7 +46,7 @@ x <- data.frame(
    n = 8L,
    sample(letters, 24L, replace = FALSE))),
   Abundance = rpois(24 * 8, 10),
-  rarefyID = rep(LETTERS[1L:8L], each = 24)
+  assemblageID = rep(LETTERS[1L:8L], each = 24)
   )
 
 res <- getBetaDissimilarity(x, "A")

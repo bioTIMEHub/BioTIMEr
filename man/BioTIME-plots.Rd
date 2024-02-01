@@ -50,12 +50,12 @@ load("./data/subBTmeta.RData")
 meta  <-  subBTmeta
 meta2 <- select(meta, STUDY_ID, TAXA, REALM)
 
-alphaSl <- as.data.frame(alphaSl \%>\% separate(., rarefyID,
+alphaSl <- as.data.frame(alphaSl \%>\% separate(., assemblageID,
                                             into= c("STUDY_ID", "cell"), sep="_", remove=F))
 
 ameta <- merge(alphaSl, meta2, by="STUDY_ID")
 
-betaSl <- as.data.frame(betaSl \%>\% separate(., rarefyID,
+betaSl <- as.data.frame(betaSl \%>\% separate(., assemblageID,
                                           into= c("STUDY_ID", "cell"), sep="_", remove=F))
 
 bmeta <- merge(betaSl, meta2, by="STUDY_ID")

@@ -19,7 +19,7 @@ test_that("getAlpha returns a data frame", {
 
 test_that("getAlpha returns the expected columns", {
   result <- getAlpha(x = data, id = "TestID")
-  expected_cols <- c("rarefyID","YEAR", "S", "N", "maxN", "Shannon","Simpson",
+  expected_cols <- c("assemblageID","YEAR", "S", "N", "maxN", "Shannon","Simpson",
                      "invSimpson","PIE","DomMc","expShannon")
   expect_equal(colnames(result), expected_cols)
 })
@@ -56,7 +56,7 @@ dataMetrics <- data.frame(
     sample(letters, 24L, replace = FALSE))),
   Abundance = rpois(24 * 8, 10),
   Biomass = rpois(24 * 8, 1000),
-  rarefyID = rep(LETTERS[1L:8L], each = 24)
+  assemblageID = rep(LETTERS[1L:8L], each = 24)
 )
 
 

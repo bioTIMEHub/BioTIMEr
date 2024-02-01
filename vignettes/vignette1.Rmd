@@ -132,7 +132,7 @@ beSl <- getLinearRegressions(x = beta, divType = "beta")
 meta2 <- select(subBTmeta, STUDY_ID, TAXA, REALM)
 
 
-alphaSl <- alSl %>% separate(rarefyID,
+alphaSl <- alSl %>% separate(assemblageID,
                              into = c("STUDY_ID", "cell"),
                              sep = "_", remove = FALSE) %>%
   as.data.frame()
@@ -140,7 +140,7 @@ alphaSl <- alSl %>% separate(rarefyID,
 ameta <- merge(alphaSl, meta2, by = "STUDY_ID")
 
 
-betaSl <- beSl %>% separate(rarefyID,
+betaSl <- beSl %>% separate(assemblageID,
                             into = c("STUDY_ID", "cell"),
                             sep = "_", remove = FALSE) %>%
   as.data.frame()

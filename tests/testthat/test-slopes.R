@@ -5,7 +5,7 @@ test_that("slopes works consistently", {
     YEAR = base::rep(base::rep(2010:2015, each = 4), times = 4),
     Species = c(base::replicate(n = 8L, base::sample(letters, 24L, replace = FALSE))),
     Abundance = stats::rpois(24 * 8, 10),
-    rarefyID = base::rep(LETTERS[1L:8L], each = 24)
+    assemblageID = base::rep(LETTERS[1L:8L], each = 24)
   )
   alpham <- getAlphaMetrics(xa, "A")
 
@@ -15,7 +15,7 @@ test_that("slopes works consistently", {
     YEAR = base::rep(base::rep(2010:2015, each = 4), times = 4),
     Species = c(base::replicate(n = 8L, base::sample(letters, 24L, replace = FALSE))),
     Abundance = stats::rpois(24 * 8, 2),
-    rarefyID = base::rep(LETTERS[1L:8L], each = 24)
+    assemblageID = base::rep(LETTERS[1L:8L], each = 24)
   )
   betam <- getBetaDissimilarity(xb, "A")
 
