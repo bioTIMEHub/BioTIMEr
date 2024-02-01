@@ -48,6 +48,7 @@ plotSlopes <- function(x, metric, cols, taxa, method, rf, divType) {
                                       "Fish", "Fungi", "Mammals", "Plants"))
   checkmate::assertChoice(x = method, choices = c("metric", "taxa", "ind"))
   checkmate::assertChoice(x = divType, choices = c("beta", "alpha"))
+  base::stopifnot("The provided rf is not in rarefyID" = base::is.element(rf, x$rarefyID))
 
   base::switch(
     divType,

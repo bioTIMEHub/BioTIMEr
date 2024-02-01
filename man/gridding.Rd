@@ -3,7 +3,7 @@
 \name{gridding}
 \alias{gridding}
 \title{gridding BioTIME
-Grids BioTIME data into 96km2 cells based on location (latitude/longitude)}
+Grids BioTIME data into 96km^2^ cells based on location (latitude/longitude)}
 \usage{
 gridding(meta, btf, res = 12L)
 }
@@ -11,6 +11,8 @@ gridding(meta, btf, res = 12L)
 \item{meta}{(data.frame) BioTIME metadata}
 
 \item{btf}{(data.frame) BioTIME data}
+
+\item{res}{(integer) XXXthe resolution for the grid sizeXXX}
 }
 \value{
 Returns a data.frame, with selected columns from the btf and meta
@@ -19,14 +21,14 @@ Returns a data.frame, with selected columns from the btf and meta
 }
 \description{
 gridding BioTIME
-Grids BioTIME data into 96km2 cells based on location (latitude/longitude)
+Grids BioTIME data into 96km^2^ cells based on location (latitude/longitude)
 }
 \details{
 Each BioTIME study contains distinct samples measured (with a
   consistent methodology) over time, which could be fixed plots (i.e. SL or
-  'single-location' studies where measures are taken from a set of specific
+  "single-location" studies where measures are taken from a set of specific
   georeferenced sites at any given time) or wide-ranging surveys, transects,
-  tows, and so on (i.e. ML or 'multi-location' studies where measures are taken
+  tows, and so on (i.e. ML or "multi-location" studies where measures are taken
   from multiple sites that may or may not align from year to year, see
   \link{runResampling}). `gridding()` is a function designed to identify,
   separate and standardize both SL and ML studies using a global grid of 96km2

@@ -2,12 +2,12 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "BioTIMEr",
-  "description": "The BioTIMEr package provides functions designed to interact with the BioTIME database. The functions provided include the BioTIME recommended methods for preparing (gridding and rarefaction) time-series data, a selection of standard biodiversity metrics (including species richness, numerical abundance and exponential Shannon) alongside examples on how to display change over time. It also includes a sample subset of both the query and meta data, the full versions of which are freely available on the BioTIME website - https://biotime.st-andrews.ac.uk/home.php",
+  "description": "The BioTIMEr package provides functions designed to interact with the BioTIME database. The functions provided include the BioTIME recommended methods for preparing (gridding and rarefaction) time-series data, a selection of standard biodiversity metrics (including species richness, numerical abundance and exponential Shannon) alongside examples on how to display change over time. It also includes a sample subset of both the query and meta data, the full versions of which are freely available on the BioTIME website - https://biotime.st-andrews.ac.uk/home.php.",
   "name": "BioTIMEr: Helper functions to explore, standardise and analyse the BioTIME database",
   "codeRepository": "https://github.com/bioTIMEHub/BioTIMEr",
   "issueTracker": "https://github.com/bioTIMEHub/BioTIMEr/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.1.9010",
+  "version": "0.1.9011",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -220,18 +220,6 @@
     },
     "6": {
       "@type": "SoftwareApplication",
-      "identifier": "geosphere",
-      "name": "geosphere",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=geosphere"
-    },
-    "7": {
-      "@type": "SoftwareApplication",
       "identifier": "dggridR",
       "name": "dggridR",
       "provider": {
@@ -242,7 +230,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=dggridR"
     },
-    "8": {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "checkmate",
       "name": "checkmate",
@@ -256,7 +244,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "3310.531KB",
+  "fileSize": "3310.749KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",

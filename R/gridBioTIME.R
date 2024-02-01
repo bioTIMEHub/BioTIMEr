@@ -3,6 +3,7 @@
 #' @export
 #' @param meta (data.frame) BioTIME metadata
 #' @param btf (data.frame) BioTIME data
+#' @param res (integer) XXXthe resolution for the grid sizeXXX
 #' @returns Returns a data.frame, with selected columns from the btf and meta
 #'   data.frames, an extra integer column called cell and two character columns
 #'   called StudyMethod and AssemblageID (concatenation of study_ID and cell).
@@ -42,6 +43,8 @@ gridding <- function(meta, btf, res = 12L) {
     must.include = c("valid_name", "STUDY_ID", "DAY", "MONTH", "YEAR",
                      "LATITUDE", "LONGITUDE", "ABUNDANCE", "BIOMASS",
                      "SAMPLE_DESC", "PLOT", "resolution", "taxon"))
+  checkmate::assert_numeric(btf$ABUNDANCE, lower = 0)
+  checkmate::assert_numeric(btf$BIOMASS, lower = 0)
 
   bt <- dplyr::inner_join(meta, btf, by = "STUDY_ID") %>%
     dplyr::rename(Species = valid_name)
@@ -103,8 +106,6 @@ gridding <- function(meta, btf, res = 12L) {
                   cell, Species, DAY, MONTH, ABUNDANCE, BIOMASS, taxon,
                   resolution) %>%
     tidyr::unite(col = rarefyID, STUDY_ID, cell, sep = "_", remove = FALSE)
-  k <- c(15, 16)
-  bt_grid[, k] <- apply(bt_grid[, k], 2, function(x) as.numeric(as.character(x)))
 
   return(bt_grid)
 }

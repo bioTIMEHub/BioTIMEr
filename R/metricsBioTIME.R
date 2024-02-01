@@ -21,10 +21,10 @@
 #' McNaughton's Dominance.
 
 getAlpha <- function(x, id) {
-  base::stopifnot(!is.null(id))
-  checkmate::assert_names(x = colnames(x)[[1L]],
-                          identical.to = "YEAR",
-                          what = "colnames")
+  # base::stopifnot(!is.null(id))
+  # checkmate::assert_names(x = colnames(x)[[1L]],
+  #                         identical.to = "YEAR",
+  #                         what = "colnames")
 
   yr <- unique(x[, 1L])
   x <- x[, -1L]
@@ -80,6 +80,7 @@ getAlphaMetrics <- function(x, ab) {
   checkmate::assert_names(x = colnames(x), what = "colnames",
                           must.include = c("YEAR","Species","rarefyID"),
                           subset.of = c("YEAR","Species","rarefyID",
+                                        "STUDY_ID", "cell",
                                         "Abundance","Biomass"))
 
   xd <- data.frame()
@@ -184,6 +185,7 @@ getBetaDissimilarity <- function(x, ab) {
   checkmate::assert_names(x = colnames(x), what = "colnames",
                           must.include = c("YEAR","Species","rarefyID"),
                           subset.of = c("YEAR","Species","rarefyID",
+                                        "STUDY_ID", "cell",
                                         "Abundance","Biomass"))
 
   xd <- data.frame()

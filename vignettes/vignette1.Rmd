@@ -22,7 +22,6 @@ by R at the same time BioTIMEr was installed.
 - [ggplot2](https://ggplot2.tidyverse.org/)
 - [dggridR](https://rdrr.io/cran/dggridR/)
 - [vegan](https://vegandevs.github.io/vegan/)
-- [geosphere](https://github.com/rspatial/geosphere)
 
 ```{r bt_package_loading, warning=FALSE, message=FALSE, eval=TRUE}
 library(dplyr)
@@ -68,7 +67,7 @@ file.exists("data/subBTquery.RData")
 ----------------------------------------------------------------------
 ### Gridding
 Where `meta` represents a long form data frame containing the meta data information for BioTIME studies and `btf` is a data frame containing long form data from the main BioTIME query.
-```{r gridding_ex, eval=TRUE, cache=TRUE, echo=FALSE, message=FALSE, tidy=TRUE, include=TRUE} 
+```{r gridding_ex, eval=FALSE, cache=TRUE, echo=FALSE, message=FALSE, tidy=TRUE, include=TRUE} 
 gridding(meta = subBTmeta, btf = subBTquery) %>% 
   head() %>% 
   kable()
@@ -150,23 +149,23 @@ bmeta <- merge(betaSl, meta2, by = "STUDY_ID")
 
 ```
 
-```{r plot_alpha_shannon_ind, fig.width=12, fig.height=10, eval=TRUE, cache = TRUE, tidy=TRUE}
-plotSlopes(x = ameta, metric = "Shannon", cols = scale_color_biotime(),
-           taxa = "Fish", method = "ind", rf = "10_9675315", divType = "alpha")
+```{r plot_alpha_shannon_ind, fig.width=12, fig.height=10, eval=TRUE, cache=TRUE, tidy=TRUE}
+plotSlopes(x = ameta, metric = "Shannon", cols = bioCol,
+           taxa = "Fish", method = "ind", rf = "10_358678", divType = "alpha")
 ```
 
 
-```{r plot_alpha_shannon_metric, fig.width=8, fig.height=6, eval=FALSE, cache = TRUE, tidy=TRUE}
-plotSlopes(x = ameta, metric = "Shannon", cols = scale_color_biotime(), taxa = "Fish", method = "metric", rf = "10_9675315", divType = "alpha")
+```{r plot_alpha_shannon_metric, fig.width=8, fig.height=6, eval=FALSE, cache=TRUE, tidy=TRUE}
+plotSlopes(x = ameta, metric = "Shannon", cols = bioCol, taxa = "Fish", method = "metric", rf = "10_358678", divType = "alpha")
 ```
 
-```{r plot_beta_jaccard_ind, fig.width=9, fig.height=6, eval=TRUE, cache = TRUE, tidy=TRUE}
-plotSlopes(x = bmeta, metric = "JaccardDiss", cols = scale_color_biotime(), taxa = "Fish",
-           method = "ind", rf = "10_9675315", divType = "beta")
+```{r plot_beta_jaccard_ind, fig.width=9, fig.height=6, eval=TRUE, cache=TRUE, tidy=TRUE}
+plotSlopes(x = bmeta, metric = "JaccardDiss", cols = bioCol, taxa = "Fish",
+           method = "ind", rf = "10_358678", divType = "beta")
 ```
 
-```{r plot_beta_jaccard_taxa, fig.width=8, fig.height=4, eval=FALSE, cache = TRUE, tidy=TRUE}
-plotSlopes(x = bmeta, metric = "JaccardDiss", cols = scale_color_biotime(),
+```{r plot_beta_jaccard_taxa, fig.width=8, fig.height=4, eval=FALSE, cache=TRUE, tidy=TRUE}
+plotSlopes(x = bmeta, metric = "JaccardDiss", cols = bioCol,
            taxa = "Fish",
-           method = "taxa", rf = "10_9675315", divType = "beta")
+           method = "taxa", rf = "10_358678", divType = "beta")
 ```
