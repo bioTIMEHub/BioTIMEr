@@ -28,7 +28,7 @@ Each BioTIME study contains distinct samples measured (with a
   georeferenced sites at any given time) or wide-ranging surveys, transects,
   tows, and so on (i.e. ML or "multi-location" studies where measures are taken
   from multiple sites that may or may not align from year to year, see
-  \link{runResampling}). `gridding()` is a function designed to identify,
+  \code{\link{runResampling}}). `gridding` is a function designed to identify,
   separate and standardise both SL and ML studies using a global grid of 96km2
   hexagonal cells derived from \code{\link[dggridR]{dgconstruct}} (res = 12).
   Here each sample is assigned a different combination of study ID and grid cell

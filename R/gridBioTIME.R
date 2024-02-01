@@ -12,7 +12,7 @@
 #'   georeferenced sites at any given time) or wide-ranging surveys, transects,
 #'   tows, and so on (i.e. ML or "multi-location" studies where measures are taken
 #'   from multiple sites that may or may not align from year to year, see
-#'   \link{runResampling}). `gridding()` is a function designed to identify,
+#'   \code{\link{runResampling}}). `gridding` is a function designed to identify,
 #'   separate and standardise both SL and ML studies using a global grid of 96km2
 #'   hexagonal cells derived from \code{\link[dggridR]{dgconstruct}} (res = 12).
 #'   Here each sample is assigned a different combination of study ID and grid cell
@@ -52,7 +52,7 @@ gridding <- function(meta, btf, res = NULL) {
                      "SAMPLE_DESC", "PLOT", "resolution", "taxon"))
   checkmate::assert_numeric(btf$ABUNDANCE, lower = 0)
   checkmate::assert_numeric(btf$BIOMASS, lower = 0)
-  checkmate::assert_integerish(res, lower = 0, len = 1L, null.ok = TRUE)
+  checkmate::assert_number(x = res, lower = 0, upper = 30, null.ok = TRUE)
 
   bt <- dplyr::inner_join(meta, btf, by = "STUDY_ID") %>%
     dplyr::rename(Species = valid_name)
@@ -89,7 +89,7 @@ gridding <- function(meta, btf, res = NULL) {
 
   bt <- bt %>% dplyr::filter(!(STUDY_ID %in% oneyear))
 
-  if (is.null(res)) {
+  if (is.null(res) || is.na(res)) {
     res <- 12L
     dgg <- dggridR::dgconstruct(res = res)
     res <- dggridR::dg_closest_res_to_area(dgg, SL_extent_mean + SL_extent_sd)

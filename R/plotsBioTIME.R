@@ -48,7 +48,7 @@ plotSlopes <- function(x, metric, cols, taxa, method, assemblageID, divType) {
                                       "Fish", "Fungi", "Mammals", "Plants"))
   checkmate::assertChoice(x = method, choices = c("metric", "taxa", "ind"))
   checkmate::assertChoice(x = divType, choices = c("beta", "alpha"))
-  base::stopifnot("The provided assemblageID is not in assemblageID" = base::is.element(assemblageID, x$assemblageID))
+  base::stopifnot("The provided assemblageID is not valid" = base::is.element(assemblageID, x$assemblageID))
 
   base::switch(
     divType,
