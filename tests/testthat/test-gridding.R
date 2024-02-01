@@ -2,7 +2,7 @@
 meta <- base::readRDS(testthat::test_path("testdata", "data-meta.rds"))
 btf <- base::readRDS(testthat::test_path("testdata", "data-query.rds"))
 
-result <- gridding(meta, btf, res = 12L)
+result <- gridding(meta, btf, res = NULL)
 
 test_that("gridding returns a data frame", {
   expect_s3_class(result, "data.frame")
@@ -28,3 +28,7 @@ test_that("gridding creates correct cell IDs", {
   })
 
 test_that("gridding produces consistent results", {expect_snapshot(result)})
+
+test_that("gridding respects provided res parameter", {
+  expect_snapshot(gridding(meta, btf, res = 18))
+  })

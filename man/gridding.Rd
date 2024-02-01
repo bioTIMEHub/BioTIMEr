@@ -2,10 +2,9 @@
 % Please edit documentation in R/gridBioTIME.R
 \name{gridding}
 \alias{gridding}
-\title{gridding BioTIME
-Grids BioTIME data into 96km^2^ cells based on location (latitude/longitude)}
+\title{Gridding BioTIME}
 \usage{
-gridding(meta, btf, res = 12L)
+gridding(meta, btf, res = NULL)
 }
 \arguments{
 \item{meta}{(data.frame) BioTIME metadata}
@@ -15,13 +14,12 @@ gridding(meta, btf, res = 12L)
 \item{res}{(integer) XXXthe resolution for the grid sizeXXX}
 }
 \value{
-Returns a data.frame, with selected columns from the btf and meta
-  data.frames, an extra integer column called cell and two character columns
-  called StudyMethod and assemblageID (concatenation of study_ID and cell).
+Returns a `data.frame`, with selected columns from the `btf` and `meta`
+  data.frames, an extra integer column called `cell` and two character columns
+  called `StudyMethod` and `assemblageID` (concatenation of study_ID and cell).
 }
 \description{
-gridding BioTIME
-Grids BioTIME data into 96km^2^ cells based on location (latitude/longitude)
+Grids BioTIME data into 96km2 cells based on location (latitude/longitude).
 }
 \details{
 Each BioTIME study contains distinct samples measured (with a
@@ -31,15 +29,20 @@ Each BioTIME study contains distinct samples measured (with a
   tows, and so on (i.e. ML or "multi-location" studies where measures are taken
   from multiple sites that may or may not align from year to year, see
   \link{runResampling}). `gridding()` is a function designed to identify,
-  separate and standardize both SL and ML studies using a global grid of 96km2
-  hexagonal cells derived from \code{\link[dggridR]{dgconstruct}} (res=12).
+  separate and standardise both SL and ML studies using a global grid of 96km2
+  hexagonal cells derived from \code{\link[dggridR]{dgconstruct}} (res = 12).
   Here each sample is assigned a different combination of study ID and grid cell
   (based on its latitude and longitude) resulting in a unique identifier for
-  each assemblage time-series (AssemblageID), thus allowing for the integrity
+  each assemblage time-series (assemblageID), thus allowing for the integrity
   of each study and each sample to be maintained.
   By default `meta` represents a long form data frame containing the data
   information for BioTIME studies and `btf` is a data frame containing long
   form data from a main BioTIME query.
+
+`res` = 12 was found to be the most appropriate value when working on the whole
+  BioTIME database. Now the function gives users the possibility to provide
+  their own values (e.g. res = 14) or to let the function compute the best
+  `res` value taking 12 as a reference.
 }
 \examples{
 \dontrun{
