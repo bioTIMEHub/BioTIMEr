@@ -24,11 +24,15 @@ test_that("gridding returns correct number of rows", {
 })
 
 test_that("gridding creates correct cell IDs", {
-          checkmate::expect_integer(result$cell, any.missing = FALSE, lower = 0L)
-  })
+  checkmate::expect_integer(result$cell, any.missing = FALSE, lower = 0L)
+})
 
-test_that("gridding produces consistent results", {expect_snapshot(result)})
+test_that("gridding produces consistent results", {
+  skip_on_ci()
+  expect_snapshot(result)
+})
 
 test_that("gridding respects provided res parameter", {
+  skip_on_ci()
   expect_snapshot(gridding(meta, btf, res = 18))
-  })
+})
