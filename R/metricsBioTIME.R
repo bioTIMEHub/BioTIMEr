@@ -1,179 +1,235 @@
-#' Alpha
-#' @rdname BioTIME-metrics
+#' Run the alpha function
+#' @param x (data.frame) First column has to be year
+#' @param ab character input for chosen currency - "A" = Abundance or "B" = Biomass
+#' @returns getAlphaMetrics returns a data.frame with nine alpha diversity metrics
+#' @author Faye Moyes
 #' @export
-#' @param x (data.frame) First column has to be year
-#' @param id definition of id
-#' @importFrom vegan diversity
-#' @author Faye Moyes
 #' @examples
 #' \dontrun{
-#' x <- data.frame(
-#'   Year = rep(rep(2010:2015, each = 4), times = 4),
-#'   Species = unlist(lapply(
-#'     X = 1L:8L,
-#'     function(x) letters[sample(length(letters), 24L, replace = FALSE)])),
-#'   Abundance = rpois(24 * 8, 10),
-#'   ID = rep(LETTERS[1L:8L], each = 24)
-#' )
-#'
-#' res<-getAlphaMetrics(x)
-#' }
-#'
-#' @returns A data frame with results for S (species richness), N (numerical abundance),
-#'   maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
-#'   Inverse Simpson, PIE (probability of intraspecific encounter) and McNaughton's Dominance
-
-getAlpha<-function(x, id){
-
-  yr<-unique(x[, 1])
-  x<-x[,-1]
-
-  q1<-diversity(x, "shannon")
-  q2<-diversity(x, "simpson")
-  invS<-diversity(x, "inv")
-
-  data.frame(rarefyID=id, Year=yr, S=apply(x>0, 1, sum),
-             N=apply(x, 1, sum), maxN=apply(x, 1, max),
-             Shannon=q1, Simpson=q2, InvSimpson=invS,
-             PIE=apply(x, 1, function(s){n<-sum(s);(n/(n-1))*(1-sum((s/n)^2))}),
-             DomMc=apply(x, 1, function(s){y<-sort(s, decreasing=T);(y[1]+y[2])/sum(y)}),
-             expShannon=apply(x, 1, function(s){n<-sum(s);exp(-sum(s/n*ifelse(s==0,0,log(s/n))))})
-  )
-}
-
-#' run the alpha function
-#' @rdname BioTIME-metrics
-#' @param x (data.frame) First column has to be year
-#' @param ab character input for chosen currency - "A"=Abundance or "B"=Biomass
-#' @returns data.frame with nine alpha diversity metrics
-#' @author Faye Moyes
-#' @examples
-#' \dontrun{
-#' res<-getAlphaMetrics(x, "B")
+#'   x <- data.frame(
+#'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
+#'     Species = c(replicate(n = 8L, sample(letters, 24L, replace = FALSE))),
+#'     Abundance = rpois(24 * 8, 10),
+#'     assemblageID = rep(LETTERS[1L:8L], each = 24)
+#'   )
+#'   res <- getAlphaMetrics(x, "A")
 #' }
 
-getAlphaMetrics<-function(x, ab) {
+getAlphaMetrics <- function(x, ab) {
+  checkmate::assert_choice(ab, c("A","B"))
+  checkmate::assert_numeric(x = base::ifelse(ab == "A", x$Abundance, x$Biomass),
+                            lower = 0, any.missing = FALSE)
+  checkmate::assert_names(x = colnames(x), what = "colnames",
+                          must.include = c("YEAR","Species","assemblageID"),
+                          subset.of = c("YEAR","Species","assemblageID",
+                                        "STUDY_ID", "cell",
+                                        "Abundance","Biomass"))
 
-  xd<-data.frame()
+  xd <- data.frame()
 
-  if(ab=="A") {
-    x<-subset(x, !is.na(Abundance))
-    for(id in unique(x$rarefyID)) {
-      df<-subset(x, rarefyID==id)
-      nsp<-n_distinct(df$Species)
-      if(length(unique(df$Year))>1 & nsp>1) {
-        df<-select(df, Year, Species, Abundance)
-        y<-as.data.frame(pivot_wider(df, names_from=Species,
-                                 values_from=Abundance))
-        y[is.na(y)]<-0
-        xr<-getAlpha(y, id)
-        xd<-rbind(xd, xr)
-      }
-    }
-  }
-  if(ab=="B") {
-    x<-subset(x, !is.na(Biomass))
-    for(id in unique(x$rarefyID)) {
-      df<-subset(x, rarefyID==id)
-      nsp<-n_distinct(df$Species)
-      if(length(unique(df$Year))>1 & nsp>1) {
-        df<-select(df, Year, Species, Biomass)
-        y<-as.data.frame(pivot_wider(df, names_from=Species,
-                                   values_from=Biomass))
-        y[is.na(y)]<-0
-        xr<-getAlpha(y, id)
-        xd<-rbind(xd, xr)
-      }
-    }
-  }
+  base::switch(
+    ab,
+    A = {
+      x <- subset(x, !is.na(Abundance))
+      for (id in unique(x$assemblageID)) {
+        df <- subset(x, assemblageID == id)
+        if (dplyr::n_distinct(df$YEAR) > 1L && dplyr::n_distinct(df$Species) > 1L) {
+          y <- dplyr::select(df, YEAR, Species, Abundance) %>%
+            tidyr::pivot_wider(names_from = Species,
+                               values_from = Abundance,
+                               values_fill = 0)
+          xd <- rbind(xd, getAlpha(x = y, id = id))
+        } # end if
+      } # end for
+    }, # end base::switch
+    B = {
+      x <- subset(x, !is.na(Biomass))
+      for (id in unique(x$assemblageID)) {
+        df <- subset(x, assemblageID == id)
+        if (dplyr::n_distinct(df$YEAR) > 1L && dplyr::n_distinct(df$Species) > 1L) {
+          y <- dplyr::select(df, YEAR, Species, Biomass) %>%
+            tidyr::pivot_wider(names_from = Species,
+                               values_from = Biomass,
+                               values_fill = 0)
+          xd <- rbind(xd, getAlpha(x = y, id = id))
+        } # end if
+      } # end for
+    }) # end base::switch
   return(xd)
 }
 
-
-#' Beta
-#' @rdname BioTIME-metrics
-#' @export
-#' @param x (data.frame) Has to have columns Species and Abundance
+#' Alpha
+#' @param x (data.frame) First column has to be year and following columns
+#' contain species abundances.
 #' @param id definition of id
-#' @returns data.frame with three beta diversity dissimilarity metrics
-#' @importFrom vegan vegdist
 #' @author Faye Moyes
+#' @noRd
 #' @examples
 #' \dontrun{
-#' res<-getBetaDissimilarity(x, "A")
-#' where x is a long form data frame
+#'   x <- data.frame(
+#'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
+#'     matrix(data = rpois(384, 10), ncol = 4)
+#'     )
+#'     res <- getAlpha(x, id = 34)
 #' }
+#'
+#' @returns A data frame with results for S (species richness), N (numerical abundance),
+#' maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
+#' Inverse Simpson, PIE (probability of intraspecific encounter) and
+#' McNaughton's Dominance.
 
-getBeta<-function(x, id) {
+getAlpha <- function(x, id) {
+  # base::stopifnot(!is.null(id))
+  # checkmate::assert_names(x = colnames(x)[[1L]],
+  #                         identical.to = "YEAR",
+  #                         what = "colnames")
 
-  yr<-unique(x[, 1])
-  x<-x[,-1]
-  xb<-x
-  xb[xb>1]<-1
-  getj<-vegdist(xb, "jaccard")
-  getmh<-vegdist(x, "horn")
-  getbc<-vegdist(x, "bray")
+  yr <- unique(x[, 1L])
+  x <- x[, -1L]
 
-  jacc<-c(1, getj[1:(nrow(x))])[-1]
-  mh<-c(1, getmh[1:(nrow(x))])[-1]
-  bc<-c(1, getbc[1:(nrow(x))])[-1]
+  S <-     apply(x > 0, 1, sum)
+  N <-     apply(x, 1, sum)
+  maxN <-  apply(x, 1, max)
 
-  xf<-data.frame(Year=yr, rarefyID=id, JaccardDiss=jacc,
-                 MorisitaHornDiss=mh, BrayCurtisDiss=bc)
-  return(xf)
+  DomMc = apply(x, 1, function(s) {
+    y <- sort(s, decreasing = TRUE)
+    (y[[1L]] + y[[2L]]) / sum(y)})
+
+  PIE = apply(x, 1, function(s) {
+    n <- sum(s)
+    (n / (n - 1)) * (1 - sum((s / n)^2))})
+
+  x <- base::sweep(x, 1, N, "/")
+  Shannon <- apply( -x * log(x), 1, sum, na.rm = TRUE)
+  H <- apply(x * x, 1, sum, na.rm = TRUE)
+
+  return(
+    data.frame(
+      assemblageID = id,
+      YEAR = yr,
+      S,
+      N,
+      maxN,
+
+      Shannon,
+      Simpson = 1 - H,
+      invSimpson = 1 / H,
+      PIE,
+      DomMc,
+      expShannon = exp(Shannon)
+    )
+  )
 }
 
 #' run the beta function
 #' @export
-#' @rdname BioTIME-metrics
-#' @param x (data.frame) Has to have columns Species and Abundance
-#' @param ab character input for chosen currency - "A"=Abundance or "B"=Biomass
-#' @returns long with results for three beta metrics
+#' @param x (data.frame) Has to have columns Species, YEAR, assemblageID,
+#'   STUDY_ID, cell and Abundance or Biomass
+#' @param ab character input for chosen currency - "A" = Abundance or "B" = Biomass
+#' @returns getBetaMetrics returns a long data.frame with results for three beta
+#'   metrics.
 #' @author Faye Moyes
+#' @examples
+#' \dontrun{
+#' x <- data.frame(
+#'   YEAR = rep(rep(2010:2015, each = 4), times = 4),
+#'   Species = c(replicate(
+#'    n = 8L,
+#'    sample(letters, 24L, replace = FALSE))),
+#'   Abundance = rpois(24 * 8, 10),
+#'   assemblageID = rep(LETTERS[1L:8L], each = 24)
+#'   )
+#'
+#' res <- getBetaMetrics(x, "A")
+#' }
 
-getBetaDissimilarity<-function(x, ab) {
+getBetaMetrics <- function(x, ab) {
+  checkmate::assert_choice(ab, c("A","B"))
+  checkmate::assert_numeric(x = base::ifelse(ab == "A", x$Abundance, x$Biomass),
+                            lower = 0, any.missing = FALSE)
+  checkmate::assert_names(x = colnames(x), what = "colnames",
+                          must.include = c("YEAR","Species","assemblageID"),
+                          subset.of = c("YEAR","Species","assemblageID",
+                                        "STUDY_ID", "cell",
+                                        "Abundance","Biomass"))
 
-  xd<-data.frame()
+  xd <- data.frame()
+  nyear <- tapply(x$YEAR, x$assemblageID, dplyr::n_distinct)
+  nsp   <- tapply(x$Species, x$assemblageID, dplyr::n_distinct)
 
-  if(ab=="A") {
-    x<-subset(x, !is.na(Abundance))
-    for(id in unique(x$rarefyID)) {
-      df<-subset(x, rarefyID==id)
-      nsp<-n_distinct(df$Species)
-      if(length(unique(df$Year))<2 | nsp<2) {
-        xr<-c(NA, id, NA, NA, NA)
-      }
-      if(length(unique(df$Year))>1 & nsp>1) {
-        df<-select(df, Year, Species, Abundance)
-        y<-as.data.frame(pivot_wider(df, names_from=Species,
-                                 values_from=Abundance))
-        y[is.na(y)]<-0
-        xr<-getBeta(y, id)
-        xd<-rbind(xd, xr)
-      }
-    }
-  }
-  if(ab=="B") {
-    x<-subset(x, !is.na(Biomass))
-    for(id in unique(x$rarefyID)) {
-      df<-subset(x, rarefyID==id)
-      nsp<-n_distinct(df$Species)
-      if(length(unique(df$Year))<2 | nsp<2) {
-        xr<-c(NA, id, NA, NA, NA)
-      }
-      if(length(unique(df$Year))>1 & nsp>1) {
-        df<-subset(x, rarefyID==id)
-        df<-select(df, Year, Species, Biomass)
-        y<-as.data.frame(pivot_wider(df, names_from=Species,
-                                   values_from=Biomass))
-        y[is.na(y)]<-0
-        xr<-getBeta(y, id)
-        xd<-rbind(xd, xr)
-      }
-    }
-  }
+  base::switch(
+    ab,
+    A = {
+      x <- subset(x, !is.na(Abundance))
+      for (id in unique(x$assemblageID)) {
+        df <- subset(x, assemblageID == id)
+        if (nyear[[id]] < 2L || nsp[[id]] < 2L) {
+          xr <- c(NA, id, NA, NA, NA)
+        } else if (nyear[[id]] > 1L && nsp[[id]] > 1L) {
+          y <- dplyr::select(df, YEAR, Species, Abundance) %>%
+            tidyr::pivot_wider(names_from = Species,
+                               values_from = Abundance,
+                               values_fill = 0)
+          xd <- rbind(xd, getBeta(x = y, id = id))
+        } # end if
+      } # end for
+    }, # end switch
+    B = {
+      x <- subset(x, !is.na(Biomass))
+      for (id in unique(x$assemblageID)) {
+        df <- subset(x, assemblageID == id)
+        if (nyear[[id]] < 2L || nsp[[id]] < 2L) {
+          xr <- c(NA, id, NA, NA, NA)
+        } else if (nyear[[id]] > 1L && nsp[[id]] > 1L) {
+          y <- subset(x, assemblageID == id) %>%
+            dplyr::select(YEAR, Species, Biomass) %>%
+            tidyr::pivot_wider(names_from = Species,
+                               values_from = Biomass,
+                               values_fill = 0)
+          xd <- rbind(xd, getBeta(x = y, id = id))
+        } # end if
+      } # end for
+    }) # end base::switch
 
-  xd<-subset(xd, !is.na(JaccardDiss))
+  xd <- subset(xd, !is.na(JaccardDiss))
   return(xd)
 }
 
+
+
+#' Beta
+#' @param x (data.frame) First column has to contain year values and following
+#' columns contain species abundances
+#' @param id definition of id
+#' @returns getBeta returns a data.frame with three beta diversity dissimilarity
+#' metrics
+#' @importFrom vegan vegdist
+#' @author Faye Moyes
+#' @noRd
+#' @examples
+#' \dontrun{
+#'   x <- data.frame(
+#'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
+#'     matrix(data = rpois(384, 2), ncol = 4)
+#'   )
+#'   res <- getBeta(x, "A")
+#' }
+
+getBeta <- function(x, id) {
+
+  yr <- unique(x[, 1L])
+  x <- x[, -1L]
+  xb <- x
+  xb[xb > 1] <- 1
+  getj <- vegan::vegdist(xb, "jaccard") #10
+  getmh <- vegan::vegdist(x, "horn") #8
+  getbc <- vegan::vegdist(x, "bray") #4
+
+  jacc <- c(1, getj[1L:nrow(x)])[-1]
+  mh <-  c(1, getmh[1L:nrow(x)])[-1]
+  bc <-  c(1, getbc[1L:nrow(x)])[-1]
+
+  xf <- data.frame(YEAR = yr, assemblageID = id, JaccardDiss = jacc,
+                   MorisitaHornDiss = mh, BrayCurtisDiss = bc)
+  return(xf)
+}

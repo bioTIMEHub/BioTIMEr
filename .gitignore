@@ -6,6 +6,13 @@
 
 # Backups
 ignored
+inst/CITATION_article
+
+# Vignette building
+inst/doc
+doc/
+Meta/
+vignettes/vignette1_cache/
 
 # Created by https://www.toptal.com/developers/gitignore/api/windows,macos,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,linux
@@ -85,6 +92,3 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux
-inst/doc
-/doc/
-/Meta/

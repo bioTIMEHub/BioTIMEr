@@ -5,7 +5,7 @@
 \alias{themeBioTIME}
 \title{Plot slopes BioTIME}
 \usage{
-plotSlopes(x, metric, cols, taxa, method, rf, divType)
+plotSlopes(x, metric, cols, taxa, method, assemblageID, divType)
 
 themeBioTIME(lp, fontSize, colx, coly)
 }
@@ -20,7 +20,7 @@ themeBioTIME(lp, fontSize, colx, coly)
 
 \item{method}{Parameter description}
 
-\item{rf}{Parameter description}
+\item{assemblageID}{Parameter description}
 
 \item{divType}{Parameter description}
 
@@ -38,7 +38,7 @@ A plot
 \description{
 Plot slopes BioTIME
 
-theme for BioTIME
+ggplot2 theme for BioTIME plots
 }
 \examples{
 \dontrun{
@@ -50,12 +50,12 @@ load("./data/subBTmeta.RData")
 meta  <-  subBTmeta
 meta2 <- select(meta, STUDY_ID, TAXA, REALM)
 
-alphaSl <- as.data.frame(alphaSl \%>\% separate(., rarefyID,
+alphaSl <- as.data.frame(alphaSl \%>\% separate(., assemblageID,
                                             into= c("STUDY_ID", "cell"), sep="_", remove=F))
 
 ameta <- merge(alphaSl, meta2, by="STUDY_ID")
 
-betaSl <- as.data.frame(betaSl \%>\% separate(., rarefyID,
+betaSl <- as.data.frame(betaSl \%>\% separate(., assemblageID,
                                           into= c("STUDY_ID", "cell"), sep="_", remove=F))
 
 bmeta <- merge(betaSl, meta2, by="STUDY_ID")
@@ -70,6 +70,6 @@ plrf <- plotSlopes(bmeta, "N", bioCol, "Fish", "ind","18_9044316", "beta")
 }
 \dontrun{
 fig1 <- ggplot2::ggplot() +
-          themeBioTIME()
+          themeBioTIME("none", 12, "black", "grey90")
 }
 }

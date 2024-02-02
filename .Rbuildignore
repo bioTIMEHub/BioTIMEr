@@ -5,3 +5,6 @@
 ^\.github$
 ^doc$
 ^Meta$
+^vignettes/vignette1_cache
+^cran-comments\.md$
+^codemeta\.json$

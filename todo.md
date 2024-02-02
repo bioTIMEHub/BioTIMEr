@@ -13,6 +13,7 @@ Add an argument to allow users to choose the gridsize.
 
 ### runResampling
 Add a third method: presence absence
+Make the column names capitalising consistent with gridding()
 
 ### Add more data
 
@@ -20,6 +21,7 @@ Add a third method: presence absence
 ## DESCRIPTION
 ### Authors
  - discuss
+ - check that title and authors are identical between inst/CITATION and DESCRIPTION
 
 ### Imports
 For geosphere, import only `geomean` & `areaPolygon`

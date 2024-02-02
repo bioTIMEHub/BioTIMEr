@@ -2,25 +2,58 @@
 % Please edit documentation in R/gridBioTIME.R
 \name{gridding}
 \alias{gridding}
-\title{gridding BioTIME}
+\title{Gridding BioTIME data}
 \usage{
-gridding(meta, btf)
+gridding(meta, btf, res = 12, res_by_data = FALSE)
 }
 \arguments{
 \item{meta}{(data.frame) BioTIME metadata}
 
 \item{btf}{(data.frame) BioTIME data}
+
+\item{res}{(integer) Resolution. Must be in the range [0,30]. Larger values
+represent finer resolutions. Default: 12 (~96 sq km). Passed to
+\code{\link[dggridR]{dgconstruct}}.}
+
+\item{res_by_data}{(logical) FALSE by default. If TRUE, the function
+\code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt `res` to
+the data extent.}
 }
 \value{
-A data.frame with studies split into 96km2 gridded cells (rarefyIDs)
+Returns a `data.frame`, with selected columns from the `btf` and `meta`
+  data.frames, an extra integer column called `cell` and two character columns
+  called `StudyMethod` and `assemblageID` (concatenation of study_ID and cell).
 }
 \description{
-gridding BioTIME
+Grids BioTIME data into a discrete global grid based on location
+(latitude/longitude).
+}
+\details{
+Each BioTIME study contains distinct samples measured (with a
+  consistent methodology) over time, which could be fixed plots (i.e. SL or
+  "single-location" studies where measures are taken from a set of specific
+  georeferenced sites at any given time) or wide-ranging surveys, transects,
+  tows, and so on (i.e. ML or "multi-location" studies where measures are taken
+  from multiple sites that may or may not align from year to year, see
+  \code{\link{runResampling}}). `gridding` is a function designed to identify,
+  separate and standardise both SL and ML studies using a global grid of
+  hexagonal cells derived from \code{\link[dggridR]{dgconstruct}}.
+  Here each sample is assigned a different combination of study ID and grid cell
+  (based on its latitude and longitude) resulting in a unique identifier for
+  each assemblage time-series (assemblageID), thus allowing for the integrity
+  of each study and each sample to be maintained.
+  By default `meta` represents a long form data frame containing the data
+  information for BioTIME studies and `btf` is a data frame containing long
+  form data from a main BioTIME query.
+
+`res` = 12 was found to be the most appropriate value when working on the whole
+  BioTIME databasee, but the function gives the user the possibility to define
+  their own grid resolution (e.g. res = 14, see `vignette("dggridR")`) or to
+  let the function compute the best `res` based on the average study extent.
 }
 \examples{
 \dontrun{
-base::load("data/subBTquery.RData")
-base::load("data/subBTmeta.RData")
-gridding(subBTmeta, subBTquery)
+  library(BioTIMEr)
+  gridding(subBTmeta, subBTquery)
 }
 }

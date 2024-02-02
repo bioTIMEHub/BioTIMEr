@@ -11,15 +11,22 @@
 #' @param reverse Default to `FALSE`
 #' @param ... Passed to \code{\link[ggplot2]{discrete_scale}} or  \code{\link[ggplot2]{scale_color_gradient}}
 #' @details
-#' USAGE NOTE: Remember to change these arguments when plotting colors continuously.
+#' USAGE NOTE: Remember to change these arguments when plotting colours continuously.
 #' @author Cher F. Y. Chow
 #' @importFrom ggplot2 discrete_scale
 #' @importFrom ggplot2 scale_fill_gradientn
 
-scale_color_biotime <- function(palette = "realms", discrete = TRUE, reverse = FALSE, ...) {
+scale_color_biotime <- function(palette = "realms", discrete = TRUE,
+                                reverse = FALSE, ...) {
+  checkmate::assert_choice(x = palette, choices = c("realms", "gradient",
+                                                    "cool", "warm"))
+  checkmate::assert_logical(x = discrete, max.len = 1L, null.ok = FALSE)
+  checkmate::assert_logical(x = reverse, max.len = 1L, null.ok = FALSE)
+
   pal <- biotime_cols(palette = palette, reverse = reverse)
   if (discrete) {
-    ggplot2::discrete_scale("color", paste("biotime_", palette, sep = ''), palette = pal, ...)
+    ggplot2::discrete_scale("color", paste("biotime_", palette, sep = ''),
+                            palette = pal, ...)
   } else {
     ggplot2::scale_color_gradientn(colours = pal(256), ...)
   }
@@ -38,10 +45,20 @@ scale_colour_biotime <- scale_color_biotime
 #' @importFrom ggplot2 discrete_scale
 #' @importFrom ggplot2 scale_fill_gradientn
 
-scale_fill_biotime <- function(palette = "realms", discrete = TRUE, reverse = FALSE, ...) {
+scale_fill_biotime <- function(palette = "realms",
+                               discrete = TRUE,
+                               reverse = FALSE, ...) {
+  checkmate::assert_choice(x = palette, choices = c("realms", "gradient",
+                                                    "cool", "warm"))
+  checkmate::assert_logical(x = discrete, max.len = 1L, null.ok = FALSE)
+  checkmate::assert_logical(x = reverse, max.len = 1L, null.ok = FALSE)
+
   pal <- biotime_cols(palette = palette, reverse = reverse)
   if (discrete) {
-    ggplot2::discrete_scale("fill", paste("biotime_", palette, sep = ''), palette = pal, ...)
+    ggplot2::discrete_scale("fill",
+                            paste("biotime_", palette, sep = ''),
+                            palette = pal,
+                            ...)
   } else {
     ggplot2::scale_fill_gradientn(colours = pal(256), ...)
   }

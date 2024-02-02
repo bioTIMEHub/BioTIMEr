@@ -1,0 +1,171 @@
+---
+title: "Introduction to BioTIMEr"
+author: ""
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to BioTIMEr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(echo = TRUE)
+```
+
+BioTIMEr requires the following packages to run and, if needed, they were installed
+by R at the same time BioTIMEr was installed.
+
+- [dplyr](https://dplyr.tidyverse.org/)
+- [tidyr](https://tidyr.tidyverse.org/)
+- [ggplot2](https://ggplot2.tidyverse.org/)
+- [dggridR](https://rdrr.io/cran/dggridR/)
+- [vegan](https://vegandevs.github.io/vegan/)
+
+```{r bt_package_loading, warning=FALSE, message=FALSE, eval=TRUE}
+library(dplyr)
+library(tidyr)
+library(BioTIMEr)
+```
+
+When loading the BioTIMEr package, a subset of BioTIME data is automatically
+loaded too.
+The whole BioTIME database is accessible [here](https://biotime.st-andrews.ac.uk/)
+
+There are two files: 
+
+- subBTmeta: 
+- subBTquery: 
+
+```{r data_description, warning=FALSE, message=FALSE, eval=TRUE, include=TRUE}
+?subBTmeta
+?subBTquery
+```
+
+
+```{r filename_check, include=FALSE, echo=FALSE}
+# Just checking that the file names given above in the vignette are still correct
+file.exists("data/subBTmeta.RData")
+file.exists("data/subBTquery.RData")
+```
+
+
+### These are the functions available in the package
+
+- gridding
+- rarefysamples
+- runResampling
+- getAlpha
+- getAlphaMetrics
+- getBeta
+- getBetaMetrics
+- getLinearRegressions
+- themeBioTIME
+- plotSlopes
+
+----------------------------------------------------------------------
+### Gridding
+Where `meta` represents a long form data frame containing the meta data information for BioTIME studies and `btf` is a data frame containing long form data from the main BioTIME query.
+```{r gridding_ex, eval=FALSE, cache=TRUE, echo=FALSE, message=FALSE, tidy=TRUE, include=TRUE} 
+gridding(meta = subBTmeta, btf = subBTquery) %>% 
+  head() %>% 
+  kable()
+```
+
+```{r eval=FALSE} 
+runResampling(df, ab)
+```
+
+where df is the data frame output from the `gridding()` function and ab is a character input indicating whether chosen currency for rarefaction and resampling is abundance or biomass, i.e. "A"=Abundance and "B"=Biomass. This function calls the `rarefysamples()` function which performs a single run of the chosen input by randomly resampling the minimum number of sampling events per year per study. This function can be run once and then used for further analyses as described here or fitted into a simple loop to run and record metrics for multiple iterations before choosing the mean (as in vignette 3). The output is a single long form data frame containing rarefied time series.
+
+```{r eval=FALSE} 
+getAlphaMetrics(x, ab) 
+```
+
+where x is the output of the `runResampling()` function and ab is a character input indicating whether chosen currency for rarefaction and resampling is abundance or biomass, i.e. "A"=Abundance and "B"=Biomass. This function calls the associated `getAlpha()` function which calculates nine alpha diversity metrics; S, N, maximum N, Shannon, Simpson, McNaughton dominance, PIE, inverse Simpson and exponential Shannon, for each year within all time series. With "A" the N and maximum N metrics return numerical abundance whilst with "B" they represent biomass.
+
+```{r eval=FALSE} 
+getBetaMetrics(x, ab) 
+```
+
+where x is the output of the `runResampling()` function and ab is a character input indicating whether chosen currency for rarefaction and resampling is abundance or biomass, i.e. "A"=Abundance and "B"=Biomass. This function calls the associated `getBeta()` function which calculates three beta diversity metrics; Jaccard dissimilarity (which uses only presence absence data), Bray-Curtis dissimilarity and Morisita-Horn dissimilarity (both of which take abundance data),for each year within all time series. The dissimilarity here is calculated against the baseline year of each time series. With "A" numerical abundance is used whilst "B" uses biomass.
+
+
+```{r eval=FALSE} 
+getLinearRegressions(x, divType)
+```
+
+where x is the output of one of the metric functions, either `getAlphaMetrics()` or `getBetaMetrics()` and divType is a string input indicating whether the input is for "alpha" or "beta". The function returns a data frame containing the original input of yearly diversity metrics for each study merged with the results of a simple linear regression (OLS) on each metric for each time series, i.e. a single slope, intercept and p-value for each study.
+
+
+```{r eval=FALSE} 
+plotSlopes(x, metric, cols, taxa, method, assemblageID, divType)
+```
+
+where `x` is the output from the `getLinearRegressions()` function, metric is a chosen metric, i.e. Jaccard dissimilarity, cols is a colour palette, taxa is chosen taxon, i.e. fish or birds, method is the type of plot required, this is taken from "ind" (single study), "taxa" (all studies from a taxon) or "metric" (chosen metric), `assemblageID` is the identity of a single time series, i.e. "53_10639590", `divType` is whether the user wishes to examine "alpha" or "beta" results.
+
+## Now try to run some things
+
+```{r code_workflow, eval=TRUE, message = FALSE, cache = TRUE}
+df <- gridding(meta = subBTmeta, btf = subBTquery)
+
+kable(head(df[6:11]))
+dim(df)
+
+assemblageID <- runResampling(df = df, ab = "A")
+
+kable(head(assemblageID))
+
+alpha <- getAlphaMetrics(x = assemblageID, ab = "A")
+
+kable(head(alpha))
+
+beta <- getBetaMetrics(x = assemblageID, ab = "A")
+
+kable(head(beta))
+
+alSl <- getLinearRegressions(x = alpha, divType = "alpha")
+
+beSl <- getLinearRegressions(x = beta, divType = "beta")
+
+meta2 <- select(subBTmeta, STUDY_ID, TAXA, REALM)
+
+
+alphaSl <- alSl %>% separate(assemblageID,
+                             into = c("STUDY_ID", "cell"),
+                             sep = "_", remove = FALSE) %>%
+  as.data.frame()
+
+ameta <- merge(alphaSl, meta2, by = "STUDY_ID")
+
+
+betaSl <- beSl %>% separate(assemblageID,
+                            into = c("STUDY_ID", "cell"),
+                            sep = "_", remove = FALSE) %>%
+  as.data.frame()
+
+bmeta <- merge(betaSl, meta2, by = "STUDY_ID")
+
+```
+
+```{r plot_alpha_shannon_ind, fig.width=12, fig.height=10, eval=TRUE, cache=TRUE, tidy=TRUE}
+plotSlopes(x = ameta, metric = "Shannon", cols = bioCol,
+           taxa = "Fish", method = "ind", assemblageID = "10_358678", divType = "alpha")
+```
+
+
+```{r plot_alpha_shannon_metric, fig.width=8, fig.height=6, eval=FALSE, cache=TRUE, tidy=TRUE}
+plotSlopes(x = ameta, metric = "Shannon", cols = bioCol, taxa = "Fish", method = "metric", assemblageID = "10_358678", divType = "alpha")
+```
+
+```{r plot_beta_jaccard_ind, fig.width=9, fig.height=6, eval=TRUE, cache=TRUE, tidy=TRUE}
+plotSlopes(x = bmeta, metric = "JaccardDiss", cols = bioCol, taxa = "Fish",
+           method = "ind", assemblageID = "10_358678", divType = "beta")
+```
+
+```{r plot_beta_jaccard_taxa, fig.width=8, fig.height=4, eval=FALSE, cache=TRUE, tidy=TRUE}
+plotSlopes(x = bmeta, metric = "JaccardDiss", cols = bioCol,
+           taxa = "Fish",
+           method = "taxa", assemblageID = "10_358678", divType = "beta")
+```

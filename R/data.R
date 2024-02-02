@@ -19,7 +19,7 @@
 #'   \item{YEAR}{Year of record}
 #'   \item{STUDY_ID}{BioTIME study unique identifier}
 #'   \item{valid_name}{Highest taxonomic resolution of individual, preferred is genus and species}
-#'   \item{resolution}{Level of resolution, i.e. 'species' respresented by genus and species}
+#'   \item{resolution}{Level of resolution, i.e. 'species' represented by genus and species}
 #'   \item{taxon}{Higher level taxonomic grouping, i.e. Fish}
 #' }
 #' @source <https://biotime.st-andrews.ac.uk/download.php>
@@ -39,7 +39,7 @@
 #'   \item{PROTECTED_AREA}{binary variable indicating if the study is within a protected area}
 #'   \item{AREA}{total area of study}
 #'   \item{BIOME_MAP}{Biome of study location (taken from the WWF biomes, i.e. Temperate broadleaf and mixed forests}
-#'   \item{TAXA}{High level taxomonic identity of study species, i.e. Fish}
+#'   \item{TAXA}{High level taxonomic identity of study species, i.e. Fish}
 #'   \item{ORGANISMS}{More detailed information on taxonomy, i.e. woody plants}
 #'   \item{TITLE}{Title of study as identified in original source}
 #'   \item{AB_BIO}{A, B or AB to designate abundance only, biomass only or both}
@@ -57,7 +57,7 @@
 #'   \item{DATE_STUDY_ADDED}{Date that the study was added to the database}
 #'   \item{ABUNDANCE_TYPE}{Type of abundance, i.e. count}
 #'   \item{BIOMASS_TYPE}{Type of biomass, i.e. weight}
-#'   \item{SAMPLE_DESC_NAME}{concatenation of descriptors comprising the unique sampling event}
+#'   \item{SAMPLE_DESC}{concatenation of descriptors comprising the unique sampling event}
 #' }
 #' @source <https://biotime.st-andrews.ac.uk/download.php>
 "subBTmeta"

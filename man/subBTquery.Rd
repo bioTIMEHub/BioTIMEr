@@ -22,7 +22,7 @@ A data frame with 77,093 rows and 16 columns:
   \item{YEAR}{Year of record}
   \item{STUDY_ID}{BioTIME study unique identifier}
   \item{valid_name}{Highest taxonomic resolution of individual, preferred is genus and species}
-  \item{resolution}{Level of resolution, i.e. 'species' respresented by genus and species}
+  \item{resolution}{Level of resolution, i.e. 'species' represented by genus and species}
   \item{taxon}{Higher level taxonomic grouping, i.e. Fish}
 }
 }

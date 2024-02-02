@@ -7,13 +7,27 @@
 getLinearRegressions(x, divType)
 }
 \arguments{
-\item{x}{output from getAlphaMetrics() or getBetaDissimilarity() functions}
+\item{x}{output from getAlphaMetrics() or getBetaMetrics() functions}
 
 \item{divType}{calculate regressions of alpha or beta results}
 }
 \value{
-a dataframe with yearly diversity results merged with results of linear regressions (intercept, slope, p-value, significance)
+a dataframe with yearly diversity results merged with results of
+linear regressions (intercept, slope, p-value, significance)
 }
 \description{
 Get Linear Regressions BioTIME
+}
+\examples{
+  x <- data.frame(
+    YEAR = rep(rep(2010:2015, each = 4), times = 4),
+    Species = c(replicate(n = 8L, sample(letters, 24L, replace = FALSE))),
+    Abundance = rpois(24 * 8, 10),
+    assemblageID = rep(LETTERS[1L:8L], each = 24)
+  )
+  alpham <- getAlphaMetrics(x, "A")
+  getLinearRegressions(x = alpham, divType = "alpha")
+  betam <- getBetaMetrics(x = x, "A")
+  getLinearRegressions(x = betam, divType = "beta")
+
 }

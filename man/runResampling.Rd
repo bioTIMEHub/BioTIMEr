@@ -2,18 +2,31 @@
 % Please edit documentation in R/rarefyBioTIME.R
 \name{runResampling}
 \alias{runResampling}
-\title{runResampling BioTIME}
+\title{runResampling BioTIME
+Uses the output of `gridding` and applies the `rarefysamples` function.}
 \usage{
-runResampling(df, ab)
+runResampling(df, ab, resamps = 1L)
 }
 \arguments{
-\item{df}{dataframe to be resampled (in the format of the output of the gridding() function}
+\item{df}{`data.frame` to be resampled (in the format of the output of the
+\code{\link{gridding}} function).}
 
-\item{ab}{set to "A" for abundance and "B" for biomass}
+\item{ab}{set to "A" for abundance and "B" for biomass.}
+
+\item{resamps}{Number of repetitions}
 }
 \value{
-dataframe containing rarefied studies
+`data.frame` containing rarefied studies
 }
 \description{
 runResampling BioTIME
+Uses the output of `gridding` and applies the `rarefysamples` function.
+}
+\examples{
+\dontrun{
+  library(BioTIMEr)
+  df<-gridding(subBTmeta, subBTquery)
+  runResampling(df, ab = "A")
+}
+
 }
