@@ -2,6 +2,6 @@ pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
-  First_contact_with_BioTIMEr: First_contact_with_BioTIMEr.html
-last_built: 2023-12-11T11:18Z
+  vignette1: vignette1.html
+last_built: 2024-02-02T16:31Z
 

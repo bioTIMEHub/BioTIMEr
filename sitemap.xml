@@ -7,10 +7,10 @@
     <loc>/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/articles/First_contact_with_BioTIMEr.html</loc>
+    <loc>/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>/articles/vignette1.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>
@@ -19,13 +19,25 @@
     <loc>/index.html</loc>
   </url>
   <url>
-    <loc>/reference/BioTIME-metrics.html</loc>
+    <loc>/news/index.html</loc>
   </url>
   <url>
     <loc>/reference/BioTIME-palette.html</loc>
   </url>
   <url>
     <loc>/reference/BioTIME-plots.html</loc>
+  </url>
+  <url>
+    <loc>/reference/getAlpha.html</loc>
+  </url>
+  <url>
+    <loc>/reference/getAlphaMetrics.html</loc>
+  </url>
+  <url>
+    <loc>/reference/getBeta.html</loc>
+  </url>
+  <url>
+    <loc>/reference/getBetaMetrics.html</loc>
   </url>
   <url>
     <loc>/reference/getLinearRegressions.html</loc>

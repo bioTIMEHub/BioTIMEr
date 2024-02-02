@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioTIMEr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9013</span>
       </span>
     </div>
 
@@ -32,9 +32,12 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/First_contact_with_BioTIMEr.html">BioTIMEr first vignette</a>
+      <a href="../articles/vignette1.html">Introduction to BioTIMEr</a>
     </li>
   </ul></li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/bioTIMEHub/BioTIMEr/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
@@ -58,10 +61,6 @@
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="BioTIME-metrics.html">getAlpha()</a></code> <code><a href="BioTIME-metrics.html">getAlphaMetrics()</a></code> <code><a href="BioTIME-metrics.html">getBeta()</a></code> <code><a href="BioTIME-metrics.html">getBetaDissimilarity()</a></code> </p>
-        </td>
-        <td><p>Alpha</p></td>
-      </tr><tr><td>
           <p><code><a href="BioTIME-palette.html">scale_color_biotime()</a></code> <code><a href="BioTIME-palette.html">scale_colour_biotime()</a></code> <code><a href="BioTIME-palette.html">scale_fill_biotime()</a></code> </p>
         </td>
         <td><p>Scale construction for ggplot use</p></td>
@@ -70,21 +69,26 @@
         </td>
         <td><p>Plot slopes BioTIME</p></td>
       </tr><tr><td>
+          <p><code><a href="getAlphaMetrics.html">getAlphaMetrics()</a></code> </p>
+        </td>
+        <td><p>Run the alpha function</p></td>
+      </tr><tr><td>
+          <p><code><a href="getBetaMetrics.html">getBetaMetrics()</a></code> </p>
+        </td>
+        <td><p>run the beta function</p></td>
+      </tr><tr><td>
           <p><code><a href="getLinearRegressions.html">getLinearRegressions()</a></code> </p>
         </td>
         <td><p>Get Linear Regressions BioTIME</p></td>
       </tr><tr><td>
           <p><code><a href="gridding.html">gridding()</a></code> </p>
         </td>
-        <td><p>gridding BioTIME</p></td>
-      </tr><tr><td>
-          <p><code><a href="rarefysamples.html">rarefysamples()</a></code> </p>
-        </td>
-        <td><p>rarefy BioTIME</p></td>
+        <td><p>Gridding BioTIME data</p></td>
       </tr><tr><td>
           <p><code><a href="runResampling.html">runResampling()</a></code> </p>
         </td>
-        <td><p>runResampling BioTIME</p></td>
+        <td><p>runResampling BioTIME
+Uses the output of `gridding` and applies the `rarefysamples` function.</p></td>
       </tr><tr><td>
           <p><code><a href="subBTmeta.html">subBTmeta</a></code> </p>
         </td>
@@ -102,7 +106,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Alban Sagouis, Faye Moyes, Anne E. Magurran, Jonathan M. Chase, Maria Dornelas.</p>
+  <p></p><p>Developed by Alban Sagouis, Faye Moyes, Inês Santos Martins, Anne E. Magurran, Jonathan M. Chase, Maria Dornelas, European Research Council grant AdG BioTIME 250189, European Research Council grant PoC BioCHANGE 727440.</p>
 </div>
 
 <div class="pkgdown">

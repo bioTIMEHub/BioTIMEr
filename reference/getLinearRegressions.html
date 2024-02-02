@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioTIMEr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9013</span>
       </span>
     </div>
 
@@ -32,9 +32,12 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/First_contact_with_BioTIMEr.html">BioTIMEr first vignette</a>
+      <a href="../articles/vignette1.html">Introduction to BioTIMEr</a>
     </li>
   </ul></li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/bioTIMEHub/BioTIMEr/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
@@ -66,7 +69,7 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
-<dd><p>output from getAlphaMetrics() or getBetaDissimilarity() functions</p></dd>
+<dd><p>output from getAlphaMetrics() or getBetaMetrics() functions</p></dd>
 
 
 <dt>divType</dt>
@@ -77,9 +80,1181 @@
     <h2>Value</h2>
     
 
-<p>a dataframe with yearly diversity results merged with results of linear regressions (intercept, slope, p-value, significance)</p>
+<p>a dataframe with yearly diversity results merged with results of
+linear regressions (intercept, slope, p-value, significance)</p>
     </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span>  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    YEAR <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">2010</span><span class="op">:</span><span class="fl">2015</span>, each <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">8L</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="fl">24L</span>, replace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    Abundance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="fl">24</span> <span class="op">*</span> <span class="fl">8</span>, <span class="fl">10</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    assemblageID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">LETTERS</span><span class="op">[</span><span class="fl">1L</span><span class="op">:</span><span class="fl">8L</span><span class="op">]</span>, each <span class="op">=</span> <span class="fl">24</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">alpham</span> <span class="op">&lt;-</span> <span class="fu"><a href="getAlphaMetrics.html">getAlphaMetrics</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"A"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">getLinearRegressions</span><span class="op">(</span>x <span class="op">=</span> <span class="va">alpham</span>, divType <span class="op">=</span> <span class="st">"alpha"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     assemblageID YEAR     metric  diversity        slopes   p-values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1              A 2010          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2              A 2010          N 41.0000000 -4.857143e-01 0.72808081</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3              A 2010       maxN 12.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4              A 2010    Shannon  1.3673782 -1.018474e-02 0.12713696</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5              A 2010    Simpson  0.7412255 -5.454201e-03 0.07515897</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6              A 2010 invSimpson  3.8643678 -7.515537e-02 0.07642516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7              A 2010        PIE  0.7597561 -5.357414e-03 0.10888484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8              A 2010      DomMc  0.5609756  1.975576e-02 0.06187671</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9              A 2010 expShannon  3.9250467 -3.917778e-02 0.12640824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10             A 2011          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11             A 2011          N 33.0000000 -4.857143e-01 0.72808081</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12             A 2011       maxN 10.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13             A 2011    Shannon  1.3696299 -1.018474e-02 0.12713696</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14             A 2011    Simpson  0.7419651 -5.454201e-03 0.07515897</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15             A 2011 invSimpson  3.8754448 -7.515537e-02 0.07642516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16             A 2011        PIE  0.7651515 -5.357414e-03 0.10888484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17             A 2011      DomMc  0.5757576  1.975576e-02 0.06187671</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18             A 2011 expShannon  3.9338947 -3.917778e-02 0.12640824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19             A 2012          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20             A 2012          N 42.0000000 -4.857143e-01 0.72808081</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21             A 2012       maxN 12.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22             A 2012    Shannon  1.3806077 -1.018474e-02 0.12713696</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23             A 2012    Simpson  0.7471655 -5.454201e-03 0.07515897</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24             A 2012 invSimpson  3.9551570 -7.515537e-02 0.07642516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25             A 2012        PIE  0.7653891 -5.357414e-03 0.10888484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26             A 2012      DomMc  0.5476190  1.975576e-02 0.06187671</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27             A 2012 expShannon  3.9773180 -3.917778e-02 0.12640824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28             A 2013          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29             A 2013          N 46.0000000 -4.857143e-01 0.72808081</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30             A 2013       maxN 15.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31             A 2013    Shannon  1.3141731 -1.018474e-02 0.12713696</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32             A 2013    Simpson  0.7183365 -5.454201e-03 0.07515897</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33             A 2013 invSimpson  3.5503356 -7.515537e-02 0.07642516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34             A 2013        PIE  0.7342995 -5.357414e-03 0.10888484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35             A 2013      DomMc  0.6521739  1.975576e-02 0.06187671</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36             A 2013 expShannon  3.7216721 -3.917778e-02 0.12640824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37             A 2014          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38             A 2014          N 36.0000000 -4.857143e-01 0.72808081</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39             A 2014       maxN 13.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40             A 2014    Shannon  1.3512382 -1.018474e-02 0.12713696</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41             A 2014    Simpson  0.7314815 -5.454201e-03 0.07515897</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42             A 2014 invSimpson  3.7241379 -7.515537e-02 0.07642516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43             A 2014        PIE  0.7523810 -5.357414e-03 0.10888484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44             A 2014      DomMc  0.6111111  1.975576e-02 0.06187671</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45             A 2014 expShannon  3.8622049 -3.917778e-02 0.12640824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46             A 2015          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47             A 2015          N 35.0000000 -4.857143e-01 0.72808081</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48             A 2015       maxN 14.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49             A 2015    Shannon  1.3204070 -1.018474e-02 0.12713696</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50             A 2015    Simpson  0.7151020 -5.454201e-03 0.07515897</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 51             A 2015 invSimpson  3.5100287 -7.515537e-02 0.07642516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 52             A 2015        PIE  0.7361345 -5.357414e-03 0.10888484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 53             A 2015      DomMc  0.6571429  1.975576e-02 0.06187671</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 54             A 2015 expShannon  3.7449452 -3.917778e-02 0.12640824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 55             B 2010          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 56             B 2010          N 44.0000000 -3.428571e-01 0.48519796</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57             B 2010       maxN 17.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 58             B 2010    Shannon  1.3224196  5.498209e-03 0.73509422</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 59             B 2010    Simpson  0.7179752  2.565743e-03 0.72410601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 60             B 2010 invSimpson  3.5457875  3.276639e-02 0.71724602</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 61             B 2010        PIE  0.7346723  2.784507e-03 0.70972489</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 62             B 2010      DomMc  0.6363636 -7.900875e-03 0.73804363</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 63             B 2010 expShannon  3.7524898  2.050293e-02 0.73261286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 64             B 2011          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 65             B 2011          N 42.0000000 -3.428571e-01 0.48519796</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 66             B 2011       maxN 12.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 67             B 2011    Shannon  1.3734043  5.498209e-03 0.73509422</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 68             B 2011    Simpson  0.7437642  2.565743e-03 0.72410601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 69             B 2011 invSimpson  3.9026549  3.276639e-02 0.71724602</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 70             B 2011        PIE  0.7619048  2.784507e-03 0.70972489</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 71             B 2011      DomMc  0.5714286 -7.900875e-03 0.73804363</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 72             B 2011 expShannon  3.9487707  2.050293e-02 0.73261286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 73             B 2012          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 74             B 2012          N 41.0000000 -3.428571e-01 0.48519796</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 75             B 2012       maxN 16.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 76             B 2012    Shannon  1.2282213  5.498209e-03 0.73509422</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 77             B 2012    Simpson  0.6793575  2.565743e-03 0.72410601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 78             B 2012 invSimpson  3.1187384  3.276639e-02 0.71724602</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 79             B 2012        PIE  0.6963415  2.784507e-03 0.70972489</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 80             B 2012      DomMc  0.7560976 -7.900875e-03 0.73804363</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 81             B 2012 expShannon  3.4151497  2.050293e-02 0.73261286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 82             B 2013          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 83             B 2013          N 43.0000000 -3.428571e-01 0.48519796</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 84             B 2013       maxN 14.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 85             B 2013    Shannon  1.3661993  5.498209e-03 0.73509422</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 86             B 2013    Simpson  0.7398594  2.565743e-03 0.72410601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 87             B 2013 invSimpson  3.8440748  3.276639e-02 0.71724602</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 88             B 2013        PIE  0.7574751  2.784507e-03 0.70972489</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 89             B 2013      DomMc  0.5813953 -7.900875e-03 0.73804363</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 90             B 2013 expShannon  3.9204221  2.050293e-02 0.73261286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 91             B 2014          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 92             B 2014          N 39.0000000 -3.428571e-01 0.48519796</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 93             B 2014       maxN 10.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 94             B 2014    Shannon  1.3852905  5.498209e-03 0.73509422</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 95             B 2014    Simpson  0.7495069  2.565743e-03 0.72410601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 96             B 2014 invSimpson  3.9921260  3.276639e-02 0.71724602</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 97             B 2014        PIE  0.7692308  2.784507e-03 0.70972489</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 98             B 2014      DomMc  0.5128205 -7.900875e-03 0.73804363</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 99             B 2014 expShannon  3.9959866  2.050293e-02 0.73261286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 100            B 2015          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 101            B 2015          N 43.0000000 -3.428571e-01 0.48519796</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 102            B 2015       maxN 16.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 103            B 2015    Shannon  1.3261797  5.498209e-03 0.73509422</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 104            B 2015    Simpson  0.7203894  2.565743e-03 0.72410601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 105            B 2015 invSimpson  3.5764023  3.276639e-02 0.71724602</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 106            B 2015        PIE  0.7375415  2.784507e-03 0.70972489</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 107            B 2015      DomMc  0.6511628 -7.900875e-03 0.73804363</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 108            B 2015 expShannon  3.7666263  2.050293e-02 0.73261286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 109            C 2010          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 110            C 2010          N 38.0000000 -5.142857e-01 0.82028297</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 111            C 2010       maxN 15.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 112            C 2010    Shannon  1.3086726  1.064868e-02 0.06775852</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 113            C 2010    Simpson  0.7105263  5.263443e-03 0.07852786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 114            C 2010 invSimpson  3.4545455  7.147699e-02 0.07899990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 115            C 2010        PIE  0.7297297  5.509960e-03 0.02562778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 116            C 2010      DomMc  0.6842105 -2.324687e-02 0.07575313</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 117            C 2010 expShannon  3.7012575  4.082843e-02 0.06771231</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 118            C 2011          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 119            C 2011          N 56.0000000 -5.142857e-01 0.82028297</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 120            C 2011       maxN 18.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 121            C 2011    Shannon  1.3555754  1.064868e-02 0.06775852</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 122            C 2011    Simpson  0.7353316  5.263443e-03 0.07852786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 123            C 2011 invSimpson  3.7783133  7.147699e-02 0.07899990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 124            C 2011        PIE  0.7487013  5.509960e-03 0.02562778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 125            C 2011      DomMc  0.6071429 -2.324687e-02 0.07575313</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 126            C 2011 expShannon  3.8789922  4.082843e-02 0.06771231</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 127            C 2012          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 128            C 2012          N 41.0000000 -5.142857e-01 0.82028297</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 129            C 2012       maxN 13.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 130            C 2012    Shannon  1.3490456  1.064868e-02 0.06775852</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 131            C 2012    Simpson  0.7317073  5.263443e-03 0.07852786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 132            C 2012 invSimpson  3.7272727  7.147699e-02 0.07899990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 133            C 2012        PIE  0.7500000  5.509960e-03 0.02562778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 134            C 2012      DomMc  0.6341463 -2.324687e-02 0.07575313</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 135            C 2012 expShannon  3.8537456  4.082843e-02 0.06771231</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 136            C 2013          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 137            C 2013          N 55.0000000 -5.142857e-01 0.82028297</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 138            C 2013       maxN 16.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 139            C 2013    Shannon  1.3819796  1.064868e-02 0.06775852</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 140            C 2013    Simpson  0.7477686  5.263443e-03 0.07852786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 141            C 2013 invSimpson  3.9646134  7.147699e-02 0.07899990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 142            C 2013        PIE  0.7616162  5.509960e-03 0.02562778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 143            C 2013      DomMc  0.5272727 -2.324687e-02 0.07575313</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 144            C 2013 expShannon  3.9827783  4.082843e-02 0.06771231</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 145            C 2014          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 146            C 2014          N 42.0000000 -5.142857e-01 0.82028297</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 147            C 2014       maxN 14.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 148            C 2014    Shannon  1.3630457  1.064868e-02 0.06775852</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 149            C 2014    Simpson  0.7380952  5.263443e-03 0.07852786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 150            C 2014 invSimpson  3.8181818  7.147699e-02 0.07899990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 151            C 2014        PIE  0.7560976  5.509960e-03 0.02562778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 152            C 2014      DomMc  0.5952381 -2.324687e-02 0.07575313</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 153            C 2014 expShannon  3.9080781  4.082843e-02 0.06771231</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 154            C 2015          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 155            C 2015          N 40.0000000 -5.142857e-01 0.82028297</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 156            C 2015       maxN 13.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 157            C 2015    Shannon  1.3721443  1.064868e-02 0.06775852</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 158            C 2015    Simpson  0.7425000  5.263443e-03 0.07852786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 159            C 2015 invSimpson  3.8834951  7.147699e-02 0.07899990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 160            C 2015        PIE  0.7615385  5.509960e-03 0.02562778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 161            C 2015      DomMc  0.5500000 -2.324687e-02 0.07575313</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 162            C 2015 expShannon  3.9437984  4.082843e-02 0.06771231</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 163            D 2010          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 164            D 2010          N 29.0000000  9.714286e-01 0.50399340</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 165            D 2010       maxN  9.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 166            D 2010    Shannon  1.3553031  2.370834e-03 0.66964640</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 167            D 2010    Simpson  0.7348395  1.266141e-03 0.63253864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 168            D 2010 invSimpson  3.7713004  1.875406e-02 0.60780739</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 169            D 2010        PIE  0.7610837  5.210721e-04 0.84645786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 170            D 2010      DomMc  0.6206897 -6.351478e-03 0.55894214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 171            D 2010 expShannon  3.8779362  9.327165e-03 0.66243129</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 172            D 2011          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 173            D 2011          N 43.0000000  9.714286e-01 0.50399340</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 174            D 2011       maxN 15.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 175            D 2011    Shannon  1.3508554  2.370834e-03 0.66964640</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 176            D 2011    Simpson  0.7322877  1.266141e-03 0.63253864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 177            D 2011 invSimpson  3.7353535  1.875406e-02 0.60780739</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 178            D 2011        PIE  0.7497231  5.210721e-04 0.84645786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 179            D 2011      DomMc  0.6046512 -6.351478e-03 0.55894214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 180            D 2011 expShannon  3.8607266  9.327165e-03 0.66243129</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 181            D 2012          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 182            D 2012          N 31.0000000  9.714286e-01 0.50399340</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 183            D 2012       maxN 11.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 184            D 2012    Shannon  1.3211782  2.370834e-03 0.66964640</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 185            D 2012    Simpson  0.7180021  1.266141e-03 0.63253864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 186            D 2012 invSimpson  3.5461255  1.875406e-02 0.60780739</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 187            D 2012        PIE  0.7419355  5.210721e-04 0.84645786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 188            D 2012      DomMc  0.6774194 -6.351478e-03 0.55894214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 189            D 2012 expShannon  3.7478346  9.327165e-03 0.66243129</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 190            D 2013          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 191            D 2013          N 33.0000000  9.714286e-01 0.50399340</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 192            D 2013       maxN 10.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 193            D 2013    Shannon  1.3624582  2.370834e-03 0.66964640</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 194            D 2013    Simpson  0.7382920  1.266141e-03 0.63253864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 195            D 2013 invSimpson  3.8210526  1.875406e-02 0.60780739</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 196            D 2013        PIE  0.7613636  5.210721e-04 0.84645786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 197            D 2013      DomMc  0.6060606 -6.351478e-03 0.55894214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 198            D 2013 expShannon  3.9057826  9.327165e-03 0.66243129</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 199            D 2014          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 200            D 2014          N 37.0000000  9.714286e-01 0.50399340</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 201            D 2014       maxN 12.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 202            D 2014    Shannon  1.3319860  2.370834e-03 0.66964640</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 203            D 2014    Simpson  0.7246165  1.266141e-03 0.63253864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 204            D 2014 invSimpson  3.6312997  1.875406e-02 0.60780739</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 205            D 2014        PIE  0.7447447  5.210721e-04 0.84645786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 206            D 2014      DomMc  0.6486486 -6.351478e-03 0.55894214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 207            D 2014 expShannon  3.7885599  9.327165e-03 0.66243129</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 208            D 2015          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 209            D 2015          N 39.0000000  9.714286e-01 0.50399340</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 210            D 2015       maxN 12.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 211            D 2015    Shannon  1.3749646  2.370834e-03 0.66964640</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 212            D 2015    Simpson  0.7442472  1.266141e-03 0.63253864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 213            D 2015 invSimpson  3.9100257  1.875406e-02 0.60780739</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 214            D 2015        PIE  0.7638327  5.210721e-04 0.84645786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 215            D 2015      DomMc  0.5641026 -6.351478e-03 0.55894214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 216            D 2015 expShannon  3.9549368  9.327165e-03 0.66243129</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 217            E 2010          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 218            E 2010          N 41.0000000 -2.457143e+00 0.15921175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 219            E 2010       maxN 13.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 220            E 2010    Shannon  1.3688954 -2.062647e-02 0.02617409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 221            E 2010    Simpson  0.7412255 -1.130462e-02 0.03169405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 222            E 2010 invSimpson  3.8643678 -1.428775e-01 0.02941141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 223            E 2010        PIE  0.7597561 -1.044380e-02 0.04148655</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 224            E 2010      DomMc  0.5853659  2.512164e-02 0.06345250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 225            E 2010 expShannon  3.9310061 -7.776910e-02 0.02578141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 226            E 2011          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 227            E 2011          N 53.0000000 -2.457143e+00 0.15921175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 228            E 2011       maxN 15.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 229            E 2011    Shannon  1.3751936 -2.062647e-02 0.02617409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 230            E 2011    Simpson  0.7447490 -1.130462e-02 0.03169405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 231            E 2011 invSimpson  3.9177127 -1.428775e-01 0.02941141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 232            E 2011        PIE  0.7590711 -1.044380e-02 0.04148655</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 233            E 2011      DomMc  0.5471698  2.512164e-02 0.06345250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 234            E 2011 expShannon  3.9558426 -7.776910e-02 0.02578141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 235            E 2012          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 236            E 2012          N 37.0000000 -2.457143e+00 0.15921175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 237            E 2012       maxN 11.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 238            E 2012    Shannon  1.3731046 -2.062647e-02 0.02617409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 239            E 2012    Simpson  0.7436085 -1.130462e-02 0.03169405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 240            E 2012 invSimpson  3.9002849 -1.428775e-01 0.02941141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 241            E 2012        PIE  0.7642643 -1.044380e-02 0.04148655</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 242            E 2012      DomMc  0.5675676  2.512164e-02 0.06345250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 243            E 2012 expShannon  3.9475875 -7.776910e-02 0.02578141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 244            E 2013          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 245            E 2013          N 41.0000000 -2.457143e+00 0.15921175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 246            E 2013       maxN 17.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 247            E 2013    Shannon  1.3010500 -2.062647e-02 0.02617409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 248            E 2013    Simpson  0.7055324 -1.130462e-02 0.03169405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 249            E 2013 invSimpson  3.3959596 -1.428775e-01 0.02941141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 250            E 2013        PIE  0.7231707 -1.044380e-02 0.04148655</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 251            E 2013      DomMc  0.6829268  2.512164e-02 0.06345250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 252            E 2013 expShannon  3.6731516 -7.776910e-02 0.02578141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 253            E 2014          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 254            E 2014          N 38.0000000 -2.457143e+00 0.15921175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 255            E 2014       maxN 14.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 256            E 2014    Shannon  1.3271950 -2.062647e-02 0.02617409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 257            E 2014    Simpson  0.7216066 -1.130462e-02 0.03169405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 258            E 2014 invSimpson  3.5920398 -1.428775e-01 0.02941141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 259            E 2014        PIE  0.7411095 -1.044380e-02 0.04148655</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 260            E 2014      DomMc  0.6315789  2.512164e-02 0.06345250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 261            E 2014 expShannon  3.7704524 -7.776910e-02 0.02578141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 262            E 2015          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 263            E 2015          N 32.0000000 -2.457143e+00 0.15921175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 264            E 2015       maxN 15.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 265            E 2015    Shannon  1.2677202 -2.062647e-02 0.02617409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 266            E 2015    Simpson  0.6835938 -1.130462e-02 0.03169405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 267            E 2015 invSimpson  3.1604938 -1.428775e-01 0.02941141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 268            E 2015        PIE  0.7056452 -1.044380e-02 0.04148655</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 269            E 2015      DomMc  0.6875000  2.512164e-02 0.06345250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 270            E 2015 expShannon  3.5527437 -7.776910e-02 0.02578141</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 271            F 2010          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 272            F 2010          N 46.0000000 -8.571429e-01 0.50298850</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 273            F 2010       maxN 16.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 274            F 2010    Shannon  1.3625768 -7.450987e-03 0.58370592</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 275            F 2010    Simpson  0.7372401 -3.278429e-03 0.53258397</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 276            F 2010 invSimpson  3.8057554 -4.368945e-02 0.50237469</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 277            F 2010        PIE  0.7536232 -3.011330e-03 0.53048000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 278            F 2010      DomMc  0.5652174  1.319265e-02 0.36090365</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 279            F 2010 expShannon  3.9062459 -2.828235e-02 0.57240383</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 280            F 2011          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 281            F 2011          N 43.0000000 -8.571429e-01 0.50298850</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 282            F 2011       maxN 15.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 283            F 2011    Shannon  1.3563593 -7.450987e-03 0.58370592</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 284            F 2011    Simpson  0.7344511 -3.278429e-03 0.53258397</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 285            F 2011 invSimpson  3.7657841 -4.368945e-02 0.50237469</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 286            F 2011        PIE  0.7519380 -3.011330e-03 0.53048000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 287            F 2011      DomMc  0.6046512  1.319265e-02 0.36090365</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 288            F 2011 expShannon  3.8820343 -2.828235e-02 0.57240383</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 289            F 2012          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 290            F 2012          N 34.0000000 -8.571429e-01 0.50298850</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 291            F 2012       maxN 13.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 292            F 2012    Shannon  1.2722900 -7.450987e-03 0.58370592</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 293            F 2012    Simpson  0.6989619 -3.278429e-03 0.53258397</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 294            F 2012 invSimpson  3.3218391 -4.368945e-02 0.50237469</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 295            F 2012        PIE  0.7201426 -3.011330e-03 0.53048000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 296            F 2012      DomMc  0.7058824  1.319265e-02 0.36090365</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 297            F 2012 expShannon  3.5690163 -2.828235e-02 0.57240383</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 298            F 2013          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 299            F 2013          N 35.0000000 -8.571429e-01 0.50298850</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 300            F 2013       maxN 13.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 301            F 2013    Shannon  1.2444193 -7.450987e-03 0.58370592</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 302            F 2013    Simpson  0.6938776 -3.278429e-03 0.53258397</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 303            F 2013 invSimpson  3.2666667 -4.368945e-02 0.50237469</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 304            F 2013        PIE  0.7142857 -3.011330e-03 0.53048000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 305            F 2013      DomMc  0.6857143  1.319265e-02 0.36090365</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 306            F 2013 expShannon  3.4709188 -2.828235e-02 0.57240383</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 307            F 2014          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 308            F 2014          N 41.0000000 -8.571429e-01 0.50298850</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 309            F 2014       maxN 13.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 310            F 2014    Shannon  1.3491909 -7.450987e-03 0.58370592</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 311            F 2014    Simpson  0.7328971 -3.278429e-03 0.53258397</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 312            F 2014 invSimpson  3.7438753 -4.368945e-02 0.50237469</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 313            F 2014        PIE  0.7512195 -3.011330e-03 0.53048000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 314            F 2014      DomMc  0.6097561  1.319265e-02 0.36090365</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 315            F 2014 expShannon  3.8543056 -2.828235e-02 0.57240383</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 316            F 2015          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 317            F 2015          N 41.0000000 -8.571429e-01 0.50298850</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 318            F 2015       maxN 16.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 319            F 2015    Shannon  1.3202951 -7.450987e-03 0.58370592</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 320            F 2015    Simpson  0.7162403 -3.278429e-03 0.53258397</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 321            F 2015 invSimpson  3.5241090 -4.368945e-02 0.50237469</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 322            F 2015        PIE  0.7341463 -3.011330e-03 0.53048000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 323            F 2015      DomMc  0.6585366  1.319265e-02 0.36090365</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 324            F 2015 expShannon  3.7445261 -2.828235e-02 0.57240383</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 325            G 2010          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 326            G 2010          N 34.0000000 -6.571429e-01 0.81915498</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 327            G 2010       maxN 13.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 328            G 2010    Shannon  1.3395428 -2.771099e-03 0.63636413</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 329            G 2010    Simpson  0.7249135 -9.748681e-04 0.74213516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 330            G 2010 invSimpson  3.6352201 -1.419676e-02 0.73763406</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 331            G 2010        PIE  0.7468806 -8.230175e-04 0.71977252</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 332            G 2010      DomMc  0.6176471  1.024750e-02 0.38550574</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 333            G 2010 expShannon  3.8172979 -1.072755e-02 0.63755267</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 334            G 2011          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 335            G 2011          N 58.0000000 -6.571429e-01 0.81915498</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 336            G 2011       maxN 16.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 337            G 2011    Shannon  1.3756078 -2.771099e-03 0.63636413</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 338            G 2011    Simpson  0.7449465 -9.748681e-04 0.74213516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 339            G 2011 invSimpson  3.9207459 -1.419676e-02 0.73763406</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 340            G 2011        PIE  0.7580157 -8.230175e-04 0.71977252</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 341            G 2011      DomMc  0.5517241  1.024750e-02 0.38550574</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 342            G 2011 expShannon  3.9574815 -1.072755e-02 0.63755267</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 343            G 2012          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 344            G 2012          N 41.0000000 -6.571429e-01 0.81915498</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 345            G 2012       maxN 11.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 346            G 2012    Shannon  1.3829728 -2.771099e-03 0.63636413</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 347            G 2012    Simpson  0.7483641 -9.748681e-04 0.74213516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 348            G 2012 invSimpson  3.9739953 -1.419676e-02 0.73763406</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 349            G 2012        PIE  0.7670732 -8.230175e-04 0.71977252</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 350            G 2012      DomMc  0.5365854  1.024750e-02 0.38550574</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 351            G 2012 expShannon  3.9867360 -1.072755e-02 0.63755267</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 352            G 2013          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 353            G 2013          N 34.0000000 -6.571429e-01 0.81915498</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 354            G 2013       maxN 11.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 355            G 2013    Shannon  1.3506523 -2.771099e-03 0.63636413</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 356            G 2013    Simpson  0.7335640 -9.748681e-04 0.74213516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 357            G 2013 invSimpson  3.7532468 -1.419676e-02 0.73763406</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 358            G 2013        PIE  0.7557932 -8.230175e-04 0.71977252</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 359            G 2013      DomMc  0.5882353  1.024750e-02 0.38550574</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 360            G 2013 expShannon  3.8599425 -1.072755e-02 0.63755267</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 361            G 2014          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 362            G 2014          N 51.0000000 -6.571429e-01 0.81915498</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 363            G 2014       maxN 16.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 364            G 2014    Shannon  1.3688664 -2.771099e-03 0.63636413</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 365            G 2014    Simpson  0.7412534 -9.748681e-04 0.74213516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 366            G 2014 invSimpson  3.8647845 -1.419676e-02 0.73763406</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 367            G 2014        PIE  0.7560784 -8.230175e-04 0.71977252</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 368            G 2014      DomMc  0.5882353  1.024750e-02 0.38550574</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 369            G 2014 expShannon  3.9308921 -1.072755e-02 0.63755267</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 370            G 2015          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 371            G 2015          N 35.0000000 -6.571429e-01 0.81915498</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 372            G 2015       maxN 12.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 373            G 2015    Shannon  1.3306541 -2.771099e-03 0.63636413</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 374            G 2015    Simpson  0.7232653 -9.748681e-04 0.74213516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 375            G 2015 invSimpson  3.6135693 -1.419676e-02 0.73763406</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 376            G 2015        PIE  0.7445378 -8.230175e-04 0.71977252</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 377            G 2015      DomMc  0.6571429  1.024750e-02 0.38550574</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 378            G 2015 expShannon  3.7835174 -1.072755e-02 0.63755267</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 379            H 2010          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 380            H 2010          N 40.0000000  1.771429e+00 0.11005861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 381            H 2010       maxN 14.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 382            H 2010    Shannon  1.2735587  9.685019e-03 0.36263532</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 383            H 2010    Simpson  0.7037500  3.651197e-03 0.41916500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 384            H 2010 invSimpson  3.3755274  4.507355e-02 0.46231572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 385            H 2010        PIE  0.7217949  3.071436e-03 0.48804594</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 386            H 2010      DomMc  0.6750000 -8.183883e-03 0.56730336</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 387            H 2010 expShannon  3.5735470  3.572735e-02 0.37502234</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 388            H 2011          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 389            H 2011          N 41.0000000  1.771429e+00 0.11005861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 390            H 2011       maxN 12.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 391            H 2011    Shannon  1.3807525  9.685019e-03 0.36263532</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 392            H 2011    Simpson  0.7471743  3.651197e-03 0.41916500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 393            H 2011 invSimpson  3.9552941  4.507355e-02 0.46231572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 394            H 2011        PIE  0.7658537  3.071436e-03 0.48804594</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 395            H 2011      DomMc  0.5365854 -8.183883e-03 0.56730336</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 396            H 2011 expShannon  3.9778938  3.572735e-02 0.37502234</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 397            H 2012          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 398            H 2012          N 41.0000000  1.771429e+00 0.11005861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 399            H 2012       maxN 16.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 400            H 2012    Shannon  1.3347225  9.685019e-03 0.36263532</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 401            H 2012    Simpson  0.7221892  3.651197e-03 0.41916500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 402            H 2012 invSimpson  3.5995717  4.507355e-02 0.46231572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 403            H 2012        PIE  0.7402439  3.071436e-03 0.48804594</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 404            H 2012      DomMc  0.6097561 -8.183883e-03 0.56730336</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 405            H 2012 expShannon  3.7989415  3.572735e-02 0.37502234</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 406            H 2013          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 407            H 2013          N 48.0000000  1.771429e+00 0.11005861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 408            H 2013       maxN 14.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 409            H 2013    Shannon  1.3775793  9.685019e-03 0.36263532</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 410            H 2013    Simpson  0.7456597  3.651197e-03 0.41916500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 411            H 2013 invSimpson  3.9317406  4.507355e-02 0.46231572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 412            H 2013        PIE  0.7615248  3.071436e-03 0.48804594</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 413            H 2013      DomMc  0.5625000 -8.183883e-03 0.56730336</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 414            H 2013 expShannon  3.9652911  3.572735e-02 0.37502234</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 415            H 2014          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 416            H 2014          N 41.0000000  1.771429e+00 0.11005861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 417            H 2014       maxN 15.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 418            H 2014    Shannon  1.3349579  9.685019e-03 0.36263532</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 419            H 2014    Simpson  0.7245687  3.651197e-03 0.41916500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 420            H 2014 invSimpson  3.6306695  4.507355e-02 0.46231572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 421            H 2014        PIE  0.7426829  3.071436e-03 0.48804594</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 422            H 2014      DomMc  0.6341463 -8.183883e-03 0.56730336</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 423            H 2014 expShannon  3.7998361  3.572735e-02 0.37502234</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 424            H 2015          S  4.0000000 -3.231300e-16 0.15830242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 425            H 2015          N 51.0000000  1.771429e+00 0.11005861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 426            H 2015       maxN 15.0000000            NA         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 427            H 2015    Shannon  1.3602592  9.685019e-03 0.36263532</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 428            H 2015    Simpson  0.7381776  3.651197e-03 0.41916500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 429            H 2015 invSimpson  3.8193833  4.507355e-02 0.46231572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 430            H 2015        PIE  0.7529412  3.071436e-03 0.48804594</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 431            H 2015      DomMc  0.5686275 -8.183883e-03 0.56730336</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 432            H 2015 expShannon  3.8972031  3.572735e-02 0.37502234</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     significance     intercept</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1              0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2              0  1016.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3             NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4              0    21.8473679</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5              0    11.7091248</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6              0   154.9967591</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7              0    11.5339800</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8              0   -39.1576765</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9              0    82.7061294</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10             0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11             0  1016.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12            NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13             0    21.8473679</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14             0    11.7091248</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15             0   154.9967591</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16             0    11.5339800</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17             0   -39.1576765</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18             0    82.7061294</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19             0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20             0  1016.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21            NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22             0    21.8473679</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23             0    11.7091248</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24             0   154.9967591</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25             0    11.5339800</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26             0   -39.1576765</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27             0    82.7061294</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28             0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29             0  1016.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30            NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31             0    21.8473679</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32             0    11.7091248</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33             0   154.9967591</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34             0    11.5339800</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35             0   -39.1576765</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36             0    82.7061294</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37             0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38             0  1016.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39            NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40             0    21.8473679</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41             0    11.7091248</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42             0   154.9967591</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43             0    11.5339800</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44             0   -39.1576765</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45             0    82.7061294</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46             0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47             0  1016.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48            NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49             0    21.8473679</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50             0    11.7091248</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 51             0   154.9967591</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 52             0    11.5339800</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 53             0   -39.1576765</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 54             0    82.7061294</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 55             0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 56             0   732.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57            NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 58             0    -9.7315261</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 59             0    -4.4384164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 60             0   -62.2790635</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 61             0    -4.8609603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 62             0    16.5187218</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 63             0   -37.4622345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 64             0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 65             0   732.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 66            NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 67             0    -9.7315261</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 68             0    -4.4384164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 69             0   -62.2790635</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 70             0    -4.8609603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 71             0    16.5187218</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 72             0   -37.4622345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 73             0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 74             0   732.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 75            NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 76             0    -9.7315261</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 77             0    -4.4384164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 78             0   -62.2790635</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 79             0    -4.8609603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 80             0    16.5187218</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 81             0   -37.4622345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 82             0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 83             0   732.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 84            NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 85             0    -9.7315261</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 86             0    -4.4384164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 87             0   -62.2790635</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 88             0    -4.8609603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 89             0    16.5187218</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 90             0   -37.4622345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 91             0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 92             0   732.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 93            NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 94             0    -9.7315261</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 95             0    -4.4384164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 96             0   -62.2790635</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 97             0    -4.8609603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 98             0    16.5187218</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 99             0   -37.4622345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 100            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 101            0   732.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 102           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 103            0    -9.7315261</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 104            0    -4.4384164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 105            0   -62.2790635</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 106            0    -4.8609603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 107            0    16.5187218</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 108            0   -37.4622345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 109            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 110            0  1080.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 111           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 112            0   -20.0753824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 113            0    -9.8583581</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 114            0  -140.0763802</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 115            1   -10.3375144</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 116            0    47.3839990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 117            0   -78.2891146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 118            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 119            0  1080.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 120           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 121            0   -20.0753824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 122            0    -9.8583581</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 123            0  -140.0763802</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 124            1   -10.3375144</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 125            0    47.3839990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 126            0   -78.2891146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 127            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 128            0  1080.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 129           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 130            0   -20.0753824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 131            0    -9.8583581</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 132            0  -140.0763802</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 133            1   -10.3375144</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 134            0    47.3839990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 135            0   -78.2891146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 136            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 137            0  1080.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 138           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 139            0   -20.0753824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 140            0    -9.8583581</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 141            0  -140.0763802</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 142            1   -10.3375144</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 143            0    47.3839990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 144            0   -78.2891146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 145            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 146            0  1080.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 147           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 148            0   -20.0753824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 149            0    -9.8583581</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 150            0  -140.0763802</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 151            1   -10.3375144</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 152            0    47.3839990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 153            0   -78.2891146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 154            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 155            0  1080.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 156           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 157            0   -20.0753824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 158            0    -9.8583581</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 159            0  -140.0763802</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 160            1   -10.3375144</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 161            0    47.3839990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 162            0   -78.2891146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 163            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 164            0 -1919.6666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 165           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 166            0    -3.4218463</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 167            0    -1.8160610</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 168            0   -34.0066839</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 169            0    -0.2948771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 170            0    13.4026124</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 171            0   -14.9149567</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 172            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 173            0 -1919.6666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 174           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 175            0    -3.4218463</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 176            0    -1.8160610</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 177            0   -34.0066839</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 178            0    -0.2948771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 179            0    13.4026124</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 180            0   -14.9149567</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 181            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 182            0 -1919.6666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 183           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 184            0    -3.4218463</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 185            0    -1.8160610</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 186            0   -34.0066839</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 187            0    -0.2948771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 188            0    13.4026124</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 189            0   -14.9149567</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 190            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 191            0 -1919.6666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 192           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 193            0    -3.4218463</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 194            0    -1.8160610</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 195            0   -34.0066839</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 196            0    -0.2948771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 197            0    13.4026124</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 198            0   -14.9149567</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 199            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 200            0 -1919.6666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 201           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 202            0    -3.4218463</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 203            0    -1.8160610</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 204            0   -34.0066839</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 205            0    -0.2948771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 206            0    13.4026124</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 207            0   -14.9149567</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 208            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 209            0 -1919.6666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 210           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 211            0    -3.4218463</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 212            0    -1.8160610</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 213            0   -34.0066839</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 214            0    -0.2948771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 215            0    13.4026124</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 216            0   -14.9149567</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 217            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 218            0  4985.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 219           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 220            1    42.8463069</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 221            1    23.4739352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 222            1   291.1795269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 223            1    21.7603155</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 224            0   -49.9402824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 225            1   160.3154514</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 226            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 227            0  4985.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 228           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 229            1    42.8463069</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 230            1    23.4739352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 231            1   291.1795269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 232            1    21.7603155</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 233            0   -49.9402824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 234            1   160.3154514</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 235            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 236            0  4985.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 237           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 238            1    42.8463069</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 239            1    23.4739352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 240            1   291.1795269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 241            1    21.7603155</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 242            0   -49.9402824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 243            1   160.3154514</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 244            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 245            0  4985.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 246           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 247            1    42.8463069</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 248            1    23.4739352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 249            1   291.1795269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 250            1    21.7603155</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 251            0   -49.9402824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 252            1   160.3154514</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 253            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 254            0  4985.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 255           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 256            1    42.8463069</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 257            1    23.4739352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 258            1   291.1795269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 259            1    21.7603155</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 260            0   -49.9402824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 261            1   160.3154514</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 262            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 263            0  4985.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 264           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 265            1    42.8463069</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 266            1    23.4739352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 267            1   291.1795269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 268            1    21.7603155</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 269            0   -49.9402824</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 270            1   160.3154514</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 271            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 272            0  1765.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 273           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 274            0    16.3126326</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 275            0     7.3167826</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 276            0    91.4963607</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 277            0     6.7978603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 278            0   -25.9119127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 279            0    60.6560682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 280            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 281            0  1765.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 282           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 283            0    16.3126326</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 284            0     7.3167826</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 285            0    91.4963607</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 286            0     6.7978603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 287            0   -25.9119127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 288            0    60.6560682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 289            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 290            0  1765.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 291           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 292            0    16.3126326</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 293            0     7.3167826</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 294            0    91.4963607</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 295            0     6.7978603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 296            0   -25.9119127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 297            0    60.6560682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 298            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 299            0  1765.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 300           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 301            0    16.3126326</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 302            0     7.3167826</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 303            0    91.4963607</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 304            0     6.7978603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 305            0   -25.9119127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 306            0    60.6560682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 307            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 308            0  1765.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 309           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 310            0    16.3126326</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 311            0     7.3167826</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 312            0    91.4963607</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 313            0     6.7978603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 314            0   -25.9119127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 315            0    60.6560682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 316            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 317            0  1765.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 318           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 319            0    16.3126326</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 320            0     7.3167826</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 321            0    91.4963607</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 322            0     6.7978603</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 323            0   -25.9119127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 324            0    60.6560682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 325            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 326            0  1364.6666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 327           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 328            0     6.9348856</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 329            0     2.6979732</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 330            0    32.3645767</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 331            0     2.4110526</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 332            0   -20.0331590</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 333            0    25.4785070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 334            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 335            0  1364.6666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 336           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 337            0     6.9348856</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 338            0     2.6979732</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 339            0    32.3645767</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 340            0     2.4110526</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 341            0   -20.0331590</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 342            0    25.4785070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 343            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 344            0  1364.6666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 345           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 346            0     6.9348856</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 347            0     2.6979732</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 348            0    32.3645767</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 349            0     2.4110526</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 350            0   -20.0331590</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 351            0    25.4785070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 352            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 353            0  1364.6666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 354           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 355            0     6.9348856</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 356            0     2.6979732</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 357            0    32.3645767</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 358            0     2.4110526</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 359            0   -20.0331590</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 360            0    25.4785070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 361            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 362            0  1364.6666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 363           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 364            0     6.9348856</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 365            0     2.6979732</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 366            0    32.3645767</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 367            0     2.4110526</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 368            0   -20.0331590</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 369            0    25.4785070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 370            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 371            0  1364.6666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 372           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 373            0     6.9348856</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 374            0     2.6979732</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 375            0    32.3645767</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 376            0     2.4110526</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 377            0   -20.0331590</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 378            0    25.4785070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 379            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 380            0 -3521.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 381           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 382            0   -18.1474624</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 383            0    -6.6177806</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 384            0   -86.9918265</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 385            0    -5.4337574</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 386            0    17.0678344</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 387            0   -68.0658484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 388            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 389            0 -3521.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 390           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 391            0   -18.1474624</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 392            0    -6.6177806</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 393            0   -86.9918265</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 394            0    -5.4337574</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 395            0    17.0678344</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 396            0   -68.0658484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 397            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 398            0 -3521.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 399           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 400            0   -18.1474624</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 401            0    -6.6177806</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 402            0   -86.9918265</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 403            0    -5.4337574</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 404            0    17.0678344</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 405            0   -68.0658484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 406            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 407            0 -3521.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 408           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 409            0   -18.1474624</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 410            0    -6.6177806</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 411            0   -86.9918265</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 412            0    -5.4337574</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 413            0    17.0678344</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 414            0   -68.0658484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 415            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 416            0 -3521.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 417           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 418            0   -18.1474624</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 419            0    -6.6177806</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 420            0   -86.9918265</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 421            0    -5.4337574</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 422            0    17.0678344</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 423            0   -68.0658484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 424            0     4.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 425            0 -3521.3333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 426           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 427            0   -18.1474624</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 428            0    -6.6177806</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 429            0   -86.9918265</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 430            0    -5.4337574</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 431            0    17.0678344</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 432            0   -68.0658484</span>
+<span class="r-in"><span>  <span class="va">betam</span> <span class="op">&lt;-</span> <span class="fu"><a href="getBetaMetrics.html">getBetaMetrics</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, <span class="st">"A"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">getLinearRegressions</span><span class="op">(</span>x <span class="op">=</span> <span class="va">betam</span>, divType <span class="op">=</span> <span class="st">"beta"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     YEAR assemblageID           metric dissimilarity        slopes  p-values</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   2010            A      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   2010            A MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   2010            A   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   2011            A      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   2011            A MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   2011            A   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   2012            A      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   2012            A MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   2012            A   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  2013            A      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  2013            A MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  2013            A   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13  2014            A      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14  2014            A MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15  2014            A   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16  2015            A      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17  2015            A MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18  2015            A   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19  2010            B      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20  2010            B MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21  2010            B   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22  2011            B      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23  2011            B MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24  2011            B   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25  2012            B      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26  2012            B MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27  2012            B   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28  2013            B      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29  2013            B MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30  2013            B   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31  2014            B      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32  2014            B MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33  2014            B   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34  2015            B      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35  2015            B MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36  2015            B   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37  2010            C      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38  2010            C MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39  2010            C   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40  2011            C      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41  2011            C MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42  2011            C   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43  2012            C      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44  2012            C MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45  2012            C   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46  2013            C      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47  2013            C MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48  2013            C   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49  2014            C      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50  2014            C MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 51  2014            C   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 52  2015            C      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 53  2015            C MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 54  2015            C   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 55  2010            D      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 56  2010            D MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57  2010            D   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 58  2011            D      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 59  2011            D MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 60  2011            D   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 61  2012            D      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 62  2012            D MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 63  2012            D   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 64  2013            D      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 65  2013            D MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 66  2013            D   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 67  2014            D      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 68  2014            D MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 69  2014            D   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 70  2015            D      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 71  2015            D MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 72  2015            D   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 73  2010            E      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 74  2010            E MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 75  2010            E   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 76  2011            E      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 77  2011            E MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 78  2011            E   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 79  2012            E      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 80  2012            E MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 81  2012            E   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 82  2013            E      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 83  2013            E MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 84  2013            E   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 85  2014            E      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 86  2014            E MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 87  2014            E   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 88  2015            E      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 89  2015            E MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 90  2015            E   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 91  2010            F      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 92  2010            F MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 93  2010            F   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 94  2011            F      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 95  2011            F MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 96  2011            F   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 97  2012            F      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 98  2012            F MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 99  2012            F   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 100 2013            F      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 101 2013            F MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 102 2013            F   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 103 2014            F      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 104 2014            F MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 105 2014            F   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 106 2015            F      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 107 2015            F MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 108 2015            F   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 109 2010            G      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 110 2010            G MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 111 2010            G   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 112 2011            G      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 113 2011            G MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 114 2011            G   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 115 2012            G      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 116 2012            G MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 117 2012            G   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 118 2013            G      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 119 2013            G MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 120 2013            G   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 121 2014            G      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 122 2014            G MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 123 2014            G   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 124 2015            G      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 125 2015            G MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 126 2015            G   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 127 2010            H      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 128 2010            H MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 129 2010            H   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 130 2011            H      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 131 2011            H MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 132 2011            H   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 133 2012            H      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 134 2012            H MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 135 2012            H   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 136 2013            H      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 137 2013            H MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 138 2013            H   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 139 2014            H      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 140 2014            H MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 141 2014            H   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 142 2015            H      JaccardDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 143 2015            H MorisitaHornDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 144 2015            H   BrayCurtisDiss             1 -8.078249e-17 0.1583024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     significance intercept</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1              0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2              0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3              0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4              0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5              0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6              0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7              0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8              0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9              0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 51             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 52             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 53             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 54             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 55             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 56             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 58             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 59             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 60             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 61             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 62             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 63             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 64             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 65             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 66             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 67             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 68             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 69             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 70             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 71             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 72             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 73             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 74             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 75             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 76             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 77             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 78             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 79             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 80             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 81             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 82             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 83             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 84             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 85             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 86             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 87             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 88             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 89             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 90             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 91             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 92             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 93             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 94             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 95             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 96             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 97             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 98             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 99             0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 100            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 101            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 102            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 103            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 104            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 105            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 106            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 107            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 108            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 109            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 110            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 111            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 112            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 113            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 114            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 115            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 116            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 117            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 118            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 119            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 120            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 121            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 122            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 123            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 124            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 125            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 126            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 127            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 128            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 129            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 130            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 131            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 132            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 133            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 134            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 135            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 136            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 137            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 138            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 139            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 140            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 141            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 142            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 143            0         1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 144            0         1</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -88,7 +1263,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Alban Sagouis, Faye Moyes, Anne E. Magurran, Jonathan M. Chase, Maria Dornelas.</p>
+  <p></p><p>Developed by Alban Sagouis, Faye Moyes, Inês Santos Martins, Anne E. Magurran, Jonathan M. Chase, Maria Dornelas, European Research Council grant AdG BioTIME 250189, European Research Council grant PoC BioCHANGE 727440.</p>
 </div>
 
 <div class="pkgdown">
