@@ -2,7 +2,7 @@
 meta <- base::readRDS(testthat::test_path("testdata", "data-meta.rds"))
 btf <- base::readRDS(testthat::test_path("testdata", "data-query.rds"))
 
-result <- gridding(meta, btf, res = NULL)
+result <- gridding(meta, btf)
 
 test_that("gridding returns a data frame", {
   expect_s3_class(result, "data.frame")

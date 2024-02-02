@@ -1,10 +1,16 @@
-#' Gridding BioTIME
+#' Gridding BioTIME data
 #'
-#' @description Grids BioTIME data into 96km2 cells based on location (latitude/longitude).
+#' @description Grids BioTIME data into a discrete global grid based on location
+#' (latitude/longitude).
 #' @export
 #' @param meta (data.frame) BioTIME metadata
 #' @param btf (data.frame) BioTIME data
-#' @param res (integer) XXXthe resolution for the grid sizeXXX
+#' @param res (integer) Resolution. Must be in the range [0,30]. Larger values
+#'   represent finer resolutions. Default: 12 (~96 sq km). Passed to
+#'   \code{\link[dggridR]{dgconstruct}}.
+#' @param res_by_data (logical) FALSE by default. If TRUE, the function
+#'   \code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt `res` to
+#'   the data extent.
 #' @details
 #' Each BioTIME study contains distinct samples measured (with a
 #'   consistent methodology) over time, which could be fixed plots (i.e. SL or
@@ -13,8 +19,8 @@
 #'   tows, and so on (i.e. ML or "multi-location" studies where measures are taken
 #'   from multiple sites that may or may not align from year to year, see
 #'   \code{\link{runResampling}}). `gridding` is a function designed to identify,
-#'   separate and standardise both SL and ML studies using a global grid of 96km2
-#'   hexagonal cells derived from \code{\link[dggridR]{dgconstruct}} (res = 12).
+#'   separate and standardise both SL and ML studies using a global grid of
+#'   hexagonal cells derived from \code{\link[dggridR]{dgconstruct}}.
 #'   Here each sample is assigned a different combination of study ID and grid cell
 #'   (based on its latitude and longitude) resulting in a unique identifier for
 #'   each assemblage time-series (assemblageID), thus allowing for the integrity
@@ -24,9 +30,9 @@
 #'   form data from a main BioTIME query.
 #'
 #' `res` = 12 was found to be the most appropriate value when working on the whole
-#'   BioTIME database. Now the function gives users the possibility to provide
-#'   their own values (e.g. res = 14) or to let the function compute the best
-#'   `res` value taking 12 as a reference.
+#'   BioTIME databasee, but the function gives the user the possibility to define
+#'   their own grid resolution (e.g. res = 14, see `vignette("dggridR")`) or to
+#'   let the function compute the best `res` based on the average study extent.
 #'
 #' @returns Returns a `data.frame`, with selected columns from the `btf` and `meta`
 #'   data.frames, an extra integer column called `cell` and two character columns
@@ -39,7 +45,7 @@
 #'   gridding(subBTmeta, subBTquery)
 #' }
 
-gridding <- function(meta, btf, res = NULL) {
+gridding <- function(meta, btf, res = 12, res_by_data = FALSE) {
   checkmate::assert_names(
     x = colnames(meta), what = "colnames",
     must.include = c("STUDY_ID", "NUMBER_LAT_LONG", "AREA_SQ_KM",
@@ -52,7 +58,8 @@ gridding <- function(meta, btf, res = NULL) {
                      "SAMPLE_DESC", "PLOT", "resolution", "taxon"))
   checkmate::assert_numeric(btf$ABUNDANCE, lower = 0)
   checkmate::assert_numeric(btf$BIOMASS, lower = 0)
-  checkmate::assert_number(x = res, lower = 0, upper = 30, null.ok = TRUE)
+  checkmate::assert_number(x = res, lower = 0, upper = 30,
+                           null.ok = FALSE, na.ok = FALSE)
 
   bt <- dplyr::inner_join(meta, btf, by = "STUDY_ID") %>%
     dplyr::rename(Species = valid_name)
@@ -89,13 +96,11 @@ gridding <- function(meta, btf, res = NULL) {
 
   bt <- bt %>% dplyr::filter(!(STUDY_ID %in% oneyear))
 
-  if (is.null(res) || is.na(res)) {
-    res <- 12L
-    dgg <- dggridR::dgconstruct(res = res)
+  dgg <- dggridR::dgconstruct(res = res)
+
+  if (res_by_data) {
     res <- dggridR::dg_closest_res_to_area(dgg, SL_extent_mean + SL_extent_sd)
     dgg <- dggridR::dgsetres(dgg, res)
-  } else {
-    dgg <- dggridR::dgconstruct(res = res)
   }
 
   bt$cell <- dggridR::dgGEO_to_SEQNUM(dggs = dgg,
