@@ -63,7 +63,7 @@ getAlphaMetrics <- function(x, ab) {
 #' contain species abundances.
 #' @param id definition of id
 #' @author Faye Moyes
-#' @noRd
+#' @keywords internal
 #' @examples
 #' \dontrun{
 #'   x <- data.frame(
@@ -205,7 +205,7 @@ getBetaMetrics <- function(x, ab) {
 #' metrics
 #' @importFrom vegan vegdist
 #' @author Faye Moyes
-#' @noRd
+#' @keywords internal
 #' @examples
 #' \dontrun{
 #'   x <- data.frame(
