@@ -78,7 +78,7 @@ runResampling <- function(df, ab, resamps = 1L) {
 #' @param resamps Number of times the function randomly draws among the samples.
 #' @returns Returns a single long form data frame containing the total currency
 #'    of interest (sum) for each species in each year.
-#' @noRd
+#' @keywords internal
 #' @details
 #'    Sample-based rarefaction prevents temporal variation in sampling effort
 #'    from affecting diversity estimates [REF]. `rarefysamples` is a function

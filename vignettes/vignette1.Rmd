@@ -149,7 +149,7 @@ bmeta <- merge(betaSl, meta2, by = "STUDY_ID")
 
 ```
 
-```{r plot_alpha_shannon_ind, fig.width=12, fig.height=10, eval=TRUE, cache=TRUE, tidy=TRUE}
+```{r plot_alpha_shannon_ind, fig.width=12, fig.height=10, eval=FALSE, cache=TRUE, tidy=TRUE}
 plotSlopes(x = ameta, metric = "Shannon", cols = bioCol,
            taxa = "Fish", method = "ind", assemblageID = "10_358678", divType = "alpha")
 ```
@@ -159,7 +159,7 @@ plotSlopes(x = ameta, metric = "Shannon", cols = bioCol,
 plotSlopes(x = ameta, metric = "Shannon", cols = bioCol, taxa = "Fish", method = "metric", assemblageID = "10_358678", divType = "alpha")
 ```
 
-```{r plot_beta_jaccard_ind, fig.width=9, fig.height=6, eval=TRUE, cache=TRUE, tidy=TRUE}
+```{r plot_beta_jaccard_ind, fig.width=9, fig.height=6, eval=FALSE, cache=TRUE, tidy=TRUE}
 plotSlopes(x = bmeta, metric = "JaccardDiss", cols = bioCol, taxa = "Fish",
            method = "ind", assemblageID = "10_358678", divType = "beta")
 ```
