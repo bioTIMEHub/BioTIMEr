@@ -1,12 +1,11 @@
 #' runResampling BioTIME
 #' Uses the output of `gridding` and applies the `rarefysamples` function.
 #' @export
-#' @param df dataframe to be resampled (in the format of the output of the
-#'  \code{\link{gridding}} function
-#' @param ab set to "A" for abundance and "B" for biomass
-#' @param resamps Number of repetitions passed to \code{\link{rarefysamples}}.
-#'    1 by default.
-#' @returns data.frame containing rarefied studies
+#' @param df `data.frame` to be resampled (in the format of the output of the
+#'  \code{\link{gridding}} function).
+#' @param ab set to "A" for abundance and "B" for biomass.
+#' @param resamps Number of repetitions
+#' @returns `data.frame` containing rarefied studies
 #' @importFrom dplyr %>%
 #' @examples
 #' \dontrun{
@@ -69,8 +68,8 @@ runResampling <- function(df, ab, resamps = 1L) {
 }
 
 
-#' Rarefy BioTIME
-#' Applies sample-based rarefaction to standardize the number of samples per year
+#' Rarefy BioTIME data
+#' Applies sample-based rarefaction to standardise the number of samples per year
 #'    within a cell-level time-series.
 #' @param Year Integer representing year of record
 #' @param SampleID Description of unique sampling event, this is used to resample
@@ -79,9 +78,10 @@ runResampling <- function(df, ab, resamps = 1L) {
 #' @param resamps Number of times the function randomly draws among the samples.
 #' @returns Returns a single long form data frame containing the total currency
 #'    of interest (sum) for each species in each year.
+#' @noRd
 #' @details
 #'    Sample-based rarefaction prevents temporal variation in sampling effort
-#'    from affecting diversity estimates [REF]. `rarefysamples()` is a function
+#'    from affecting diversity estimates [REF]. `rarefysamples` is a function
 #'    used to count the number of samples taken in each year, identify the
 #'    minimum number of samples, and then use this minimum to randomly
 #'    resample each year down to that number of samples, after which standard
@@ -110,8 +110,8 @@ rarefysamples <- function(Year, SampleID, Species, currency, resamps) {
   checkmate::assertSetEqual(x = length(Year),
                             y = c(length(SampleID), length(Species),
                                   length(currency)))
-  checkmate::assert_integerish(x = resamps, lower = 1,
-                               any.missing = FALSE, len = 1L)
+  checkmate::assert_number(x = resamps, lower = 1,
+                           na.ok = FALSE, null.ok = FALSE)
 
   # Computing minimal effort per year in this assemblageID
   minsample <- min(tapply(SampleID, Year, function(x) length(unique(x))))

@@ -1,68 +1,4 @@
-#' Alpha
-#' @rdname BioTIME-alpha-metrics
-#' @param x (data.frame) First column has to be year and following columns
-#' contain species abundances.
-#' @param id definition of id
-#' @author Faye Moyes
-#' @examples
-#' \dontrun{
-#'   x <- data.frame(
-#'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
-#'     matrix(data = rpois(384, 10), ncol = 4)
-#'     )
-#'     res <- getAlpha(x, id = 34)
-#' }
-#'
-#' @returns A data frame with results for S (species richness), N (numerical abundance),
-#' maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
-#' Inverse Simpson, PIE (probability of intraspecific encounter) and
-#' McNaughton's Dominance.
-
-getAlpha <- function(x, id) {
-  # base::stopifnot(!is.null(id))
-  # checkmate::assert_names(x = colnames(x)[[1L]],
-  #                         identical.to = "YEAR",
-  #                         what = "colnames")
-
-  yr <- unique(x[, 1L])
-  x <- x[, -1L]
-
-  S <-     apply(x > 0, 1, sum)
-  N <-     apply(x, 1, sum)
-  maxN <-  apply(x, 1, max)
-
-  DomMc = apply(x, 1, function(s) {
-    y <- sort(s, decreasing = TRUE)
-    (y[[1L]] + y[[2L]]) / sum(y)})
-
-  PIE = apply(x, 1, function(s) {
-    n <- sum(s)
-    (n / (n - 1)) * (1 - sum((s / n)^2))})
-
-  x <- base::sweep(x, 1, N, "/")
-  Shannon <- apply( -x * log(x), 1, sum, na.rm = TRUE)
-  H <- apply(x * x, 1, sum, na.rm = TRUE)
-
-  return(
-    data.frame(
-      assemblageID = id,
-      YEAR = yr,
-      S,
-      N,
-      maxN,
-
-      Shannon,
-      Simpson = 1 - H,
-      invSimpson = 1 / H,
-      PIE,
-      DomMc,
-      expShannon = exp(Shannon)
-    )
-  )
-}
-
-#' run the alpha function
-#' @rdname BioTIME-alpha-metrics
+#' Run the alpha function
 #' @param x (data.frame) First column has to be year
 #' @param ab character input for chosen currency - "A" = Abundance or "B" = Biomass
 #' @returns getAlphaMetrics returns a data.frame with nine alpha diversity metrics
@@ -122,47 +58,71 @@ getAlphaMetrics <- function(x, ab) {
   return(xd)
 }
 
-
-#' Beta
-#' @rdname BioTIME-beta-metrics
-#' @param x (data.frame) First column has to contain year values and following
-#' columns contain species abundances
+#' Alpha
+#' @param x (data.frame) First column has to be year and following columns
+#' contain species abundances.
 #' @param id definition of id
-#' @returns getBeta returns a data.frame with three beta diversity dissimilarity
-#' metrics
-#' @importFrom vegan vegdist
 #' @author Faye Moyes
+#' @noRd
 #' @examples
 #' \dontrun{
 #'   x <- data.frame(
 #'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
-#'     matrix(data = rpois(384, 2), ncol = 4)
-#'   )
-#'   res <- getBeta(x, "A")
+#'     matrix(data = rpois(384, 10), ncol = 4)
+#'     )
+#'     res <- getAlpha(x, id = 34)
 #' }
+#'
+#' @returns A data frame with results for S (species richness), N (numerical abundance),
+#' maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
+#' Inverse Simpson, PIE (probability of intraspecific encounter) and
+#' McNaughton's Dominance.
 
-getBeta <- function(x, id) {
+getAlpha <- function(x, id) {
+  # base::stopifnot(!is.null(id))
+  # checkmate::assert_names(x = colnames(x)[[1L]],
+  #                         identical.to = "YEAR",
+  #                         what = "colnames")
 
   yr <- unique(x[, 1L])
   x <- x[, -1L]
-  xb <- x
-  xb[xb > 1] <- 1
-  getj <- vegan::vegdist(xb, "jaccard") #10
-  getmh <- vegan::vegdist(x, "horn") #8
-  getbc <- vegan::vegdist(x, "bray") #4
 
-  jacc <- c(1, getj[1L:nrow(x)])[-1]
-  mh <-  c(1, getmh[1L:nrow(x)])[-1]
-  bc <-  c(1, getbc[1L:nrow(x)])[-1]
+  S <-     apply(x > 0, 1, sum)
+  N <-     apply(x, 1, sum)
+  maxN <-  apply(x, 1, max)
 
-  xf <- data.frame(YEAR = yr, assemblageID = id, JaccardDiss = jacc,
-                   MorisitaHornDiss = mh, BrayCurtisDiss = bc)
-  return(xf)
+  DomMc = apply(x, 1, function(s) {
+    y <- sort(s, decreasing = TRUE)
+    (y[[1L]] + y[[2L]]) / sum(y)})
+
+  PIE = apply(x, 1, function(s) {
+    n <- sum(s)
+    (n / (n - 1)) * (1 - sum((s / n)^2))})
+
+  x <- base::sweep(x, 1, N, "/")
+  Shannon <- apply( -x * log(x), 1, sum, na.rm = TRUE)
+  H <- apply(x * x, 1, sum, na.rm = TRUE)
+
+  return(
+    data.frame(
+      assemblageID = id,
+      YEAR = yr,
+      S,
+      N,
+      maxN,
+
+      Shannon,
+      Simpson = 1 - H,
+      invSimpson = 1 / H,
+      PIE,
+      DomMc,
+      expShannon = exp(Shannon)
+    )
+  )
 }
 
 #' run the beta function
 #' @export
-#' @rdname BioTIME-beta-metrics
 #' @param x (data.frame) Has to have columns Species, YEAR, assemblageID,
 #'   STUDY_ID, cell and Abundance or Biomass
 #' @param ab character input for chosen currency - "A" = Abundance or "B" = Biomass
@@ -233,4 +193,43 @@ getBetaMetrics <- function(x, ab) {
 
   xd <- subset(xd, !is.na(JaccardDiss))
   return(xd)
+}
+
+
+
+#' Beta
+#' @param x (data.frame) First column has to contain year values and following
+#' columns contain species abundances
+#' @param id definition of id
+#' @returns getBeta returns a data.frame with three beta diversity dissimilarity
+#' metrics
+#' @importFrom vegan vegdist
+#' @author Faye Moyes
+#' @noRd
+#' @examples
+#' \dontrun{
+#'   x <- data.frame(
+#'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
+#'     matrix(data = rpois(384, 2), ncol = 4)
+#'   )
+#'   res <- getBeta(x, "A")
+#' }
+
+getBeta <- function(x, id) {
+
+  yr <- unique(x[, 1L])
+  x <- x[, -1L]
+  xb <- x
+  xb[xb > 1] <- 1
+  getj <- vegan::vegdist(xb, "jaccard") #10
+  getmh <- vegan::vegdist(x, "horn") #8
+  getbc <- vegan::vegdist(x, "bray") #4
+
+  jacc <- c(1, getj[1L:nrow(x)])[-1]
+  mh <-  c(1, getmh[1L:nrow(x)])[-1]
+  bc <-  c(1, getbc[1L:nrow(x)])[-1]
+
+  xf <- data.frame(YEAR = yr, assemblageID = id, JaccardDiss = jacc,
+                   MorisitaHornDiss = mh, BrayCurtisDiss = bc)
+  return(xf)
 }
