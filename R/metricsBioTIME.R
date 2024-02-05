@@ -30,26 +30,26 @@ getAlphaMetrics <- function(x, ab) {
   base::switch(
     ab,
     A = {
-      x <- subset(x, !is.na(Abundance))
+      x <- x[!is.na(x$Abundance), ]
       for (id in unique(x$assemblageID)) {
-        df <- subset(x, assemblageID == id)
+        df <- x[x$assemblageID == id, ]
         if (dplyr::n_distinct(df$YEAR) > 1L && dplyr::n_distinct(df$Species) > 1L) {
-          y <- dplyr::select(df, YEAR, Species, Abundance) %>%
-            tidyr::pivot_wider(names_from = Species,
-                               values_from = Abundance,
+          y <- dplyr::select(df, "YEAR", "Species", "Abundance") %>%
+            tidyr::pivot_wider(names_from = "Species",
+                               values_from = "Abundance",
                                values_fill = 0)
           xd <- rbind(xd, getAlpha(x = y, id = id))
         } # end if
       } # end for
     }, # end base::switch
     B = {
-      x <- subset(x, !is.na(Biomass))
+      x <- x[!is.na(x$Biomass), ]
       for (id in unique(x$assemblageID)) {
-        df <- subset(x, assemblageID == id)
+        df <- x[x$assemblageID == id, ]
         if (dplyr::n_distinct(df$YEAR) > 1L && dplyr::n_distinct(df$Species) > 1L) {
-          y <- dplyr::select(df, YEAR, Species, Biomass) %>%
-            tidyr::pivot_wider(names_from = Species,
-                               values_from = Biomass,
+          y <- dplyr::select(df, "YEAR", "Species", "Biomass") %>%
+            tidyr::pivot_wider(names_from = "Species",
+                               values_from = "Biomass",
                                values_fill = 0)
           xd <- rbind(xd, getAlpha(x = y, id = id))
         } # end if
@@ -160,38 +160,38 @@ getBetaMetrics <- function(x, ab) {
   base::switch(
     ab,
     A = {
-      x <- subset(x, !is.na(Abundance))
+      x <- x[!is.na(x$Abundance), ]
       for (id in unique(x$assemblageID)) {
-        df <- subset(x, assemblageID == id)
+        df <- x[x$assemblageID == id, ]
         if (nyear[[id]] < 2L || nsp[[id]] < 2L) {
           xr <- c(NA, id, NA, NA, NA)
         } else if (nyear[[id]] > 1L && nsp[[id]] > 1L) {
-          y <- dplyr::select(df, YEAR, Species, Abundance) %>%
-            tidyr::pivot_wider(names_from = Species,
-                               values_from = Abundance,
+          y <- dplyr::select(df, "YEAR", "Species", "Abundance") %>%
+            tidyr::pivot_wider(names_from = "Species",
+                               values_from = "Abundance",
                                values_fill = 0)
           xd <- rbind(xd, getBeta(x = y, id = id))
         } # end if
       } # end for
     }, # end switch
     B = {
-      x <- subset(x, !is.na(Biomass))
+      x <- x[!is.na(x$Biomass), ]
       for (id in unique(x$assemblageID)) {
-        df <- subset(x, assemblageID == id)
+        df <- x[x$assemblageID == id, ]
         if (nyear[[id]] < 2L || nsp[[id]] < 2L) {
           xr <- c(NA, id, NA, NA, NA)
         } else if (nyear[[id]] > 1L && nsp[[id]] > 1L) {
-          y <- subset(x, assemblageID == id) %>%
-            dplyr::select(YEAR, Species, Biomass) %>%
-            tidyr::pivot_wider(names_from = Species,
-                               values_from = Biomass,
+          y <- x[x$assemblageID == id, ] %>%
+            dplyr::select("YEAR", "Species", "Biomass") %>%
+            tidyr::pivot_wider(names_from = "Species",
+                               values_from = "Biomass",
                                values_fill = 0)
           xd <- rbind(xd, getBeta(x = y, id = id))
         } # end if
       } # end for
     }) # end base::switch
 
-  xd <- subset(xd, !is.na(JaccardDiss))
+  xd <- xd[!is.na(xd$JaccardDiss), ]
   return(xd)
 }
 
