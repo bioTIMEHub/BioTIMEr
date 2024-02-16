@@ -21,6 +21,11 @@ runResampling <- function(df, ab, resamps = 1L) {
     x = colnames(df), what = "colnames",
     must.include = c("YEAR", "SAMPLE_DESC", "Species"))
 
+  # WARNING : we found NAs
+  # by default we delete observations with NA in biomass
+  # as an option (conservative = TRUE (?)) the whole sample is deleted
+  # but they should be the same in most most cases
+
   base::switch(
     ab,
     A = {
@@ -39,8 +44,8 @@ runResampling <- function(df, ab, resamps = 1L) {
         dplyr::mutate(rfID = rep(rfIDs, times = sapply(TSrf, nrow))) %>%
         tidyr::separate(rfID, into =  c("STUDY_ID", "cell"),
                         sep = "_", remove = FALSE) %>%
-        # dplyr::mutate(STUDY_ID = as.integer(STUDY_ID)) %>%
-        dplyr::select(-repeats, YEAR, Species, currency, rfID, STUDY_ID) %>%
+        dplyr::mutate(STUDY_ID = as.integer(STUDY_ID)) %>%
+        dplyr::select(resamps = repeats, YEAR, Species, currency, rfID, STUDY_ID) %>%
         dplyr::rename(Abundance = currency, assemblageID = rfID) %>%
         return()
     }, # end of ab == A
@@ -60,8 +65,8 @@ runResampling <- function(df, ab, resamps = 1L) {
         dplyr::mutate(rfID = rep(rfIDs, times = sapply(TSrf, nrow))) %>%
         tidyr::separate(rfID, into =  c("STUDY_ID", "cell"),
                         sep = "_", remove = FALSE) %>%
-        # dplyr::mutate(STUDY_ID = as.integer(STUDY_ID)) %>%
-        dplyr::select(-repeats, YEAR, Species, currency, rfID, STUDY_ID) %>%
+        dplyr::mutate(STUDY_ID = as.integer(STUDY_ID)) %>%
+        dplyr::select(resamps = repeats, YEAR, Species, currency, rfID, STUDY_ID) %>%
         dplyr::rename(Biomass = currency, assemblageID = rfID) %>%
         return()
     })  # end of ab == B
@@ -107,7 +112,7 @@ runResampling <- function(df, ab, resamps = 1L) {
 
 rarefysamples <- function(Year, SampleID, Species, currency, resamps) {
   # Checking arguments
-  checkmate::assertSetEqual(x = length(Year),
+  checkmate::assert_set_equal(x = length(Year),
                             y = c(length(SampleID), length(Species),
                                   length(currency)))
   checkmate::assert_number(x = resamps, lower = 1,

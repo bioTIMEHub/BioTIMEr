@@ -4,12 +4,15 @@
 \alias{getLinearRegressions}
 \title{Get Linear Regressions BioTIME}
 \usage{
-getLinearRegressions(x, divType)
+getLinearRegressions(x, divType, pThreshold = 0.05)
 }
 \arguments{
-\item{x}{output from getAlphaMetrics() or getBetaMetrics() functions}
+\item{x}{output from \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}}
+functions}
 
-\item{divType}{calculate regressions of alpha or beta results}
+\item{divType}{(character) Can be "alpha" or "beta"}
+
+\item{pThreshold}{(numeric)}
 }
 \value{
 a dataframe with yearly diversity results merged with results of

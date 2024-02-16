@@ -1,8 +1,10 @@
 #' Get Linear Regressions BioTIME
 #'
 #' @export
-#' @param x output from getAlphaMetrics() or getBetaMetrics() functions
-#' @param divType calculate regressions of alpha or beta results
+#' @param x output from \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}}
+#'  functions
+#' @param divType (character) Can be "alpha" or "beta"
+#' @param pThreshold (numeric)
 #' @returns a dataframe with yearly diversity results merged with results of
 #' linear regressions (intercept, slope, p-value, significance)
 #' @importFrom dplyr %>%
@@ -19,9 +21,9 @@
 #'   getLinearRegressions(x = betam, divType = "beta")
 #'
 
-getLinearRegressions <- function(x, divType) {
+getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
 
-  checkmate::assert_choice(divType, choices = c("beta", "alpha"))
+  checkmate::assert_choice(divType, choices = c("alpha", "beta"))
 
   base::switch(
     divType,
@@ -78,14 +80,14 @@ getLinearRegressions <- function(x, divType) {
       dft[, 2L:25L] <- apply(dft[, 2L:25L], 2,
                              function(x) as.numeric(as.character(x)))
       dft <- dft %>% dplyr::mutate(
-        sp =  dplyr::if_else(SPval < .05, 1, 0),
-        np =  dplyr::if_else(NPval < .05, 1, 0),
-        sip = dplyr::if_else(simpPval < .05, 1, 0),
-        isp = dplyr::if_else(invSPval < .05, 1, 0),
-        dmp = dplyr::if_else(domMPval < .05, 1, 0),
-        pp =  dplyr::if_else(PIEPval < .05, 1, 0),
-        esp = dplyr::if_else(expShPval < .05, 1, 0),
-        shp = dplyr::if_else(shanPval < .05, 1, 0)
+        sp =  dplyr::if_else(SPval < pThreshold, 1, 0),
+        np =  dplyr::if_else(NPval < pThreshold, 1, 0),
+        sip = dplyr::if_else(simpPval < pThreshold, 1, 0),
+        isp = dplyr::if_else(invSPval < pThreshold, 1, 0),
+        dmp = dplyr::if_else(domMPval < pThreshold, 1, 0),
+        pp =  dplyr::if_else(PIEPval < pThreshold, 1, 0),
+        esp = dplyr::if_else(expShPval < pThreshold, 1, 0),
+        shp = dplyr::if_else(shanPval < pThreshold, 1, 0)
       )
 
       ###############################################
@@ -93,7 +95,7 @@ getLinearRegressions <- function(x, divType) {
                           invSimpson = invSS, DomMc = domMS,
                           PIE = PIES, expShannon = expShS, Shannon = shanS) %>%
         tidyr::pivot_longer(-assemblageID, names_to = "metric",
-                            values_to = "slopes")
+                            values_to = "slope")
 
       d2 <- dplyr::select(dft, assemblageID, S = SPval, N = NPval, Simpson = simpPval,
                           invSimpson = invSPval, DomMc = domMPval,
@@ -162,16 +164,16 @@ getLinearRegressions <- function(x, divType) {
       dft[, 2L:10L] <- apply(dft[, 2L:10L], 2,
                              function(x) as.numeric(as.character(x)))
       dft <- dft %>% dplyr::mutate(
-        jdp = dplyr::if_else(jdPval < .05, 1, 0),
-        mhp = dplyr::if_else(mhPval < .05, 1, 0),
-        bcp = dplyr::if_else(bcPval < .05, 1, 0)
+        jdp = dplyr::if_else(jdPval < pThreshold, 1, 0),
+        mhp = dplyr::if_else(mhPval < pThreshold, 1, 0),
+        bcp = dplyr::if_else(bcPval < pThreshold, 1, 0)
       )
 
       #####################################
       d1 <- dplyr::select(dft, assemblageID, JaccardDiss = jdS,
                           MorisitaHornDiss = mhS, BrayCurtisDiss = bcS) %>%
         tidyr::pivot_longer(-assemblageID, names_to = "metric",
-                            values_to = "slopes")
+                            values_to = "slope")
 
       d2 <- dplyr::select(dft, assemblageID, JaccardDiss = jdPval,
                           MorisitaHornDiss = mhPval,

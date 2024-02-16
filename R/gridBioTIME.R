@@ -121,8 +121,8 @@ gridding <- function(meta, btf, res = 12, res_by_data = FALSE) {
   bt_grid <- bt %>%
     dplyr::select(CLIMATE, REALM, TAXA, StudyMethod, SAMPLE_DESC,
                   ABUNDANCE_TYPE, BIOMASS_TYPE, STUDY_ID, YEAR, PLOT,
-                  cell, Species, DAY, MONTH, ABUNDANCE, BIOMASS, taxon,
-                  resolution) %>%
+                  cell, "LATITUDE", "LONGITUDE", Species, taxon,
+                  resolution, DAY, MONTH, ABUNDANCE, BIOMASS) %>%
     tidyr::unite(col = assemblageID, STUDY_ID, cell, sep = "_", remove = FALSE)
 
   return(bt_grid)
