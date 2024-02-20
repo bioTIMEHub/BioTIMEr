@@ -6,18 +6,16 @@
 Applies sample-based rarefaction to standardise the number of samples per year
    within a cell-level time-series.}
 \usage{
-rarefysamples(Year, SampleID, Species, currency, resamps)
+rarefysamples(df, ab, resamps)
 }
 \arguments{
-\item{Year}{Integer representing year of record}
+\item{df}{`data.frame` to be resampled (in the format of the output of the
+\code{\link{gridding}} function).}
 
-\item{SampleID}{Description of unique sampling event, this is used to resample}
+\item{ab}{(character) Enter the names of the columns of interest:
+"ABUNDANCE", "BIOMASS" or c("ABUNDANCE","BIOMASS").}
 
-\item{Species}{Highest resolution of taxonomic description available}
-
-\item{currency}{Set to either (numeric) abundance or biomass}
-
-\item{resamps}{Number of times the function randomly draws among the samples.}
+\item{resamps}{(integer) Number of repetitions, 1 by default.}
 }
 \value{
 Returns a single long form data frame containing the total currency

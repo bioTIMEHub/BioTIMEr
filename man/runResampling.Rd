@@ -11,9 +11,10 @@ runResampling(df, ab, resamps = 1L)
 \item{df}{`data.frame` to be resampled (in the format of the output of the
 \code{\link{gridding}} function).}
 
-\item{ab}{set to "A" for abundance and "B" for biomass.}
+\item{ab}{(character) Enter the names of the columns of interest:
+"ABUNDANCE", "BIOMASS" or c("ABUNDANCE","BIOMASS").}
 
-\item{resamps}{Number of repetitions}
+\item{resamps}{(integer) Number of repetitions, 1 by default.}
 }
 \value{
 `data.frame` containing rarefied studies
@@ -25,8 +26,10 @@ Uses the output of `gridding` and applies the `rarefysamples` function.
 \examples{
 \dontrun{
   library(BioTIMEr)
-  df<-gridding(subBTmeta, subBTquery)
-  runResampling(df, ab = "A")
+  df <- gridding(subBTmeta, subBTquery)
+  runResampling(df, ab = "ABUNDANCE")
+  runResampling(df, ab = "BIOMASS")
+  runResampling(df, ab = c("ABUNDANCE","BIOMASS"))
 }
 
 }

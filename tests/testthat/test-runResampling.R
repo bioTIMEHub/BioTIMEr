@@ -1,38 +1,60 @@
 # Loading data for testing runResampling
 subBTmeta <- base::readRDS(testthat::test_path("testdata", "data-meta.rds"))
 subBTquery <- base::readRDS(testthat::test_path("testdata", "data-query.rds"))
-example_data <- gridding(subBTmeta, subBTquery)
+test_df <- gridding(subBTmeta, subBTquery)
 
 test_that("runResampling runs correctly for Abundance", {
-  result <- runResampling(df = example_data, ab = "A")
+  expect_snapshot({
+    result <- runResampling(df = test_df, ab = "ABUNDANCE", resamps = 1L)
+  })
 
-  expect_true(all(unique(result$Species) %in% unique(example_data$Species)))
-  expect_true(all(unique(result$assemblageID) %in% unique(example_data$assemblageID)))
-  expect_true(all(unique(result$StudyID) %in% unique(example_data$STUDY_ID)))
+  expect_true(all(unique(result$Species) %in% unique(test_df$Species)))
+  expect_true(all(unique(result$assemblageID) %in% unique(test_df$assemblageID)))
+  expect_true(all(unique(result$StudyID) %in% unique(test_df$STUDY_ID)))
 
   # subset to data sets that actually had abundance values
-  abundance_example_data <- subset(example_data[, c("assemblageID", "STUDY_ID", "ABUNDANCE", "YEAR")], !is.na(ABUNDANCE))
-  sub_example_data <- unique(abundance_example_data[, c("assemblageID", "STUDY_ID", "YEAR")])
-  result <- dplyr::semi_join(result, sub_example_data, dplyr::join_by(assemblageID, YEAR)) # STUDY_ID
+  abundance_test_df <- subset(test_df[, c("assemblageID", "STUDY_ID", "ABUNDANCE", "YEAR")], !is.na(ABUNDANCE))
+  sub_test_df <- unique(abundance_test_df[, c("assemblageID", "STUDY_ID", "YEAR")])
+  result <- dplyr::semi_join(result, sub_test_df, dplyr::join_by(assemblageID, YEAR)) # STUDY_ID
 
   expect_false(anyNA(result))
-  expect_lte(sum(result$Abundance), sum(abundance_example_data$ABUNDANCE))
+  expect_lte(sum(result$Abundance), sum(abundance_test_df$ABUNDANCE))
 })
 
 
 test_that("runResampling runs correctly for Biomass", {
-  result <- runResampling(df = example_data, ab = "B")
+  expect_snapshot({
+    result <- runResampling(df = test_df, ab = "BIOMASS", resamps = 1L)
+  })
 
-  expect_true(all(unique(result$Species) %in% unique(example_data$Species)))
-  expect_true(all(unique(result$assemblageID) %in% unique(example_data$assemblageID)))
-  expect_true(all(unique(result$StudyID) %in% unique(example_data$STUDY_ID)))
+  expect_true(all(unique(result$Species) %in% unique(test_df$Species)))
+  expect_true(all(unique(result$assemblageID) %in% unique(test_df$assemblageID)))
+  expect_true(all(unique(result$StudyID) %in% unique(test_df$STUDY_ID)))
 
   # subset to data sets that actually had biomass values
-  biomass_example_data <- subset(example_data[, c("assemblageID", "STUDY_ID", "BIOMASS", "YEAR")], !is.na(BIOMASS))
-  sub_example_data <- unique(biomass_example_data[, c("assemblageID", "STUDY_ID", "YEAR")])
-  result <- dplyr::semi_join(result, sub_example_data, dplyr::join_by(assemblageID, YEAR)) # STUDY_ID
+  biomass_test_df <- subset(test_df[, c("assemblageID", "STUDY_ID", "BIOMASS", "YEAR")], !is.na(BIOMASS))
+  sub_test_df <- unique(biomass_test_df[, c("assemblageID", "STUDY_ID", "YEAR")])
+  result <- dplyr::semi_join(result, sub_test_df, dplyr::join_by(assemblageID, YEAR)) # STUDY_ID
 
   expect_false(anyNA(result))
-  expect_lte(sum(result$Biomass), sum(biomass_example_data$BIOMASS))
+  expect_lte(sum(result$Biomass), sum(biomass_test_df$BIOMASS))
 })
 
+
+test_that("runResampling runs correctly for Abundance and Biomass together", {
+  expect_snapshot({
+    result <- runResampling(df = test_df, ab = c("ABUNDANCE","BIOMASS"), resamps = 1L)
+  })
+
+  expect_true(all(unique(result$Species) %in% unique(test_df$Species)))
+  expect_true(all(unique(result$assemblageID) %in% unique(test_df$assemblageID)))
+  expect_true(all(unique(result$StudyID) %in% unique(test_df$STUDY_ID)))
+
+  # subset to data sets that actually had biomass values
+  biomass_test_df <- subset(test_df[, c("assemblageID", "STUDY_ID", "BIOMASS", "YEAR")], !is.na(BIOMASS))
+  sub_test_df <- unique(biomass_test_df[, c("assemblageID", "STUDY_ID", "YEAR")])
+  result <- dplyr::semi_join(result, sub_test_df, dplyr::join_by(assemblageID, YEAR)) # STUDY_ID
+
+  expect_false(anyNA(result))
+  expect_lte(sum(result$Biomass), sum(biomass_test_df$BIOMASS))
+})
