@@ -6,6 +6,9 @@
 #' @param ab (character) Enter the names of the columns of interest:
 #' "ABUNDANCE", "BIOMASS" or c("ABUNDANCE","BIOMASS").
 #' @param resamps (integer) Number of repetitions, 1 by default.
+#' @param conservative (logical) If `TRUE`, whenever a NA is found for abundance
+#' or biomass, the whole sample is removed instead of the missing observations
+#' only. `FALSE` by default.
 #' @returns `data.frame` containing rarefied studies
 #' @importFrom dplyr %>%
 #' @examples
@@ -17,25 +20,35 @@
 #'   runResampling(df, ab = c("ABUNDANCE","BIOMASS"))
 #' }
 #'
-runResampling <- function(df, ab, resamps = 1L) {
+runResampling <- function(df, ab, resamps = 1L, conservative = FALSE) {
   checkmate::assert_names(
     x = colnames(df), what = "colnames",
     must.include = c("YEAR", "SAMPLE_DESC", "Species", ab))
-  checkmate::assert_number(x = resamps, lower = 1,
+  checkmate::assert_number(x = resamps, lower = 1L,
                            na.ok = FALSE, null.ok = FALSE)
-  checkmate::assert_integer(x = df$YEAR, lower = 1300, null.ok = FALSE)
+  checkmate::assert_integer(x = df$YEAR, lower = 1300L, null.ok = FALSE)
+  checkmate::assert_logical(x = conservative, len = 1L,
+                            null.ok = FALSE, any.missing = FALSE)
 
   if (anyNA(df[, ab])) {
-    # WARNING : we found NAs
-    # by default we delete observations with NA in biomass
-    # as an option (conservative = TRUE (?)) the whole sample is deleted
-    # but they should be the same in most most cases
-    warning(paste0("NA values found and removed.\n",
-                   "Only a subset of `df` is used."))
-    df <- dplyr::filter(df, !apply(
-      X = dplyr::select(df, dplyr::all_of(ab)),
-      MARGIN = 1,
-      FUN = anyNA))
+    if (conservative) {
+      df <- stats::aggregate(x = df[, ab, drop = FALSE],
+                              by = list(SAMPLE_DESC = df$SAMPLE_DESC),
+                              function(j) anyNA(j)) %>%
+        dplyr::mutate(na_values = rowSums(dplyr::select(., dplyr::all_of(ab)))) %>%
+        dplyr::filter(na_values == 0L) %>%
+        dplyr::semi_join(x = df, y = ., by = "SAMPLE_DESC")
+
+      warning(paste0("NA values found and whole samples removed since `conservative` is TRUE.\n",
+                     "Only a subset of `df` is used."))
+    } else {
+      df <- dplyr::filter(df, !apply(
+        X = dplyr::select(df, dplyr::all_of(ab)),
+        MARGIN = 1,
+        FUN = anyNA))
+      warning(paste0("NA values found and removed.\n",
+                     "Only a subset of `df` is used."))
+    }
   }
 
   rfIDs <- unique(df$assemblageID)
@@ -114,7 +127,7 @@ rarefysamples <- function(df, ab, resamps) {
       tSpecies <- df[selected_indices, "Species"]
       tcurrency <- df[selected_indices, ab, drop = FALSE]
 
-      raref <- stats::aggregate(tcurrency,
+      raref <- stats::aggregate(x = tcurrency,
                                 by = list(YEAR = tYear, Species = tSpecies),
                                 FUN = sum)
       raref$resamp <- i
