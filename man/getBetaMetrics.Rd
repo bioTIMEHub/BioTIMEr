@@ -8,9 +8,9 @@ getBetaMetrics(x, ab)
 }
 \arguments{
 \item{x}{(data.frame) Has to have columns Species, YEAR, assemblageID,
-STUDY_ID, cell and Abundance or Biomass}
+STUDY_ID, cell and ABUNDANCE or BIOMASS}
 
-\item{ab}{character input for chosen currency - "A" = Abundance or "B" = Biomass}
+\item{ab}{character input for chosen currency - "A" = ABUNDANCE or "B" = BIOMASS}
 }
 \value{
 getBetaMetrics returns a long data.frame with results for three beta
@@ -26,7 +26,7 @@ x <- data.frame(
   Species = c(replicate(
    n = 8L,
    sample(letters, 24L, replace = FALSE))),
-  Abundance = rpois(24 * 8, 10),
+  ABUNDANCE = rpois(24 * 8, 10),
   assemblageID = rep(LETTERS[1L:8L], each = 24)
   )
 

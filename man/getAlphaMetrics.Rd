@@ -9,7 +9,7 @@ getAlphaMetrics(x, ab)
 \arguments{
 \item{x}{(data.frame) First column has to be year}
 
-\item{ab}{character input for chosen currency - "A" = Abundance or "B" = Biomass}
+\item{ab}{character input for chosen currency - "A" = ABUNDANCE or "B" = BIOMASS}
 }
 \value{
 getAlphaMetrics returns a data.frame with nine alpha diversity metrics
@@ -22,7 +22,7 @@ Run the alpha function
   x <- data.frame(
     YEAR = rep(rep(2010:2015, each = 4), times = 4),
     Species = c(replicate(n = 8L, sample(letters, 24L, replace = FALSE))),
-    Abundance = rpois(24 * 8, 10),
+    ABUNDANCE = rpois(24 * 8, 10),
     assemblageID = rep(LETTERS[1L:8L], each = 24)
   )
   res <- getAlphaMetrics(x, "A")

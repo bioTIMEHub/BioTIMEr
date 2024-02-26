@@ -55,8 +55,8 @@ dataMetrics <- data.frame(
   Species = c(replicate(
     n = 8L,
     sample(letters, 24L, replace = FALSE))),
-  Abundance = rpois(24 * 8, 10),
-  Biomass = rpois(24 * 8, 1000),
+  ABUNDANCE = rpois(24 * 8, 10),
+  BIOMASS = rpois(24 * 8, 1000),
   assemblageID = rep(LETTERS[1L:8L], each = 24)
 )
 
