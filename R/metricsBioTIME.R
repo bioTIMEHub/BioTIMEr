@@ -21,7 +21,7 @@ getAlphaMetrics <- function(x, ab) {
                             lower = 0, any.missing = FALSE)
   checkmate::assert_names(x = colnames(x), what = "colnames",
                           must.include = c("YEAR","Species","assemblageID"),
-                          subset.of = c("YEAR","Species","assemblageID",
+                          subset.of = c("resamp","YEAR","Species","assemblageID",
                                         "STUDY_ID", "cell",
                                         "ABUNDANCE","BIOMASS"))
 
@@ -149,7 +149,7 @@ getBetaMetrics <- function(x, ab) {
                             lower = 0, any.missing = FALSE)
   checkmate::assert_names(x = colnames(x), what = "colnames",
                           must.include = c("YEAR","Species","assemblageID"),
-                          subset.of = c("YEAR","Species","assemblageID",
+                          subset.of = c("resamp","YEAR","Species","assemblageID",
                                         "STUDY_ID", "cell",
                                         "ABUNDANCE","BIOMASS"))
 

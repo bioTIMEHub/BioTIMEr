@@ -133,7 +133,9 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
         must.include = c("YEAR", "assemblageID", "JaccardDiss", "MorisitaHornDiss",
                          "BrayCurtisDiss"))
 
-      x <- dplyr::filter(x, !is.na(JaccardDiss))
+      x <- dplyr::filter(x, !is.na(JaccardDiss) &
+                           !is.na(MorisitaHornDiss) &
+                           !is.na(BrayCurtisDiss))
 
       y <- x %>%
         dplyr::group_by(assemblageID) %>%
