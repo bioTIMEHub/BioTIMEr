@@ -61,46 +61,19 @@ dataMetrics <- data.frame(
 )
 
 
-# test getAlphaMetrics
-# test_that("getAlphaMetrics returns correct number of rows", {
-#
-# })
 test_that("getAlphaMetrics works correctly for Abundance", {
   skip_on_ci()
-  expect_snapshot(x = getAlphaMetrics(x = dataMetrics, ab = "A"))
+  expect_snapshot(x = getAlphaMetrics(x = dataMetrics, ab = "ABUNDANCE"))
 })
 test_that("getAlphaMetrics works correctly for Biomass", {
   skip_on_ci()
-  expect_snapshot(x = getAlphaMetrics(x = dataMetrics, ab = "B"))
+  expect_snapshot(x = getAlphaMetrics(x = dataMetrics, ab = "BIOMASS"))
 })
-
-# test_that("getBeta returns a data frame", {
-#   result <- getBeta(x = pivot_data, id = "TestID")
-#   expect_s3_class(result, "data.frame")
-# })
-#
-# test_that("getBeta returns the expected columns", {
-#   result <- getBeta(x = pivot_data, id = "TestID")
-#   expected_cols <- c("YEAR", "ID", "jaccD", "mhorn")
-#   expect_equal(colnames(result), expected_cols)
-# })
-#
-# test_that("getBeta returns correct number of rows", {
-#   result <- getBeta(x = pivot_data, id = "TestID")
-#   expected_rows <- length(unique(data$YEAR))
-#   expect_equal(nrow(result), expected_rows)
-# })
-#
-# test_that("getBeta computes accurate biodiversity metrics", {
-#   result <- getBeta(x = pivot_data, id = "TestID")
-#
-#   # Calculate expected values using external libraries
-#   x2 <- pivot_data[, -1L]
-#   x2[x2 > 1] <- 1
-#   jacc_expected <- vegan::vegdist(x2, method = "jaccard")
-#   mh_expected <- vegan::vegdist(pivot_data[, -1L], method = "horn")
-#
-#   # Compare computed values with expected values
-#   expect_equal(result$jaccD[-2], jacc_expected, ignore_attr = TRUE)
-#   expect_equal(result$mhorn[-2], mh_expected, ignore_attr = TRUE)
-# })
+test_that("getBetaMetrics works correctly for Abundance", {
+  skip_on_ci()
+  expect_snapshot(x = getBetaMetrics(x = dataMetrics, ab = "ABUNDANCE"))
+})
+test_that("getBetaMetrics works correctly for Biomass", {
+  skip_on_ci()
+  expect_snapshot(x = getBetaMetrics(x = dataMetrics, ab = "BIOMASS"))
+})

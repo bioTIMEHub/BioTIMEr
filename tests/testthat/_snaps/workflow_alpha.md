@@ -1,8 +1,9 @@
 # Whole workflow works consistently
 
     Code
+      set.seed(42)
       gridding(meta, btf) %>% runResampling(ab = "ABUNDANCE", resamps = 1L) %>%
-        getAlphaMetrics(ab = "A") %>% getLinearRegressions(divType = "alpha")
+        getAlphaMetrics(ab = "ABUNDANCE") %>% getLinearRegressions(divType = "alpha")
     Message
       OK: all SL studies have 1 grid cell
     Output
@@ -25011,8 +25012,9 @@
 ---
 
     Code
+      set.seed(42)
       gridding(meta, btf) %>% runResampling(ab = "BIOMASS", resamps = 1L) %>%
-        getAlphaMetrics(ab = "B") %>% getLinearRegressions(divType = "alpha")
+        getAlphaMetrics(ab = "BIOMASS") %>% getLinearRegressions(divType = "alpha")
     Message
       OK: all SL studies have 1 grid cell
     Condition

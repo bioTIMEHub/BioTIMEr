@@ -8,7 +8,7 @@ test_that("slopes works consistently", {
     ABUNDANCE = stats::rpois(24 * 8, 10),
     assemblageID = base::rep(LETTERS[1L:8L], each = 24)
   )
-  alpham <- getAlphaMetrics(xa, "A")
+  alpham <- getAlphaMetrics(xa, ab = "ABUNDANCE")
 
   # Beta  diversity metrics
   base::set.seed(42)
@@ -18,7 +18,7 @@ test_that("slopes works consistently", {
     ABUNDANCE = stats::rpois(24 * 8, 2),
     assemblageID = base::rep(LETTERS[1L:8L], each = 24)
   )
-  betam <- getBetaMetrics(xb, "A")
+  betam <- getBetaMetrics(xb, ab = "ABUNDANCE")
 
   # Tests
   expect_snapshot(getLinearRegressions(x = alpham, divType = "alpha"))

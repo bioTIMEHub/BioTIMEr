@@ -26,7 +26,7 @@ Run the alpha function
     ABUNDANCE = rpois(24 * 8, 10),
     assemblageID = rep(LETTERS[1L:8L], each = 24)
   )
-  res <- getAlphaMetrics(x, "A")
+  res <- getAlphaMetrics(x, ab = "ABUNDANCE")
 }
 }
 \author{

@@ -31,7 +31,7 @@ x <- data.frame(
   assemblageID = rep(LETTERS[1L:8L], each = 24)
   )
 
-res <- getBetaMetrics(x, "A")
+res <- getBetaMetrics(x, ab = "ABUNDANCE")
 }
 }
 \author{

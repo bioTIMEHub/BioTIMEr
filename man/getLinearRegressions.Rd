@@ -29,9 +29,9 @@ Get Linear Regressions BioTIME
     ABUNDANCE = rpois(24 * 8, 10),
     assemblageID = rep(LETTERS[1L:8L], each = 24)
   )
-  alpham <- getAlphaMetrics(x, "A")
+  alpham <- getAlphaMetrics(x, "ABUNDANCE")
   getLinearRegressions(x = alpham, divType = "alpha", pThreshold = 0.01)
-  betam <- getBetaMetrics(x = x, "A")
+  betam <- getBetaMetrics(x = x, "ABUNDANCE")
   getLinearRegressions(x = betam, divType = "beta")
 
 }

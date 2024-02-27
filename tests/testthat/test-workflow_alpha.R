@@ -5,19 +5,19 @@ test_that("Whole workflow works consistently", {
   btf <- base::readRDS(testthat::test_path("testdata", "data-query.rds"))
 
   # Alpha diversity metrics
-  set.seed(42)
   expect_snapshot({
+    set.seed(42)
     gridding(meta, btf) %>%
       runResampling(ab = "ABUNDANCE", resamps = 1L) %>%
-      getAlphaMetrics(ab = "A") %>%
+      getAlphaMetrics(ab = "ABUNDANCE") %>%
       getLinearRegressions(divType = "alpha")
   })
 
-  set.seed(42)
   expect_snapshot({
+    set.seed(42)
     gridding(meta, btf) %>%
       runResampling(ab = "BIOMASS", resamps = 1L) %>%
-      getAlphaMetrics(ab = "B") %>%
+      getAlphaMetrics(ab = "BIOMASS") %>%
       getLinearRegressions(divType = "alpha")
   })
 

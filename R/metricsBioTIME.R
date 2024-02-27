@@ -13,15 +13,12 @@
 #'     ABUNDANCE = rpois(24 * 8, 10),
 #'     assemblageID = rep(LETTERS[1L:8L], each = 24)
 #'   )
-#'   res <- getAlphaMetrics(x, "A")
+#'   res <- getAlphaMetrics(x, ab = "ABUNDANCE")
 #' }
 
 getAlphaMetrics <- function(x, ab) {
-  checkmate::assert_choice(ab, c("A","B"))
-  checkmate::assert_numeric(x = base::ifelse(ab == "A", x$ABUNDANCE, x$BIOMASS),
-                            lower = 0, any.missing = FALSE)
   checkmate::assert_names(x = colnames(x), what = "colnames",
-                          must.include = c("YEAR","Species","assemblageID")
+                          must.include = c(ab, "YEAR", "Species", "assemblageID")
                           # subset.of = c("resamp","YEAR","Species","assemblageID",
                           #               "STUDY_ID", "cell",
                           #               "ABUNDANCE","BIOMASS")
@@ -29,38 +26,23 @@ getAlphaMetrics <- function(x, ab) {
 
   xd <- data.frame()
 
-  base::switch(
-    ab,
-    A = {
-      x <- x[!is.na(x$ABUNDANCE), ]
-      for (id in unique(x$assemblageID)) {
-        df <- x[x$assemblageID == id, ]
-        if (dplyr::n_distinct(df$YEAR) > 1L && dplyr::n_distinct(df$Species) > 1L) {
-          y <- df %>%
-            dplyr::select("YEAR", "Species", "ABUNDANCE") %>%
-            tidyr::pivot_wider(names_from = "Species",
-                               values_from = "ABUNDANCE",
-                               values_fill = 0)
-          xd <- rbind(xd, getAlpha(x = y, id = id))
-        } # end if
-      } # end for
-    }, # end base::switch
-    B = {
-      x <- x[!is.na(x$BIOMASS), ]
-      for (id in unique(x$assemblageID)) {
-        df <- x[x$assemblageID == id, ]
-        if (dplyr::n_distinct(df$YEAR) > 1L && dplyr::n_distinct(df$Species) > 1L) {
-          y <- df %>%
-            dplyr::select("YEAR", "Species", "BIOMASS") %>%
-            tidyr::pivot_wider(names_from = "Species",
-                               values_from = "BIOMASS",
-                               values_fill = 0)
-          xd <- rbind(xd, getAlpha(x = y, id = id))
-        } # end if
-      } # end for
-    }) # end base::switch
+  x <- x[!is.na(x[, ab]), ]
+  for (id in unique(x$assemblageID)) {
+    df <- x[x$assemblageID == id, ]
+    if (dplyr::n_distinct(df$YEAR) > 1L && dplyr::n_distinct(df$Species) > 1L) {
+      y <- df %>%
+        dplyr::select("YEAR", "Species", dplyr::all_of(ab)) %>%
+        tidyr::pivot_wider(names_from = "Species",
+                           values_from = dplyr::all_of(ab),
+                           values_fill = 0)
+      xd <- rbind(xd, getAlpha(x = y, id = id))
+    } # end if
+  } # end for
+
   return(xd)
 }
+
+
 
 #' Alpha
 #' @param x (data.frame) First column has to be year and following columns
@@ -145,60 +127,42 @@ getAlpha <- function(x, id) {
 #'   assemblageID = rep(LETTERS[1L:8L], each = 24)
 #'   )
 #'
-#' res <- getBetaMetrics(x, "A")
+#' res <- getBetaMetrics(x, ab = "ABUNDANCE")
 #' }
 
 getBetaMetrics <- function(x, ab) {
-  checkmate::assert_choice(ab, c("A","B"))
-  checkmate::assert_numeric(x = base::ifelse(ab == "A", x$ABUNDANCE, x$BIOMASS),
-                            lower = 0, any.missing = FALSE)
   checkmate::assert_names(x = colnames(x), what = "colnames",
-                          must.include = c("YEAR","Species","assemblageID")
+                          must.include = c(ab, "YEAR", "Species", "assemblageID")
                           # subset.of = c("resamp","YEAR","Species","assemblageID",
                           #               "STUDY_ID", "cell",
                           #               "ABUNDANCE","BIOMASS")
   )
 
   xd <- data.frame()
+
+  x <- x[!is.na(x[, ab]), ]
   nyear <- tapply(x$YEAR, x$assemblageID, dplyr::n_distinct)
   nsp   <- tapply(x$Species, x$assemblageID, dplyr::n_distinct)
 
-  base::switch(
-    ab,
-    A = {
-      x <- x[!is.na(x$ABUNDANCE), ]
-      for (id in unique(x$assemblageID)) {
-        df <- x[x$assemblageID == id, ]
-        if (nyear[[id]] < 2L || nsp[[id]] < 2L) {
-          xr <- c(NA, id, NA, NA, NA)
-        } else if (nyear[[id]] > 1L && nsp[[id]] > 1L) {
-          y <- df %>%
-            dplyr::select("YEAR", "Species", "ABUNDANCE") %>%
-            tidyr::pivot_wider(names_from = "Species",
-                               values_from = "ABUNDANCE",
-                               values_fill = 0)
-          xd <- rbind(xd, getBeta(x = y, id = id))
-        } # end if
-      } # end for
-    }, # end switch
-    B = {
-      x <- x[!is.na(x$BIOMASS), ]
-      for (id in unique(x$assemblageID)) {
-        df <- x[x$assemblageID == id, ]
-        if (nyear[[id]] < 2L || nsp[[id]] < 2L) {
-          xr <- c(NA, id, NA, NA, NA)
-        } else if (nyear[[id]] > 1L && nsp[[id]] > 1L) {
-          y <- x[x$assemblageID == id, ] %>%
-            dplyr::select("YEAR", "Species", "BIOMASS") %>%
-            tidyr::pivot_wider(names_from = "Species",
-                               values_from = "BIOMASS",
-                               values_fill = 0)
-          xd <- rbind(xd, getBeta(x = y, id = id))
-        } # end if
-      } # end for
-    }) # end base::switch
+  for (id in unique(x$assemblageID)) {
+    df <- x[x$assemblageID == id, ]
+    if (nyear[[id]] < 2L || nsp[[id]] < 2L) {
+      xd <- rbind(xd, data.frame(YEAR = unique(df$YEAR),
+                                 assemblageID = id,
+                                 JaccardDiss = NA,
+                                 MorisitaHornDiss = NA,
+                                 BrayCurtisDiss = NA))
+    } else if (nyear[[id]] > 1L && nsp[[id]] > 1L) {
+      rbeta <- df %>%
+        dplyr::select("YEAR", "Species", dplyr::all_of(ab)) %>%
+        tidyr::pivot_wider(names_from = "Species",
+                           values_from = dplyr::all_of(ab),
+                           values_fill = 0) %>%
+        getBeta(id = id)
+      xd <- rbind(xd, rbeta)
+    } # end if
+  } # end for
 
-  xd <- xd[!is.na(xd$JaccardDiss), ]
   return(xd)
 }
 
@@ -219,7 +183,7 @@ getBetaMetrics <- function(x, ab) {
 #'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
 #'     matrix(data = rpois(384, 2), ncol = 4)
 #'   )
-#'   res <- getBeta(x, "A")
+#'   res <- getBeta(x, id = "F")
 #' }
 
 getBeta <- function(x, id) {
