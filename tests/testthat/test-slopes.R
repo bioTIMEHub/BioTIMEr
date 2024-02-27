@@ -23,4 +23,7 @@ test_that("slopes works consistently", {
   # Tests
   expect_snapshot(getLinearRegressions(x = alpham, divType = "alpha"))
   expect_snapshot(getLinearRegressions(x = betam, divType = "beta"))
+
+  expect_snapshot(getLinearRegressions(x = alpham, divType = "alpha", pThreshold = 0.01))
+  expect_snapshot(getLinearRegressions(x = betam, divType = "beta", pThreshold = 0.01))
 })

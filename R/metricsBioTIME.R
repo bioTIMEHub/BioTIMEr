@@ -7,6 +7,7 @@
 #' @examples
 #' \dontrun{
 #'   x <- data.frame(
+#'     resamp = 1L,
 #'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
 #'     Species = c(replicate(n = 8L, sample(letters, 24L, replace = FALSE))),
 #'     ABUNDANCE = rpois(24 * 8, 10),
@@ -20,10 +21,11 @@ getAlphaMetrics <- function(x, ab) {
   checkmate::assert_numeric(x = base::ifelse(ab == "A", x$ABUNDANCE, x$BIOMASS),
                             lower = 0, any.missing = FALSE)
   checkmate::assert_names(x = colnames(x), what = "colnames",
-                          must.include = c("YEAR","Species","assemblageID"),
-                          subset.of = c("resamp","YEAR","Species","assemblageID",
-                                        "STUDY_ID", "cell",
-                                        "ABUNDANCE","BIOMASS"))
+                          must.include = c("YEAR","Species","assemblageID")
+                          # subset.of = c("resamp","YEAR","Species","assemblageID",
+                          #               "STUDY_ID", "cell",
+                          #               "ABUNDANCE","BIOMASS")
+  )
 
   xd <- data.frame()
 
@@ -132,6 +134,7 @@ getAlpha <- function(x, id) {
 #' @examples
 #' \dontrun{
 #' x <- data.frame(
+#'   resamp = 1L,
 #'   YEAR = rep(rep(2010:2015, each = 4), times = 4),
 #'   Species = c(replicate(
 #'    n = 8L,
@@ -148,10 +151,11 @@ getBetaMetrics <- function(x, ab) {
   checkmate::assert_numeric(x = base::ifelse(ab == "A", x$ABUNDANCE, x$BIOMASS),
                             lower = 0, any.missing = FALSE)
   checkmate::assert_names(x = colnames(x), what = "colnames",
-                          must.include = c("YEAR","Species","assemblageID"),
-                          subset.of = c("resamp","YEAR","Species","assemblageID",
-                                        "STUDY_ID", "cell",
-                                        "ABUNDANCE","BIOMASS"))
+                          must.include = c("YEAR","Species","assemblageID")
+                          # subset.of = c("resamp","YEAR","Species","assemblageID",
+                          #               "STUDY_ID", "cell",
+                          #               "ABUNDANCE","BIOMASS")
+  )
 
   xd <- data.frame()
   nyear <- tapply(x$YEAR, x$assemblageID, dplyr::n_distinct)

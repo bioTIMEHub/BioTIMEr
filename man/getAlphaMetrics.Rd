@@ -20,6 +20,7 @@ Run the alpha function
 \examples{
 \dontrun{
   x <- data.frame(
+    resamp = 1L,
     YEAR = rep(rep(2010:2015, each = 4), times = 4),
     Species = c(replicate(n = 8L, sample(letters, 24L, replace = FALSE))),
     ABUNDANCE = rpois(24 * 8, 10),

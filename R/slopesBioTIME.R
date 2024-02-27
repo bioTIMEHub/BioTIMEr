@@ -10,13 +10,14 @@
 #' @importFrom dplyr %>%
 #' @examples
 #'   x <- data.frame(
+#'     resamp = 1L,
 #'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
 #'     Species = c(replicate(n = 8L, sample(letters, 24L, replace = FALSE))),
 #'     ABUNDANCE = rpois(24 * 8, 10),
 #'     assemblageID = rep(LETTERS[1L:8L], each = 24)
 #'   )
 #'   alpham <- getAlphaMetrics(x, "A")
-#'   getLinearRegressions(x = alpham, divType = "alpha")
+#'   getLinearRegressions(x = alpham, divType = "alpha", pThreshold = 0.01)
 #'   betam <- getBetaMetrics(x = x, "A")
 #'   getLinearRegressions(x = betam, divType = "beta")
 #'
@@ -24,6 +25,8 @@
 getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
 
   checkmate::assert_choice(divType, choices = c("alpha", "beta"))
+  checkmate::assert_number(pThreshold, na.ok = FALSE, null.ok = FALSE,
+                           finite = TRUE, lower = 0)
 
   base::switch(
     divType,
