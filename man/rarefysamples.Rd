@@ -13,7 +13,7 @@ rarefysamples(df, ab, resamps)
 \code{\link{gridding}} function).}
 
 \item{ab}{(character) Enter the names of the columns of interest:
-"ABUNDANCE", "BIOMASS" or c("ABUNDANCE","BIOMASS").}
+"ABUNDANCE", "BIOMASS" or c("ABUNDANCE","BIOMASS"). The column cannot have 0s.}
 
 \item{resamps}{(integer) Number of repetitions, 1 by default.}
 }

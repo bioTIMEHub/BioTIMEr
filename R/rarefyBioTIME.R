@@ -4,7 +4,7 @@
 #' @param df `data.frame` to be resampled (in the format of the output of the
 #'  \code{\link{gridding}} function).
 #' @param ab (character) Enter the names of the columns of interest:
-#' "ABUNDANCE", "BIOMASS" or c("ABUNDANCE","BIOMASS").
+#' "ABUNDANCE", "BIOMASS" or c("ABUNDANCE","BIOMASS"). The column cannot have 0s.
 #' @param resamps (integer) Number of repetitions, 1 by default.
 #' @param conservative (logical) If `TRUE`, whenever a NA is found for abundance
 #' or biomass, the whole sample is removed instead of the missing observations
@@ -14,21 +14,26 @@
 #' @examples
 #' \dontrun{
 #'   library(BioTIMEr)
+#'   set.seed(42)
 #'   df <- gridding(subBTmeta, subBTquery)
-#'   runResampling(df, ab = "ABUNDANCE")
 #'   runResampling(df, ab = "BIOMASS")
+#'   runResampling(df, ab = "ABUNDANCE")
 #'   runResampling(df, ab = c("ABUNDANCE","BIOMASS"))
 #' }
 #'
+
 runResampling <- function(df, ab, resamps = 1L, conservative = FALSE) {
   checkmate::assert_names(
     x = colnames(df), what = "colnames",
     must.include = c("YEAR", "SAMPLE_DESC", "Species", ab))
+  base::stopifnot("ab must be > 0" = all(df[, ab] > 0, na.rm = TRUE))
   checkmate::assert_number(x = resamps, lower = 1L,
                            na.ok = FALSE, null.ok = FALSE)
   checkmate::assert_integer(x = df$YEAR, lower = 1300L, null.ok = FALSE)
   checkmate::assert_logical(x = conservative, len = 1L,
                             null.ok = FALSE, any.missing = FALSE)
+
+
 
   if (anyNA(df[, ab])) {
     if (conservative) {

@@ -12,7 +12,7 @@ runResampling(df, ab, resamps = 1L, conservative = FALSE)
 \code{\link{gridding}} function).}
 
 \item{ab}{(character) Enter the names of the columns of interest:
-"ABUNDANCE", "BIOMASS" or c("ABUNDANCE","BIOMASS").}
+"ABUNDANCE", "BIOMASS" or c("ABUNDANCE","BIOMASS"). The column cannot have 0s.}
 
 \item{resamps}{(integer) Number of repetitions, 1 by default.}
 
@@ -30,9 +30,10 @@ Uses the output of `gridding` and applies the `rarefysamples` function.
 \examples{
 \dontrun{
   library(BioTIMEr)
+  set.seed(42)
   df <- gridding(subBTmeta, subBTquery)
-  runResampling(df, ab = "ABUNDANCE")
   runResampling(df, ab = "BIOMASS")
+  runResampling(df, ab = "ABUNDANCE")
   runResampling(df, ab = c("ABUNDANCE","BIOMASS"))
 }
 

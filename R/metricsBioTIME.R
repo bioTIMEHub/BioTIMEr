@@ -36,7 +36,8 @@ getAlphaMetrics <- function(x, ab) {
       for (id in unique(x$assemblageID)) {
         df <- x[x$assemblageID == id, ]
         if (dplyr::n_distinct(df$YEAR) > 1L && dplyr::n_distinct(df$Species) > 1L) {
-          y <- dplyr::select(df, "YEAR", "Species", "ABUNDANCE") %>%
+          y <- df %>%
+            dplyr::select("YEAR", "Species", "ABUNDANCE") %>%
             tidyr::pivot_wider(names_from = "Species",
                                values_from = "ABUNDANCE",
                                values_fill = 0)
@@ -49,7 +50,8 @@ getAlphaMetrics <- function(x, ab) {
       for (id in unique(x$assemblageID)) {
         df <- x[x$assemblageID == id, ]
         if (dplyr::n_distinct(df$YEAR) > 1L && dplyr::n_distinct(df$Species) > 1L) {
-          y <- dplyr::select(df, "YEAR", "Species", "BIOMASS") %>%
+          y <- df %>%
+            dplyr::select("YEAR", "Species", "BIOMASS") %>%
             tidyr::pivot_wider(names_from = "Species",
                                values_from = "BIOMASS",
                                values_fill = 0)
@@ -170,7 +172,8 @@ getBetaMetrics <- function(x, ab) {
         if (nyear[[id]] < 2L || nsp[[id]] < 2L) {
           xr <- c(NA, id, NA, NA, NA)
         } else if (nyear[[id]] > 1L && nsp[[id]] > 1L) {
-          y <- dplyr::select(df, "YEAR", "Species", "ABUNDANCE") %>%
+          y <- df %>%
+            dplyr::select("YEAR", "Species", "ABUNDANCE") %>%
             tidyr::pivot_wider(names_from = "Species",
                                values_from = "ABUNDANCE",
                                values_fill = 0)
