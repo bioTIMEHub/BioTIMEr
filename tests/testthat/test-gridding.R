@@ -38,7 +38,7 @@ test_that("gridding respects provided res parameter", {
   expect_snapshot(gridding(meta, btf, res = 18))
 })
 
-test_that("gridding respects res_by_data argument", {
+test_that("gridding respects resByData argument", {
   skip_on_ci()
-  expect_snapshot(gridding(meta, btf, res_by_data = TRUE))
+  expect_snapshot(gridding(meta, btf, resByData = TRUE))
 })

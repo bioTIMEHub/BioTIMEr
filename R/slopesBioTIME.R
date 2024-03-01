@@ -26,14 +26,14 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
 
   checkmate::assert_choice(divType, choices = c("alpha", "beta"))
   checkmate::assert_number(pThreshold, na.ok = FALSE, null.ok = FALSE,
-                           finite = TRUE, lower = 0)
+                           finite = TRUE, lower = 0, upper = 1)
 
   base::switch(
     divType,
     alpha = {
       checkmate::assert_names(
         x = colnames(x), what = "colnames",
-        must.include = c("assemblageID", "YEAR", "S", "N", "Simpson",
+        must.include = c("assemblageID", "YEAR", "S", "N", "maxN", "Simpson",
                          "invSimpson", "DomMc", "PIE", "expShannon",
                          "Shannon"))
 
@@ -52,6 +52,7 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
         f1 <- subset(x, assemblageID == id)
         fitd <- stats::lm(f1$S ~ f1$YEAR, )
         fits <- stats::lm(f1$N ~ f1$YEAR)
+        fitm <- stats::lm(f1$maxN ~ f1$YEAR)
         fitt <- stats::lm(f1$Simpson ~ f1$YEAR)
         fite <- stats::lm(f1$invSimpson ~ f1$YEAR)
         fitf <- stats::lm(f1$DomMc ~ f1$YEAR)
@@ -63,28 +64,30 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
           dfits <- c(dfits, id,
                      fitd$coef[[2L]], summary(fitd)$coefficients[2L, 4L],
                      fits$coef[[2L]], summary(fits)$coefficients[2L, 4L],
+                     fitm$coef[[2L]], summary(fitm)$coefficients[2L, 4L],
                      fitt$coef[[2L]], summary(fitt)$coefficients[2L, 4L],
                      fite$coef[[2L]], summary(fite)$coefficients[2L, 4L],
                      fitf$coef[[2L]], summary(fitf)$coefficients[2L, 4L],
                      fitg$coef[[2L]], summary(fitg)$coefficients[2L, 4L],
                      fith$coef[[2L]], summary(fith)$coefficients[2L, 4L],
                      fiti$coef[[2L]], summary(fiti)$coefficients[2L, 4L],
-                     fitd$coef[[1L]], fits$coef[[1L]], fitt$coef[[1L]],
-                     fite$coef[[1L]], fitf$coef[[1L]], fitg$coef[[1L]],
-                     fith$coef[[1L]], fiti$coef[[1L]])
+                     fitd$coef[[1L]], fits$coef[[1L]], fitm$coef[[1L]],
+                     fitt$coef[[1L]], fite$coef[[1L]], fitf$coef[[1L]],
+                     fitg$coef[[1L]], fith$coef[[1L]], fiti$coef[[1L]])
           dft <- rbind(dft, dfits)
         })
       }
-      variables <- c("S", "N", "simp", "invS", "domM", "PIE", "expSh", "shan")
+      variables <- c("S", "N", "maxN", "simp", "invS", "domM", "PIE", "expSh", "shan")
       colnames(dft) <- c("assemblageID",
                          paste0(rep(variables, each = 2L), c("S", "Pval")),
                          paste0(variables, "I"))
 
-      dft[, 2L:25L] <- apply(dft[, 2L:25L], 2,
+      dft[, -1L] <- apply(dft[, -1L], 2,
                              function(x) as.numeric(as.character(x)))
       dft <- dft %>% dplyr::mutate(
         sp =  dplyr::if_else(SPval < pThreshold, 1, 0),
         np =  dplyr::if_else(NPval < pThreshold, 1, 0),
+        maxNp = dplyr::if_else(maxNPval < pThreshold, 1, 0),
         sip = dplyr::if_else(simpPval < pThreshold, 1, 0),
         isp = dplyr::if_else(invSPval < pThreshold, 1, 0),
         dmp = dplyr::if_else(domMPval < pThreshold, 1, 0),
@@ -94,27 +97,27 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
       )
 
       ###############################################
-      d1 <- dplyr::select(dft, assemblageID, S = SS, N = NS, Simpson = simpS,
-                          invSimpson = invSS, DomMc = domMS,
+      d1 <- dplyr::select(dft, assemblageID, S = SS, N = NS, maxN = maxNS,
+                          Simpson = simpS, invSimpson = invSS, DomMc = domMS,
                           PIE = PIES, expShannon = expShS, Shannon = shanS) %>%
         tidyr::pivot_longer(-assemblageID, names_to = "metric",
                             values_to = "slope")
 
-      d2 <- dplyr::select(dft, assemblageID, S = SPval, N = NPval, Simpson = simpPval,
-                          invSimpson = invSPval, DomMc = domMPval,
-                          PIE = PIEPval, expShannon = expShPval,
+      d2 <- dplyr::select(dft, assemblageID, S = SPval, N = NPval, maxN = maxNPval,
+                          Simpson = simpPval, invSimpson = invSPval,
+                          DomMc = domMPval, PIE = PIEPval, expShannon = expShPval,
                           Shannon = shanPval) %>%
         tidyr::pivot_longer(-assemblageID, names_to = "metric",
-                            values_to = "p-values")
+                            values_to = "pvalue")
 
-      d4 <- dplyr::select(dft, assemblageID, S = sp, N = np, Simpson = sip,
-                          invSimpson = isp, DomMc = dmp, PIE = pp,
+      d4 <- dplyr::select(dft, assemblageID, S = sp, N = np, maxN = maxNp,
+                          Simpson = sip, invSimpson = isp, DomMc = dmp, PIE = pp,
                           expShannon = esp, Shannon = shp) %>%
         tidyr::pivot_longer(-assemblageID, names_to = "metric",
                             values_to = "significance")
 
-      d8 <- dplyr::select(dft, assemblageID, S = SI, N = NI, Simpson = simpI,
-                          invSimpson = invSI, DomMc = domMI,
+      d8 <- dplyr::select(dft, assemblageID, S = SI, N = NI, maxN = maxNI,
+                          Simpson = simpI, invSimpson = invSI, DomMc = domMI,
                           PIE = PIEI, expShannon = expShI, Shannon = shanI) %>%
         tidyr::pivot_longer(-assemblageID, names_to = "metric",
                             values_to = "intercept")

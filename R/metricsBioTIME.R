@@ -62,11 +62,6 @@ getAlphaMetrics <- function(x, measure) {
 #' McNaughton's Dominance.
 
 getAlpha <- function(x, id) {
-  # base::stopifnot(!is.null(id))
-  # checkmate::assert_names(x = colnames(x)[[1L]],
-  #                         identical.to = "YEAR",
-  #                         what = "colnames")
-
   yr <- unique(x[, 1L])
   x <- x[, -1L]
 
@@ -90,6 +85,7 @@ getAlpha <- function(x, id) {
     data.frame(
       assemblageID = id,
       YEAR = yr,
+
       S,
       N,
       maxN,
@@ -130,9 +126,6 @@ getAlpha <- function(x, id) {
 getBetaMetrics <- function(x, measure) {
   checkmate::assert_names(x = colnames(x), what = "colnames",
                           must.include = c(measure, "YEAR", "Species", "assemblageID")
-                          # subset.of = c("resamp","YEAR","Species","assemblageID",
-                          #               "STUDY_ID", "cell",
-                          #               "ABUNDANCE","BIOMASS")
   )
 
   xd <- data.frame()

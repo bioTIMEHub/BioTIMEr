@@ -8,7 +8,7 @@
 #' @param res (integer) Resolution. Must be in the range [0,30]. Larger values
 #'   represent finer resolutions. Default: 12 (~96 sq km). Passed to
 #'   \code{\link[dggridR]{dgconstruct}}.
-#' @param res_by_data (logical) FALSE by default. If TRUE, the function
+#' @param resByData (logical) FALSE by default. If TRUE, the function
 #'   \code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt `res` to
 #'   the data extent.
 #' @details
@@ -45,7 +45,7 @@
 #'   gridding(subBTmeta, subBTquery)
 #' }
 
-gridding <- function(meta, btf, res = 12, res_by_data = FALSE) {
+gridding <- function(meta, btf, res = 12, resByData = FALSE) {
   checkmate::assert_names(
     x = colnames(meta), what = "colnames",
     must.include = c("STUDY_ID", "NUMBER_LAT_LONG", "AREA_SQ_KM",
@@ -98,7 +98,7 @@ gridding <- function(meta, btf, res = 12, res_by_data = FALSE) {
 
   dgg <- dggridR::dgconstruct(res = res)
 
-  if (res_by_data) {
+  if (resByData) {
     res <- dggridR::dg_closest_res_to_area(dgg, SL_extent_mean + SL_extent_sd)
     dgg <- dggridR::dgsetres(dgg, res)
   }

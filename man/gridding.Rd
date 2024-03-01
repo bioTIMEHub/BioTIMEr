@@ -4,7 +4,7 @@
 \alias{gridding}
 \title{Gridding BioTIME data}
 \usage{
-gridding(meta, btf, res = 12, res_by_data = FALSE)
+gridding(meta, btf, res = 12, resByData = FALSE)
 }
 \arguments{
 \item{meta}{(data.frame) BioTIME metadata}
@@ -15,7 +15,7 @@ gridding(meta, btf, res = 12, res_by_data = FALSE)
 represent finer resolutions. Default: 12 (~96 sq km). Passed to
 \code{\link[dggridR]{dgconstruct}}.}
 
-\item{res_by_data}{(logical) FALSE by default. If TRUE, the function
+\item{resByData}{(logical) FALSE by default. If TRUE, the function
 \code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt `res` to
 the data extent.}
 }
