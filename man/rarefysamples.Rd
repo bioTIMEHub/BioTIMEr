@@ -6,13 +6,13 @@
 Applies sample-based rarefaction to standardise the number of samples per year
    within a cell-level time-series.}
 \usage{
-rarefysamples(df, ab, resamps)
+rarefysamples(df, measure, resamps)
 }
 \arguments{
 \item{df}{`data.frame` to be resampled (in the format of the output of the
 \code{\link{gridding}} function).}
 
-\item{ab}{(character) Enter the names of the columns of interest:
+\item{measure}{(character) Enter the names of the columns of interest:
 "ABUNDANCE", "BIOMASS" or c("ABUNDANCE","BIOMASS"). The column cannot have 0s.}
 
 \item{resamps}{(integer) Number of repetitions, 1 by default.}
@@ -38,7 +38,7 @@ Sample-based rarefaction prevents temporal variation in sampling effort
    with the variable (abundance or biomass) to be retained during the
    sample-based rarefaction, while `resamps` can be used to define multiple
    iterations (see examples). To apply directly to the output from the
-   \code{\link{gridding}} function use \code{\link{resample}}.
+   \code{\link{gridding}} function use \code{\link{resampling}}.
 }
 \examples{
 \dontrun{

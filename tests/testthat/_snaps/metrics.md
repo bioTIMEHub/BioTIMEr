@@ -201,7 +201,7 @@
 # getAlphaMetrics works correctly for Abundance
 
     Code
-      getAlphaMetrics(x = dataMetrics, ab = "ABUNDANCE")
+      getAlphaMetrics(x = dataMetrics, measure = "ABUNDANCE")
     Output
          assemblageID YEAR S  N maxN  Shannon   Simpson invSimpson       PIE
       1             A 2010 4 34   14 1.318024 0.7128028   3.481928 0.7344029
@@ -305,7 +305,7 @@
 # getAlphaMetrics works correctly for Biomass
 
     Code
-      getAlphaMetrics(x = dataMetrics, ab = "BIOMASS")
+      getAlphaMetrics(x = dataMetrics, measure = "BIOMASS")
     Output
          assemblageID YEAR S    N maxN  Shannon   Simpson invSimpson       PIE
       1             A 2010 4 4051 1034 1.386206 0.7499555   3.999288 0.7501406
@@ -409,7 +409,7 @@
 # getBetaMetrics works correctly for Abundance
 
     Code
-      getBetaMetrics(x = dataMetrics, ab = "ABUNDANCE")
+      getBetaMetrics(x = dataMetrics, measure = "ABUNDANCE")
     Output
          YEAR assemblageID JaccardDiss MorisitaHornDiss BrayCurtisDiss
       1  2010            A           1                1              1
@@ -464,7 +464,7 @@
 # getBetaMetrics works correctly for Biomass
 
     Code
-      getBetaMetrics(x = dataMetrics, ab = "BIOMASS")
+      getBetaMetrics(x = dataMetrics, measure = "BIOMASS")
     Output
          YEAR assemblageID JaccardDiss MorisitaHornDiss BrayCurtisDiss
       1  2010            A           1                1              1

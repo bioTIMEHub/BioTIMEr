@@ -4,13 +4,13 @@
 \alias{getBetaMetrics}
 \title{run the beta function}
 \usage{
-getBetaMetrics(x, ab)
+getBetaMetrics(x, measure)
 }
 \arguments{
 \item{x}{(data.frame) Has to have columns Species, YEAR, assemblageID,
 STUDY_ID, cell and ABUNDANCE or BIOMASS}
 
-\item{ab}{character input for chosen currency - "A" = ABUNDANCE or "B" = BIOMASS}
+\item{measure}{character input for chosen currency - "A" = ABUNDANCE or "B" = BIOMASS}
 }
 \value{
 getBetaMetrics returns a long data.frame with results for three beta
@@ -31,7 +31,7 @@ x <- data.frame(
   assemblageID = rep(LETTERS[1L:8L], each = 24)
   )
 
-res <- getBetaMetrics(x, ab = "ABUNDANCE")
+res <- getBetaMetrics(x, measure = "ABUNDANCE")
 }
 }
 \author{

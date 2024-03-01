@@ -1,9 +1,9 @@
-#' resample BioTIME
+#' resampling BioTIME
 #' Uses the output of `gridding` and applies the `rarefysamples` function.
 #' @export
 #' @param df `data.frame` to be resampled (in the format of the output of the
 #'  \code{\link{gridding}} function).
-#' @param ab (character) Enter the names of the columns of interest:
+#' @param measure (character) Enter the names of the columns of interest:
 #' "ABUNDANCE", "BIOMASS" or c("ABUNDANCE","BIOMASS"). The column cannot have 0s.
 #' @param resamps (integer) Number of repetitions, 1 by default.
 #' @param conservative (logical) If `TRUE`, whenever a NA is found for abundance
@@ -16,17 +16,17 @@
 #'   library(BioTIMEr)
 #'   set.seed(42)
 #'   df <- gridding(subBTmeta, subBTquery)
-#'   resample(df, ab = "BIOMASS")
-#'   resample(df, ab = "ABUNDANCE")
-#'   resample(df, ab = c("ABUNDANCE","BIOMASS"))
+#'   resampling(df, measure = "BIOMASS")
+#'   resampling(df, measure = "ABUNDANCE")
+#'   resampling(df, measure = c("ABUNDANCE","BIOMASS"))
 #' }
 #'
 
-resample <- function(df, ab, resamps = 1L, conservative = FALSE) {
+resampling <- function(df, measure, resamps = 1L, conservative = FALSE) {
   checkmate::assert_names(
     x = colnames(df), what = "colnames",
-    must.include = c("YEAR", "SAMPLE_DESC", "Species", ab))
-  base::stopifnot("ab must be > 0" = all(df[, ab] > 0, na.rm = TRUE))
+    must.include = c("YEAR", "SAMPLE_DESC", "Species", measure))
+  base::stopifnot("measure must be > 0" = all(df[, measure] > 0, na.rm = TRUE))
   checkmate::assert_number(x = resamps, lower = 1L,
                            na.ok = FALSE, null.ok = FALSE)
   checkmate::assert_integer(x = df$YEAR, lower = 1300L, null.ok = FALSE)
@@ -35,12 +35,12 @@ resample <- function(df, ab, resamps = 1L, conservative = FALSE) {
 
 
 
-  if (anyNA(df[, ab])) {
+  if (anyNA(df[, measure])) {
     if (conservative) {
-      df <- stats::aggregate(x = df[, ab, drop = FALSE],
+      df <- stats::aggregate(x = df[, measure, drop = FALSE],
                               by = list(SAMPLE_DESC = df$SAMPLE_DESC),
                               function(j) anyNA(j)) %>%
-        dplyr::mutate(na_values = rowSums(dplyr::select(., dplyr::all_of(ab)))) %>%
+        dplyr::mutate(na_values = rowSums(dplyr::select(., dplyr::all_of(measure)))) %>%
         dplyr::filter(na_values == 0L) %>%
         dplyr::semi_join(x = df, y = ., by = "SAMPLE_DESC")
 
@@ -48,7 +48,7 @@ resample <- function(df, ab, resamps = 1L, conservative = FALSE) {
                      "Only a subset of `df` is used."))
     } else {
       df <- dplyr::filter(df, !apply(
-        X = dplyr::select(df, dplyr::all_of(ab)),
+        X = dplyr::select(df, dplyr::all_of(measure)),
         MARGIN = 1,
         FUN = anyNA))
       warning(paste0("NA values found and removed.\n",
@@ -62,7 +62,7 @@ resample <- function(df, ab, resamps = 1L, conservative = FALSE) {
     FUN = function(i) {
       temp_data <- df[df$assemblageID == i, ]
       rarefysamples(df = temp_data,
-                    ab = ab,
+                    measure = measure,
                     resamps = resamps)},
     USE.NAMES = TRUE, simplify = FALSE)
 
@@ -72,7 +72,7 @@ resample <- function(df, ab, resamps = 1L, conservative = FALSE) {
                     sep = "_", remove = FALSE) %>%
     dplyr::mutate(STUDY_ID = as.integer(STUDY_ID)) %>%
     dplyr::select(resamp, assemblageID = rfID, STUDY_ID, YEAR, Species,
-                  dplyr::all_of(ab)) %>%
+                  dplyr::all_of(measure)) %>%
     return()
 }
 
@@ -81,7 +81,7 @@ resample <- function(df, ab, resamps = 1L, conservative = FALSE) {
 #' Rarefy BioTIME data
 #' Applies sample-based rarefaction to standardise the number of samples per year
 #'    within a cell-level time-series.
-#' @inheritParams resample
+#' @inheritParams resampling
 #' @returns Returns a single long form data frame containing the total currency
 #'    of interest (sum) for each species in each year.
 #' @keywords internal
@@ -97,7 +97,7 @@ resample <- function(df, ab, resamps = 1L, conservative = FALSE) {
 #'    with the variable (abundance or biomass) to be retained during the
 #'    sample-based rarefaction, while `resamps` can be used to define multiple
 #'    iterations (see examples). To apply directly to the output from the
-#'    \code{\link{gridding}} function use \code{\link{resample}}.
+#'    \code{\link{gridding}} function use \code{\link{resampling}}.
 #'
 #' @examples
 #' \dontrun{
@@ -111,7 +111,7 @@ resample <- function(df, ab, resamps = 1L, conservative = FALSE) {
 #'}
 #'
 
-rarefysamples <- function(df, ab, resamps) {
+rarefysamples <- function(df, measure, resamps) {
   # Computing minimal effort per year in this assemblageID
   minsample <- min(tapply(df$SAMPLE_DESC,
                           df$YEAR,
@@ -130,7 +130,7 @@ rarefysamples <- function(df, ab, resamps) {
 
       tYear    <- df[selected_indices, "YEAR"]
       tSpecies <- df[selected_indices, "Species"]
-      tcurrency <- df[selected_indices, ab, drop = FALSE]
+      tcurrency <- df[selected_indices, measure, drop = FALSE]
 
       raref <- stats::aggregate(x = tcurrency,
                                 by = list(YEAR = tYear, Species = tSpecies),

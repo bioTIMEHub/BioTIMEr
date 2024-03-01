@@ -1,6 +1,6 @@
 #' Run the alpha function
 #' @param x (data.frame) First column has to be year
-#' @param ab character input for chosen currency - "A" = ABUNDANCE or "B" = BIOMASS
+#' @param measure character input for chosen currency - "A" = ABUNDANCE or "B" = BIOMASS
 #' @returns getAlphaMetrics returns a data.frame with nine alpha diversity metrics
 #' @author Faye Moyes
 #' @export
@@ -13,27 +13,24 @@
 #'     ABUNDANCE = rpois(24 * 8, 10),
 #'     assemblageID = rep(LETTERS[1L:8L], each = 24)
 #'   )
-#'   res <- getAlphaMetrics(x, ab = "ABUNDANCE")
+#'   res <- getAlphaMetrics(x, measure = "ABUNDANCE")
 #' }
 
-getAlphaMetrics <- function(x, ab) {
+getAlphaMetrics <- function(x, measure) {
   checkmate::assert_names(x = colnames(x), what = "colnames",
-                          must.include = c(ab, "YEAR", "Species", "assemblageID")
-                          # subset.of = c("resamp","YEAR","Species","assemblageID",
-                          #               "STUDY_ID", "cell",
-                          #               "ABUNDANCE","BIOMASS")
+                          must.include = c(measure, "YEAR", "Species", "assemblageID")
   )
 
   xd <- data.frame()
 
-  x <- x[!is.na(x[, ab]), ]
+  x <- x[!is.na(x[, measure]), ]
   for (id in unique(x$assemblageID)) {
     df <- x[x$assemblageID == id, ]
     if (dplyr::n_distinct(df$YEAR) > 1L && dplyr::n_distinct(df$Species) > 1L) {
       y <- df %>%
-        dplyr::select("YEAR", "Species", dplyr::all_of(ab)) %>%
+        dplyr::select("YEAR", "Species", dplyr::all_of(measure)) %>%
         tidyr::pivot_wider(names_from = "Species",
-                           values_from = dplyr::all_of(ab),
+                           values_from = dplyr::all_of(measure),
                            values_fill = 0)
       xd <- rbind(xd, getAlpha(x = y, id = id))
     } # end if
@@ -111,7 +108,7 @@ getAlpha <- function(x, id) {
 #' @export
 #' @param x (data.frame) Has to have columns Species, YEAR, assemblageID,
 #'   STUDY_ID, cell and ABUNDANCE or BIOMASS
-#' @param ab character input for chosen currency - "A" = ABUNDANCE or "B" = BIOMASS
+#' @param measure character input for chosen currency - "A" = ABUNDANCE or "B" = BIOMASS
 #' @returns getBetaMetrics returns a long data.frame with results for three beta
 #'   metrics.
 #' @author Faye Moyes
@@ -127,12 +124,12 @@ getAlpha <- function(x, id) {
 #'   assemblageID = rep(LETTERS[1L:8L], each = 24)
 #'   )
 #'
-#' res <- getBetaMetrics(x, ab = "ABUNDANCE")
+#' res <- getBetaMetrics(x, measure = "ABUNDANCE")
 #' }
 
-getBetaMetrics <- function(x, ab) {
+getBetaMetrics <- function(x, measure) {
   checkmate::assert_names(x = colnames(x), what = "colnames",
-                          must.include = c(ab, "YEAR", "Species", "assemblageID")
+                          must.include = c(measure, "YEAR", "Species", "assemblageID")
                           # subset.of = c("resamp","YEAR","Species","assemblageID",
                           #               "STUDY_ID", "cell",
                           #               "ABUNDANCE","BIOMASS")
@@ -140,7 +137,7 @@ getBetaMetrics <- function(x, ab) {
 
   xd <- data.frame()
 
-  x <- x[!is.na(x[, ab]), ]
+  x <- x[!is.na(x[, measure]), ]
   nyear <- tapply(x$YEAR, x$assemblageID, dplyr::n_distinct)
   nsp   <- tapply(x$Species, x$assemblageID, dplyr::n_distinct)
 
@@ -154,9 +151,9 @@ getBetaMetrics <- function(x, ab) {
                                  BrayCurtisDiss = NA))
     } else if (nyear[[id]] > 1L && nsp[[id]] > 1L) {
       rbeta <- df %>%
-        dplyr::select("YEAR", "Species", dplyr::all_of(ab)) %>%
+        dplyr::select("YEAR", "Species", dplyr::all_of(measure)) %>%
         tidyr::pivot_wider(names_from = "Species",
-                           values_from = dplyr::all_of(ab),
+                           values_from = dplyr::all_of(measure),
                            values_fill = 0) %>%
         getBeta(id = id)
       xd <- rbind(xd, rbeta)

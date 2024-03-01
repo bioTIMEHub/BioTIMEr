@@ -4,12 +4,12 @@
 \alias{getAlphaMetrics}
 \title{Run the alpha function}
 \usage{
-getAlphaMetrics(x, ab)
+getAlphaMetrics(x, measure)
 }
 \arguments{
 \item{x}{(data.frame) First column has to be year}
 
-\item{ab}{character input for chosen currency - "A" = ABUNDANCE or "B" = BIOMASS}
+\item{measure}{character input for chosen currency - "A" = ABUNDANCE or "B" = BIOMASS}
 }
 \value{
 getAlphaMetrics returns a data.frame with nine alpha diversity metrics
@@ -26,7 +26,7 @@ Run the alpha function
     ABUNDANCE = rpois(24 * 8, 10),
     assemblageID = rep(LETTERS[1L:8L], each = 24)
   )
-  res <- getAlphaMetrics(x, ab = "ABUNDANCE")
+  res <- getAlphaMetrics(x, measure = "ABUNDANCE")
 }
 }
 \author{
