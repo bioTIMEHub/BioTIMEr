@@ -1,11 +1,11 @@
-# Loading data for testing runResampling
+# Loading data for testing resample
 subBTmeta <- base::readRDS(testthat::test_path("testdata", "data-meta.rds"))
 subBTquery <- base::readRDS(testthat::test_path("testdata", "data-query.rds"))
 test_df <- gridding(subBTmeta, subBTquery)
 
-test_that("runResampling runs correctly for Abundance", {
+test_that("resample runs correctly for Abundance", {
   expect_snapshot({
-    result <- runResampling(df = test_df, ab = "ABUNDANCE",
+    result <- resample(df = test_df, ab = "ABUNDANCE",
                             resamps = 1L, conservative = FALSE)
   })
 
@@ -23,9 +23,9 @@ test_that("runResampling runs correctly for Abundance", {
 })
 
 
-test_that("runResampling runs correctly for Biomass", {
+test_that("resample runs correctly for Biomass", {
   expect_snapshot({
-    result <- runResampling(df = test_df, ab = "BIOMASS",
+    result <- resample(df = test_df, ab = "BIOMASS",
                             resamps = 1L, conservative = FALSE)
   })
 
@@ -43,9 +43,9 @@ test_that("runResampling runs correctly for Biomass", {
 })
 
 
-test_that("runResampling runs correctly for Abundance and Biomass together", {
+test_that("resample runs correctly for Abundance and Biomass together", {
   expect_snapshot({
-    result <- runResampling(df = test_df, ab = c("ABUNDANCE","BIOMASS"),
+    result <- resample(df = test_df, ab = c("ABUNDANCE","BIOMASS"),
                             resamps = 1L, conservative = FALSE)
   })
 
@@ -62,10 +62,10 @@ test_that("runResampling runs correctly for Abundance and Biomass together", {
   expect_lte(sum(result$Biomass), sum(biomass_test_df$BIOMASS))
 })
 
-test_that("runResampling runs correctly for Abundance and Biomass together
+test_that("resample runs correctly for Abundance and Biomass together
           2 iterations, conservative", {
             expect_snapshot({
-              result <- runResampling(df = test_df, ab = c("ABUNDANCE","BIOMASS"),
+              result <- resample(df = test_df, ab = c("ABUNDANCE","BIOMASS"),
                                       resamps = 2L, conservative = TRUE)
             })
 

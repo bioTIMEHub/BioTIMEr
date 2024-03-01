@@ -8,7 +8,7 @@ test_that("Whole workflow works consistently", {
   expect_snapshot({
     set.seed(42)
     gridding(meta, btf) %>%
-      runResampling(ab = "ABUNDANCE", resamps = 1L) %>%
+      resample(ab = "ABUNDANCE", resamps = 1L) %>%
       getBetaMetrics(ab = "ABUNDANCE") %>%
       getLinearRegressions(divType = "beta")
   })
@@ -16,7 +16,7 @@ test_that("Whole workflow works consistently", {
   expect_snapshot({
     set.seed(42)
     gridding(meta, btf) %>%
-      runResampling(ab = "BIOMASS", resamps = 1L) %>%
+      resample(ab = "BIOMASS", resamps = 1L) %>%
       getBetaMetrics(ab = "BIOMASS") %>%
       getLinearRegressions(divType = "beta")
   })

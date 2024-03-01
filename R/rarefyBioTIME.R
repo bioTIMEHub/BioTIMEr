@@ -1,4 +1,4 @@
-#' runResampling BioTIME
+#' resample BioTIME
 #' Uses the output of `gridding` and applies the `rarefysamples` function.
 #' @export
 #' @param df `data.frame` to be resampled (in the format of the output of the
@@ -16,13 +16,13 @@
 #'   library(BioTIMEr)
 #'   set.seed(42)
 #'   df <- gridding(subBTmeta, subBTquery)
-#'   runResampling(df, ab = "BIOMASS")
-#'   runResampling(df, ab = "ABUNDANCE")
-#'   runResampling(df, ab = c("ABUNDANCE","BIOMASS"))
+#'   resample(df, ab = "BIOMASS")
+#'   resample(df, ab = "ABUNDANCE")
+#'   resample(df, ab = c("ABUNDANCE","BIOMASS"))
 #' }
 #'
 
-runResampling <- function(df, ab, resamps = 1L, conservative = FALSE) {
+resample <- function(df, ab, resamps = 1L, conservative = FALSE) {
   checkmate::assert_names(
     x = colnames(df), what = "colnames",
     must.include = c("YEAR", "SAMPLE_DESC", "Species", ab))
@@ -81,7 +81,7 @@ runResampling <- function(df, ab, resamps = 1L, conservative = FALSE) {
 #' Rarefy BioTIME data
 #' Applies sample-based rarefaction to standardise the number of samples per year
 #'    within a cell-level time-series.
-#' @inheritParams runResampling
+#' @inheritParams resample
 #' @returns Returns a single long form data frame containing the total currency
 #'    of interest (sum) for each species in each year.
 #' @keywords internal
@@ -97,7 +97,7 @@ runResampling <- function(df, ab, resamps = 1L, conservative = FALSE) {
 #'    with the variable (abundance or biomass) to be retained during the
 #'    sample-based rarefaction, while `resamps` can be used to define multiple
 #'    iterations (see examples). To apply directly to the output from the
-#'    \code{\link{gridding}} function use \code{\link{runResampling}}.
+#'    \code{\link{gridding}} function use \code{\link{resample}}.
 #'
 #' @examples
 #' \dontrun{

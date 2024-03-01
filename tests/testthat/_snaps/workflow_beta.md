@@ -2,7 +2,7 @@
 
     Code
       set.seed(42)
-      gridding(meta, btf) %>% runResampling(ab = "ABUNDANCE", resamps = 1L) %>%
+      gridding(meta, btf) %>% resample(ab = "ABUNDANCE", resamps = 1L) %>%
         getBetaMetrics(ab = "ABUNDANCE") %>% getLinearRegressions(divType = "beta")
     Message
       OK: all SL studies have 1 grid cell
@@ -14948,12 +14948,12 @@
 
     Code
       set.seed(42)
-      gridding(meta, btf) %>% runResampling(ab = "BIOMASS", resamps = 1L) %>%
+      gridding(meta, btf) %>% resample(ab = "BIOMASS", resamps = 1L) %>%
         getBetaMetrics(ab = "BIOMASS") %>% getLinearRegressions(divType = "beta")
     Message
       OK: all SL studies have 1 grid cell
     Condition
-      Warning in `runResampling()`:
+      Warning in `resample()`:
       NA values found and removed.
       Only a subset of `df` is used.
     Output

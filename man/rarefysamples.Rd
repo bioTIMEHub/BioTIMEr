@@ -38,7 +38,7 @@ Sample-based rarefaction prevents temporal variation in sampling effort
    with the variable (abundance or biomass) to be retained during the
    sample-based rarefaction, while `resamps` can be used to define multiple
    iterations (see examples). To apply directly to the output from the
-   \code{\link{gridding}} function use \code{\link{runResampling}}.
+   \code{\link{gridding}} function use \code{\link{resample}}.
 }
 \examples{
 \dontrun{
