@@ -875,7 +875,7 @@
     Code
       getLinearRegressions(x = betam, divType = "beta")
     Output
-          YEAR assemblageID           metric dissimilarity         slope  p-values
+          YEAR assemblageID           metric dissimilarity         slope    pvalue
       1   2010            A      JaccardDiss             1 -8.078249e-17 0.1583024
       2   2010            A MorisitaHornDiss             1 -8.078249e-17 0.1583024
       3   2010            A   BrayCurtisDiss             1 -8.078249e-17 0.1583024
@@ -2043,7 +2043,7 @@
     Code
       getLinearRegressions(x = betam, divType = "beta", pThreshold = 0.01)
     Output
-          YEAR assemblageID           metric dissimilarity         slope  p-values
+          YEAR assemblageID           metric dissimilarity         slope    pvalue
       1   2010            A      JaccardDiss             1 -8.078249e-17 0.1583024
       2   2010            A MorisitaHornDiss             1 -8.078249e-17 0.1583024
       3   2010            A   BrayCurtisDiss             1 -8.078249e-17 0.1583024

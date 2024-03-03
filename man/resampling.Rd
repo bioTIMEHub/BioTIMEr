@@ -5,10 +5,10 @@
 \title{resampling BioTIME
 Uses the output of `gridding` and applies the `rarefysamples` function.}
 \usage{
-resampling(df, measure, resamps = 1L, conservative = FALSE)
+resampling(x, measure, resamps = 1L, conservative = FALSE)
 }
 \arguments{
-\item{df}{`data.frame` to be resampled (in the format of the output of the
+\item{x}{`data.frame` to be resampled (in the format of the output of the
 \code{\link{gridding}} function).}
 
 \item{measure}{(character) Enter the names of the columns of interest:
@@ -31,10 +31,10 @@ Uses the output of `gridding` and applies the `rarefysamples` function.
 \dontrun{
   library(BioTIMEr)
   set.seed(42)
-  df <- gridding(subBTmeta, subBTquery)
-  resampling(df, measure = "BIOMASS")
-  resampling(df, measure = "ABUNDANCE")
-  resampling(df, measure = c("ABUNDANCE","BIOMASS"))
+  x <- gridding(subBTmeta, subBTquery)
+  resampling(x, measure = "BIOMASS")
+  resampling(x, measure = "ABUNDANCE")
+  resampling(x, measure = c("ABUNDANCE","BIOMASS"))
 }
 
 }

@@ -5,7 +5,7 @@ test_df <- gridding(subBTmeta, subBTquery)
 
 test_that("resampling runs correctly for Abundance", {
   expect_snapshot({
-    result <- resampling(df = test_df, measure = "ABUNDANCE",
+    result <- resampling(x = test_df, measure = "ABUNDANCE",
                             resamps = 1L, conservative = FALSE)
   })
 
@@ -25,7 +25,7 @@ test_that("resampling runs correctly for Abundance", {
 
 test_that("resampling runs correctly for Biomass", {
   expect_snapshot({
-    result <- resampling(df = test_df, measure = "BIOMASS",
+    result <- resampling(x = test_df, measure = "BIOMASS",
                             resamps = 1L, conservative = FALSE)
   })
 
@@ -45,7 +45,7 @@ test_that("resampling runs correctly for Biomass", {
 
 test_that("resampling runs correctly for Abundance and Biomass together", {
   expect_snapshot({
-    result <- resampling(df = test_df, measure = c("ABUNDANCE","BIOMASS"),
+    result <- resampling(x = test_df, measure = c("ABUNDANCE","BIOMASS"),
                             resamps = 1L, conservative = FALSE)
   })
 
@@ -65,7 +65,7 @@ test_that("resampling runs correctly for Abundance and Biomass together", {
 test_that("resampling runs correctly for Abundance and Biomass together
           2 iterations, conservative", {
             expect_snapshot({
-              result <- resampling(df = test_df, measure = c("ABUNDANCE","BIOMASS"),
+              result <- resampling(x = test_df, measure = c("ABUNDANCE","BIOMASS"),
                                       resamps = 2L, conservative = TRUE)
             })
 

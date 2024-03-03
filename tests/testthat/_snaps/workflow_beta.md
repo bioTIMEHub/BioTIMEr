@@ -7475,7 +7475,7 @@
       7465 2016  437_2073741      JaccardDiss  7.343750e-01  3.065634e-02
       7466 2016  437_2073741 MorisitaHornDiss  3.815590e-01 -1.487758e-03
       7467 2016  437_2073741   BrayCurtisDiss  6.997519e-01  3.607616e-02
-               p-values significance     intercept
+                 pvalue significance     intercept
       1    4.724426e-01            0 -1.804978e+01
       2    1.691434e-01            0 -1.999238e+00
       3    6.554540e-01            0  9.959397e+00
@@ -14955,9 +14955,9 @@
     Condition
       Warning in `resampling()`:
       NA values found and removed.
-      Only a subset of `df` is used.
+      Only a subset of `x` is used.
     Output
-          YEAR assemblageID           metric dissimilarity        slope    p-values
+          YEAR assemblageID           metric dissimilarity        slope      pvalue
       1   1980   211_528514      JaccardDiss    0.56089010  0.016466117 0.229606351
       2   1980   211_528514 MorisitaHornDiss    0.30941089  0.011510256 0.741736591
       3   1980   211_528514   BrayCurtisDiss    0.74911796 -0.001134076 0.943233207

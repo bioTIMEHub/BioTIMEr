@@ -187,7 +187,7 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
                           MorisitaHornDiss = mhPval,
                           BrayCurtisDiss = bcPval) %>%
         tidyr::pivot_longer(-assemblageID, names_to = "metric",
-                            values_to = "p-values")
+                            values_to = "pvalue")
 
       d4 <- dplyr::select(dft, assemblageID, JaccardDiss = jdp,
                           MorisitaHornDiss = mhp,

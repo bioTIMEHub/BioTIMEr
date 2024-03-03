@@ -1,7 +1,7 @@
 #' resampling BioTIME
 #' Uses the output of `gridding` and applies the `rarefysamples` function.
 #' @export
-#' @param df `data.frame` to be resampled (in the format of the output of the
+#' @param x `data.frame` to be resampled (in the format of the output of the
 #'  \code{\link{gridding}} function).
 #' @param measure (character) Enter the names of the columns of interest:
 #' "ABUNDANCE", "BIOMASS" or c("ABUNDANCE","BIOMASS"). The column cannot have 0s.
@@ -15,53 +15,53 @@
 #' \dontrun{
 #'   library(BioTIMEr)
 #'   set.seed(42)
-#'   df <- gridding(subBTmeta, subBTquery)
-#'   resampling(df, measure = "BIOMASS")
-#'   resampling(df, measure = "ABUNDANCE")
-#'   resampling(df, measure = c("ABUNDANCE","BIOMASS"))
+#'   x <- gridding(subBTmeta, subBTquery)
+#'   resampling(x, measure = "BIOMASS")
+#'   resampling(x, measure = "ABUNDANCE")
+#'   resampling(x, measure = c("ABUNDANCE","BIOMASS"))
 #' }
 #'
 
-resampling <- function(df, measure, resamps = 1L, conservative = FALSE) {
+resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
   checkmate::assert_names(
-    x = colnames(df), what = "colnames",
+    x = colnames(x), what = "colnames",
     must.include = c("YEAR", "SAMPLE_DESC", "Species", measure))
-  base::stopifnot("measure must be > 0" = all(df[, measure] > 0, na.rm = TRUE))
+  base::stopifnot("measure must be > 0" = all(x[, measure] > 0, na.rm = TRUE))
   checkmate::assert_number(x = resamps, lower = 1L,
                            na.ok = FALSE, null.ok = FALSE)
-  checkmate::assert_integer(x = df$YEAR, lower = 1300L, null.ok = FALSE)
+  checkmate::assert_integer(x = x$YEAR, lower = 1300L, null.ok = FALSE)
   checkmate::assert_logical(x = conservative, len = 1L,
                             null.ok = FALSE, any.missing = FALSE)
 
 
 
-  if (anyNA(df[, measure])) {
+  if (anyNA(x[, measure])) {
     if (conservative) {
-      df <- stats::aggregate(x = df[, measure, drop = FALSE],
-                              by = list(SAMPLE_DESC = df$SAMPLE_DESC),
+      x <- stats::aggregate(x = x[, measure, drop = FALSE],
+                              by = list(SAMPLE_DESC = x$SAMPLE_DESC),
                               function(j) anyNA(j)) %>%
         dplyr::mutate(na_values = rowSums(dplyr::select(., dplyr::all_of(measure)))) %>%
         dplyr::filter(na_values == 0L) %>%
-        dplyr::semi_join(x = df, y = ., by = "SAMPLE_DESC")
+        dplyr::semi_join(x = x, y = ., by = "SAMPLE_DESC")
 
       warning(paste0("NA values found and whole samples removed since `conservative` is TRUE.\n",
-                     "Only a subset of `df` is used."))
+                     "Only a subset of `x` is used."))
     } else {
-      df <- dplyr::filter(df, !apply(
-        X = dplyr::select(df, dplyr::all_of(measure)),
+      x <- dplyr::filter(x, !apply(
+        X = dplyr::select(x, dplyr::all_of(measure)),
         MARGIN = 1,
         FUN = anyNA))
       warning(paste0("NA values found and removed.\n",
-                     "Only a subset of `df` is used."))
+                     "Only a subset of `x` is used."))
     }
   }
 
-  rfIDs <- unique(df$assemblageID)
+  rfIDs <- unique(x$assemblageID)
   TSrf <- sapply(
     X = rfIDs,
     FUN = function(i) {
-      temp_data <- df[df$assemblageID == i, ]
-      rarefysamples(df = temp_data,
+      temp_data <- x[x$assemblageID == i, ]
+      rarefysamples(x = temp_data,
                     measure = measure,
                     resamps = resamps)},
     USE.NAMES = TRUE, simplify = FALSE)
@@ -103,34 +103,34 @@ resampling <- function(df, measure, resamps = 1L, conservative = FALSE) {
 #' \dontrun{
 #'   library(dplyr)
 #'   library(BioTIMEr)
-#'   df <- gridding(subBTmeta, subBTquery) %>%
+#'   x <- gridding(subBTmeta, subBTquery) %>%
 #'     filter(assemblageID == "10_358678")
-#'   rarefysamples(Year = df$YEAR, SampleID = df$SAMPLE_DESC,
-#'     Species = df$Species, currency = df$ABUNDANCE,
+#'   rarefysamples(Year = x$YEAR, SampleID = x$SAMPLE_DESC,
+#'     Species = x$Species, currency = x$ABUNDANCE,
 #'     resamps = 3)
 #'}
 #'
 
-rarefysamples <- function(df, measure, resamps) {
+rarefysamples <- function(x, measure, resamps) {
   # Computing minimal effort per year in this assemblageID
-  minsample <- min(tapply(df$SAMPLE_DESC,
-                          df$YEAR,
+  minsample <- min(tapply(x$SAMPLE_DESC,
+                          x$YEAR,
                           function(x) length(unique(x))))
 
   rareftab_list <- lapply( # beginning loop on repetitions
     X = seq_len(resamps),
     FUN = function(i) {
       selected_indices <- unlist(lapply( # beginning sub loop on years
-        X = unique(df$YEAR),
+        X = unique(x$YEAR),
         FUN = function(y) {
-          samps <- unique(df$SAMPLE_DESC[df$YEAR == y])
+          samps <- unique(x$SAMPLE_DESC[x$YEAR == y])
           sam <- sample(samps, minsample, replace = TRUE)
-          return(which(df$SAMPLE_DESC %in% sam & df$YEAR == y))
+          return(which(x$SAMPLE_DESC %in% sam & x$YEAR == y))
         })) # end of loop on years
 
-      tYear    <- df[selected_indices, "YEAR"]
-      tSpecies <- df[selected_indices, "Species"]
-      tcurrency <- df[selected_indices, measure, drop = FALSE]
+      tYear    <- x[selected_indices, "YEAR"]
+      tSpecies <- x[selected_indices, "Species"]
+      tcurrency <- x[selected_indices, measure, drop = FALSE]
 
       raref <- stats::aggregate(x = tcurrency,
                                 by = list(YEAR = tYear, Species = tSpecies),

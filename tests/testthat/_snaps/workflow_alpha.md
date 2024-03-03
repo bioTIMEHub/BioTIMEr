@@ -25020,7 +25020,7 @@
     Condition
       Warning in `resampling()`:
       NA values found and removed.
-      Only a subset of `df` is used.
+      Only a subset of `x` is used.
     Output
           assemblageID YEAR     metric     diversity         slope     pvalue
       1     211_528514 1980          S  3.000000e+01 -1.911765e+00 0.06351243

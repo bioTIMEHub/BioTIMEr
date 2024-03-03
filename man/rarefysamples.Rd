@@ -6,10 +6,10 @@
 Applies sample-based rarefaction to standardise the number of samples per year
    within a cell-level time-series.}
 \usage{
-rarefysamples(df, measure, resamps)
+rarefysamples(x, measure, resamps)
 }
 \arguments{
-\item{df}{`data.frame` to be resampled (in the format of the output of the
+\item{x}{`data.frame` to be resampled (in the format of the output of the
 \code{\link{gridding}} function).}
 
 \item{measure}{(character) Enter the names of the columns of interest:
@@ -44,10 +44,10 @@ Sample-based rarefaction prevents temporal variation in sampling effort
 \dontrun{
   library(dplyr)
   library(BioTIMEr)
-  df <- gridding(subBTmeta, subBTquery) \%>\%
+  x <- gridding(subBTmeta, subBTquery) \%>\%
     filter(assemblageID == "10_358678")
-  rarefysamples(Year = df$YEAR, SampleID = df$SAMPLE_DESC,
-    Species = df$Species, currency = df$ABUNDANCE,
+  rarefysamples(Year = x$YEAR, SampleID = x$SAMPLE_DESC,
+    Species = x$Species, currency = x$ABUNDANCE,
     resamps = 3)
 }
 
