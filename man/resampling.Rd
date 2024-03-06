@@ -2,30 +2,57 @@
 % Please edit documentation in R/rarefyBioTIME.R
 \name{resampling}
 \alias{resampling}
-\title{resampling BioTIME
-Uses the output of `gridding` and applies the `rarefysamples` function.}
+\title{rarefy BioTIME data
+Takes the output of \code{\link{gridding}} and applies sample-based rarefaction to
+standardise the number of samples per year within each cell-level time-series.}
 \usage{
 resampling(x, measure, resamps = 1L, conservative = FALSE)
 }
 \arguments{
-\item{x}{`data.frame` to be resampled (in the format of the output of the
-\code{\link{gridding}} function).}
+\item{x}{(data.frame) BioTIME gridded data to be resampled (in the format of
+the output of the \code{\link{gridding}} function).}
 
-\item{measure}{(character) Enter the names of the columns of interest:
-"ABUNDANCE", "BIOMASS" or c("ABUNDANCE","BIOMASS"). The column cannot have 0s.}
+\item{measure}{(character) currency to be retained during the sample-based
+rarefaction. Can be either defined by a single column name or a vector of
+two or more column names.}
 
-\item{resamps}{(integer) Number of repetitions, 1 by default.}
+\item{resamps}{(integer) number of repetitions. Default is 1.}
 
-\item{conservative}{(logical) If `TRUE`, whenever a NA is found for abundance
-or biomass, the whole sample is removed instead of the missing observations
-only. `FALSE` by default.}
+\item{conservative}{(logical). `FALSE` by default. If `TRUE`, whenever a `NA`
+is found in the measure field(s), the whole sample is removed instead of the
+missing observations only.}
 }
 \value{
-`data.frame` containing rarefied studies
+Returns a single long form `data.frame` containing the total currency
+or currencies of interest (sum) for each species in each year within each
+rarefied time series (`assemblageID`). An extra integer column called `resamp`
+indicates the specific iteration.
 }
 \description{
-resampling BioTIME
-Uses the output of `gridding` and applies the `rarefysamples` function.
+rarefy BioTIME data
+Takes the output of \code{\link{gridding}} and applies sample-based rarefaction to
+standardise the number of samples per year within each cell-level time-series.
+}
+\details{
+Sample-based rarefaction prevents temporal variation in sampling effort from
+affecting diversity estimates (see Gotelli N.J., Colwell R.K. 2001 Quantifying biodiversity: procedures and pitfalls in the measurement and comparison of species richness. Ecology Letters 4(4), 379-391). `resampling` is a function
+used to counted the number of samples taken in each year (sampling effort),
+identified the minimum number of samples, and then use this minimum to
+randomly resample each year down to that number of samples, after which
+standard biodiversity metrics (e.g. \code{\link{getAlphaMetrics}},
+\code{\link{getAlphaMetrics}} can be calculated. `measure` is a `character`
+input specifying the chosen currency to be retained during the sample-based
+rarefaction. Can be a single column name or a vector of two or more column
+names - e.g. `measure = c("ABUNDANCE", "BIOMASS")`.
+
+By default, any observations with `NA` within the currency field(s) are
+removed. You can choose to remove the full sample where such observations are
+present by setting `conservative` to `TRUE.` `resamps` can be used to define
+multiple iterations, effectively creating multiple alternative datasets.
+Note that the function always returns a single data frame, if `resamps` > 1,
+the returned data frame is the result of individual data frames
+(from each repetition) concatenated together, each identified by a numerical
+unique identifier (see value).
 }
 \examples{
 \dontrun{

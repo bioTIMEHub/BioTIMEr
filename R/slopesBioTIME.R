@@ -1,12 +1,18 @@
+
 #' Get Linear Regressions BioTIME
-#'
+#' Fits linear regression models to \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} outputs
 #' @export
-#' @param x output from \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}}
+#' @param x (`data.frame`) BioTIME data table in the format of the output of  \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}}
 #'  functions
-#' @param divType (character) Can be "alpha" or "beta"
-#' @param pThreshold (numeric)
-#' @returns a dataframe with yearly diversity results merged with results of
-#' linear regressions (intercept, slope, p-value, significance)
+#' @param divType (`character`) string specifying the nature of the metrics in
+#' the data; only `divType = "alpha"` or `divType = "beta"` is supported
+#' @param pThreshold (`numeric`) P-value threshold for statistical significance
+#' @returns Returns a single long `data.frame`, with the input diversity results concatenated with results of linear regressions (slope, pvalue, significance, intercept) for each year and `assemblageID`.
+#' @details
+#' The function `getLinearRegressions` fits simple linear regression models (see \code{\link[stats]{lm}} for details) for a given output ('data') of either \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} function.
+#' `divType` needs to be specified in agreement with x.
+#' The typical model has the form `metric ~ year`. Note that assemblages with less than 3 time points or/and single species time-series are removed.
+#'
 #' @importFrom dplyr %>%
 #' @examples
 #'   x <- data.frame(

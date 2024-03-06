@@ -9,13 +9,14 @@ Applies sample-based rarefaction to standardise the number of samples per year
 rarefysamples(x, measure, resamps)
 }
 \arguments{
-\item{x}{`data.frame` to be resampled (in the format of the output of the
-\code{\link{gridding}} function).}
+\item{x}{(data.frame) BioTIME gridded data to be resampled (in the format of
+the output of the \code{\link{gridding}} function).}
 
-\item{measure}{(character) Enter the names of the columns of interest:
-"ABUNDANCE", "BIOMASS" or c("ABUNDANCE","BIOMASS"). The column cannot have 0s.}
+\item{measure}{(character) currency to be retained during the sample-based
+rarefaction. Can be either defined by a single column name or a vector of
+two or more column names.}
 
-\item{resamps}{(integer) Number of repetitions, 1 by default.}
+\item{resamps}{(integer) number of repetitions. Default is 1.}
 }
 \value{
 Returns a single long form data frame containing the total currency
@@ -25,20 +26,6 @@ Returns a single long form data frame containing the total currency
 Rarefy BioTIME data
 Applies sample-based rarefaction to standardise the number of samples per year
    within a cell-level time-series.
-}
-\details{
-Sample-based rarefaction prevents temporal variation in sampling effort
-   from affecting diversity estimates [REF]. `rarefysamples` is a function
-   used to count the number of samples taken in each year, identify the
-   minimum number of samples, and then use this minimum to randomly
-   resample each year down to that number of samples, after which standard
-   biodiversity metrics (e.g. \code{\link{getAlpha}}, \code{\link{getBeta}})
-   can be calculated. Here sampling effort is defined as the number of
-   samples (SampleID) taken in each year. `currency` is a numerical column
-   with the variable (abundance or biomass) to be retained during the
-   sample-based rarefaction, while `resamps` can be used to define multiple
-   iterations (see examples). To apply directly to the output from the
-   \code{\link{gridding}} function use \code{\link{resampling}}.
 }
 \examples{
 \dontrun{

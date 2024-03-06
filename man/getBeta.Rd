@@ -28,7 +28,4 @@ Beta
   res <- getBeta(x, id = "F")
 }
 }
-\author{
-Faye Moyes
-}
 \keyword{internal}

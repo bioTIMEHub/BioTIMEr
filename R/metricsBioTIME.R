@@ -1,8 +1,26 @@
-#' Run the alpha function
-#' @param x (data.frame) First column has to be year
-#' @param measure character input for chosen currency - "A" = ABUNDANCE or "B" = BIOMASS
-#' @returns getAlphaMetrics returns a data.frame with nine alpha diversity metrics
-#' @author Faye Moyes
+#' Alpha diversity metrics
+#' Calculates a set of standard alpha diversity metrics
+#' @param x (`data.frame`) BioTIME data table in the format of the output of the
+#' \code{\link{gridding}} function and/or \code{\link{resampling}} function.
+#' @param measure (`character`) chosen currency defined by a single column name.
+#'
+#' @description
+#' The function `getAlphaMetrics` computes nine alpha diversity metrics, for a given community data frame, where `measure` is a character input specifying the chosen currency field used for the calculations. For each row of the data frame that has any data in it,  `getAlphaMetrics` calculates the following metrics:
+
+#' - Species richness (`S`) as the total number of species in each year with currency > 0. #' - Numerical abundance (`N`) as the total currency (sum) in each year.
+#' - Maximum Numerical abundance as the highest currency value reported in each year.
+#' - Shannon or Shannon–Weaver index is calculated as -ipilogbpi, where pi is the proportional abundance of species i and b is the base of the logarithm (natural logarithms), while exponential Shannon is given by `exp(Shannon)`.
+#' - Simpson's index is calculated as 1-sum(pi2), while Inverse Simpson as 1/sum(pi2).
+#' - McNaughton's Dominance is calculated as the sum of the pi of the two most abundant species
+#' - Probability of intraspecific encounter or PIE is calculated as (NN-1)(1-i=1si2).
+#' Note that the input data frame needs to be in the format of the output of the \code{\link{gridding}} function and/or \code{\link{resampling}} function, this includes keeping to the default BioTIME column names. If such columns are not found an error is issued and all operations are halted.
+#'
+#' @returns Returns a data frame with results for species richness (`S`), numerical
+#'  abundance (`N`), Maximum Numerical abundance (`MaxN`), Shannon Index (`Shannon`),
+#'  Exponential Shannon (`expShannon`), Simpson's Index (Simpson), Inverse Simpson
+#'  (`InvSimpson`), Probability of intraspecific encounter (`PIE`) and McNaughton's
+#'  Dominance (`DomMc`) for each year and `assemblageID.`
+
 #' @export
 #' @examples
 #' \dontrun{
@@ -45,7 +63,6 @@ getAlphaMetrics <- function(x, measure) {
 #' @param x (data.frame) First column has to be year and following columns
 #' contain species abundances.
 #' @param id definition of id
-#' @author Faye Moyes
 #' @keywords internal
 #' @examples
 #' \dontrun{
@@ -100,14 +117,19 @@ getAlpha <- function(x, id) {
   )
 }
 
-#' run the beta function
+#' Beta diversity metrics
+#' Calculates a set of standard beta diversity metrics
 #' @export
-#' @param x (data.frame) Has to have columns Species, YEAR, assemblageID,
-#'   STUDY_ID, cell and ABUNDANCE or BIOMASS
-#' @param measure character input for chosen currency - "A" = ABUNDANCE or "B" = BIOMASS
-#' @returns getBetaMetrics returns a long data.frame with results for three beta
-#'   metrics.
-#' @author Faye Moyes
+#' @param x (`data.frame`) BioTIME data table in the format of the output of the
+#'  \code{\link{gridding}} function and/or \code{\link{resampling}} function.
+#' @param measure (character) chosen currency defined by a single column name.
+#'
+#' @details
+#' The function getBetaMetrics computes three beta diversity metrics, for a given community data frame, where `measure` is a character input specifying the chosen currency field used for the calculations. `getBetaMetrics` calls the \code{\link[vegan]{vegdist}} function which calculates for each row the following metrics: Jaccard dissimilarity (`method = "jaccard"`), Morisita-Horn dissimilarity (`method = "horn"`) and Bray-Curtis dissimilarity (`method = "bray"`). Here, the dissimilarity are calculated against the baseline year of each assemblage time series i.e. first year of the time-series.
+#' Note that the input data frame needs to be in the format of the output of the
+#'  \code{\link{gridding}} function and/or \code{\link{resampling}} function, this includes keeping to the default BioTIME column names. If such columns are not found an error is issued and all operations are halted.
+#'
+#' @returns Returns a `data.frame` with results for Jaccard dissimilarity (`JaccadDiss`), Morisita-Horn dissimilarity (`MorisitaHornDiss`), and Bray-Curtis dissimilarity (`BrayCurtsDiss`) for each year and `assemblageID.`
 #' @examples
 #' \dontrun{
 #' x <- data.frame(
@@ -165,7 +187,6 @@ getBetaMetrics <- function(x, measure) {
 #' @returns getBeta returns a data.frame with three beta diversity dissimilarity
 #' metrics
 #' @importFrom vegan vegdist
-#' @author Faye Moyes
 #' @keywords internal
 #' @examples
 #' \dontrun{

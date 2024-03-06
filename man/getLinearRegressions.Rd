@@ -2,24 +2,31 @@
 % Please edit documentation in R/slopesBioTIME.R
 \name{getLinearRegressions}
 \alias{getLinearRegressions}
-\title{Get Linear Regressions BioTIME}
+\title{Get Linear Regressions BioTIME
+Fits linear regression models to \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} outputs}
 \usage{
 getLinearRegressions(x, divType, pThreshold = 0.05)
 }
 \arguments{
-\item{x}{output from \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}}
+\item{x}{(`data.frame`) BioTIME data table in the format of the output of  \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}}
 functions}
 
-\item{divType}{(character) Can be "alpha" or "beta"}
+\item{divType}{(`character`) string specifying the nature of the metrics in
+the data; only `divType = "alpha"` or `divType = "beta"` is supported}
 
-\item{pThreshold}{(numeric)}
+\item{pThreshold}{(`numeric`) P-value threshold for statistical significance}
 }
 \value{
-a dataframe with yearly diversity results merged with results of
-linear regressions (intercept, slope, p-value, significance)
+Returns a single long `data.frame`, with the input diversity results concatenated with results of linear regressions (slope, pvalue, significance, intercept) for each year and `assemblageID`.
 }
 \description{
 Get Linear Regressions BioTIME
+Fits linear regression models to \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} outputs
+}
+\details{
+The function `getLinearRegressions` fits simple linear regression models (see \code{\link[stats]{lm}} for details) for a given output ('data') of either \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} function.
+`divType` needs to be specified in agreement with x.
+The typical model has the form `metric ~ year`. Note that assemblages with less than 3 time points or/and single species time-series are removed.
 }
 \examples{
   x <- data.frame(

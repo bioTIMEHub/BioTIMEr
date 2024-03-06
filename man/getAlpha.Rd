@@ -31,7 +31,4 @@ Alpha
 }
 
 }
-\author{
-Faye Moyes
-}
 \keyword{internal}
