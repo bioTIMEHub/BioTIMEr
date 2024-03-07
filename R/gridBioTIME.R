@@ -62,39 +62,43 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE) {
                            null.ok = FALSE, na.ok = FALSE)
 
   bt <- dplyr::inner_join(meta, btf, by = "STUDY_ID") %>%
-    dplyr::rename(Species = valid_name)
+    dplyr::rename(Species = "valid_name")
 
   meta <- meta %>%
-    dplyr::mutate(StudyMethod = dplyr::if_else(NUMBER_LAT_LONG == 1, "SL", NA))
+    dplyr::mutate(StudyMethod = dplyr::if_else(dplyr::pick("NUMBER_LAT_LONG") == 1, "SL", NA))
   bt <- bt %>%
-    dplyr::mutate(StudyMethod = dplyr::if_else(NUMBER_LAT_LONG == 1, "SL", "ML"))
+    dplyr::mutate(StudyMethod = dplyr::if_else(dplyr::pick("NUMBER_LAT_LONG") == 1, "SL", "ML"))
 
   SL_extent_mean <- meta %>%
-    dplyr::filter(StudyMethod == "SL" & AREA_SQ_KM <= 500) %>%
-    dplyr::summarise(extent_mean = mean(AREA_SQ_KM, na.rm = TRUE)) %>%
-    dplyr::pull(extent_mean)
+    dplyr::filter(c(dplyr::pick("StudyMethod") == "SL") & c(dplyr::pick("AREA_SQ_KM") <= 500)) %>%
+    dplyr::summarise(extent_mean = mean(.data$AREA_SQ_KM, na.rm = TRUE)) %>%
+    dplyr::pull("extent_mean")
   SL_extent_sd <- meta %>%
-    dplyr::filter(StudyMethod == "SL" & AREA_SQ_KM <= 500) %>%
-    dplyr::summarise(extent_sd = stats::sd(AREA_SQ_KM, na.rm = TRUE)) %>%
-    dplyr::pull(extent_sd)
+    dplyr::filter(c(dplyr::pick("StudyMethod") == "SL") & c(dplyr::pick("AREA_SQ_KM") <= 500)) %>%
+    dplyr::summarise(extent_sd = stats::sd(.data$AREA_SQ_KM, na.rm = TRUE)) %>%
+    dplyr::pull("extent_sd")
 
   bt <- bt %>% dplyr::mutate(
     StudyMethod = dplyr::if_else(
-      condition = AREA_SQ_KM < (SL_extent_mean + SL_extent_sd),
+      condition = dplyr::pick("AREA_SQ_KM") < (SL_extent_mean + SL_extent_sd),
       true = "SL",
-      false = StudyMethod)) %>%
+      false = dplyr::pull(dplyr::pick("StudyMethod")))) %>%
     dplyr::mutate(
-      lon_to_grid = dplyr::if_else(StudyMethod == "SL", CENT_LONG, LONGITUDE),
-      lat_to_grid = dplyr::if_else(StudyMethod == "SL", CENT_LAT, LATITUDE))
+      lon_to_grid = dplyr::if_else(condition = dplyr::pick("StudyMethod") == "SL",
+                                   true = .data$CENT_LONG,
+                                   false = .data$LONGITUDE),
+      lat_to_grid = dplyr::if_else(condition = dplyr::pick("StudyMethod") == "SL",
+                                   true = .data$CENT_LAT,
+                                   false = .data$LATITUDE))
 
   oneyear <- bt %>%
-    dplyr::group_by(STUDY_ID) %>%
-    dplyr::filter(max(YEAR) - min(YEAR) == 0) %>%
+    dplyr::group_by(dplyr::pick("STUDY_ID")) %>%
+    dplyr::filter(max(dplyr::pick("YEAR")) - min(dplyr::pick("YEAR")) == 0) %>%
     dplyr::summarise() %>%
     dplyr::collect() %>%
-    dplyr::pull(STUDY_ID)
+    dplyr::pull("STUDY_ID")
 
-  bt <- bt %>% dplyr::filter(!(STUDY_ID %in% oneyear))
+  bt <- bt %>% dplyr::filter(!is.element(dplyr::pick("STUDY_ID"), oneyear))
 
   dgg <- dggridR::dgconstruct(res = res)
 
@@ -109,21 +113,23 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE) {
     as.integer()
 
   check <- bt %>%
-    dplyr::group_by(StudyMethod, STUDY_ID) %>%
-    dplyr::summarise(n_cell = dplyr::n_distinct(cell))
+    dplyr::group_by(dplyr::pick("StudyMethod"), dplyr::pick("STUDY_ID")) %>%
+    dplyr::summarise(n_cell = dplyr::n_distinct(dplyr::pick("cell"))) %>%
+    dplyr::ungroup()
 
-  if (sum(dplyr::filter(check, StudyMethod == "SL") %>% .$n_cell != 1) == 0) {
+  if (sum(dplyr::filter(check, c(dplyr::pick("StudyMethod")) == "SL") %>% .$n_cell != 1) == 0) {
     base::message("OK: all SL studies have 1 grid cell")
   } else {
     base::stop("ERROR: some SL studies have > 1 grid cell")
   }
 
+
   bt_grid <- bt %>%
-    dplyr::select(CLIMATE, REALM, TAXA, StudyMethod, SAMPLE_DESC,
-                  ABUNDANCE_TYPE, BIOMASS_TYPE, STUDY_ID, YEAR, PLOT,
-                  cell, "LATITUDE", "LONGITUDE", Species, taxon,
-                  resolution, DAY, MONTH, ABUNDANCE, BIOMASS) %>%
-    tidyr::unite(col = assemblageID, STUDY_ID, cell, sep = "_", remove = FALSE)
+    dplyr::select("CLIMATE", "REALM", "TAXA", "StudyMethod", "SAMPLE_DESC",
+                  "ABUNDANCE_TYPE", "BIOMASS_TYPE", "STUDY_ID", "YEAR", "PLOT",
+                  "cell", "LATITUDE", "LONGITUDE", "Species", "taxon",
+                  "resolution", "DAY", "MONTH", "ABUNDANCE", "BIOMASS") %>%
+    tidyr::unite(col = "assemblageID", "STUDY_ID", "cell", sep = "_", remove = FALSE)
 
   return(bt_grid)
 }

@@ -99,7 +99,7 @@ ggplot(data = check1) +
 You can see that several studies are not partitioned, that's because all their observations were already contained within a single cell.
 
 #### **What happens if I change `res`?**   
-By default the function separates studies into hexagonal cells of ~96 km2 (`res=12`), as this resolution was found to be the most appropriate value when working on the whole BioTIME database. Yet sometimes, particularly when working with a subset of BioTime, you may want to explore alternative grid resolutions. The function gives you 2 options: you can either directly define a new resolution or allow the function to find the best `res` based on the average study extent of your dataset. Let's run over these alternative options with a few examples:
+By default the function separates studies into hexagonal cells of ~96 km2 (`res=12`), as this resolution was found to be the most appropriate value when working on the whole BioTIME database. Yet sometimes, particularly when working with a subset of BioTIME, you may want to explore alternative grid resolutions. The function gives you 2 options: you can either directly define a new resolution or allow the function to find the best `res` based on the average study extent of your dataset. Let's run over these alternative options with a few examples:
 
 ```{r gridding_ex2, cache=TRUE, echo=TRUE, message=FALSE, tidy=TRUE, include=TRUE,results='hold'}
 #define a alternative resolution of 14 (~10.7 km2 cells)
@@ -140,7 +140,7 @@ dgg_12 <- dggridR::dgconstruct(res = 12)
 
 #To make it lighter, we only map the grid cell boundaries for 
 #cells which we have observations.
-#NOTE:if you are working with the full BioTime database, this step may take some time. 
+#NOTE:if you are working with the full BioTIME database, this step may take some time. 
 grid_12<- dggridR::dgcellstogrid(dgg_12,grid_samples$cell)
 
 

@@ -18,7 +18,7 @@
 #'   x <- data.frame(
 #'     resamp = 1L,
 #'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
-#'     Species = c(replicate(n = 8L, sample(letters, 24L, replace = FALSE))),
+#'     Species = c(replicate(n = 8L * 6L, sample(letters[1L:10L], 4L, replace = FALSE))),
 #'     ABUNDANCE = rpois(24 * 8, 10),
 #'     assemblageID = rep(LETTERS[1L:8L], each = 24)
 #'   )
@@ -43,19 +43,19 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
                          "invSimpson", "DomMc", "PIE", "expShannon",
                          "Shannon"))
 
-      x <- subset(x, S != 1)
+      x <- subset(x, x$S != 1)
 
       y <- x %>%
-        dplyr::group_by(assemblageID) %>%
-        dplyr::summarise(nsp = dplyr::n_distinct(YEAR)) %>%
-        dplyr::filter(nsp < 3)
+        dplyr::group_by(dplyr::pick("assemblageID")) %>%
+        dplyr::summarise(nsp = dplyr::n_distinct(dplyr::pick("YEAR"))) %>%
+        dplyr::filter(c(dplyr::pick("nsp") < 3))
 
       x <- dplyr::anti_join(x, y, by = "assemblageID")
 
       dft <- data.frame()
       for (id in unique(x$assemblageID)) {
         dfits <- c()
-        f1 <- subset(x, assemblageID == id)
+        f1 <- subset(x, x$assemblageID == id)
         fitd <- stats::lm(f1$S ~ f1$YEAR, )
         fits <- stats::lm(f1$N ~ f1$YEAR)
         fitm <- stats::lm(f1$maxN ~ f1$YEAR)
@@ -89,46 +89,46 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
                          paste0(variables, "I"))
 
       dft[, -1L] <- apply(dft[, -1L], 2,
-                             function(x) as.numeric(as.character(x)))
+                          function(x) as.numeric(as.character(x)))
       dft <- dft %>% dplyr::mutate(
-        sp =  dplyr::if_else(SPval < pThreshold, 1, 0),
-        np =  dplyr::if_else(NPval < pThreshold, 1, 0),
-        maxNp = dplyr::if_else(maxNPval < pThreshold, 1, 0),
-        sip = dplyr::if_else(simpPval < pThreshold, 1, 0),
-        isp = dplyr::if_else(invSPval < pThreshold, 1, 0),
-        dmp = dplyr::if_else(domMPval < pThreshold, 1, 0),
-        pp =  dplyr::if_else(PIEPval < pThreshold, 1, 0),
-        esp = dplyr::if_else(expShPval < pThreshold, 1, 0),
-        shp = dplyr::if_else(shanPval < pThreshold, 1, 0)
+        sp =  dplyr::if_else(dplyr::pick("SPval") < pThreshold, 1, 0),
+        np =  dplyr::if_else(dplyr::pick("NPval") < pThreshold, 1, 0),
+        maxNp = dplyr::if_else(dplyr::pick("maxNPval") < pThreshold, 1, 0),
+        sip = dplyr::if_else(dplyr::pick("simpPval") < pThreshold, 1, 0),
+        isp = dplyr::if_else(dplyr::pick("invSPval") < pThreshold, 1, 0),
+        dmp = dplyr::if_else(dplyr::pick("domMPval") < pThreshold, 1, 0),
+        pp =  dplyr::if_else(dplyr::pick("PIEPval") < pThreshold, 1, 0),
+        esp = dplyr::if_else(dplyr::pick("expShPval") < pThreshold, 1, 0),
+        shp = dplyr::if_else(dplyr::pick("shanPval") < pThreshold, 1, 0)
       )
 
       ###############################################
-      d1 <- dplyr::select(dft, assemblageID, S = SS, N = NS, maxN = maxNS,
-                          Simpson = simpS, invSimpson = invSS, DomMc = domMS,
-                          PIE = PIES, expShannon = expShS, Shannon = shanS) %>%
-        tidyr::pivot_longer(-assemblageID, names_to = "metric",
+      d1 <- dplyr::select(dft, "assemblageID", S = "SS", N = "NS", maxN = "maxNS",
+                          Simpson = "simpS", invSimpson = "invSS", DomMc = "domMS",
+                          PIE = "PIES", expShannon = "expShS", Shannon = "shanS") %>%
+        tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "slope")
 
-      d2 <- dplyr::select(dft, assemblageID, S = SPval, N = NPval, maxN = maxNPval,
-                          Simpson = simpPval, invSimpson = invSPval,
-                          DomMc = domMPval, PIE = PIEPval, expShannon = expShPval,
-                          Shannon = shanPval) %>%
-        tidyr::pivot_longer(-assemblageID, names_to = "metric",
+      d2 <- dplyr::select(dft, "assemblageID", S = "SPval", N = "NPval", maxN = "maxNPval",
+                          Simpson = "simpPval", invSimpson = "invSPval",
+                          DomMc = "domMPval", PIE = "PIEPval", expShannon = "expShPval",
+                          Shannon = "shanPval") %>%
+        tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "pvalue")
 
-      d4 <- dplyr::select(dft, assemblageID, S = sp, N = np, maxN = maxNp,
-                          Simpson = sip, invSimpson = isp, DomMc = dmp, PIE = pp,
-                          expShannon = esp, Shannon = shp) %>%
-        tidyr::pivot_longer(-assemblageID, names_to = "metric",
+      d4 <- dplyr::select(dft, "assemblageID", S = "sp", N = "np", maxN = "maxNp",
+                          Simpson = "sip", invSimpson = "isp", DomMc = "dmp", PIE = "pp",
+                          expShannon = "esp", Shannon = "shp") %>%
+        tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "significance")
 
-      d8 <- dplyr::select(dft, assemblageID, S = SI, N = NI, maxN = maxNI,
-                          Simpson = simpI, invSimpson = invSI, DomMc = domMI,
-                          PIE = PIEI, expShannon = expShI, Shannon = shanI) %>%
-        tidyr::pivot_longer(-assemblageID, names_to = "metric",
+      d8 <- dplyr::select(dft, "assemblageID", S = "SI", N = "NI", maxN = "maxNI",
+                          Simpson = "simpI", invSimpson = "invSI", DomMc = "domMI",
+                          PIE = "PIEI", expShannon = "expShI", Shannon = "shanI") %>%
+        tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "intercept")
 
-      d6 <- tidyr::pivot_longer(x, -c(assemblageID, YEAR),
+      d6 <- tidyr::pivot_longer(x, -c("assemblageID", "YEAR"),
                                 names_to = "metric",
                                 values_to = "diversity")
 
@@ -138,6 +138,8 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
         dplyr::left_join(d8, by = c("assemblageID", "metric")) %>%
         as.data.frame()
     },
+
+
     ###############################################
     beta = {
       checkmate::assert_names(
@@ -145,21 +147,21 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
         must.include = c("YEAR", "assemblageID", "JaccardDiss", "MorisitaHornDiss",
                          "BrayCurtisDiss"))
 
-      x <- dplyr::filter(x, !is.na(JaccardDiss) &
-                           !is.na(MorisitaHornDiss) &
-                           !is.na(BrayCurtisDiss))
+      x <- subset(x, !is.na(x$JaccardDiss) &
+                    !is.na(x$MorisitaHornDiss) &
+                    !is.na(x$BrayCurtisDiss))
 
       y <- x %>%
-        dplyr::group_by(assemblageID) %>%
-        dplyr::summarise(nsp = dplyr::n_distinct(YEAR)) %>%
-        dplyr::filter(nsp < 3)
+        dplyr::group_by(dplyr::pick("assemblageID")) %>%
+        dplyr::summarise(nsp = dplyr::n_distinct(dplyr::pick("YEAR"))) %>%
+        dplyr::filter(c(dplyr::pick("nsp") < 3))
 
       x <- dplyr::anti_join(x, y, by = "assemblageID")
 
       dft <- data.frame()
       for (id in unique(x$assemblageID)) {
         dfits <- c()
-        f1 <- dplyr::filter(x, assemblageID == id)
+        f1 <- dplyr::filter(x, c(dplyr::pick("assemblageID") == id))
         fitd <- stats::lm(f1$JaccardDiss ~ f1$YEAR)
         fits <- stats::lm(f1$MorisitaHornDiss ~ f1$YEAR)
         fitt <- stats::lm(f1$BrayCurtisDiss ~ f1$YEAR)
@@ -178,35 +180,35 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
       dft[, 2L:10L] <- apply(dft[, 2L:10L], 2,
                              function(x) as.numeric(as.character(x)))
       dft <- dft %>% dplyr::mutate(
-        jdp = dplyr::if_else(jdPval < pThreshold, 1, 0),
-        mhp = dplyr::if_else(mhPval < pThreshold, 1, 0),
-        bcp = dplyr::if_else(bcPval < pThreshold, 1, 0)
+        jdp = dplyr::if_else(dplyr::pick("jdPval") < pThreshold, 1, 0),
+        mhp = dplyr::if_else(dplyr::pick("mhPval") < pThreshold, 1, 0),
+        bcp = dplyr::if_else(dplyr::pick("bcPval") < pThreshold, 1, 0)
       )
 
       #####################################
-      d1 <- dplyr::select(dft, assemblageID, JaccardDiss = jdS,
-                          MorisitaHornDiss = mhS, BrayCurtisDiss = bcS) %>%
-        tidyr::pivot_longer(-assemblageID, names_to = "metric",
+      d1 <- dplyr::select(dft, "assemblageID", JaccardDiss = "jdS",
+                          MorisitaHornDiss = "mhS", BrayCurtisDiss = "bcS") %>%
+        tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "slope")
 
-      d2 <- dplyr::select(dft, assemblageID, JaccardDiss = jdPval,
-                          MorisitaHornDiss = mhPval,
-                          BrayCurtisDiss = bcPval) %>%
-        tidyr::pivot_longer(-assemblageID, names_to = "metric",
+      d2 <- dplyr::select(dft, "assemblageID", JaccardDiss = "jdPval",
+                          MorisitaHornDiss = "mhPval",
+                          BrayCurtisDiss = "bcPval") %>%
+        tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "pvalue")
 
-      d4 <- dplyr::select(dft, assemblageID, JaccardDiss = jdp,
-                          MorisitaHornDiss = mhp,
-                          BrayCurtisDiss = bcp) %>%
-        tidyr::pivot_longer(-assemblageID, names_to = "metric",
+      d4 <- dplyr::select(dft, "assemblageID", JaccardDiss = "jdp",
+                          MorisitaHornDiss = "mhp",
+                          BrayCurtisDiss = "bcp") %>%
+        tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "significance")
 
-      d8 <- dplyr::select(dft, assemblageID, JaccardDiss = jdI,
-                          MorisitaHornDiss = mhI, BrayCurtisDiss = bcI) %>%
-        tidyr::pivot_longer(-assemblageID, names_to = "metric",
+      d8 <- dplyr::select(dft, "assemblageID", JaccardDiss = "jdI",
+                          MorisitaHornDiss = "mhI", BrayCurtisDiss = "bcI") %>%
+        tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "intercept")
 
-      d6 <- tidyr::pivot_longer(x, -c(assemblageID, YEAR),
+      d6 <- tidyr::pivot_longer(x, -c("assemblageID", "YEAR"),
                                 names_to = "metric",
                                 values_to = "dissimilarity")
 

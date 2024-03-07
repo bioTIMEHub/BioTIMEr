@@ -68,7 +68,7 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
                               by = list(SAMPLE_DESC = x$SAMPLE_DESC),
                               function(j) anyNA(j)) %>%
         dplyr::mutate(na_values = rowSums(dplyr::select(., dplyr::all_of(measure)))) %>%
-        dplyr::filter(na_values == 0L) %>%
+        dplyr::filter(c(dplyr::pick("na_values") == 0L)) %>%
         dplyr::semi_join(x = x, y = ., by = "SAMPLE_DESC")
 
       warning(paste0("NA values found and whole samples removed since `conservative` is TRUE.\n",
@@ -95,10 +95,10 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
 
   dplyr::bind_rows(TSrf) %>%
     dplyr::mutate(rfID = rep(rfIDs, times = sapply(TSrf, nrow))) %>%
-    tidyr::separate(rfID, into =  c("STUDY_ID", "cell"),
+    tidyr::separate("rfID", into =  c("STUDY_ID", "cell"),
                     sep = "_", remove = FALSE) %>%
-    dplyr::mutate(STUDY_ID = as.integer(STUDY_ID)) %>%
-    dplyr::select(resamp, assemblageID = rfID, STUDY_ID, YEAR, Species,
+    dplyr::mutate(STUDY_ID = as.integer(.data$STUDY_ID)) %>%
+    dplyr::select("resamp", assemblageID = "rfID", "STUDY_ID", "YEAR", "Species",
                   dplyr::all_of(measure)) %>%
     return()
 }

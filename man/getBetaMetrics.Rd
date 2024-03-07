@@ -14,7 +14,7 @@ getBetaMetrics(x, measure)
 \item{measure}{(character) chosen currency defined by a single column name.}
 }
 \value{
-Returns a `data.frame` with results for Jaccard dissimilarity (`JaccadDiss`), Morisita-Horn dissimilarity (`MorisitaHornDiss`), and Bray-Curtis dissimilarity (`BrayCurtsDiss`) for each year and `assemblageID.`
+Returns a `data.frame` with results for Jaccard dissimilarity (`JaccardDiss`), Morisita-Horn dissimilarity (`MorisitaHornDiss`), and Bray-Curtis dissimilarity (`BrayCurtsDiss`) for each year and `assemblageID.`
 }
 \description{
 Beta diversity metrics

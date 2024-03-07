@@ -129,7 +129,7 @@ getAlpha <- function(x, id) {
 #' Note that the input data frame needs to be in the format of the output of the
 #'  \code{\link{gridding}} function and/or \code{\link{resampling}} function, this includes keeping to the default BioTIME column names. If such columns are not found an error is issued and all operations are halted.
 #'
-#' @returns Returns a `data.frame` with results for Jaccard dissimilarity (`JaccadDiss`), Morisita-Horn dissimilarity (`MorisitaHornDiss`), and Bray-Curtis dissimilarity (`BrayCurtsDiss`) for each year and `assemblageID.`
+#' @returns Returns a `data.frame` with results for Jaccard dissimilarity (`JaccardDiss`), Morisita-Horn dissimilarity (`MorisitaHornDiss`), and Bray-Curtis dissimilarity (`BrayCurtsDiss`) for each year and `assemblageID.`
 #' @examples
 #' \dontrun{
 #' x <- data.frame(

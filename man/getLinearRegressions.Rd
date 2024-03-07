@@ -32,7 +32,7 @@ The typical model has the form `metric ~ year`. Note that assemblages with less 
   x <- data.frame(
     resamp = 1L,
     YEAR = rep(rep(2010:2015, each = 4), times = 4),
-    Species = c(replicate(n = 8L, sample(letters, 24L, replace = FALSE))),
+    Species = c(replicate(n = 8L * 6L, sample(letters[1L:10L], 4L, replace = FALSE))),
     ABUNDANCE = rpois(24 * 8, 10),
     assemblageID = rep(LETTERS[1L:8L], each = 24)
   )

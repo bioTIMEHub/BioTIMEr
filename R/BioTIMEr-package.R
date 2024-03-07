@@ -9,7 +9,7 @@
 #'
 "_PACKAGE"
 
-
 ## usethis namespace: start
+utils::globalVariables(c(".",".data"))
 ## usethis namespace: end
 NULL
