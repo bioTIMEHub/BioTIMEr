@@ -449,7 +449,7 @@ ggplot(data=  alpha_slop_set, aes(x = slope, fill=TAXA)) +
 Finally, if you are only working with a few single locations you may be more interested in exploring their individual trends, this has the advantage that one can actually plot the points together with a trend line: 
 ```{r trends8, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7.2, fig.height=6,tidy=FALSE, include=TRUE,results='hold', figures='hold'} 
 #Let's go back to the dataframe with the yearly values and select our relevant data for plotting
-alpha_slopes_set <- subset(alpha_slopes, assemblageID == "211_528514")
+alpha_slopes_set <- subset(alpha_slopes, assemblageID == "18_335699")
 
 #get assemblage ID
 name_assemblage <- unique(alpha_slopes_set$assemblageID)

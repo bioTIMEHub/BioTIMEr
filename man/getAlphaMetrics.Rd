@@ -23,7 +23,7 @@ Returns a data frame with results for species richness (`S`), numerical
 \description{
 The function `getAlphaMetrics` computes nine alpha diversity metrics, for a given community data frame, where `measure` is a character input specifying the chosen currency field used for the calculations. For each row of the data frame that has any data in it,  `getAlphaMetrics` calculates the following metrics:
 
-- Species richness (`S`) as the total number of species in each year with currency > 0. 
+- Species richness (`S`) as the total number of species in each year with currency > 0.
 
 - Numerical abundance (`N`) as the total currency (sum) in each year.
 
@@ -33,7 +33,7 @@ The function `getAlphaMetrics` computes nine alpha diversity metrics, for a give
 
 - Simpson's index is calculated as 1-sum(pi2), while Inverse Simpson as 1/sum(pi2).
 
-- McNaughton's Dominance is calculated as the sum of the pi of the two most abundant species
+- McNaughton's Dominance is calculated as the sum of the pi of the two most abundant species.
 
 - Probability of intraspecific encounter or PIE is calculated as (NN-1)(1-i=1si2).
 
