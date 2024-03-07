@@ -6,7 +6,7 @@
 \title{BioTIME subset metadata}
 \format{
 ## `subBTmeta`
-A data frame with 10 rows and 26 columns:
+A data frame with 12 rows and 26 columns:
 \describe{
   \item{STUDY_ID}{BioTIME study unique identifier}
   \item{REALM}{Realm of study location, i.e. Marine}
