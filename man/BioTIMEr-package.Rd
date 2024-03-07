@@ -16,7 +16,7 @@ quantify and visualise temporal biodiversity change for a given BioTIME dataset.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/bioTIMEHub/BioTIMEr (devel)}
+  \item \url{https://github.com/bioTIMEHub/BioTIMEr}
   \item Report bugs at \url{https://github.com/bioTIMEHub/BioTIMEr/issues}
 }
 
