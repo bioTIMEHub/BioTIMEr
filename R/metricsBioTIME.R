@@ -6,7 +6,7 @@
 #'
 #' @description
 #' The function `getAlphaMetrics` computes nine alpha diversity metrics, for a given community data frame, where `measure` is a character input specifying the chosen currency field used for the calculations. For each row of the data frame that has any data in it,  `getAlphaMetrics` calculates the following metrics:
-
+#'
 #' - Species richness (`S`) as the total number of species in each year with currency > 0. 
 #'
 #' - Numerical abundance (`N`) as the total currency (sum) in each year.
