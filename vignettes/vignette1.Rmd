@@ -454,6 +454,8 @@ alpha_slopes_set <- subset(alpha_slopes, assemblageID == "18_335699")
 #get assemblage ID
 name_assemblage <- unique(alpha_slopes_set$assemblageID)
 
+alpha_slopes_set<-as.data.frame(alpha_slopes_set)
+
 #Let's put it all together
 ggplot(data = alpha_slopes_set, aes(x = YEAR, y = diversity)) +
   geom_point(colour = "#155f49", size = 1) +   #plot the yearly estimates
@@ -467,6 +469,7 @@ ggplot(data = alpha_slopes_set, aes(x = YEAR, y = diversity)) +
   theme_bw() + theme(plot.title = element_text(size = 11, hjust = 0.5))
 
 ```
+
 ```{r trends9, cache=TRUE, echo=TRUE, message=FALSE, fig.width=10, fig.height=7,tidy=TRUE, include=FALSE,results='hold', figures='hold'} 
 #Hint: If you want to draw the p-value on the plot, you can try using the ggpmisc::stat_fit_glance which takes anything passed through lm() in R and allows it to processed and printed using ggplot2.
 ```
