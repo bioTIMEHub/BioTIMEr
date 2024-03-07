@@ -150,7 +150,7 @@ grid_14<- dggridR::dgcellstogrid(dgg_14,grid_samples_14$cell)
 
 
 #Finally we get some background polygons for each country of the world
-countries <- map_data("world")
+countries <- ggplot2::map_data("world")
 
 #Now you can map the all world, but let's just zoom in in the UK and have a look at 
 #STUDY 466 (Marine Fish):

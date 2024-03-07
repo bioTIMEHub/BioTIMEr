@@ -4,7 +4,7 @@
 \name{BioTIMEr-package}
 \alias{BioTIMEr}
 \alias{BioTIMEr-package}
-\title{BioTIMEr: BioTIMEr: tools to use and explore the BioTIME database}
+\title{BioTIMEr: Tools to Use and Explore the BioTIME Database}
 \description{
 The BioTIMEr package is developed at GitHub
 (https://github.com/bioTIMEHub/BioTIMEr). To see the preferable citation of
