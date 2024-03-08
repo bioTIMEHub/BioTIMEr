@@ -68,7 +68,7 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
                               by = list(SAMPLE_DESC = x$SAMPLE_DESC),
                               function(j) anyNA(j)) %>%
         dplyr::mutate(na_values = rowSums(dplyr::select(., dplyr::all_of(measure)))) %>%
-        dplyr::filter(c(dplyr::pick("na_values") == 0L)) %>%
+        dplyr::filter(.data$na_values == 0L) %>%
         dplyr::semi_join(x = x, y = ., by = "SAMPLE_DESC")
 
       warning(paste0("NA values found and whole samples removed since `conservative` is TRUE.\n",

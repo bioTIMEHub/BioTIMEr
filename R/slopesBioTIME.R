@@ -46,9 +46,9 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
       x <- subset(x, x$S != 1)
 
       y <- x %>%
-        dplyr::group_by(dplyr::pick("assemblageID")) %>%
-        dplyr::summarise(nsp = dplyr::n_distinct(dplyr::pick("YEAR"))) %>%
-        dplyr::filter(c(dplyr::pick("nsp") < 3))
+        dplyr::group_by(.data$assemblageID) %>%
+        dplyr::summarise(nsp = dplyr::n_distinct(.data$YEAR)) %>%
+        dplyr::filter(.data$nsp < 3)
 
       x <- dplyr::anti_join(x, y, by = "assemblageID")
 
@@ -91,15 +91,15 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
       dft[, -1L] <- apply(dft[, -1L], 2,
                           function(x) as.numeric(as.character(x)))
       dft <- dft %>% dplyr::mutate(
-        sp =  dplyr::if_else(dplyr::pick("SPval") < pThreshold, 1, 0),
-        np =  dplyr::if_else(dplyr::pick("NPval") < pThreshold, 1, 0),
-        maxNp = dplyr::if_else(dplyr::pick("maxNPval") < pThreshold, 1, 0),
-        sip = dplyr::if_else(dplyr::pick("simpPval") < pThreshold, 1, 0),
-        isp = dplyr::if_else(dplyr::pick("invSPval") < pThreshold, 1, 0),
-        dmp = dplyr::if_else(dplyr::pick("domMPval") < pThreshold, 1, 0),
-        pp =  dplyr::if_else(dplyr::pick("PIEPval") < pThreshold, 1, 0),
-        esp = dplyr::if_else(dplyr::pick("expShPval") < pThreshold, 1, 0),
-        shp = dplyr::if_else(dplyr::pick("shanPval") < pThreshold, 1, 0)
+        sp =  dplyr::if_else(.data$SPval < pThreshold, 1, 0),
+        np =  dplyr::if_else(.data$NPval < pThreshold, 1, 0),
+        maxNp = dplyr::if_else(.data$maxNPval < pThreshold, 1, 0),
+        sip = dplyr::if_else(.data$simpPval < pThreshold, 1, 0),
+        isp = dplyr::if_else(.data$invSPval < pThreshold, 1, 0),
+        dmp = dplyr::if_else(.data$domMPval < pThreshold, 1, 0),
+        pp =  dplyr::if_else(.data$PIEPval < pThreshold, 1, 0),
+        esp = dplyr::if_else(.data$expShPval < pThreshold, 1, 0),
+        shp = dplyr::if_else(.data$shanPval < pThreshold, 1, 0)
       )
 
       ###############################################
@@ -152,16 +152,16 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
                     !is.na(x$BrayCurtisDiss))
 
       y <- x %>%
-        dplyr::group_by(dplyr::pick("assemblageID")) %>%
-        dplyr::summarise(nsp = dplyr::n_distinct(dplyr::pick("YEAR"))) %>%
-        dplyr::filter(c(dplyr::pick("nsp") < 3))
+        dplyr::group_by(.data$assemblageID) %>%
+        dplyr::summarise(nsp = dplyr::n_distinct(.data$YEAR)) %>%
+        dplyr::filter(.data$nsp < 3)
 
       x <- dplyr::anti_join(x, y, by = "assemblageID")
 
       dft <- data.frame()
       for (id in unique(x$assemblageID)) {
         dfits <- c()
-        f1 <- dplyr::filter(x, c(dplyr::pick("assemblageID") == id))
+        f1 <- dplyr::filter(x, .data$assemblageID == id)
         fitd <- stats::lm(f1$JaccardDiss ~ f1$YEAR)
         fits <- stats::lm(f1$MorisitaHornDiss ~ f1$YEAR)
         fitt <- stats::lm(f1$BrayCurtisDiss ~ f1$YEAR)
@@ -180,9 +180,9 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
       dft[, 2L:10L] <- apply(dft[, 2L:10L], 2,
                              function(x) as.numeric(as.character(x)))
       dft <- dft %>% dplyr::mutate(
-        jdp = dplyr::if_else(dplyr::pick("jdPval") < pThreshold, 1, 0),
-        mhp = dplyr::if_else(dplyr::pick("mhPval") < pThreshold, 1, 0),
-        bcp = dplyr::if_else(dplyr::pick("bcPval") < pThreshold, 1, 0)
+        jdp = dplyr::if_else(.data$jdPval < pThreshold, 1, 0),
+        mhp = dplyr::if_else(.data$mhPval < pThreshold, 1, 0),
+        bcp = dplyr::if_else(.data$bcPval < pThreshold, 1, 0)
       )
 
       #####################################

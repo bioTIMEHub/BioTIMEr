@@ -65,40 +65,40 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE) {
     dplyr::rename(Species = "valid_name")
 
   meta <- meta %>%
-    dplyr::mutate(StudyMethod = dplyr::if_else(dplyr::pick("NUMBER_LAT_LONG") == 1, "SL", NA))
+    dplyr::mutate(StudyMethod = dplyr::if_else(.data$NUMBER_LAT_LONG == 1, "SL", NA))
   bt <- bt %>%
-    dplyr::mutate(StudyMethod = dplyr::if_else(dplyr::pick("NUMBER_LAT_LONG") == 1, "SL", "ML"))
+    dplyr::mutate(StudyMethod = dplyr::if_else(.data$NUMBER_LAT_LONG == 1, "SL", "ML"))
 
   SL_extent_mean <- meta %>%
-    dplyr::filter(c(dplyr::pick("StudyMethod") == "SL") & c(dplyr::pick("AREA_SQ_KM") <= 500)) %>%
+    dplyr::filter(.data$StudyMethod == "SL" & .data$AREA_SQ_KM <= 500) %>%
     dplyr::summarise(extent_mean = mean(.data$AREA_SQ_KM, na.rm = TRUE)) %>%
     dplyr::pull("extent_mean")
   SL_extent_sd <- meta %>%
-    dplyr::filter(c(dplyr::pick("StudyMethod") == "SL") & c(dplyr::pick("AREA_SQ_KM") <= 500)) %>%
+    dplyr::filter(.data$StudyMethod == "SL" & .data$AREA_SQ_KM <= 500) %>%
     dplyr::summarise(extent_sd = stats::sd(.data$AREA_SQ_KM, na.rm = TRUE)) %>%
     dplyr::pull("extent_sd")
 
   bt <- bt %>% dplyr::mutate(
     StudyMethod = dplyr::if_else(
-      condition = dplyr::pick("AREA_SQ_KM") < (SL_extent_mean + SL_extent_sd),
+      condition = .data$AREA_SQ_KM < (SL_extent_mean + SL_extent_sd),
       true = "SL",
-      false = dplyr::pull(dplyr::pick("StudyMethod")))) %>%
+      false = .data$StudyMethod)) %>%
     dplyr::mutate(
-      lon_to_grid = dplyr::if_else(condition = dplyr::pick("StudyMethod") == "SL",
+      lon_to_grid = dplyr::if_else(condition = .data$StudyMethod == "SL",
                                    true = .data$CENT_LONG,
                                    false = .data$LONGITUDE),
-      lat_to_grid = dplyr::if_else(condition = dplyr::pick("StudyMethod") == "SL",
+      lat_to_grid = dplyr::if_else(condition = .data$StudyMethod == "SL",
                                    true = .data$CENT_LAT,
                                    false = .data$LATITUDE))
 
   oneyear <- bt %>%
-    dplyr::group_by(dplyr::pick("STUDY_ID")) %>%
-    dplyr::filter(max(dplyr::pick("YEAR")) - min(dplyr::pick("YEAR")) == 0) %>%
+    dplyr::group_by(.data$STUDY_ID) %>%
+    dplyr::filter(max(.data$YEAR) - min(.data$YEAR) == 0) %>%
     dplyr::summarise() %>%
     dplyr::collect() %>%
     dplyr::pull("STUDY_ID")
 
-  bt <- bt %>% dplyr::filter(!is.element(dplyr::pick("STUDY_ID"), oneyear))
+  bt <- bt %>% dplyr::filter(!is.element(.data$STUDY_ID, oneyear))
 
   dgg <- dggridR::dgconstruct(res = res)
 
@@ -113,11 +113,11 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE) {
     as.integer()
 
   check <- bt %>%
-    dplyr::group_by(dplyr::pick("StudyMethod"), dplyr::pick("STUDY_ID")) %>%
-    dplyr::summarise(n_cell = dplyr::n_distinct(dplyr::pick("cell"))) %>%
+    dplyr::group_by(.data$StudyMethod, .data$STUDY_ID) %>%
+    dplyr::summarise(n_cell = dplyr::n_distinct(.data$cell)) %>%
     dplyr::ungroup()
 
-  if (sum(dplyr::filter(check, c(dplyr::pick("StudyMethod")) == "SL") %>% .$n_cell != 1) == 0) {
+  if (sum(dplyr::filter(check, .data$StudyMethod == "SL") %>% .$n_cell != 1) == 0) {
     base::message("OK: all SL studies have 1 grid cell")
   } else {
     base::stop("ERROR: some SL studies have > 1 grid cell")
