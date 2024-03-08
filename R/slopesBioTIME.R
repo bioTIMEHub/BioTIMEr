@@ -1,5 +1,5 @@
-
 #' Get Linear Regressions BioTIME
+#'
 #' Fits linear regression models to \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} outputs
 #' @export
 #' @param x (`data.frame`) BioTIME data table in the format of the output of  \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}}

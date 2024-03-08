@@ -1,4 +1,5 @@
 #' rarefy BioTIME data
+#'
 #' Takes the output of \code{\link{gridding}} and applies sample-based rarefaction to
 #' standardise the number of samples per year within each cell-level time-series.
 #' @export

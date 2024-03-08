@@ -2,9 +2,7 @@
 % Please edit documentation in R/rarefyBioTIME.R
 \name{resampling}
 \alias{resampling}
-\title{rarefy BioTIME data
-Takes the output of \code{\link{gridding}} and applies sample-based rarefaction to
-standardise the number of samples per year within each cell-level time-series.}
+\title{rarefy BioTIME data}
 \usage{
 resampling(x, measure, resamps = 1L, conservative = FALSE)
 }
@@ -29,7 +27,6 @@ rarefied time series (`assemblageID`). An extra integer column called `resamp`
 indicates the specific iteration.
 }
 \description{
-rarefy BioTIME data
 Takes the output of \code{\link{gridding}} and applies sample-based rarefaction to
 standardise the number of samples per year within each cell-level time-series.
 }

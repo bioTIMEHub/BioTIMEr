@@ -2,8 +2,7 @@
 % Please edit documentation in R/slopesBioTIME.R
 \name{getLinearRegressions}
 \alias{getLinearRegressions}
-\title{Get Linear Regressions BioTIME
-Fits linear regression models to \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} outputs}
+\title{Get Linear Regressions BioTIME}
 \usage{
 getLinearRegressions(x, divType, pThreshold = 0.05)
 }
@@ -20,7 +19,6 @@ the data; only `divType = "alpha"` or `divType = "beta"` is supported}
 Returns a single long `data.frame`, with the input diversity results concatenated with results of linear regressions (slope, pvalue, significance, intercept) for each year and `assemblageID`.
 }
 \description{
-Get Linear Regressions BioTIME
 Fits linear regression models to \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} outputs
 }
 \details{

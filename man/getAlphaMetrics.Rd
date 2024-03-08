@@ -2,40 +2,42 @@
 % Please edit documentation in R/metricsBioTIME.R
 \name{getAlphaMetrics}
 \alias{getAlphaMetrics}
-\title{Alpha diversity metrics
-Calculates a set of standard alpha diversity metrics}
+\title{Alpha diversity metrics}
 \usage{
 getAlphaMetrics(x, measure)
 }
 \arguments{
-\item{x}{(`data.frame`) BioTIME data table in the format of the output of the
+\item{x}{(\code{data.frame}) BioTIME data table in the format of the output of the
 \code{\link{gridding}} function and/or \code{\link{resampling}} function.}
 
-\item{measure}{(`character`) chosen currency defined by a single column name.}
+\item{measure}{(\code{character}) chosen currency defined by a single column name.}
 }
 \value{
-Returns a data frame with results for species richness (`S`), numerical
- abundance (`N`), Maximum Numerical abundance (`MaxN`), Shannon Index (`Shannon`),
- Exponential Shannon (`expShannon`), Simpson's Index (Simpson), Inverse Simpson
- (`InvSimpson`), Probability of intraspecific encounter (`PIE`) and McNaughton's
- Dominance (`DomMc`) for each year and `assemblageID.`
+Returns a data frame with results for species richness (\code{S}), numerical
+ abundance (\code{N}), Maximum Numerical abundance (\code{MaxN}), Shannon Index (\code{Shannon}),
+ Exponential Shannon (\code{expShannon}), Simpson's Index (Simpson), Inverse Simpson
+ (\code{InvSimpson}), Probability of intraspecific encounter (\code{PIE}) and McNaughton's
+ Dominance (\code{DomMc}) for each year and \code{assemblageID}.
 }
 \description{
-The function `getAlphaMetrics` computes nine alpha diversity metrics, for a given community data frame, where `measure` is a character input specifying the chosen currency field used for the calculations. For each row of the data frame that has any data in it,  `getAlphaMetrics` calculates the following metrics:
+Calculates a set of standard alpha diversity metrics
+}
+\details{
+The function \code{getAlphaMetrics} computes nine alpha diversity metrics, for a given community data frame, where \code{measure} is a character input specifying the chosen currency field used for the calculations. For each row of the data frame that has any data in it,  \code{getAlphaMetrics} calculates the following metrics:
 
-- Species richness (`S`) as the total number of species in each year with currency > 0.
+- Species richness (\code{S}) as the total number of species in each year with currency > 0.
 
-- Numerical abundance (`N`) as the total currency (sum) in each year.
+- Numerical abundance (\code{N}) as the total currency (sum) in each year.
 
 - Maximum Numerical abundance as the highest currency value reported in each year.
 
-- Shannon or Shannon–Weaver index is calculated as -ipilogbpi, where pi is the proportional abundance of species i and b is the base of the logarithm (natural logarithms), while exponential Shannon is given by `exp(Shannon)`.
+- Shannon or Shannon–Weaver index is calculated as \eqn{\sum_{i}p_{i}log_{b}p_{i}}, where \eqn{p_{i}} is the proportional abundance of species i and b is the base of the logarithm (natural logarithms), while exponential Shannon is given by \code{exp(Shannon)}.
 
-- Simpson's index is calculated as 1-sum(pi2), while Inverse Simpson as 1/sum(pi2).
+- Simpson's index is calculated as \eqn{1-sum(p_{i}^{2})}, while Inverse Simpson as \eqn{1/sum(p_{i}^{2})}.
 
 - McNaughton's Dominance is calculated as the sum of the pi of the two most abundant species.
 
-- Probability of intraspecific encounter or PIE is calculated as (NN-1)(1-i=1si2).
+- Probability of intraspecific encounter or PIE is calculated as \eqn{\left(\frac{N}{N-1}\right)\left(1-\sum_{i=1}^{S}\pi_{i}^{2}\right)}.
 
 Note that the input data frame needs to be in the format of the output of the \code{\link{gridding}} function and/or \code{\link{resampling}} function, this includes keeping to the default BioTIME column names. If such columns are not found an error is issued and all operations are halted.
 }

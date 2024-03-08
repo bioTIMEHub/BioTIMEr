@@ -7,7 +7,7 @@
 getBeta(x, id)
 }
 \arguments{
-\item{x}{(data.frame) First column has to contain year values and following
+\item{x}{(\code{data.frame}) First column has to contain year values and following
 columns contain species abundances}
 
 \item{id}{definition of id}

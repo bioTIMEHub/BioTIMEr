@@ -8,8 +8,7 @@
 \description{
 The BioTIMEr package is developed at GitHub
 (https://github.com/bioTIMEHub/BioTIMEr). To see the preferable citation of
-the package, type citation("BioTIMEr"). Changes in BioTIMEr documents can be
-read with [add code]. The associated vignette includes an introduction
+the package, type citation("BioTIMEr"). The associated vignette includes an introduction
 to the functions, how to apply them as well as some hints on how to
 quantify and visualise temporal biodiversity change for a given BioTIME dataset.
 }
@@ -27,7 +26,7 @@ Useful links:
 Authors:
 \itemize{
   \item Faye Moyes (\href{https://orcid.org/0000-0001-9687-0593}{ORCID})
-  \item Inês Santos Martins (\href{https://orcid.org/0000-0003-4328-7286}{ORCID})
+  \item Inês S. Martins (\href{https://orcid.org/0000-0003-4328-7286}{ORCID})
 }
 
 Other contributors:
