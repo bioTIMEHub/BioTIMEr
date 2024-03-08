@@ -30,8 +30,8 @@
     },
     {
       "@type": "Person",
-      "givenName": "Inês",
-      "familyName": "Santos Martins",
+      "givenName": "Inês S.",
+      "familyName": "Martins",
       "@id": "https://orcid.org/0000-0003-4328-7286"
     }
   ],
@@ -64,9 +64,9 @@
   "copyrightHolder": [
     {
       "@type": "Person",
-      "givenName": "Faye",
-      "familyName": "Moyes",
-      "@id": "https://orcid.org/0000-0001-9687-0593"
+      "givenName": "Maria",
+      "familyName": "Dornelas",
+      "@id": "https://orcid.org/0000-0003-2077-7055"
     }
   ],
   "funder": [
@@ -142,18 +142,6 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=rmarkdown"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "formatR",
-      "name": "formatR",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=formatR"
     },
     {
       "@type": "SoftwareApplication",
@@ -262,7 +250,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "8226.711KB",
+  "fileSize": "8226.733KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
@@ -280,7 +268,7 @@
         },
         {
           "@type": "Person",
-          "givenName": ["Inês", "Santos"],
+          "givenName": ["Inês", "S."],
           "familyName": "Martins"
         },
         {
