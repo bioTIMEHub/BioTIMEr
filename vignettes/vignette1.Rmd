@@ -52,14 +52,14 @@ file.exists("data/subBTquery.RData")
 
 ### How to use it?
 1. Grid BioTIME data into a discrete global grid based on location (latitude/longitude) using:  
-- `gridding()`  
+    - `gridding()`  
 2. Apply sample-based rarefaction to standardize the number of samples per year within a cell-level time-series with:  
-- `resampling()`
+    - `resampling()`
 3. Calculate a set of standard alpha/beta diversity metrics using:  
-- `getAlphaMetrics()`
-- `getBetaMetrics()`
+    - `getAlphaMetrics()`
+    - `getBetaMetrics()`
 4. Fits linear regression models to step 3 outputs for use in plotting with:  
-- `getLinearRegressions ()`
+    - `getLinearRegressions ()`
 5. Visualize some results
 
 What follows is a detailed run through these different steps, breaking down some of the tasks and our reasoning behind our suggestions. 
@@ -214,7 +214,7 @@ grid_rare<- resampling(x = grid_samples, measure ="ABUNDANCE",
 
 The function returns a single long form data frame containing the total currency of interest (sum) for each species in each year within an assemblage time-series. You can decide what your currency field is: Abundance, Biomass or both; but note that the above function also tests and removes any `NAs` within any picked currency field(s) before any resampling. So if you choose, for instance, to keep both currency fields of BioTIME, only observations (when `conservative = FALSE`) or full sampling events (when `conservative = TRUE`) in which BOTH Abundance and Biomass were recorded are retain and a warning is issued as follows:
 
-```{r resampling_ex12, cache=TRUE, echo=TRUE, message=FALSE, tidy=TRUE, include=FALSE} 
+```{r resampling_ex12, cache=TRUE, echo=TRUE, message=FALSE, tidy=TRUE, include=TRUE} 
 #Keep only observations with both abundance and biomass
 grid_rare_ab <- resampling(x = grid_samples, measure = c("ABUNDANCE", "BIOMASS"),
                            resamps = 1L, conservative = FALSE)
@@ -268,7 +268,7 @@ Since sampling events within a study are retrieved with a consistent methodology
 ### Calculate diversity estimates
 Now the following functions are pretty straightforward. For each year within each assemblage time-series in you BioTIME data set you can use the `getAlphaMetrics()` and `getBetaMetrics()` functions to estimate a set of common alpha and beta diversity metrics. Lets apply it to our now processed BioTIME example dataset:
 
-```{r metrics, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=TRUE, include=FALSE, figures='hold'} 
+```{r metrics, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=FALSE, include=TRUE, figures='hold'} 
 # Get alpha metrics estimates:
 alpha_metrics <- getAlphaMetrics(x = grid_rare, measure = "ABUNDANCE")
 #see also help("getAlphaMetrics") for more details on the metrics
@@ -285,7 +285,7 @@ beta_metrics %>% head(6) %>% kable()
 ```
 
 
-```{r testes2, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=TRUE, include=FALSE, figures='hold'}
+```{r testes2, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=FALSE, include=FALSE, figures='hold'}
 # # Get alpha metrics estimates:
 # alpha_metrics <- getAlphaMetrics(x = grid_rare_ab, measure = "BIOMASS")
 # #see also help("getAlphaMetrics") for more details on the metrics
@@ -325,7 +325,7 @@ Have in mind that some of these data may benefit from some additional transforma
 Now that we have quantified change through time we are ready to make some plots! - The next section will provide you with some examples of queries and data visualization, but by no means should this be taken as a comprehensive exploration of the results. What you could and should use depends on your research question.
 
 Right, let's start will some overall stats and trends:
-```{r trends2, cache=TRUE, echo=TRUE, message=FALSE, fig.width=10, fig.height=7,tidy=FALSE, include=FALSE} 
+```{r trends2, cache=TRUE, echo=TRUE, message=FALSE, fig.width=10, fig.height=7,tidy=FALSE, include=TRUE} 
 # First, how many assemblages in our dataset show a moderate evidence (P < 0.05) of change in alpha diversity?
 check6 <- alpha_slopes %>%
   group_by(metric) %>% 
@@ -430,7 +430,7 @@ alpha_slopes_meta <- merge(alpha_slopes_simp, meta, by = "STUDY_ID")
 alpha_slopes_set1 <- subset(alpha_slopes_meta, alpha_slopes_meta$metric == "Shannon" & (alpha_slopes_meta$TAXA == "Fish" | alpha_slopes_meta$TAXA == "Birds"))
 
 #Let's put it all together
-ggplot(data = alpha_slop_set, aes(x = slope, fill = TAXA)) +
+ggplot(data = alpha_slopes_set1, aes(x = slope, fill = TAXA)) +
   geom_histogram(fill = "grey", bins = 25) + #all assemblages
   geom_histogram(data = alpha_slopes_set1[alpha_slopes_set1$significance == 1, ], bins = 25) + #only significant change assemblages
   geom_vline(aes(xintercept = 0), linetype = 3, colour = "black", linewidth = 0.5) + #add slope=0 line
@@ -450,21 +450,20 @@ ggplot(data = alpha_slop_set, aes(x = slope, fill = TAXA)) +
 Finally, if you are only working with a few single locations you may be more interested in exploring their individual trends, this has the advantage that one can actually plot the points together with a trend line: 
 ```{r trends8, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7.2, fig.height=6,tidy=FALSE, include=TRUE,results='hold', figures='hold'} 
 # Let's go back to the data frame with the yearly values and select our relevant data for plotting
-alpha_slopes_set <- subset(alpha_slopes, assemblageID == "18_335699")
+alpha_slopes_set2 <- subset(alpha_slopes, assemblageID == "18_335699")
 
 # get assemblage ID
-name_assemblage <- unique(alpha_slopes_set$assemblageID)
+name_assemblage <- unique(alpha_slopes_set2$assemblageID)
 
-alpha_slopes_set <- as.data.frame(alpha_slopes_set)
+alpha_slopes_set2 <- as.data.frame(alpha_slopes_set2)
 
 #Let's put it all together
 ggplot(data = alpha_slopes_set2, aes(x = YEAR, y = diversity)) +
   geom_point(colour = "#155f49", size = 1) +   #plot the yearly estimates
   stat_smooth(method = "lm", se = FALSE, linetype = 2, colour = "grey") + #draw all regression line
-  stat_smooth(data = subset(alpha_slopes_set2, alpha_slopes_set2$significance == 1), #color only trends that are significant
-
+  stat_smooth(data = subset(alpha_slopes_set2, alpha_slopes_set2$significance == 1),
               aes(x = YEAR, y = diversity), method = "lm", se = FALSE, 
-              linetype = 2, colour = "#155f49") +
+              linetype = 2, colour = "#155f49") + #color only trends that are significant
   facet_wrap(~metric, scales = "free") +
   scale_fill_biotime() +
   ggtitle(name_assemblage) + ylab("Diversity") +
@@ -472,7 +471,7 @@ ggplot(data = alpha_slopes_set2, aes(x = YEAR, y = diversity)) +
 
 ```
 
-```{r trends9, cache=TRUE, echo=TRUE, message=FALSE, fig.width=10, fig.height=7,tidy=FALSE, include=FALSE,results='hold', figures='hold'} 
+```{r trends9, cache=TRUE, echo=TRUE, message=FALSE, fig.width=10, fig.height=7,tidy=FALSE, include=TRUE,results='hold', figures='hold'} 
 #Hint: If you want to draw the p-value on the plot, you can try using the ggpmisc::stat_fit_glance which takes anything passed through lm() in R and allows it to processed and printed using ggplot2.
 ```
 
