@@ -2,32 +2,43 @@
 % Please edit documentation in R/slopesBioTIME.R
 \name{getLinearRegressions}
 \alias{getLinearRegressions}
-\title{Get Linear Regressions BioTIME}
+\title{Get Linear Regressions BioTIME
+Fits linear regression models to \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} outputs}
 \usage{
-getLinearRegressions(x, divType)
+getLinearRegressions(x, divType, pThreshold = 0.05)
 }
 \arguments{
-\item{x}{output from getAlphaMetrics() or getBetaMetrics() functions}
+\item{x}{(`data.frame`) BioTIME data table in the format of the output of  \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}}
+functions}
 
-\item{divType}{calculate regressions of alpha or beta results}
+\item{divType}{(`character`) string specifying the nature of the metrics in
+the data; only `divType = "alpha"` or `divType = "beta"` is supported}
+
+\item{pThreshold}{(`numeric`) P-value threshold for statistical significance}
 }
 \value{
-a dataframe with yearly diversity results merged with results of
-linear regressions (intercept, slope, p-value, significance)
+Returns a single long `data.frame`, with the input diversity results concatenated with results of linear regressions (slope, pvalue, significance, intercept) for each year and `assemblageID`.
 }
 \description{
 Get Linear Regressions BioTIME
+Fits linear regression models to \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} outputs
+}
+\details{
+The function `getLinearRegressions` fits simple linear regression models (see \code{\link[stats]{lm}} for details) for a given output ('data') of either \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} function.
+`divType` needs to be specified in agreement with x.
+The typical model has the form `metric ~ year`. Note that assemblages with less than 3 time points or/and single species time-series are removed.
 }
 \examples{
   x <- data.frame(
+    resamp = 1L,
     YEAR = rep(rep(2010:2015, each = 4), times = 4),
-    Species = c(replicate(n = 8L, sample(letters, 24L, replace = FALSE))),
-    Abundance = rpois(24 * 8, 10),
+    Species = c(replicate(n = 8L * 6L, sample(letters[1L:10L], 4L, replace = FALSE))),
+    ABUNDANCE = rpois(24 * 8, 10),
     assemblageID = rep(LETTERS[1L:8L], each = 24)
   )
-  alpham <- getAlphaMetrics(x, "A")
-  getLinearRegressions(x = alpham, divType = "alpha")
-  betam <- getBetaMetrics(x = x, "A")
+  alpham <- getAlphaMetrics(x, "ABUNDANCE")
+  getLinearRegressions(x = alpham, divType = "alpha", pThreshold = 0.01)
+  betam <- getBetaMetrics(x = x, "ABUNDANCE")
   getLinearRegressions(x = betam, divType = "beta")
 
 }

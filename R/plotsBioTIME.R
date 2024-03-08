@@ -1,6 +1,5 @@
 #' Plot slopes BioTIME
 #'
-#' @export
 #' @rdname BioTIME-plots
 #' @param x Parameter description
 #' @param metric Parameter description
@@ -10,6 +9,7 @@
 #' @param assemblageID Parameter description
 #' @param divType Parameter description
 #' @returns A plot
+#' @keywords internal
 #' @examples
 #' \dontrun{
 #' library(dplyr)
@@ -48,7 +48,8 @@ plotSlopes <- function(x, metric, cols, taxa, method, assemblageID, divType) {
                                       "Fish", "Fungi", "Mammals", "Plants"))
   checkmate::assertChoice(x = method, choices = c("metric", "taxa", "ind"))
   checkmate::assertChoice(x = divType, choices = c("beta", "alpha"))
-  base::stopifnot("The provided assemblageID is not valid" = base::is.element(assemblageID, x$assemblageID))
+  base::stopifnot("The provided assemblageID is not valid" =
+                    base::is.element(assemblageID, x$assemblageID))
 
   base::switch(
     divType,
@@ -61,19 +62,19 @@ plotSlopes <- function(x, metric, cols, taxa, method, assemblageID, divType) {
         method,
         metric = {
           xy <- subset(x, metric == metric)
-          p <- ggplot2::ggplot(xy, ggplot2::aes(x = slopes)) +
+          p <- ggplot2::ggplot(xy, ggplot2::aes(x = "slopes")) +
             ggplot2::ggtitle(metric) +
             ggplot2::geom_histogram(bins = 25, colour = "grey70",
-                                    ggplot2::aes(fill = TAXA)) +
+                                    ggplot2::aes(fill = "TAXA")) +
             ggplot2::geom_vline(xintercept = 0, linetype = 2, colour = "firebrick") +
             ggplot2::scale_fill_manual(values = cols) +
             themeBioTIME("none", 12, "black", "grey90") +
-            ggplot2::facet_wrap(~TAXA, scales = "free")
+            ggplot2::facet_wrap(~"TAXA", scales = "free")
           return(p)
         }, # end method == metric
         taxa = {
-          xy <- subset(x, TAXA == taxa)
-          p <- ggplot2::ggplot(xy, ggplot2::aes(x = slopes)) +
+          xy <- subset(x, "TAXA" == taxa)
+          p <- ggplot2::ggplot(xy, ggplot2::aes(x = "slopes")) +
             ggplot2::ggtitle(taxa) +
             ggplot2::geom_histogram(bins = 25, colour = "grey70",
                                     ggplot2::aes(fill = metric)) +
@@ -85,7 +86,7 @@ plotSlopes <- function(x, metric, cols, taxa, method, assemblageID, divType) {
         }, # end method == taxa
         ind = {
           xy <- subset(x, assemblageID == assemblageID)
-          p <- ggplot2::ggplot(xy, ggplot2::aes(x = YEAR, y = diversity)) +
+          p <- ggplot2::ggplot(xy, ggplot2::aes(x = "YEAR", y = "diversity")) +
             ggplot2::ggtitle(assemblageID) +
             ggplot2::geom_point(colour = "#00483d", size = 3) +
             ggplot2::ylab("Diversity") +
@@ -104,19 +105,19 @@ plotSlopes <- function(x, metric, cols, taxa, method, assemblageID, divType) {
         method,
         metric = {
           xy <- subset(x, metric == metric)
-          p <- ggplot2::ggplot(xy, ggplot2::aes(x = slopes)) +
+          p <- ggplot2::ggplot(xy, ggplot2::aes(x = "slopes")) +
             ggplot2::geom_histogram(bins = 25, colour = "grey70",
-                                    ggplot2::aes(fill = TAXA)) +
+                                    ggplot2::aes(fill = "TAXA")) +
             ggplot2::geom_vline(xintercept = 0, linetype = 2, colour = "firebrick") +
             ggplot2::scale_fill_manual(values = cols) +
             ggplot2::ggtitle(metric) +
             themeBioTIME("none", 12, "black", "grey90") +
-            ggplot2::facet_wrap(~TAXA, scale = "free_y")
+            ggplot2::facet_wrap(~"TAXA", scale = "free_y")
           return(p)
         }, # end method == metric
         taxa = {
-          xy <- subset(x, TAXA == taxa)
-          p <- ggplot2::ggplot(xy, ggplot2::aes(x = slopes)) +
+          xy <- subset(x, "TAXA" == taxa)
+          p <- ggplot2::ggplot(xy, ggplot2::aes(x = "slopes")) +
             ggplot2::geom_histogram(bins = 25, colour = "grey70",
                                     ggplot2::aes(fill = metric)) +
             ggplot2::geom_vline(xintercept = 0, linetype = 2, colour = "firebrick") +
@@ -128,7 +129,7 @@ plotSlopes <- function(x, metric, cols, taxa, method, assemblageID, divType) {
         }, # end method == taxa
         ind = {
           xy <- subset(x, assemblageID == assemblageID)
-          p <- ggplot2::ggplot(xy, ggplot2::aes(x = YEAR, y = dissimilarity)) +
+          p <- ggplot2::ggplot(xy, ggplot2::aes(x = "YEAR", y = "dissimilarity")) +
             ggplot2::ggtitle(assemblageID) +
             ggplot2::geom_point(colour = "#155f49", size = 3) +
             ggplot2::ylab("Dissimilarity") +

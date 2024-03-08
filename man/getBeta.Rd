@@ -25,10 +25,7 @@ Beta
     YEAR = rep(rep(2010:2015, each = 4), times = 4),
     matrix(data = rpois(384, 2), ncol = 4)
   )
-  res <- getBeta(x, "A")
+  res <- getBeta(x, id = "F")
 }
-}
-\author{
-Faye Moyes
 }
 \keyword{internal}

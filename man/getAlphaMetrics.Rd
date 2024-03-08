@@ -2,32 +2,52 @@
 % Please edit documentation in R/metricsBioTIME.R
 \name{getAlphaMetrics}
 \alias{getAlphaMetrics}
-\title{Run the alpha function}
+\title{Alpha diversity metrics
+Calculates a set of standard alpha diversity metrics}
 \usage{
-getAlphaMetrics(x, ab)
+getAlphaMetrics(x, measure)
 }
 \arguments{
-\item{x}{(data.frame) First column has to be year}
+\item{x}{(`data.frame`) BioTIME data table in the format of the output of the
+\code{\link{gridding}} function and/or \code{\link{resampling}} function.}
 
-\item{ab}{character input for chosen currency - "A" = Abundance or "B" = Biomass}
+\item{measure}{(`character`) chosen currency defined by a single column name.}
 }
 \value{
-getAlphaMetrics returns a data.frame with nine alpha diversity metrics
+Returns a data frame with results for species richness (`S`), numerical
+ abundance (`N`), Maximum Numerical abundance (`MaxN`), Shannon Index (`Shannon`),
+ Exponential Shannon (`expShannon`), Simpson's Index (Simpson), Inverse Simpson
+ (`InvSimpson`), Probability of intraspecific encounter (`PIE`) and McNaughton's
+ Dominance (`DomMc`) for each year and `assemblageID.`
 }
 \description{
-Run the alpha function
+The function `getAlphaMetrics` computes nine alpha diversity metrics, for a given community data frame, where `measure` is a character input specifying the chosen currency field used for the calculations. For each row of the data frame that has any data in it,  `getAlphaMetrics` calculates the following metrics:
+
+- Species richness (`S`) as the total number of species in each year with currency > 0.
+
+- Numerical abundance (`N`) as the total currency (sum) in each year.
+
+- Maximum Numerical abundance as the highest currency value reported in each year.
+
+- Shannon or Shannon–Weaver index is calculated as -ipilogbpi, where pi is the proportional abundance of species i and b is the base of the logarithm (natural logarithms), while exponential Shannon is given by `exp(Shannon)`.
+
+- Simpson's index is calculated as 1-sum(pi2), while Inverse Simpson as 1/sum(pi2).
+
+- McNaughton's Dominance is calculated as the sum of the pi of the two most abundant species.
+
+- Probability of intraspecific encounter or PIE is calculated as (NN-1)(1-i=1si2).
+
+Note that the input data frame needs to be in the format of the output of the \code{\link{gridding}} function and/or \code{\link{resampling}} function, this includes keeping to the default BioTIME column names. If such columns are not found an error is issued and all operations are halted.
 }
 \examples{
 \dontrun{
   x <- data.frame(
+    resamp = 1L,
     YEAR = rep(rep(2010:2015, each = 4), times = 4),
     Species = c(replicate(n = 8L, sample(letters, 24L, replace = FALSE))),
-    Abundance = rpois(24 * 8, 10),
+    ABUNDANCE = rpois(24 * 8, 10),
     assemblageID = rep(LETTERS[1L:8L], each = 24)
   )
-  res <- getAlphaMetrics(x, "A")
+  res <- getAlphaMetrics(x, measure = "ABUNDANCE")
 }
-}
-\author{
-Faye Moyes
 }

@@ -201,7 +201,7 @@
 # getAlphaMetrics works correctly for Abundance
 
     Code
-      getAlphaMetrics(x = dataMetrics, ab = "A")
+      getAlphaMetrics(x = dataMetrics, measure = "ABUNDANCE")
     Output
          assemblageID YEAR S  N maxN  Shannon   Simpson invSimpson       PIE
       1             A 2010 4 34   14 1.318024 0.7128028   3.481928 0.7344029
@@ -305,7 +305,7 @@
 # getAlphaMetrics works correctly for Biomass
 
     Code
-      getAlphaMetrics(x = dataMetrics, ab = "B")
+      getAlphaMetrics(x = dataMetrics, measure = "BIOMASS")
     Output
          assemblageID YEAR S    N maxN  Shannon   Simpson invSimpson       PIE
       1             A 2010 4 4051 1034 1.386206 0.7499555   3.999288 0.7501406
@@ -405,4 +405,114 @@
       46 0.5148615   3.997082
       47 0.5150246   3.997806
       48 0.5095986   3.999165
+
+# getBetaMetrics works correctly for Abundance
+
+    Code
+      getBetaMetrics(x = dataMetrics, measure = "ABUNDANCE")
+    Output
+         YEAR assemblageID JaccardDiss MorisitaHornDiss BrayCurtisDiss
+      1  2010            A           1                1              1
+      2  2011            A           1                1              1
+      3  2012            A           1                1              1
+      4  2013            A           1                1              1
+      5  2014            A           1                1              1
+      6  2015            A           1                1              1
+      7  2010            B           1                1              1
+      8  2011            B           1                1              1
+      9  2012            B           1                1              1
+      10 2013            B           1                1              1
+      11 2014            B           1                1              1
+      12 2015            B           1                1              1
+      13 2010            C           1                1              1
+      14 2011            C           1                1              1
+      15 2012            C           1                1              1
+      16 2013            C           1                1              1
+      17 2014            C           1                1              1
+      18 2015            C           1                1              1
+      19 2010            D           1                1              1
+      20 2011            D           1                1              1
+      21 2012            D           1                1              1
+      22 2013            D           1                1              1
+      23 2014            D           1                1              1
+      24 2015            D           1                1              1
+      25 2010            E           1                1              1
+      26 2011            E           1                1              1
+      27 2012            E           1                1              1
+      28 2013            E           1                1              1
+      29 2014            E           1                1              1
+      30 2015            E           1                1              1
+      31 2010            F           1                1              1
+      32 2011            F           1                1              1
+      33 2012            F           1                1              1
+      34 2013            F           1                1              1
+      35 2014            F           1                1              1
+      36 2015            F           1                1              1
+      37 2010            G           1                1              1
+      38 2011            G           1                1              1
+      39 2012            G           1                1              1
+      40 2013            G           1                1              1
+      41 2014            G           1                1              1
+      42 2015            G           1                1              1
+      43 2010            H           1                1              1
+      44 2011            H           1                1              1
+      45 2012            H           1                1              1
+      46 2013            H           1                1              1
+      47 2014            H           1                1              1
+      48 2015            H           1                1              1
+
+# getBetaMetrics works correctly for Biomass
+
+    Code
+      getBetaMetrics(x = dataMetrics, measure = "BIOMASS")
+    Output
+         YEAR assemblageID JaccardDiss MorisitaHornDiss BrayCurtisDiss
+      1  2010            A           1                1              1
+      2  2011            A           1                1              1
+      3  2012            A           1                1              1
+      4  2013            A           1                1              1
+      5  2014            A           1                1              1
+      6  2015            A           1                1              1
+      7  2010            B           1                1              1
+      8  2011            B           1                1              1
+      9  2012            B           1                1              1
+      10 2013            B           1                1              1
+      11 2014            B           1                1              1
+      12 2015            B           1                1              1
+      13 2010            C           1                1              1
+      14 2011            C           1                1              1
+      15 2012            C           1                1              1
+      16 2013            C           1                1              1
+      17 2014            C           1                1              1
+      18 2015            C           1                1              1
+      19 2010            D           1                1              1
+      20 2011            D           1                1              1
+      21 2012            D           1                1              1
+      22 2013            D           1                1              1
+      23 2014            D           1                1              1
+      24 2015            D           1                1              1
+      25 2010            E           1                1              1
+      26 2011            E           1                1              1
+      27 2012            E           1                1              1
+      28 2013            E           1                1              1
+      29 2014            E           1                1              1
+      30 2015            E           1                1              1
+      31 2010            F           1                1              1
+      32 2011            F           1                1              1
+      33 2012            F           1                1              1
+      34 2013            F           1                1              1
+      35 2014            F           1                1              1
+      36 2015            F           1                1              1
+      37 2010            G           1                1              1
+      38 2011            G           1                1              1
+      39 2012            G           1                1              1
+      40 2013            G           1                1              1
+      41 2014            G           1                1              1
+      42 2015            G           1                1              1
+      43 2010            H           1                1              1
+      44 2011            H           1                1              1
+      45 2012            H           1                1              1
+      46 2013            H           1                1              1
+      47 2014            H           1                1              1
+      48 2015            H           1                1              1
 

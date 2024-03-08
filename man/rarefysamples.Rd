@@ -6,18 +6,17 @@
 Applies sample-based rarefaction to standardise the number of samples per year
    within a cell-level time-series.}
 \usage{
-rarefysamples(Year, SampleID, Species, currency, resamps)
+rarefysamples(x, measure, resamps)
 }
 \arguments{
-\item{Year}{Integer representing year of record}
+\item{x}{(data.frame) BioTIME gridded data to be resampled (in the format of
+the output of the \code{\link{gridding}} function).}
 
-\item{SampleID}{Description of unique sampling event, this is used to resample}
+\item{measure}{(character) currency to be retained during the sample-based
+rarefaction. Can be either defined by a single column name or a vector of
+two or more column names.}
 
-\item{Species}{Highest resolution of taxonomic description available}
-
-\item{currency}{Set to either (numeric) abundance or biomass}
-
-\item{resamps}{Number of times the function randomly draws among the samples.}
+\item{resamps}{(integer) number of repetitions. Default is 1.}
 }
 \value{
 Returns a single long form data frame containing the total currency
@@ -28,28 +27,14 @@ Rarefy BioTIME data
 Applies sample-based rarefaction to standardise the number of samples per year
    within a cell-level time-series.
 }
-\details{
-Sample-based rarefaction prevents temporal variation in sampling effort
-   from affecting diversity estimates [REF]. `rarefysamples` is a function
-   used to count the number of samples taken in each year, identify the
-   minimum number of samples, and then use this minimum to randomly
-   resample each year down to that number of samples, after which standard
-   biodiversity metrics (e.g. \code{\link{getAlpha}}, \code{\link{getBeta}})
-   can be calculated. Here sampling effort is defined as the number of
-   samples (SampleID) taken in each year. `currency` is a numerical column
-   with the variable (abundance or biomass) to be retained during the
-   sample-based rarefaction, while `resamps` can be used to define multiple
-   iterations (see examples). To apply directly to the output from the
-   \code{\link{gridding}} function use \code{\link{runResampling}}.
-}
 \examples{
 \dontrun{
   library(dplyr)
   library(BioTIMEr)
-  df <- gridding(subBTmeta, subBTquery) \%>\%
+  x <- gridding(subBTmeta, subBTquery) \%>\%
     filter(assemblageID == "10_358678")
-  rarefysamples(Year = df$YEAR, SampleID = df$SAMPLE_DESC,
-    Species = df$Species, currency = df$ABUNDANCE,
+  rarefysamples(Year = x$YEAR, SampleID = x$SAMPLE_DESC,
+    Species = x$Species, currency = x$ABUNDANCE,
     resamps = 3)
 }
 

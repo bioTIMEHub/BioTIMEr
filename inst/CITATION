@@ -1,2 +1,7 @@
-bibentry(  "Manual",  title = "BioTIMEr: exploring, standardising the BioTIME database",  author = "Alban Sagouis, Faye Moyes, Shane A. Blowes, Viviana Brambilla, Cher F. Y. Chow, Ada Fontrodona-Eslava, Jonathan M. Chase, Maria Dornelas, Anne E. Magurran",  year = 2023,
-  url = "https://github.com/bioTIMEHub/BioTIMEr")
+bibentry(
+  "Manual",
+  title = "BioTIMEr: tools to use and explore the BioTIME database",
+  author = "Alban Sagouis, Faye Moyes, Inês S. Martins, Shane A. Blowes, Viviana Brambilla, Cher F. Y. Chow, Ada Fontrodona-Eslava, Jonathan M. Chase, Maria Dornelas, Anne E. Magurran",
+  year = 2024,
+  url = "https://github.com/bioTIMEHub/BioTIMEr"
+)

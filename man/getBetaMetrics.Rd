@@ -2,37 +2,41 @@
 % Please edit documentation in R/metricsBioTIME.R
 \name{getBetaMetrics}
 \alias{getBetaMetrics}
-\title{run the beta function}
+\title{Beta diversity metrics
+Calculates a set of standard beta diversity metrics}
 \usage{
-getBetaMetrics(x, ab)
+getBetaMetrics(x, measure)
 }
 \arguments{
-\item{x}{(data.frame) Has to have columns Species, YEAR, assemblageID,
-STUDY_ID, cell and Abundance or Biomass}
+\item{x}{(`data.frame`) BioTIME data table in the format of the output of the
+\code{\link{gridding}} function and/or \code{\link{resampling}} function.}
 
-\item{ab}{character input for chosen currency - "A" = Abundance or "B" = Biomass}
+\item{measure}{(character) chosen currency defined by a single column name.}
 }
 \value{
-getBetaMetrics returns a long data.frame with results for three beta
-  metrics.
+Returns a `data.frame` with results for Jaccard dissimilarity (`JaccardDiss`), Morisita-Horn dissimilarity (`MorisitaHornDiss`), and Bray-Curtis dissimilarity (`BrayCurtsDiss`) for each year and `assemblageID.`
 }
 \description{
-run the beta function
+Beta diversity metrics
+Calculates a set of standard beta diversity metrics
+}
+\details{
+The function getBetaMetrics computes three beta diversity metrics, for a given community data frame, where `measure` is a character input specifying the chosen currency field used for the calculations. `getBetaMetrics` calls the \code{\link[vegan]{vegdist}} function which calculates for each row the following metrics: Jaccard dissimilarity (`method = "jaccard"`), Morisita-Horn dissimilarity (`method = "horn"`) and Bray-Curtis dissimilarity (`method = "bray"`). Here, the dissimilarity are calculated against the baseline year of each assemblage time series i.e. first year of the time-series.
+Note that the input data frame needs to be in the format of the output of the
+ \code{\link{gridding}} function and/or \code{\link{resampling}} function, this includes keeping to the default BioTIME column names. If such columns are not found an error is issued and all operations are halted.
 }
 \examples{
 \dontrun{
 x <- data.frame(
+  resamp = 1L,
   YEAR = rep(rep(2010:2015, each = 4), times = 4),
   Species = c(replicate(
    n = 8L,
    sample(letters, 24L, replace = FALSE))),
-  Abundance = rpois(24 * 8, 10),
+  ABUNDANCE = rpois(24 * 8, 10),
   assemblageID = rep(LETTERS[1L:8L], each = 24)
   )
 
-res <- getBetaMetrics(x, "A")
+res <- getBetaMetrics(x, measure = "ABUNDANCE")
 }
-}
-\author{
-Faye Moyes
 }

@@ -3,7 +3,7 @@
 #' A subset of data from BioTIME temporal surveys.
 #'
 #' @format ## `subBTquery`
-#' A data frame with 77,093 rows and 16 columns:
+#' A data frame with 81,084 rows and 17 columns:
 #' \describe{
 #'   \item{ID_ALL_RAW_DATA}{Unique BioTIME identifier for record}
 #'   \item{ABUNDANCE}{Double representing the abundance for the record (see metadata for details of ABUNDANCE_TYPE}
@@ -18,6 +18,7 @@
 #'   \item{MONTH}{Numerical value of month for record, i.e. January=1}
 #'   \item{YEAR}{Year of record}
 #'   \item{STUDY_ID}{BioTIME study unique identifier}
+#'   \item{newID}{Validated species identifier key}
 #'   \item{valid_name}{Highest taxonomic resolution of individual, preferred is genus and species}
 #'   \item{resolution}{Level of resolution, i.e. 'species' represented by genus and species}
 #'   \item{taxon}{Higher level taxonomic grouping, i.e. Fish}
@@ -30,7 +31,7 @@
 #' A subset of the metadata from BioTIME
 #'
 #' @format ## `subBTmeta`
-#' A data frame with 10 rows and 26 columns:
+#' A data frame with 12 rows and 26 columns:
 #' \describe{
 #'   \item{STUDY_ID}{BioTIME study unique identifier}
 #'   \item{REALM}{Realm of study location, i.e. Marine}

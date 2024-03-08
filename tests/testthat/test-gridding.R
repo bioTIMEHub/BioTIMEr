@@ -12,7 +12,8 @@ test_that("gridding returns the expected columns", {
   expected_cols <- c(
     "CLIMATE", "REALM", "TAXA", "StudyMethod", "SAMPLE_DESC",
     "ABUNDANCE_TYPE", "BIOMASS_TYPE", "assemblageID", "STUDY_ID", "YEAR", "PLOT",
-    "cell", "Species", "DAY", "MONTH", "ABUNDANCE", "BIOMASS", "taxon", "resolution"
+    "cell", "Species", "DAY", "MONTH", "ABUNDANCE", "BIOMASS", "taxon",
+    "LATITUDE", "LONGITUDE", "resolution"
   )
   checkmate::expect_names(x = colnames(result), what = "colnames",
                           permutation.of = expected_cols)
@@ -35,4 +36,9 @@ test_that("gridding produces consistent results", {
 test_that("gridding respects provided res parameter", {
   skip_on_ci()
   expect_snapshot(gridding(meta, btf, res = 18))
+})
+
+test_that("gridding respects resByData argument", {
+  skip_on_ci()
+  expect_snapshot(gridding(meta, btf, resByData = TRUE))
 })
