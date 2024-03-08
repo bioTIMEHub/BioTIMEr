@@ -23,7 +23,7 @@ Applies sample-based rarefaction to standardise the number of samples per year
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioTIMEr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9013</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9018</span>
       </span>
     </div>
 
@@ -73,29 +73,24 @@ Applies sample-based rarefaction to standardise the number of samples per year
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">rarefysamples</span><span class="op">(</span><span class="va">Year</span>, <span class="va">SampleID</span>, <span class="va">Species</span>, <span class="va">currency</span>, <span class="va">resamps</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">rarefysamples</span><span class="op">(</span><span class="va">x</span>, <span class="va">measure</span>, <span class="va">resamps</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>Year</dt>
-<dd><p>Integer representing year of record</p></dd>
+    <dl><dt>x</dt>
+<dd><p>(data.frame) BioTIME gridded data to be resampled (in the format of
+the output of the <code><a href="gridding.html">gridding</a></code> function).</p></dd>
 
 
-<dt>SampleID</dt>
-<dd><p>Description of unique sampling event, this is used to resample</p></dd>
-
-
-<dt>Species</dt>
-<dd><p>Highest resolution of taxonomic description available</p></dd>
-
-
-<dt>currency</dt>
-<dd><p>Set to either (numeric) abundance or biomass</p></dd>
+<dt>measure</dt>
+<dd><p>(character) currency to be retained during the sample-based
+rarefaction. Can be either defined by a single column name or a vector of
+two or more column names.</p></dd>
 
 
 <dt>resamps</dt>
-<dd><p>Number of times the function randomly draws among the samples.</p></dd>
+<dd><p>(integer) number of repetitions. Default is 1.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -105,31 +100,16 @@ Applies sample-based rarefaction to standardise the number of samples per year
 <p>Returns a single long form data frame containing the total currency
    of interest (sum) for each species in each year.</p>
     </div>
-    <div id="details">
-    <h2>Details</h2>
-    <p>Sample-based rarefaction prevents temporal variation in sampling effort
-   from affecting diversity estimates [REF]. `rarefysamples` is a function
-   used to count the number of samples taken in each year, identify the
-   minimum number of samples, and then use this minimum to randomly
-   resample each year down to that number of samples, after which standard
-   biodiversity metrics (e.g. <code><a href="getAlpha.html">getAlpha</a></code>, <code><a href="getBeta.html">getBeta</a></code>)
-   can be calculated. Here sampling effort is defined as the number of
-   samples (SampleID) taken in each year. `currency` is a numerical column
-   with the variable (abundance or biomass) to be retained during the
-   sample-based rarefaction, while `resamps` can be used to define multiple
-   iterations (see examples). To apply directly to the output from the
-   <code><a href="gridding.html">gridding</a></code> function use <code><a href="runResampling.html">runResampling</a></code>.</p>
-    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bioTIMEHub/BioTIMEr" class="external-link">BioTIMEr</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="gridding.html">gridding</a></span><span class="op">(</span><span class="va">subBTmeta</span>, <span class="va">subBTquery</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="gridding.html">gridding</a></span><span class="op">(</span><span class="va">subBTmeta</span>, <span class="va">subBTquery</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">assemblageID</span> <span class="op">==</span> <span class="st">"10_358678"</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu">rarefysamples</span><span class="op">(</span>Year <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">YEAR</span>, SampleID <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">SAMPLE_DESC</span>,</span></span>
-<span class="r-in"><span>    Species <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">Species</span>, currency <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">ABUNDANCE</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">rarefysamples</span><span class="op">(</span>Year <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">YEAR</span>, SampleID <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">SAMPLE_DESC</span>,</span></span>
+<span class="r-in"><span>    Species <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">Species</span>, currency <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">ABUNDANCE</span>,</span></span>
 <span class="r-in"><span>    resamps <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
@@ -143,7 +123,7 @@ Applies sample-based rarefaction to standardise the number of samples per year
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Alban Sagouis, Faye Moyes, Inês Santos Martins, Anne E. Magurran, Jonathan M. Chase, Maria Dornelas, European Research Council grant AdG BioTIME 250189, European Research Council grant PoC BioCHANGE 727440.</p>
+  <p></p><p>Developed by Alban Sagouis, Faye Moyes, Inês S. Martins, Anne E. Magurran, Jonathan M. Chase, Maria Dornelas, European Research Council grant AdG BioTIME 250189, European Research Council grant PoC BioCHANGE 727440.</p>
 </div>
 
 <div class="pkgdown">

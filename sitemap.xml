@@ -28,6 +28,9 @@
     <loc>/reference/BioTIME-plots.html</loc>
   </url>
   <url>
+    <loc>/reference/BioTIMEr-package.html</loc>
+  </url>
+  <url>
     <loc>/reference/getAlpha.html</loc>
   </url>
   <url>
@@ -52,15 +55,12 @@
     <loc>/reference/rarefysamples.html</loc>
   </url>
   <url>
-    <loc>/reference/runResampling.html</loc>
+    <loc>/reference/resampling.html</loc>
   </url>
   <url>
     <loc>/reference/subBTmeta.html</loc>
   </url>
   <url>
     <loc>/reference/subBTquery.html</loc>
-  </url>
-  <url>
-    <loc>/todo.html</loc>
   </url>
 </urlset>

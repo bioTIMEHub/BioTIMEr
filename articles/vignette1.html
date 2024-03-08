@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioTIMEr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9013</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9018</span>
       </span>
     </div>
 
@@ -79,9 +79,10 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Introduction to BioTIMEr</h1>
-                        <h4 data-toc-skip class="author"></h4>
+                        <h4 data-toc-skip class="author">Inês S.
+Martins</h4>
             
-            <h4 data-toc-skip class="date">2024-03-04</h4>
+            <h4 data-toc-skip class="date">2024-03-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/bioTIMEHub/BioTIMEr/blob/HEAD/vignettes/vignette1.Rmd" class="external-link"><code>vignettes/vignette1.Rmd</code></a></small>
       <div class="hidden name"><code>vignette1.Rmd</code></div>
@@ -90,247 +91,611 @@
 
     
     
-<p>BioTIMEr requires the following packages to run and, if needed, they
-were installed by R at the same time BioTIMEr was installed.</p>
-<ul>
-<li><a href="https://dplyr.tidyverse.org/" class="external-link">dplyr</a></li>
-<li><a href="https://tidyr.tidyverse.org/" class="external-link">tidyr</a></li>
-<li><a href="https://ggplot2.tidyverse.org/" class="external-link">ggplot2</a></li>
-<li><a href="https://rdrr.io/cran/dggridR/" class="external-link">dggridR</a></li>
-<li><a href="https://vegandevs.github.io/vegan/" class="external-link">vegan</a></li>
-</ul>
+<p>The <code>BioTIMEr</code> package provides tools designed to interact
+with the BioTIME database. The functions provided include the BioTIME
+recommended methods for preparing (gridding and rarefaction) time-series
+data, a selection of standard biodiversity metrics (including species
+richness, numerical abundance and exponential Shannon) alongside
+examples on how to display change over time. This vignette will lead you
+through an example from start to end.</p>
+<div class="section level2">
+<h2 id="preliminaries">Preliminaries<a class="anchor" aria-label="anchor" href="#preliminaries"></a>
+</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Install the latest version of the package</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bioTIMEHub/BioTIMEr" class="external-link">BioTIMEr</a></span><span class="op">)</span></span></code></pre></div>
 <p>When loading the BioTIMEr package, a subset of BioTIME data is
-automatically loaded too. The whole BioTIME database is accessible <a href="https://biotime.st-andrews.ac.uk/" class="external-link">here</a></p>
-<p>There are two files:</p>
-<ul>
-<li>subBTmeta:</li>
-<li>subBTquery:</li>
-</ul>
+automatically loaded too together with its metadata. The whole BioTIME
+database is accessible <a href="https://biotime.st-andrews.ac.uk/" class="external-link">here</a></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">?</span><span class="va">subBTmeta</span></span>
+<code class="sourceCode R"><span><span class="co"># you can run the following commands to retrieve more information about the subsets.</span></span>
+<span><span class="op">?</span><span class="va">subBTmeta</span></span>
 <span><span class="op">?</span><span class="va">subBTquery</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># you can also see a full list of BioTIMEr functions and help pages by:</span></span>
+<span><span class="op">?</span><span class="op">?</span><span class="va">BioTIMEr</span></span></code></pre></div>
 <div class="section level3">
-<h3 id="these-are-the-functions-available-in-the-package">These are the functions available in the package<a class="anchor" aria-label="anchor" href="#these-are-the-functions-available-in-the-package"></a>
+<h3 id="how-to-use-it">How to use it?<a class="anchor" aria-label="anchor" href="#how-to-use-it"></a>
 </h3>
+<ol style="list-style-type: decimal">
+<li>Grid BioTIME data into a discrete global grid based on location
+(latitude/longitude) using:
 <ul>
-<li>gridding</li>
-<li>rarefysamples</li>
-<li>runResampling</li>
-<li>getAlpha</li>
-<li>getAlphaMetrics</li>
-<li>getBeta</li>
-<li>getBetaMetrics</li>
-<li>getLinearRegressions</li>
-<li>themeBioTIME</li>
-<li>plotSlopes</li>
+<li>
+<code><a href="../reference/gridding.html">gridding()</a></code><br>
+</li>
 </ul>
+</li>
+<li>Apply sample-based rarefaction to standardize the number of samples
+per year within a cell-level time-series with:
+<ul>
+<li><code><a href="../reference/resampling.html">resampling()</a></code></li>
+</ul>
+</li>
+<li>Calculate a set of standard alpha/beta diversity metrics using:
+<ul>
+<li><code><a href="../reference/getAlphaMetrics.html">getAlphaMetrics()</a></code></li>
+<li><code><a href="../reference/getBetaMetrics.html">getBetaMetrics()</a></code></li>
+</ul>
+</li>
+<li>Fits linear regression models to step 3 outputs for use in plotting
+with:
+<ul>
+<li><code><a href="../reference/getLinearRegressions.html">getLinearRegressions ()</a></code></li>
+</ul>
+</li>
+<li>Visualize some results</li>
+</ol>
+<p>What follows is a detailed run through these different steps,
+breaking down some of the tasks and our reasoning behind our
+suggestions.</p>
+<p>Note that throughout this vignette we will use the so-called ‘pipe’
+operator <code>(%&gt;%)</code> which allows us to connect multiple
+functions in order to make our code more efficient and streamlined, we
+will also use ggplot2 library for most of our visualizations. This and
+other libraries required for BioTIMEr to run will be, if needed,
+installed by R at the same time BioTIMEr is installed.*</p>
 <hr>
 </div>
 <div class="section level3">
-<h3 id="gridding">Gridding<a class="anchor" aria-label="anchor" href="#gridding"></a>
+<h3 id="why-bother-with-separating-observations-into-cells">Why bother with separating observations into cells?<a class="anchor" aria-label="anchor" href="#why-bother-with-separating-observations-into-cells"></a>
 </h3>
-<p>Where <code>meta</code> represents a long form data frame containing
-the meta data information for BioTIME studies and <code>btf</code> is a
-data frame containing long form data from the main BioTIME query.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/runResampling.html">runResampling</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">ab</span><span class="op">)</span></span></code></pre></div>
-<p>where df is the data frame output from the <code><a href="../reference/gridding.html">gridding()</a></code>
-function and ab is a character input indicating whether chosen currency
-for rarefaction and resampling is abundance or biomass,
-i.e. “A”=Abundance and “B”=Biomass. This function calls the
-<code><a href="../reference/rarefysamples.html">rarefysamples()</a></code> function which performs a single run of the
-chosen input by randomly resampling the minimum number of sampling
-events per year per study. This function can be run once and then used
-for further analyses as described here or fitted into a simple loop to
-run and record metrics for multiple iterations before choosing the mean
-(as in vignette 3). The output is a single long form data frame
-containing rarefied time series.</p>
+<p>Typically, a BioTIME study contains distinct samples measured in a
+successive order (with a consistent methodology) for a given period of
+time. However the spatial distribution among samples can vary
+substantially depending on the nature and taxonomic resolution of the
+study (e.g. forest quadrants, bird transects, fish tows, etc.). Because
+the spatial extent varies among studies, a advisable step is to grid
+those studies that have large extents and multiple sites into smaller
+more appropriate subsets. The <code><a href="../reference/gridding.html">gridding()</a></code> function is design
+to perform such task using a global grid of hexagonal cells derived from
+dggridR (see <code>vignette(‘dggridR’)</code>).</p>
+<p>Let’s apply it to a subset of BioTIME data and see what happens:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/getAlphaMetrics.html">getAlphaMetrics</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">ab</span><span class="op">)</span> </span></code></pre></div>
-<p>where x is the output of the <code><a href="../reference/runResampling.html">runResampling()</a></code> function
-and ab is a character input indicating whether chosen currency for
-rarefaction and resampling is abundance or biomass, i.e. “A”=Abundance
-and “B”=Biomass. This function calls the associated
-<code><a href="../reference/getAlpha.html">getAlpha()</a></code> function which calculates nine alpha diversity
-metrics; S, N, maximum N, Shannon, Simpson, McNaughton dominance, PIE,
-inverse Simpson and exponential Shannon, for each year within all time
-series. With “A” the N and maximum N metrics return numerical abundance
-whilst with “B” they represent biomass.</p>
+<code class="sourceCode R"><span><span class="va">grid_samples</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/gridding.html">gridding</a></span><span class="op">(</span>meta <span class="op">=</span> <span class="va">subBTmeta</span>, btf <span class="op">=</span> <span class="va">subBTquery</span>, res <span class="op">=</span> <span class="fl">12</span>, resByData <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> </span>
+<span></span>
+<span><span class="co"># Get a look at the output</span></span>
+<span><span class="co"># grid_samples %&gt;% head() %&gt;% kable()</span></span></code></pre></div>
+<p>You can see that each sample is assigned a different combination of
+study ID and grid cell (based on its latitude and longitude) resulting
+in a unique identifier which determines our assemblage time-series
+(assemblageID). Let’s take a look and see how many
+studies/cells/assemblages time-series are there:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/getBetaMetrics.html">getBetaMetrics</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">ab</span><span class="op">)</span> </span></code></pre></div>
-<p>where x is the output of the <code><a href="../reference/runResampling.html">runResampling()</a></code> function
-and ab is a character input indicating whether chosen currency for
-rarefaction and resampling is abundance or biomass, i.e. “A”=Abundance
-and “B”=Biomass. This function calls the associated
-<code><a href="../reference/getBeta.html">getBeta()</a></code> function which calculates three beta diversity
-metrics; Jaccard dissimilarity (which uses only presence absence data),
-Bray-Curtis dissimilarity and Morisita-Horn dissimilarity (both of which
-take abundance data),for each year within all time series. The
-dissimilarity here is calculated against the baseline year of each time
-series. With “A” numerical abundance is used whilst “B” uses
-biomass.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/getLinearRegressions.html">getLinearRegressions</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">divType</span><span class="op">)</span></span></code></pre></div>
-<p>where x is the output of one of the metric functions, either
-<code><a href="../reference/getAlphaMetrics.html">getAlphaMetrics()</a></code> or <code><a href="../reference/getBetaMetrics.html">getBetaMetrics()</a></code> and
-divType is a string input indicating whether the input is for “alpha” or
-“beta”. The function returns a data frame containing the original input
-of yearly diversity metrics for each study merged with the results of a
-simple linear regression (OLS) on each metric for each time series,
-i.e. a single slope, intercept and p-value for each study.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/BioTIME-plots.html">plotSlopes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">metric</span>, <span class="va">cols</span>, <span class="va">taxa</span>, <span class="va">method</span>, <span class="va">assemblageID</span>, <span class="va">divType</span><span class="op">)</span></span></code></pre></div>
-<p>where <code>x</code> is the output from the
-<code><a href="../reference/getLinearRegressions.html">getLinearRegressions()</a></code> function, metric is a chosen metric,
-i.e. Jaccard dissimilarity, cols is a colour palette, taxa is chosen
-taxon, i.e. fish or birds, method is the type of plot required, this is
-taken from “ind” (single study), “taxa” (all studies from a taxon) or
-“metric” (chosen metric), <code>assemblageID</code> is the identity of a
-single time series, i.e. “53_10639590”, <code>divType</code> is whether
-the user wishes to examine “alpha” or “beta” results.</p>
-</div>
-<div class="section level2">
-<h2 id="now-try-to-run-some-things">Now try to run some things<a class="anchor" aria-label="anchor" href="#now-try-to-run-some-things"></a>
-</h2>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gridding.html">gridding</a></span><span class="op">(</span>meta <span class="op">=</span> <span class="va">subBTmeta</span>, btf <span class="op">=</span> <span class="va">subBTquery</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">check1</span> <span class="op">&lt;-</span> <span class="va">grid_samples</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">StudyMethod</span>, <span class="va">STUDY_ID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>n_cell <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">cell</span><span class="op">)</span>, n_aID <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, res<span class="op">=</span><span class="st">"res12"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">kable</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">11</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">check1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
-<th align="left">ABUNDANCE_TYPE</th>
-<th align="left">BIOMASS_TYPE</th>
-<th align="left">assemblageID</th>
+<th align="left">StudyMethod</th>
 <th align="right">STUDY_ID</th>
-<th align="right">YEAR</th>
-<th align="left">PLOT</th>
+<th align="right">n_cell</th>
+<th align="right">n_aID</th>
+<th align="left">res</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">Count</td>
-<td align="left">NA</td>
-<td align="left">10_359170</td>
-<td align="right">10</td>
-<td align="right">1984</td>
-<td align="left">12</td>
+<td align="left">ML</td>
+<td align="right">211</td>
+<td align="right">12</td>
+<td align="right">12</td>
+<td align="left">res12</td>
 </tr>
 <tr class="even">
-<td align="left">Count</td>
-<td align="left">NA</td>
-<td align="left">10_359170</td>
-<td align="right">10</td>
-<td align="right">1984</td>
-<td align="left">12</td>
+<td align="left">ML</td>
+<td align="right">372</td>
+<td align="right">85</td>
+<td align="right">85</td>
+<td align="left">res12</td>
 </tr>
 <tr class="odd">
-<td align="left">Count</td>
-<td align="left">NA</td>
-<td align="left">10_359170</td>
-<td align="right">10</td>
-<td align="right">1984</td>
-<td align="left">12</td>
+<td align="left">ML</td>
+<td align="right">402</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="left">res12</td>
 </tr>
 <tr class="even">
-<td align="left">Count</td>
-<td align="left">NA</td>
-<td align="left">10_359170</td>
-<td align="right">10</td>
-<td align="right">1984</td>
-<td align="left">12</td>
+<td align="left">ML</td>
+<td align="right">431</td>
+<td align="right">456</td>
+<td align="right">456</td>
+<td align="left">res12</td>
 </tr>
 <tr class="odd">
-<td align="left">Count</td>
-<td align="left">NA</td>
-<td align="left">10_359170</td>
+<td align="left">ML</td>
+<td align="right">437</td>
 <td align="right">10</td>
-<td align="right">1984</td>
-<td align="left">1</td>
+<td align="right">10</td>
+<td align="left">res12</td>
 </tr>
 <tr class="even">
-<td align="left">Count</td>
-<td align="left">NA</td>
-<td align="left">10_359170</td>
+<td align="left">ML</td>
+<td align="right">466</td>
+<td align="right">250</td>
+<td align="right">250</td>
+<td align="left">res12</td>
+</tr>
+<tr class="odd">
+<td align="left">SL</td>
 <td align="right">10</td>
-<td align="right">1984</td>
-<td align="left">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">res12</td>
+</tr>
+<tr class="even">
+<td align="left">SL</td>
+<td align="right">18</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">res12</td>
+</tr>
+<tr class="odd">
+<td align="left">SL</td>
+<td align="right">41</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">res12</td>
+</tr>
+<tr class="even">
+<td align="left">SL</td>
+<td align="right">53</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">res12</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 81084    19</span></span></code></pre>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">assemblageID</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/runResampling.html">runResampling</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">df</span>, ab <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># How spread out were samples in a given study?</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">check1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">STUDY_ID</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">n_aID</span>, fill <span class="op">=</span> <span class="va">res</span> ,<span class="op">)</span>,</span>
+<span>           stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_fill_discrete</a></span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#155f49"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"StudyID"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of assemblages in a study"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="vignette1_files/figure-html/gridding_ex_plot-1.png" width="672">
+You can see that several studies are not partitioned, and that’s because
+all their observations were already contained within a single cell.</p>
+<div class="section level4">
+<h4 id="what-happens-if-i-change-res">
+<strong>What happens if I change <code>res</code>?</strong><a class="anchor" aria-label="anchor" href="#what-happens-if-i-change-res"></a>
+</h4>
+<p>By default the function separates studies into hexagonal cells of ~96
+km2 (<code>res=12</code>), as this resolution was found to be the most
+appropriate value when working on the whole BioTIME database. Yet
+sometimes, particularly when working with a subset of BioTIME, you may
+want to explore alternative grid resolutions. The function gives you 2
+options: you can either directly define a new resolution or allow the
+function to find the best <code>res</code> based on the average study
+extent of your dataset. Let’s run over these alternative options with a
+few examples:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># define a alternative resolution of 14 (~10.7 km2 cells)</span></span>
+<span><span class="va">grid_samples_14</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/gridding.html">gridding</a></span><span class="op">(</span>meta <span class="op">=</span> <span class="va">subBTmeta</span>, btf <span class="op">=</span> <span class="va">subBTquery</span>, res <span class="op">=</span> <span class="fl">14</span>, resByData <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> </span>
 <span></span>
-<span><span class="fu">kable</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># allow the spatial extent of the data to define the resolution</span></span>
+<span><span class="va">grid_samples_auto</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/gridding.html">gridding</a></span><span class="op">(</span>meta <span class="op">=</span> <span class="va">subBTmeta</span>, btf <span class="op">=</span> <span class="va">subBTquery</span>, res <span class="op">=</span> <span class="fl">12</span>, resByData <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co"># this option also returns a message with the automatically picked resolution:</span></span></code></pre></div>
+<pre><code><span><span class="co">## Resolution: 15, Area (km^2): 3.55473501726709, Spacing (km): 1.86210705534755, CLS (km): 2.12744663988395</span></span></code></pre>
+<p>So what changed with <code>res</code>?</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">check2</span> <span class="op">&lt;-</span> <span class="va">grid_samples_14</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">StudyMethod</span>, <span class="va">STUDY_ID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>n_cell <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">cell</span><span class="op">)</span>, n_aID <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, res <span class="op">=</span> <span class="st">"res14"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">check3</span> <span class="op">&lt;-</span> <span class="va">grid_samples_auto</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">StudyMethod</span>, <span class="va">STUDY_ID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>n_cell <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">cell</span><span class="op">)</span>, n_aID <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, res <span class="op">=</span> <span class="st">"res15"</span><span class="op">)</span> </span>
+<span></span>
+<span><span class="va">checks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">check1</span>, <span class="va">check2</span>, <span class="va">check3</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">checks</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">STUDY_ID</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">n_aID</span>, fill <span class="op">=</span> <span class="va">res</span><span class="op">)</span>, </span>
+<span>           stat <span class="op">=</span> <span class="st">"identity"</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span>  </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_fill_discrete</a></span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#155f49"</span>,<span class="st">"#66c1d1"</span>,<span class="st">"#d9d956"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"StudyID"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of assemblages in a study"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="vignette1_files/figure-html/gridding_ex3-1.png" width="672"></p>
+<p>You can also map what just happens, but this required a little more
+work to create:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## The following example is built on the demonstrations shown in</span></span>
+<span><span class="co">## https://cran.r-project.org/web/packages/dggridR/vignettes/dggridR.html.</span></span>
+<span></span>
+<span><span class="co">#First we need to construct the ~96 km2 global grid</span></span>
+<span><span class="va">dgg_12</span> <span class="op">&lt;-</span> <span class="fu">dggridR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dggridR/man/dgconstruct.html" class="external-link">dgconstruct</a></span><span class="op">(</span>res <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#To make it lighter, we only map the grid cell boundaries for cells which we </span></span>
+<span><span class="co">#have observations.  </span></span>
+<span><span class="co">#NOTE:if you are working with the full BioTIME database, this step may take some time. </span></span>
+<span><span class="va">grid_12</span> <span class="op">&lt;-</span> <span class="fu">dggridR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dggridR/man/dgcellstogrid.html" class="external-link">dgcellstogrid</a></span><span class="op">(</span><span class="va">dgg_12</span>, <span class="va">grid_samples</span><span class="op">$</span><span class="va">cell</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co">#Now let's follow the same steps and construct a ~10.7 km2 global grid:</span></span>
+<span><span class="va">dgg_14</span> <span class="op">&lt;-</span> <span class="fu">dggridR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dggridR/man/dgconstruct.html" class="external-link">dgconstruct</a></span><span class="op">(</span>res <span class="op">=</span> <span class="fl">14</span><span class="op">)</span></span>
+<span><span class="va">grid_14</span> <span class="op">&lt;-</span> <span class="fu">dggridR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dggridR/man/dgcellstogrid.html" class="external-link">dgcellstogrid</a></span><span class="op">(</span><span class="va">dgg_14</span>, <span class="va">grid_samples_14</span><span class="op">$</span><span class="va">cell</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co">#Finally we get some background polygons for each country of the world</span></span>
+<span><span class="va">countries</span> <span class="op">&lt;-</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/map_data.html" class="external-link">map_data</a></span><span class="op">(</span><span class="st">"world"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#Now you can map the all world, but let's just zoom in in the UK and have a look at </span></span>
+<span><span class="co">#STUDY 466 (Marine Fish):</span></span>
+<span><span class="va">map_uk_locations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_polygon.html" class="external-link">geom_polygon</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">countries</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, group <span class="op">=</span> <span class="va">group</span><span class="op">)</span>, fill <span class="op">=</span> <span class="cn">NA</span>, color <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">grid_12</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/alpha.html" class="external-link">alpha</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">coord_sf</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">20</span>, <span class="fl">10</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_rect</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="op">-</span><span class="fl">11</span>, xmax <span class="op">=</span> <span class="op">-</span><span class="fl">0.7</span>, ymin <span class="op">=</span> <span class="fl">57.2</span>, ymax <span class="op">=</span> <span class="fl">59</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"red"</span>, fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="cn">NULL</span>, y <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">zoom_in_map</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_polygon.html" class="external-link">geom_polygon</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">countries</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, group <span class="op">=</span> <span class="va">group</span><span class="op">)</span>, fill <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>               color <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">grid_12</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/alpha.html" class="external-link">alpha</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">grid_14</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/alpha.html" class="external-link">alpha</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">coord_sf</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">11</span>, <span class="op">-</span><span class="fl">0.7</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">57.2</span>, <span class="fl">59</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.newpage.html" class="external-link">grid.newpage</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">main</span> <span class="op">&lt;-</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/viewport.html" class="external-link">viewport</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1</span>, height <span class="op">=</span> <span class="fl">1</span>, x <span class="op">=</span> <span class="fl">0.5</span>, y <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>  <span class="co"># the main map</span></span>
+<span><span class="va">inset</span> <span class="op">&lt;-</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/viewport.html" class="external-link">viewport</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.4</span>, height <span class="op">=</span> <span class="fl">0.4</span>, x <span class="op">=</span> <span class="fl">0.82</span>, y <span class="op">=</span> <span class="fl">0.45</span><span class="op">)</span>  <span class="co"># the inset in bottom left</span></span>
+<span></span>
+<span><span class="co">#The resulting distribution of different size cells appears as follows:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">zoom_in_map</span>, vp <span class="op">=</span> <span class="va">main</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">map_uk_locations</span>, vp <span class="op">=</span> <span class="va">inset</span><span class="op">)</span></span></code></pre></div>
+<p><img src="vignette1_files/figure-html/gridding_map-1.png" width="672">
+Do you see why reflecting on your <code>res</code> may the important? -
+You can see that the higher the resolution you set the higher is the
+number of cells in which samples get divided. However there is also the
+risk of the resulting assemblages time-series becoming too small to have
+any ecological meaning. A good rule of thumb is to never set
+<code>res</code> higher than the resolution you get when
+<code>resByData = TRUE</code>.</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="why-rarefaction-is-a-must">Why rarefaction is a must!<a class="anchor" aria-label="anchor" href="#why-rarefaction-is-a-must"></a>
+</h3>
+<p>Now we will deal with another common issue when working with
+time-series data, the fact that the number of locations sampled through
+time may vary across time. A rather common phenomenon in BioTIME studies
+as well. Why this may be a problem you ask? - Well when looking at
+changes through time it’s important to be able to quantify change
+independently of the number of samples e.g. alpha diversity has truly
+increased and is not a sampling artifact resulting from expanding my
+original sampling of 3 plots to 5 plots in latest years.</p>
+<p>Probably the most common and widely used approach to prevents
+temporal variation in sampling effort from affecting your diversity
+estimate is to apply sample-based rarefaction. Here (add link) is a
+great introduction to it. In this package we provide the
+<code><a href="../reference/resampling.html">resampling()</a></code> function that does this for you, already
+adapted to BioTIME data and design to run smoothly over a previously
+gridded dataset. Let’s continue with our BioTIME example dataset:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#First if you are working with a BioTIME subset and are not sure you need this step, </span></span>
+<span><span class="co">#you can always check:</span></span>
+<span><span class="va">check4</span> <span class="op">&lt;-</span> <span class="va">grid_samples</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">assemblageID</span>, <span class="va">YEAR</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>n_samples <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">SAMPLE_DESC</span><span class="op">)</span>, n_species <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">check4</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
-<th align="right">YEAR</th>
-<th align="left">Species</th>
-<th align="right">Abundance</th>
+<th align="right">STUDY_ID</th>
 <th align="left">assemblageID</th>
-<th align="left">STUDY_ID</th>
-<th align="left">cell</th>
+<th align="right">YEAR</th>
+<th align="right">n_samples</th>
+<th align="right">n_species</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="right">1984</td>
-<td align="left">Acer rubrum</td>
-<td align="right">378</td>
+<td align="right">10</td>
 <td align="left">10_359170</td>
-<td align="left">10</td>
-<td align="left">359170</td>
+<td align="right">1984</td>
+<td align="right">164</td>
+<td align="right">22</td>
 </tr>
 <tr class="even">
-<td align="right">1992</td>
-<td align="left">Acer rubrum</td>
-<td align="right">231</td>
+<td align="right">10</td>
 <td align="left">10_359170</td>
-<td align="left">10</td>
-<td align="left">359170</td>
+<td align="right">1992</td>
+<td align="right">163</td>
+<td align="right">20</td>
 </tr>
 <tr class="odd">
-<td align="right">1996</td>
-<td align="left">Acer rubrum</td>
-<td align="right">134</td>
+<td align="right">10</td>
 <td align="left">10_359170</td>
-<td align="left">10</td>
-<td align="left">359170</td>
+<td align="right">1996</td>
+<td align="right">107</td>
+<td align="right">20</td>
 </tr>
 <tr class="even">
-<td align="right">1984</td>
-<td align="left">Acer saccharum</td>
-<td align="right">1920</td>
-<td align="left">10_359170</td>
-<td align="left">10</td>
-<td align="left">359170</td>
+<td align="right">18</td>
+<td align="left">18_335699</td>
+<td align="right">1923</td>
+<td align="right">4</td>
+<td align="right">26</td>
 </tr>
 <tr class="odd">
-<td align="right">1992</td>
-<td align="left">Acer saccharum</td>
-<td align="right">590</td>
-<td align="left">10_359170</td>
-<td align="left">10</td>
-<td align="left">359170</td>
+<td align="right">18</td>
+<td align="left">18_335699</td>
+<td align="right">1926</td>
+<td align="right">4</td>
+<td align="right">27</td>
 </tr>
 <tr class="even">
-<td align="right">1996</td>
-<td align="left">Acer saccharum</td>
-<td align="right">797</td>
-<td align="left">10_359170</td>
-<td align="left">10</td>
-<td align="left">359170</td>
+<td align="right">18</td>
+<td align="left">18_335699</td>
+<td align="right">1927</td>
+<td align="right">3</td>
+<td align="right">21</td>
+</tr>
+<tr class="odd">
+<td align="right">18</td>
+<td align="left">18_335699</td>
+<td align="right">1929</td>
+<td align="right">4</td>
+<td align="right">27</td>
+</tr>
+<tr class="even">
+<td align="right">18</td>
+<td align="left">18_335699</td>
+<td align="right">1930</td>
+<td align="right">16</td>
+<td align="right">34</td>
+</tr>
+<tr class="odd">
+<td align="right">18</td>
+<td align="left">18_335699</td>
+<td align="right">1931</td>
+<td align="right">16</td>
+<td align="right">30</td>
+</tr>
+<tr class="even">
+<td align="right">18</td>
+<td align="left">18_335699</td>
+<td align="right">1932</td>
+<td align="right">26</td>
+<td align="right">45</td>
 </tr>
 </tbody>
 </table>
+<p>Look at the <code>n_samples</code> column and you can already see for
+the few assemblages in this list that there are noted differences in the
+sampling effort (i.e. number of samples) trough time - There is no doubt
+here that we need to carry on and standardize for sampling effort:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getAlphaMetrics.html">getAlphaMetrics</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">assemblageID</span>, ab <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co">#let's apply it then:</span></span>
+<span><span class="va">grid_rare</span><span class="op">&lt;-</span> <span class="fu"><a href="../reference/resampling.html">resampling</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">grid_samples</span>, measure <span class="op">=</span><span class="st">"ABUNDANCE"</span>,</span>
+<span>                       resamps <span class="op">=</span> <span class="fl">1L</span>, conservative <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p>The function returns a single long form data frame containing the
+total currency of interest (sum) for each species in each year within an
+assemblage time-series. You can decide what your currency field is:
+Abundance, Biomass or both; but note that the above function also tests
+and removes any <code>NAs</code> within any picked currency field(s)
+before any resampling. So if you choose, for instance, to keep both
+currency fields of BioTIME, only observations (when
+<code>conservative = FALSE</code>) or full sampling events (when
+<code>conservative = TRUE</code>) in which BOTH Abundance and Biomass
+were recorded are retain and a warning is issued as follows:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Keep only observations with both abundance and biomass</span></span>
+<span><span class="va">grid_rare_ab</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/resampling.html">resampling</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">grid_samples</span>, measure <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABUNDANCE"</span>, <span class="st">"BIOMASS"</span><span class="op">)</span>,</span>
+<span>    resamps <span class="op">=</span> <span class="fl">1L</span>, conservative <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning in resampling(x = grid_samples, measure = c("ABUNDANCE", "BIOMASS"), : NA values found and removed.</span></span>
+<span><span class="co">## Only a subset of `x` is used.</span></span></code></pre>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Keep only sampling events where all observations within had both abundance</span></span>
+<span><span class="co"># and biomass to start with</span></span>
+<span><span class="va">grid_rare_abT</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/resampling.html">resampling</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">grid_samples</span>, measure <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABUNDANCE"</span>, <span class="st">"BIOMASS"</span><span class="op">)</span>,</span>
+<span>    resamps <span class="op">=</span> <span class="fl">1L</span>, conservative <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning in resampling(x = grid_samples, measure = c("ABUNDANCE", "BIOMASS"), : NA values found and whole samples removed since `conservative` is TRUE.</span></span>
+<span><span class="co">## Only a subset of `x` is used.</span></span></code></pre>
+<div class="section level4">
+<h4 id="what-use-do-i-have-for-the-resamps-field">
+<strong>What use do I have for the <code>resamps</code>
+field?</strong><a class="anchor" aria-label="anchor" href="#what-use-do-i-have-for-the-resamps-field"></a>
+</h4>
+<p>First of all let’s remember that sample-based rarefaction involves
+randomly selecting for each sampling year a specified number of samples
+(i.e. sampling events) that are equal to the number of samples in the
+year with the lowest sampling effort. If the sampling effort through
+time was equal or relatively stable then you probably don’t need to
+concern yourself any further; however for some assemblage time-series in
+BioTIME the sample-based rarefaction process could lead to a different
+species composition. To help exemplify this point across, let’s pick one
+of those assemblage time-series from the list and plot the number of
+samples recorded in each year:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#what's the number of samples in the year with the lowest sampling effort?</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">check4</span><span class="op">[</span><span class="va">check4</span><span class="op">$</span><span class="va">assemblageID</span> <span class="op">==</span> <span class="st">"18_335699"</span>,<span class="op">]</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">n_samples</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">n_samples</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"red"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1926</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">n_samples</span><span class="op">)</span> <span class="op">+</span> <span class="fl">3</span>,</span>
+<span>                   xend <span class="op">=</span> <span class="fl">1927</span>, yend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">n_samples</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>               arrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/arrow.html" class="external-link">arrow</a></span><span class="op">(</span>length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="st">"cm"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Year"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of samples"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning in geom_segment(aes(x = 1926, y = min(n_samples) + 3, xend = 1927, : All aesthetics have length 1, but the data has 29 rows.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Did you mean to use `annotate()`?</span></span></code></pre>
+<p><img src="vignette1_files/figure-html/resampling_ex3-1.png" width="672"></p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#In this case, that will be 3, as 3 is the number of samples found in the year 1927 (arrow),</span></span>
+<span><span class="co">#the year with the lowest sampling effort</span></span></code></pre></div>
+<p>In this particular case, and if nothing more is done to treat the
+data, what <code><a href="../reference/resampling.html">resampling()</a></code> function will do is to randomly
+pick and retain only 3 samples from each year of this assemblage
+time-series. Now you can see in the above plot that we have years with
+more than 20 sampling events recorded; so if you run the function a
+second time it’s likely that the sample-based rarefaction process will
+pick a different combination of 3 sampling events (with the exception of
+year 1927), which may or may not differ in their species
+compositions.</p>
+<p>An option is to repeat this process multiple times, effectively
+creating multiple alternative datasets that can be used in your
+subsequent sensitivity analysis:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#Let's resample out dataset 10 times.</span></span>
+<span><span class="va">grid_rare_n10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/resampling.html">resampling</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">grid_samples</span>, measure <span class="op">=</span> <span class="st">"ABUNDANCE"</span>, resamps <span class="op">=</span> <span class="fl">10L</span>,</span>
+<span>                            conservative <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">kable</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">alpha</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#Note if you are running this checks you may want to resample at least 30-100+ times, </span></span>
+<span><span class="co">#depending on how many iterations you want your bootstrap analysis down the line to have. </span></span>
+<span><span class="co">#This may also take some computation time, so if you are working with a big subset of BioTIME </span></span>
+<span><span class="co">#is advisable to break it down in smaller subsets.</span></span>
+<span></span>
+<span><span class="co">#Let's have a quickly check if there are big differences across 3 of this iterations: </span></span>
+<span><span class="va">check5</span> <span class="op">&lt;-</span> <span class="va">grid_rare_n10</span><span class="op">[</span><span class="va">grid_rare_n10</span><span class="op">$</span><span class="va">resamp</span> <span class="op">&lt;</span> <span class="fl">4</span>,<span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">assemblageID</span>, <span class="va">resamp</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>n_obs <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, n_species <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span>, n_year <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">YEAR</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">check5</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="right">STUDY_ID</th>
+<th align="left">assemblageID</th>
+<th align="right">resamp</th>
+<th align="right">n_obs</th>
+<th align="right">n_species</th>
+<th align="right">n_year</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">10</td>
+<td align="left">10_359170</td>
+<td align="right">1</td>
+<td align="right">54</td>
+<td align="right">23</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="right">10</td>
+<td align="left">10_359170</td>
+<td align="right">2</td>
+<td align="right">59</td>
+<td align="right">24</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="right">10</td>
+<td align="left">10_359170</td>
+<td align="right">3</td>
+<td align="right">59</td>
+<td align="right">23</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="right">18</td>
+<td align="left">18_335699</td>
+<td align="right">1</td>
+<td align="right">730</td>
+<td align="right">75</td>
+<td align="right">29</td>
+</tr>
+<tr class="odd">
+<td align="right">18</td>
+<td align="left">18_335699</td>
+<td align="right">2</td>
+<td align="right">716</td>
+<td align="right">80</td>
+<td align="right">29</td>
+</tr>
+<tr class="even">
+<td align="right">18</td>
+<td align="left">18_335699</td>
+<td align="right">3</td>
+<td align="right">729</td>
+<td align="right">72</td>
+<td align="right">29</td>
+</tr>
+<tr class="odd">
+<td align="right">41</td>
+<td align="left">41_453357</td>
+<td align="right">1</td>
+<td align="right">418</td>
+<td align="right">56</td>
+<td align="right">10</td>
+</tr>
+<tr class="even">
+<td align="right">41</td>
+<td align="left">41_453357</td>
+<td align="right">2</td>
+<td align="right">418</td>
+<td align="right">56</td>
+<td align="right">10</td>
+</tr>
+<tr class="odd">
+<td align="right">41</td>
+<td align="left">41_453357</td>
+<td align="right">3</td>
+<td align="right">418</td>
+<td align="right">56</td>
+<td align="right">10</td>
+</tr>
+<tr class="even">
+<td align="right">53</td>
+<td align="left">53_394335</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">5</td>
+<td align="right">10</td>
+</tr>
+</tbody>
+</table>
+<p>Since sampling events within a study are retrieved with a consistent
+methodology and observational effort, we don’t expect to see big
+differences between picking some sampling events over others, however
+it’s still a advisable check to do. The example above also highlights
+the fact that during this process (standardise the number of samples per
+year within each time-series) we may end up discarding quite a bit of
+data. Additional steps, such as removing low sampling years, before
+applying the <code><a href="../reference/resampling.html">resampling()</a></code> function may minimize this
+effect.</p>
+<p><strong>Your data is now ready!</strong> - You can stop here and go
+do your own thing (the world is your oyster!)…or you can follow the next
+steps and learn how to use the BioTIMEr package to estimate a few
+standard diversity metrics, as well as some hints on how to quantify and
+visualize temporal biodiversity change for a given BioTIME dataset.</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="calculate-diversity-estimates">Calculate diversity estimates<a class="anchor" aria-label="anchor" href="#calculate-diversity-estimates"></a>
+</h3>
+<p>Now the following functions are pretty straightforward. For each year
+within each assemblage time-series in you BioTIME data set you can use
+the <code><a href="../reference/getAlphaMetrics.html">getAlphaMetrics()</a></code> and <code><a href="../reference/getBetaMetrics.html">getBetaMetrics()</a></code>
+functions to estimate a set of common alpha and beta diversity metrics.
+Lets apply it to our now processed BioTIME example dataset:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Get alpha metrics estimates:</span></span>
+<span><span class="va">alpha_metrics</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getAlphaMetrics.html">getAlphaMetrics</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">grid_rare</span>, measure <span class="op">=</span> <span class="st">"ABUNDANCE"</span><span class="op">)</span></span>
+<span><span class="co">#see also help("getAlphaMetrics") for more details on the metrics</span></span>
+<span></span>
+<span><span class="co">#Have a quick look at the output</span></span>
+<span><span class="va">alpha_metrics</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
 <col width="14%">
@@ -363,86 +728,89 @@ the user wishes to examine “alpha” or “beta” results.</p>
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="right">21</td>
-<td align="right">3085</td>
-<td align="right">1920</td>
-<td align="right">1.402078</td>
-<td align="right">0.5826394</td>
-<td align="right">2.396009</td>
-<td align="right">0.5828283</td>
-<td align="right">0.7448947</td>
-<td align="right">4.063637</td>
+<td align="right">2861</td>
+<td align="right">1641</td>
+<td align="right">1.509634</td>
+<td align="right">0.6329829</td>
+<td align="right">2.724668</td>
+<td align="right">0.6332042</td>
+<td align="right">0.7015030</td>
+<td align="right">4.525076</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="right">1992</td>
-<td align="right">20</td>
-<td align="right">1519</td>
-<td align="right">590</td>
-<td align="right">1.803001</td>
-<td align="right">0.7664418</td>
-<td align="right">4.281589</td>
-<td align="right">0.7669467</td>
-<td align="right">0.5905201</td>
-<td align="right">6.067827</td>
+<td align="right">19</td>
+<td align="right">1647</td>
+<td align="right">836</td>
+<td align="right">1.591979</td>
+<td align="right">0.6881832</td>
+<td align="right">3.207012</td>
+<td align="right">0.6886013</td>
+<td align="right">0.6769885</td>
+<td align="right">4.913463</td>
 </tr>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="right">1996</td>
-<td align="right">17</td>
-<td align="right">1443</td>
-<td align="right">797</td>
-<td align="right">1.542453</td>
-<td align="right">0.6539295</td>
-<td align="right">2.889584</td>
-<td align="right">0.6543830</td>
-<td align="right">0.7110187</td>
-<td align="right">4.676047</td>
+<td align="right">19</td>
+<td align="right">1525</td>
+<td align="right">830</td>
+<td align="right">1.595116</td>
+<td align="right">0.6648312</td>
+<td align="right">2.983571</td>
+<td align="right">0.6652674</td>
+<td align="right">0.6721311</td>
+<td align="right">4.928900</td>
+</tr>
+<tr class="even">
+<td align="left">18_335699</td>
+<td align="right">1945</td>
+<td align="right">33</td>
+<td align="right">1093</td>
+<td align="right">267</td>
+<td align="right">2.498175</td>
+<td align="right">0.8723968</td>
+<td align="right">7.836796</td>
+<td align="right">0.8731957</td>
+<td align="right">0.4428179</td>
+<td align="right">12.160279</td>
+</tr>
+<tr class="odd">
+<td align="left">18_335699</td>
+<td align="right">1932</td>
+<td align="right">23</td>
+<td align="right">360</td>
+<td align="right">83</td>
+<td align="right">2.445823</td>
+<td align="right">0.8695062</td>
+<td align="right">7.663198</td>
+<td align="right">0.8719282</td>
+<td align="right">0.4500000</td>
+<td align="right">11.540041</td>
 </tr>
 <tr class="even">
 <td align="left">18_335699</td>
 <td align="right">1933</td>
-<td align="right">35</td>
-<td align="right">744</td>
-<td align="right">172</td>
-<td align="right">2.468741</td>
-<td align="right">0.8683374</td>
-<td align="right">7.595170</td>
-<td align="right">0.8695061</td>
-<td align="right">0.4247312</td>
-<td align="right">11.807571</td>
-</tr>
-<tr class="odd">
-<td align="left">18_335699</td>
-<td align="right">1934</td>
-<td align="right">27</td>
-<td align="right">433</td>
-<td align="right">193</td>
-<td align="right">2.223263</td>
-<td align="right">0.7764402</td>
-<td align="right">4.473077</td>
-<td align="right">0.7782375</td>
-<td align="right">0.5219400</td>
-<td align="right">9.237421</td>
-</tr>
-<tr class="even">
-<td align="left">18_335699</td>
-<td align="right">1937</td>
-<td align="right">27</td>
-<td align="right">645</td>
-<td align="right">179</td>
-<td align="right">2.541143</td>
-<td align="right">0.8775963</td>
-<td align="right">8.169688</td>
-<td align="right">0.8789590</td>
-<td align="right">0.3937984</td>
-<td align="right">12.694167</td>
+<td align="right">24</td>
+<td align="right">356</td>
+<td align="right">90</td>
+<td align="right">2.428954</td>
+<td align="right">0.8707550</td>
+<td align="right">7.737241</td>
+<td align="right">0.8732078</td>
+<td align="right">0.4044944</td>
+<td align="right">11.347007</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBetaMetrics.html">getBetaMetrics</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">assemblageID</span>, ab <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Get beta metrics estimates:</span></span>
+<span><span class="va">beta_metrics</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBetaMetrics.html">getBetaMetrics</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">grid_rare</span>, measure <span class="op">=</span> <span class="st">"ABUNDANCE"</span><span class="op">)</span></span>
+<span><span class="co">#see also help("getBetaMetrics") for more details on the metrics</span></span>
 <span></span>
-<span><span class="fu">kable</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">beta</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#Have a quick look at the output</span></span>
+<span><span class="va">beta_metrics</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">YEAR</th>
@@ -455,81 +823,311 @@ the user wishes to examine “alpha” or “beta” results.</p>
 <tr class="odd">
 <td align="right">1984</td>
 <td align="left">10_359170</td>
-<td align="right">0.1363636</td>
-<td align="right">0.1093979</td>
-<td align="right">0.3622937</td>
+<td align="right">0.1818182</td>
+<td align="right">0.0108271</td>
+<td align="right">0.2803904</td>
 </tr>
 <tr class="even">
 <td align="right">1992</td>
 <td align="left">10_359170</td>
-<td align="right">0.4166667</td>
-<td align="right">0.0164342</td>
-<td align="right">0.4037102</td>
+<td align="right">0.2608696</td>
+<td align="right">0.0104251</td>
+<td align="right">0.3556772</td>
 </tr>
 <tr class="odd">
 <td align="right">1996</td>
 <td align="left">10_359170</td>
-<td align="right">0.3913043</td>
-<td align="right">0.0726597</td>
-<td align="right">0.2316003</td>
+<td align="right">0.2727273</td>
+<td align="right">0.0173989</td>
+<td align="right">0.1179067</td>
+</tr>
+<tr class="even">
+<td align="right">1945</td>
+<td align="left">18_335699</td>
+<td align="right">0.6666667</td>
+<td align="right">0.4346765</td>
+<td align="right">0.6875430</td>
+</tr>
+<tr class="odd">
+<td align="right">1932</td>
+<td align="left">18_335699</td>
+<td align="right">0.5750000</td>
+<td align="right">0.2608290</td>
+<td align="right">0.6052450</td>
 </tr>
 <tr class="even">
 <td align="right">1933</td>
 <td align="left">18_335699</td>
-<td align="right">0.5238095</td>
-<td align="right">0.3655996</td>
-<td align="right">0.4936279</td>
-</tr>
-<tr class="odd">
-<td align="right">1934</td>
-<td align="left">18_335699</td>
-<td align="right">0.4102564</td>
-<td align="right">0.3047485</td>
-<td align="right">0.4571634</td>
-</tr>
-<tr class="even">
-<td align="right">1937</td>
-<td align="left">18_335699</td>
-<td align="right">0.4782609</td>
-<td align="right">0.3104601</td>
-<td align="right">0.5499474</td>
+<td align="right">0.4772727</td>
+<td align="right">0.3467452</td>
+<td align="right">0.4960541</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">alSl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getLinearRegressions.html">getLinearRegressions</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">alpha</span>, divType <span class="op">=</span> <span class="st">"alpha"</span><span class="op">)</span></span>
+<p>There are many metrics for measuring biodiversity in community
+ecology. We cannot possible cover them all here, so instead we focus on
+the more commonly applied metrics used when measuring temporal changes
+in biodiversity. In total the functions give estimates for nine alpha
+diversity metrics: Species richness (<code>S</code>), numerical
+abundance (<code>N</code>), maximum numerical abundance
+(<code>maxN</code>), Shannon index, Simpson index, inverse Simpson,
+McNaughton dominance, probability of intraspecific encounter
+(<code>PIE</code>) and exponential Shannon; and/or three beta diversity
+metrics: Jaccard dissimilarity, Bray-Curtis dissimilarity and
+Morisita-Horn dissimilarity. Note that, when
+<code>measure=ABUNDANCE</code> the <code>N</code> and <code>maxN</code>
+metrics return numerical abundance whilst with
+<code>measure=BIOMASS</code> they represent biomass.</p>
+</div>
+<div class="section level3">
+<h3 id="investigating-your-trends">Investigating your trends<a class="anchor" aria-label="anchor" href="#investigating-your-trends"></a>
+</h3>
+<p>Finally, when looking to measure biodiversity change using temporal
+data, it is common to estimated temporal trends in alpha diversity and
+beta diversity by fitting a simple linear regression to your diversity
+estimates over the duration of your sampling. In this package we again
+provide a function that does this for you - the
+<code><a href="../reference/getLinearRegressions.html">getLinearRegressions()</a></code> function, already adapted to BioTIME
+data and design to run smoothly over an output of the
+<code><a href="../reference/getAlphaMetrics.html">getAlphaMetrics()</a></code> or <code><a href="../reference/getBetaMetrics.html">getBetaMetrics()</a></code>
+functions. In particular it will provide you with the results of simple
+linear regressions (slope, p-value, significance, intercept), fit
+individually to the yearly diversity estimates of each metric within
+each assemblage time-series in your dataset.</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#Let's apply it then:</span></span>
+<span><span class="va">alpha_slopes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getLinearRegressions.html">getLinearRegressions</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">alpha_metrics</span>, divType <span class="op">=</span> <span class="st">"alpha"</span>,</span>
+<span>                                     pThreshold <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span> <span class="co">#for alpha metrics</span></span>
 <span></span>
-<span><span class="va">beSl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getLinearRegressions.html">getLinearRegressions</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">beta</span>, divType <span class="op">=</span> <span class="st">"beta"</span><span class="op">)</span></span>
+<span><span class="va">beta_slopes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getLinearRegressions.html">getLinearRegressions</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">beta_metrics</span>, divType <span class="op">=</span> <span class="st">"beta"</span>,</span>
+<span>                                    pThreshold <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span>  <span class="co">#for beta metrics</span></span>
 <span></span>
-<span><span class="va">meta2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">subBTmeta</span>, <span class="va">STUDY_ID</span>, <span class="va">TAXA</span>, <span class="va">REALM</span><span class="op">)</span></span>
+<span><span class="co">#Have a quick look at the output if you want</span></span>
+<span><span class="co">#alpha_slopes %&gt;% head(6) %&gt;% kable()</span></span></code></pre></div>
+<p>Within the function you can also choose to change the default P-value
+threshold for statistical significance (i.e. the measure of the strength
+of evidence against <code>H0</code>) from 0.05 to any other preferred
+value between 0 and 1. For easy sorting and plotting, a column called
+<code>significance</code> is also provided, where 1 is given if the
+threshold is meet. Note that if you don’t want to go over the process of
+re-running the function with an alternatively <code>pThreshold</code>,
+you can always use the <code>pvalue</code> column directly to sort your
+assemblages based on a preferred P-value threshold.</p>
+<p>Have in mind that some of these data may benefit from some additional
+transformations and scaling before being used directly for modelling
+with linear models. We will not expand on this issue, but you can check
+a nice tutorial on the subject <a href="https://ourcodingclub.github.io/tutorials/data-scaling/" class="external-link">here</a>.</p>
+</div>
+<div class="section level3">
+<h3 id="summarize-and-visualise-your-trends">Summarize and visualise your trends<a class="anchor" aria-label="anchor" href="#summarize-and-visualise-your-trends"></a>
+</h3>
+<p>Now that we have quantified change through time we are ready to make
+some plots! - The next section will provide you with some examples of
+queries and data visualization, but by no means should this be taken as
+a comprehensive exploration of the results. What you could and should
+use depends on your research question.</p>
+<p>Right, let’s start will some overall stats and trends:</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># First, how many assemblages in our dataset show a moderate evidence (P &lt; 0.05) of change in alpha diversity?</span></span>
+<span><span class="va">check6</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">metric</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>   <span class="co"># or use filter(pvalue&lt;0.05)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>n_sig <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
+<span><span class="va">check6</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="left">metric</th>
+<th align="right">n_sig</th>
+<th align="right">mean(slope)</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">DomMc</td>
+<td align="right">23</td>
+<td align="right">-0.0031927</td>
+</tr>
+<tr class="even">
+<td align="left">N</td>
+<td align="right">30</td>
+<td align="right">-185.9713397</td>
+</tr>
+<tr class="odd">
+<td align="left">PIE</td>
+<td align="right">35</td>
+<td align="right">0.0096766</td>
+</tr>
+<tr class="even">
+<td align="left">S</td>
+<td align="right">33</td>
+<td align="right">-0.3803370</td>
+</tr>
+<tr class="odd">
+<td align="left">Shannon</td>
+<td align="right">36</td>
+<td align="right">0.0127252</td>
+</tr>
+<tr class="even">
+<td align="left">Simpson</td>
+<td align="right">35</td>
+<td align="right">0.0119890</td>
+</tr>
+<tr class="odd">
+<td align="left">expShannon</td>
+<td align="right">38</td>
+<td align="right">-0.0109784</td>
+</tr>
+<tr class="even">
+<td align="left">invSimpson</td>
+<td align="right">32</td>
+<td align="right">0.0102306</td>
+</tr>
+<tr class="odd">
+<td align="left">maxN</td>
+<td align="right">29</td>
+<td align="right">-137.9821388</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># From the assemblages time-series that made the cut, you can see that only a few (&lt;40)</span></span>
+<span><span class="co"># actually show a significant trend of change, independently of the metric used. This also </span></span>
+<span><span class="co"># means that in most locations alpha diversity is not really changing through time.</span></span></code></pre></div>
+<p>You can also do some summary plots, like these histograms of alpha
+diversity change:</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#Get a slope per assemblageID and metric</span></span>
+<span><span class="va">alpha_slopes_simp</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">assemblageID</span>, <span class="va">metric</span>, <span class="va">pvalue</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>   <span class="co">#select only the assemblages with significant trends</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Note: you may need to simplify your data as by default the getLinearRegressions() function </span></span>
+<span><span class="co">#returns a data frame containing the original input of yearly diversity metrics for each assemblage </span></span>
+<span><span class="co">#time-series merged with the results of a simple linear regression.</span></span>
 <span></span>
-<span><span class="va">alphaSl</span> <span class="op">&lt;-</span> <span class="va">alSl</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/separate.html" class="external-link">separate</a></span><span class="op">(</span><span class="va">assemblageID</span>,</span>
-<span>                             into <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDY_ID"</span>, <span class="st">"cell"</span><span class="op">)</span>,</span>
-<span>                             sep <span class="op">=</span> <span class="st">"_"</span>, remove <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># Calculate the mean slope and CIs</span></span>
+<span><span class="va">stats_alpha</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes_simp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">metric</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>mean_slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span>, <span class="co">#mean</span></span>
+<span>            ci_slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">qt</a></span><span class="op">(</span><span class="fl">0.95</span>, df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">slope</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co">#margin of error</span></span>
 <span></span>
-<span><span class="va">ameta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">alphaSl</span>, <span class="va">meta2</span>, by <span class="op">=</span> <span class="st">"STUDY_ID"</span><span class="op">)</span></span>
+<span><span class="co"># Let's put it all together</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">alpha_slopes_simp</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">slope</span>, fill <span class="op">=</span> <span class="va">metric</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span>bins <span class="op">=</span> <span class="fl">25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="co">#geom_density(alpha=0.5)+ #in case you what a density plot instead</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="fl">3</span>, colour <span class="op">=</span> <span class="st">"grey"</span>,linewidth <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span> <span class="co">#add slope=0 line</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">stats_alpha</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">mean_slope</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>             linewidth <span class="op">=</span> <span class="fl">0.5</span>,colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span> <span class="co">#mean</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">stats_alpha</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">mean_slope</span> <span class="op">-</span> <span class="va">ci_slope</span><span class="op">)</span>,</span>
+<span>             linetype <span class="op">=</span> <span class="fl">2</span>, linewidth <span class="op">=</span> <span class="fl">0.5</span>, colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span> <span class="co">#lower confidence interval</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">stats_alpha</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">mean_slope</span> <span class="op">+</span> <span class="va">ci_slope</span><span class="op">)</span>,</span>
+<span>             linetype <span class="op">=</span> <span class="fl">2</span>, linewidth <span class="op">=</span> <span class="fl">0.5</span>, colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span> <span class="co">#upper confidence interval</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">metric</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/BioTIME-palette.html">scale_fill_biotime</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>  <span class="co">#using the customize BioTIME colour scale. See help("scale_color_biotime") for more options.</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="co">#add slope=0 line</span></span></code></pre></div>
+<p><img src="vignette1_files/figure-html/trends3-1.png" width="691.2">
+Now the same for beta diversity change:
+<img src="vignette1_files/figure-html/trends4-1.png" width="691.2"></p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#Hint: If you wish to plot all metrics together, simply merge you alpha_slopes and </span></span>
+<span><span class="co">#beta_slopes dataframes beforehand.</span></span></code></pre></div>
+<p>That’s great! But while overall trends are nice, you may also want to
+select for a specific taxa or climate instead, and look at both sets of
+trends (i.e. significant and non-significant) together. For example,
+let’s say you want to have a look at changes in Shannon diversity for
+the two more represented taxon in our example BioTIME dataset - This is
+feasible, but we have to go back and retrieve some metadata first.</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Have a look at the meta file and retrieve any of the studies metadata you may find of interest</span></span>
+<span><span class="co">#head(subBTmeta)</span></span>
+<span><span class="va">meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">subBTmeta</span>, <span class="va">STUDY_ID</span>, <span class="va">TAXA</span>, <span class="va">REALM</span>, <span class="va">CLIMATE</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># Get a slope per assemblageID and metric</span></span>
+<span><span class="va">alpha_slopes_simp</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">assemblageID</span>, <span class="va">metric</span>,<span class="st">'pvalue'</span>, <span class="va">significance</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">betaSl</span> <span class="op">&lt;-</span> <span class="va">beSl</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/separate.html" class="external-link">separate</a></span><span class="op">(</span><span class="va">assemblageID</span>,</span>
-<span>                            into <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDY_ID"</span>, <span class="st">"cell"</span><span class="op">)</span>,</span>
-<span>                            sep <span class="op">=</span> <span class="st">"_"</span>, remove <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># Get back the Study ID by separating our assemblageID column into multiple other columns.</span></span>
+<span><span class="va">alpha_slopes_simp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">alpha_slopes_simp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>                                     <span class="fu"><a href="https://tidyr.tidyverse.org/reference/separate.html" class="external-link">separate</a></span><span class="op">(</span><span class="va">.</span>, <span class="va">assemblageID</span>, </span>
+<span>                                              into <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDY_ID"</span>, <span class="st">"cell"</span><span class="op">)</span>,</span>
+<span>                                              sep <span class="op">=</span> <span class="st">"_"</span>, remove <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#Merge it all</span></span>
+<span><span class="va">alpha_slopes_meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">alpha_slopes_simp</span>, <span class="va">meta</span>, by <span class="op">=</span> <span class="st">"STUDY_ID"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">bmeta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">betaSl</span>, <span class="va">meta2</span>, by <span class="op">=</span> <span class="st">"STUDY_ID"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/BioTIME-plots.html">plotSlopes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ameta</span>, metric <span class="op">=</span> <span class="st">"Shannon"</span>, cols <span class="op">=</span> <span class="va">bioCol</span>, taxa <span class="op">=</span> <span class="st">"Fish"</span>, method <span class="op">=</span> <span class="st">"ind"</span>,</span>
-<span>    assemblageID <span class="op">=</span> <span class="st">"10_358678"</span>, divType <span class="op">=</span> <span class="st">"alpha"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/BioTIME-plots.html">plotSlopes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ameta</span>, metric <span class="op">=</span> <span class="st">"Shannon"</span>, cols <span class="op">=</span> <span class="va">bioCol</span>, taxa <span class="op">=</span> <span class="st">"Fish"</span>, method <span class="op">=</span> <span class="st">"metric"</span>,</span>
-<span>    assemblageID <span class="op">=</span> <span class="st">"10_358678"</span>, divType <span class="op">=</span> <span class="st">"alpha"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/BioTIME-plots.html">plotSlopes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bmeta</span>, metric <span class="op">=</span> <span class="st">"JaccardDiss"</span>, cols <span class="op">=</span> <span class="va">bioCol</span>, taxa <span class="op">=</span> <span class="st">"Fish"</span>, method <span class="op">=</span> <span class="st">"ind"</span>,</span>
-<span>    assemblageID <span class="op">=</span> <span class="st">"10_358678"</span>, divType <span class="op">=</span> <span class="st">"beta"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/BioTIME-plots.html">plotSlopes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bmeta</span>, metric <span class="op">=</span> <span class="st">"JaccardDiss"</span>, cols <span class="op">=</span> <span class="va">bioCol</span>, taxa <span class="op">=</span> <span class="st">"Fish"</span>, method <span class="op">=</span> <span class="st">"taxa"</span>,</span>
-<span>    assemblageID <span class="op">=</span> <span class="st">"10_358678"</span>, divType <span class="op">=</span> <span class="st">"beta"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#select relevant data for plotting</span></span>
+<span><span class="va">alpha_slopes_set1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">alpha_slopes_meta</span>, <span class="va">alpha_slopes_meta</span><span class="op">$</span><span class="va">metric</span> <span class="op">==</span> <span class="st">"Shannon"</span> <span class="op">&amp;</span> <span class="op">(</span><span class="va">alpha_slopes_meta</span><span class="op">$</span><span class="va">TAXA</span> <span class="op">==</span> <span class="st">"Fish"</span> <span class="op">|</span> <span class="va">alpha_slopes_meta</span><span class="op">$</span><span class="va">TAXA</span> <span class="op">==</span> <span class="st">"Birds"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#Let's put it all together</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">alpha_slopes_set1</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">slope</span>, fill <span class="op">=</span> <span class="va">TAXA</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"grey"</span>, bins <span class="op">=</span> <span class="fl">25</span><span class="op">)</span> <span class="op">+</span> <span class="co">#all assemblages</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">alpha_slopes_set1</span><span class="op">[</span><span class="va">alpha_slopes_set1</span><span class="op">$</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>, bins <span class="op">=</span> <span class="fl">25</span><span class="op">)</span> <span class="op">+</span> <span class="co">#only significant change assemblages</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="fl">3</span>, colour <span class="op">=</span> <span class="st">"black"</span>, linewidth <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span> <span class="co">#add slope=0 line</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">TAXA</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/BioTIME-palette.html">scale_fill_biotime</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Shannon-Weiner Species Diversity Index"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="co">#add slope=0 line</span></span></code></pre></div>
+<p><img src="vignette1_files/figure-html/trends6-1.png" width="691.2"></p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#Now you can see the full distribution of slopes. On the background, in grey, all assemblages </span></span>
+<span><span class="co"># are shown, while in colour we only show the subset of assemblages for which</span></span>
+<span><span class="co"># moderate evidence (P &lt; 0.05) of change was detected when testing slopes against 0.</span></span></code></pre></div>
+<p>Finally, if you are only working with a few single locations you may
+be more interested in exploring their individual trends, this has the
+advantage that one can actually plot the points together with a trend
+line:</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Let's go back to the data frame with the yearly values and select our relevant data for plotting</span></span>
+<span><span class="va">alpha_slopes_set2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">alpha_slopes</span>, <span class="va">assemblageID</span> <span class="op">==</span> <span class="st">"18_335699"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># get assemblage ID</span></span>
+<span><span class="va">name_assemblage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">alpha_slopes_set2</span><span class="op">$</span><span class="va">assemblageID</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">alpha_slopes_set2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">alpha_slopes_set2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#Let's put it all together</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">alpha_slopes_set2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">diversity</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"#155f49"</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span>   <span class="co">#plot the yearly estimates</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">stat_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, linetype <span class="op">=</span> <span class="fl">2</span>, colour <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span> <span class="op">+</span> <span class="co">#draw all regression line</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">stat_smooth</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">alpha_slopes_set2</span>, <span class="va">alpha_slopes_set2</span><span class="op">$</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>              <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">diversity</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>              linetype <span class="op">=</span> <span class="fl">2</span>, colour <span class="op">=</span> <span class="st">"#155f49"</span><span class="op">)</span> <span class="op">+</span> <span class="co">#color only trends that are significant</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">metric</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/BioTIME-palette.html">scale_fill_biotime</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="va">name_assemblage</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Diversity"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="vignette1_files/figure-html/trends8-1.png" width="691.2"></p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#Hint: If you want to draw the p-value on the plot, you can try using the ggpmisc::stat_fit_glance which takes anything passed through lm() in R and allows it to processed and printed using ggplot2.</span></span></code></pre></div>
+<p>You can see that results may vary depending on your dataset and the
+metric of change you use. It is important to remember that a
+biodiversity metric is just a tool used by ecologists to measure changes
+in biodiversity, and can show diverse abilities to detect changes under
+different scenarios. While they are complementary, they also provide
+different pieces of a complex puzzle and may strongly affect our
+interpretation of biodiversity change. Therefore, before deciding which
+metric of set of metrics you deem to be of interest in your analytical
+approach, it is crucial that you reflect which metrics respond to
+certain changes, as some may be more appropriate then others to answer
+your specific research question.</p>
+</div>
+<div class="section level3">
+<h3 id="credits-and-disclaimer">Credits and Disclaimer<a class="anchor" aria-label="anchor" href="#credits-and-disclaimer"></a>
+</h3>
+<p>This R package was developed by the BioTIME team. The functions and
+documentation was developed predominantly by Alban Sagouis, Faye Moyes
+and Inês S. Martins. For optimal use, the package should operate in the
+manner described here. Feedback is appreciated, particularly if you come
+across any bugs or will like to suggest changes, however note that
+updates will be made sporadically.</p>
+</div>
+<div class="section level3">
+<h3 id="citing-this-package">Citing this Package<a class="anchor" aria-label="anchor" href="#citing-this-package"></a>
+</h3>
+<p>Sagouis A, Moyes F, Martins IS, Blowes SA, Brambilla V, Chow CFY,
+Fontrodona-Eslava A, Chase JM, Dornelas M, Magurran AE (2024). BioTIMEr:
+tools to use and explore the BioTIME database. <a href="https://github.com/bioTIMEHub/BioTIMEr" class="external-link uri">https://github.com/bioTIMEHub/BioTIMEr</a></p>
+</div>
 </div>
   </div>
 
@@ -545,7 +1143,7 @@ the user wishes to examine “alpha” or “beta” results.</p>
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Alban Sagouis, Faye Moyes, Inês Santos Martins, Anne E. Magurran, Jonathan M. Chase, Maria Dornelas, European Research Council grant AdG BioTIME 250189, European Research Council grant PoC BioCHANGE 727440.</p>
+<p>Developed by Alban Sagouis, Faye Moyes, Inês S. Martins, Anne E. Magurran, Jonathan M. Chase, Maria Dornelas, European Research Council grant AdG BioTIME 250189, European Research Council grant PoC BioCHANGE 727440.</p>
 </div>
 
 <div class="pkgdown">
