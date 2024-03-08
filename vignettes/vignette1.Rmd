@@ -72,7 +72,7 @@ Note that throughout this vignette we will use the so-called ‘pipe’ operator
 Typically, a BioTIME study contains distinct samples measured in a successive order (with a consistent methodology) for a given period of time. However the spatial distribution among samples can vary substantially depending on the nature and taxonomic resolution of the study (e.g. forest quadrants, bird transects, fish tows, etc.). Because the spatial extent varies among studies, a advisable step is to grid those studies that have large extents and multiple sites into smaller more appropriate subsets. The `gridding()` function is design to perform such task using a global grid of hexagonal cells derived from dggridR (see `vignette(‘dggridR’)`).
 
 Let's apply it to a subset of BioTIME data and see what happens:
-```{r gridding_ex, cache=TRUE, echo=TRUE, message=FALSE, tidy=TRUE, include=TRUE} 
+```{r gridding_ex, cache=TRUE, echo=TRUE, message=FALSE, tidy=FALSE, include=TRUE} 
 grid_samples<-gridding(meta = subBTmeta, btf = subBTquery, res = 12, resByData = FALSE) 
 
 # Get a look at the output
@@ -101,7 +101,7 @@ You can see that several studies are not partitioned, and that's because all the
 #### **What happens if I change `res`?**   
 By default the function separates studies into hexagonal cells of ~96 km2 (`res=12`), as this resolution was found to be the most appropriate value when working on the whole BioTIME database. Yet sometimes, particularly when working with a subset of BioTIME, you may want to explore alternative grid resolutions. The function gives you 2 options: you can either directly define a new resolution or allow the function to find the best `res` based on the average study extent of your dataset. Let's run over these alternative options with a few examples:
 
-```{r gridding_ex2, cache=TRUE, echo=TRUE, message=FALSE, tidy=TRUE, include=TRUE,results='hold'}
+```{r gridding_ex2, cache=TRUE, echo=TRUE, message=FALSE, tidy=FALSE, include=TRUE,results='hold'}
 # define a alternative resolution of 14 (~10.7 km2 cells)
 grid_samples_14<-gridding(meta = subBTmeta, btf = subBTquery, res = 14, resByData = FALSE) 
 
@@ -111,7 +111,7 @@ grid_samples_auto<-gridding(meta = subBTmeta, btf = subBTquery, res = 12, resByD
 ```
 
 So what changed with `res`?
-```{r gridding_ex3, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=TRUE, include=TRUE}
+```{r gridding_ex3, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=FALSE, include=TRUE}
 check2 <- grid_samples_14 %>% 
   group_by(StudyMethod, STUDY_ID) %>% 
   summarise(n_cell = n_distinct(cell), n_aID = n_distinct(assemblageID), res = "res14")
@@ -131,7 +131,7 @@ ggplot(data = checks) +
 ```
 
 You can also map what just happens, but this required a little more work to create:
-```{r gridding_map, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=TRUE, include=TRUE,results='hold', figures='hold'}
+```{r gridding_map, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=FALSE, include=TRUE,results='hold', figures='hold'}
 ## The following example is built on the demonstrations shown in
 ## https://cran.r-project.org/web/packages/dggridR/vignettes/dggridR.html.
 
@@ -186,7 +186,7 @@ Now we will deal with another common issue when working with time-series data, t
 
 Probably the most common and widely used approach to prevents temporal variation in sampling effort from affecting your diversity estimate is to apply sample-based rarefaction. Here (add link) is a great introduction to it. In this package we provide the `resampling()` function that does this for you, already adapted to BioTIME data and design to run smoothly over a previously gridded dataset. Let's continue with our BioTIME example dataset: 
 
-```{r resampling_ex, cache=TRUE, echo=TRUE, message=FALSE, tidy=TRUE, include=TRUE} 
+```{r resampling_ex, cache=TRUE, echo=TRUE, message=FALSE, tidy=TRUE, include=FALSE} 
 #First if you are working with a BioTIME subset and are not sure you need this step, 
 #you can always check:
 check4 <- grid_samples %>% 
@@ -198,7 +198,7 @@ check4 %>% head(10) %>% kable()
 ```
 Look at the `n_samples` column and you can already see for the few assemblages in this list that there are noted differences in the sampling effort (i.e. number of samples) trough time - There is no doubt here that we need to carry on and standardize for sampling effort:
 
-```{r resampling_ex1, cache=TRUE, echo=TRUE, message=FALSE, tidy=TRUE, include=TRUE} 
+```{r resampling_ex1, cache=TRUE, echo=TRUE, message=FALSE, tidy=TRUE, include=FALSE} 
 #let's apply it then:
 grid_rare<- resampling(x = grid_samples, measure ="ABUNDANCE",
                        resamps = 1L, conservative = FALSE)
@@ -213,7 +213,7 @@ grid_rare<- resampling(x = grid_samples, measure ="ABUNDANCE",
 
 The function returns a single long form data frame containing the total currency of interest (sum) for each species in each year within an assemblage time-series. You can decide what your currency field is: Abundance, Biomass or both; but note that the above function also tests and removes any `NAs` within any picked currency field(s) before any resampling. So if you choose, for instance, to keep both currency fields of BioTIME, only observations (when `conservative = FALSE`) or full sampling events (when `conservative = TRUE`) in which BOTH Abundance and Biomass were recorded are retain and a warning is issued as follows:
 
-```{r resampling_ex12, cache=TRUE, echo=TRUE, message=FALSE, tidy=TRUE, include=TRUE} 
+```{r resampling_ex12, cache=TRUE, echo=TRUE, message=FALSE, tidy=TRUE, include=FALSE} 
 #Keep only observations with both abundance and biomass
 grid_rare_ab <- resampling(x = grid_samples, measure = c("ABUNDANCE", "BIOMASS"),
                            resamps = 1L, conservative = FALSE)
@@ -226,7 +226,7 @@ grid_rare_abT <- resampling(x = grid_samples, measure = c("ABUNDANCE", "BIOMASS"
 #### **What use do I have for the `resamps` field?**   
 First of all let’s remember that sample-based rarefaction involves randomly selecting for each sampling year a specified number of samples (i.e. sampling events) that are equal to the number of samples in the year with the lowest sampling effort. If the sampling effort through time was equal or relatively stable then you probably don’t need to concern yourself any further; however for some assemblage time-series in BioTIME the sample-based rarefaction process could lead to a different species composition. To help exemplify this point across, let’s pick one of those assemblage time-series from the list and plot the number of samples recorded in each year:
 
-```{r resampling_ex3, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=TRUE, include=TRUE,results='hold', figures='hold'} 
+```{r resampling_ex3, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=FALSE, include=TRUE,results='hold', figures='hold'} 
 #what's the number of samples in the year with the lowest sampling effort?
 ggplot(data = check4[check4$assemblageID == "18_335699",], aes(x = YEAR, y = n_samples)) +
   geom_col(aes(x = YEAR, y = n_samples), fill = "red", alpha = 0.5) +
@@ -243,7 +243,7 @@ In this particular case, and if nothing more is done to treat the data, what `re
 
 An option is to repeat this process multiple times, effectively creating multiple alternative datasets that can be used in your subsequent sensitivity analysis:
 
-```{r resampling_ex4, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=TRUE, include=TRUE,results='hold', figures='hold'} 
+```{r resampling_ex4, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=FALSE, include=TRUE,results='hold', figures='hold'} 
 #Let's resample out dataset 10 times.
 grid_rare_n10 <- resampling(x = grid_samples, measure = "ABUNDANCE", resamps = 10L,
                             conservative = FALSE)
@@ -267,7 +267,7 @@ Since sampling events within a study are retrieved with a consistent methodology
 ### Calculate diversity estimates
 Now the following functions are pretty straightforward. For each year within each assemblage time-series in you BioTIME data set you can use the `getAlphaMetrics()` and `getBetaMetrics()` functions to estimate a set of common alpha and beta diversity metrics. Lets apply it to our now processed BioTIME example dataset:
 
-```{r metrics, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=TRUE, include=TRUE, figures='hold'} 
+```{r metrics, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=TRUE, include=FALSE, figures='hold'} 
 # Get alpha metrics estimates:
 alpha_metrics <- getAlphaMetrics(x = grid_rare, measure = "ABUNDANCE")
 #see also help("getAlphaMetrics") for more details on the metrics
@@ -305,7 +305,7 @@ There are many metrics for measuring biodiversity in community ecology. We canno
 ### Investigating your trends
 Finally, when looking to measure biodiversity change using temporal data, it is common to estimated temporal trends in alpha diversity and beta diversity by fitting a simple linear regression to your diversity estimates over the duration of your sampling. In this package we again provide a function that does this for you - the `getLinearRegressions()` function, already adapted to BioTIME data and design to run smoothly over an output of the `getAlphaMetrics()` or `getBetaMetrics()` functions. In particular it will provide you with the results of simple linear regressions (slope, p-value, significance, intercept), fit individually to the yearly diversity estimates of each metric within each assemblage time-series in your dataset.
 
-```{r trends, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=TRUE, include=TRUE,results='hold', figures='hold'} 
+```{r trends, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=FALSE, include=TRUE,results='hold', figures='hold'} 
 #Let's apply it then:
 alpha_slopes <- getLinearRegressions(x = alpha_metrics, divType = "alpha",
                                      pThreshold = 0.05) #for alpha metrics
@@ -324,7 +324,7 @@ Have in mind that some of these data may benefit from some additional transforma
 Now that we have quantified change through time we are ready to make some plots! - The next section will provide you with some examples of queries and data visualization, but by no means should this be taken as a comprehensive exploration of the results. What you could and should use depends on your research question.
 
 Right, let's start will some overall stats and trends:
-```{r trends2, cache=TRUE, echo=TRUE, message=FALSE, fig.width=10, fig.height=7,tidy=FALSE, include=TRUE} 
+```{r trends2, cache=TRUE, echo=TRUE, message=FALSE, fig.width=10, fig.height=7,tidy=FALSE, include=FALSE} 
 # First, how many assemblages in our dataset show a moderate evidence (P < 0.05) of change in alpha diversity?
 check6 <- alpha_slopes %>%
   group_by(metric) %>% 
@@ -372,7 +372,7 @@ ggplot(data = alpha_slopes_simp, aes(x = slope, fill = metric)) +
 
 ```
 Now the same for beta diversity change:
-```{r trends4, cache=TRUE, echo=FALSE, message=FALSE, fig.width=7.2, fig.height=1.9,tidy=TRUE, include=TRUE,results='hold'}
+```{r trends4, cache=TRUE, echo=FALSE, message=FALSE, fig.width=7.2, fig.height=1.9,tidy=FALSE, include=TRUE,results='hold'}
 # sort the data
 beta_slopes_simp <- beta_slopes %>% 
   group_by(assemblageID, metric, 'pvalue') %>%
@@ -401,13 +401,13 @@ ggplot(data = beta_slopes_simp, aes(x = slope, fill = metric)) +
   theme_bw() #add slope=0 line
 ```
 
-```{r trends5, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7.2, fig.height=1.9,tidy=TRUE, include=TRUE,results='hold'} 
+```{r trends5, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7.2, fig.height=1.9,tidy=FALSE, include=TRUE,results='hold'} 
 #Hint: If you wish to plot all metrics together, simply merge you alpha_slopes and 
 #beta_slopes dataframes beforehand.
 ```
 
 That's great! But while overall trends are nice, you may also want to select for a specific taxa or climate instead, and look at both sets of trends (i.e. significant and non-significant) together. For example, let's say you want to have a look at changes in Shannon diversity for the two more represented taxon in our example BioTIME dataset - This is feasible, but we have to go back and retrieve some metadata first.
-```{r trends6, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7.2, fig.height=2.2,tidy=FALSE, include=TRUE,results='hold'} 
+```{r trends6, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7.2, fig.height=2.3,tidy=FALSE, include=TRUE,results='hold'} 
 # Have a look at the meta file and retrieve any of the studies metadata you may find of interest
 #head(subBTmeta)
 meta <- select(subBTmeta, STUDY_ID, TAXA, REALM, CLIMATE)
@@ -426,12 +426,12 @@ alpha_slopes_simp <- as.data.frame(alpha_slopes_simp %>%
 alpha_slopes_meta <- merge(alpha_slopes_simp, meta, by = "STUDY_ID")
 
 #select relevant data for plotting
-alpha_slop_set <- subset(alpha_slopes_meta, alpha_slopes_meta$metric == "Shannon" & (alpha_slopes_meta$TAXA == "Fish" | alpha_slopes_meta$TAXA == "Birds"))
+alpha_slopes_set1 <- subset(alpha_slopes_meta, alpha_slopes_meta$metric == "Shannon" & (alpha_slopes_meta$TAXA == "Fish" | alpha_slopes_meta$TAXA == "Birds"))
 
 #Let's put it all together
-ggplot(data=  alpha_slop_set, aes(x = slope, fill=TAXA)) +
+ggplot(data=alpha_slopes_set1, aes(x = slope, fill=TAXA)) +
   geom_histogram(fill = "grey", bins = 25) + #all assemblages
-  geom_histogram(data = alpha_slop_set[alpha_slop_set$significance == 1, ], bins = 25) + #only significant change assemblages
+  geom_histogram(data = alpha_slopes_set1[alpha_slopes_set1$significance == 1, ], bins = 25) + #only significant change assemblages
   geom_vline(aes(xintercept = 0), linetype = 3, colour = "black", linewidth = 0.5) + #add slope=0 line
   facet_wrap(~TAXA, scales = "free") +
   scale_fill_biotime() +
@@ -449,18 +449,18 @@ ggplot(data=  alpha_slop_set, aes(x = slope, fill=TAXA)) +
 Finally, if you are only working with a few single locations you may be more interested in exploring their individual trends, this has the advantage that one can actually plot the points together with a trend line: 
 ```{r trends8, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7.2, fig.height=6,tidy=FALSE, include=TRUE,results='hold', figures='hold'} 
 #Let's go back to the dataframe with the yearly values and select our relevant data for plotting
-alpha_slopes_set <- subset(alpha_slopes, assemblageID == "18_335699")
+alpha_slopes_set2 <- subset(alpha_slopes, assemblageID == "18_335699")
 
 #get assemblage ID
-name_assemblage <- unique(alpha_slopes_set$assemblageID)
+name_assemblage <- unique(alpha_slopes_set2$assemblageID)
 
-alpha_slopes_set<-as.data.frame(alpha_slopes_set)
+alpha_slopes_set2<-as.data.frame(alpha_slopes_set2)
 
 #Let's put it all together
-ggplot(data = alpha_slopes_set, aes(x = YEAR, y = diversity)) +
+ggplot(data = alpha_slopes_set2, aes(x = YEAR, y = diversity)) +
   geom_point(colour = "#155f49", size = 1) +   #plot the yearly estimates
   stat_smooth(method = "lm", se = FALSE, linetype = 2, colour = "grey") + #draw all regression line
-  stat_smooth(data = subset(alpha_slopes_set, alpha_slopes_set$significance == 1), #color only trends that are significant
+  stat_smooth(data = subset(alpha_slopes_set2, alpha_slopes_set2$significance == 1), #color only trends that are significant
               aes(x = YEAR, y = diversity), method = "lm", se = FALSE, 
               linetype = 2, colour = "#155f49") +
   facet_wrap(~metric, scales = "free") +
@@ -470,7 +470,7 @@ ggplot(data = alpha_slopes_set, aes(x = YEAR, y = diversity)) +
 
 ```
 
-```{r trends9, cache=TRUE, echo=TRUE, message=FALSE, fig.width=10, fig.height=7,tidy=TRUE, include=FALSE,results='hold', figures='hold'} 
+```{r trends9, cache=TRUE, echo=TRUE, message=FALSE, fig.width=10, fig.height=7,tidy=FALSE, include=FALSE,results='hold', figures='hold'} 
 #Hint: If you want to draw the p-value on the plot, you can try using the ggpmisc::stat_fit_glance which takes anything passed through lm() in R and allows it to processed and printed using ggplot2.
 ```
 
@@ -482,7 +482,7 @@ You can see that results may vary depending on your dataset and the metric of ch
 This R package was developed by the BioTIME team. The functions and documentation was developed predominantly by Alban Sagouis, Faye Moyes and Inês S. Martins. For optimal use, the package should operate in the manner described here. Feedback is appreciated, particularly if you come across any bugs or will like to suggest changes, however note that updates will be made sporadically.
 
 ### Citing this Package
-```{r citation, cache=TRUE, echo=FALSE, message=FALSE, fig.width=10, fig.height=7,tidy=TRUE, include=FALSE,results='hold', figures='hold'} 
+```{r citation, cache=TRUE, echo=FALSE, message=FALSE, fig.width=10, fig.height=7,tidy=FALSE, include=FALSE,results='hold', figures='hold'} 
 citation("BioTIMEr")
 ```
 Sagouis A, Moyes F, Martins IS, Blowes SA, Brambilla V, Chow CFY, Fontrodona-Eslava A, Chase JM,
