@@ -6,7 +6,7 @@ Authors@R: c(
   person("Alban", "Sagouis", role = c("aut","cre"),
         email = "alban.sagouis@idiv.de",
         comment = c(ORCID = "0000-0002-3827-1063")),
-  person("Faye", "Moyes", role = c("aut","cph"),
+  person("Faye", "Moyes", role = "aut",
         comment = c(ORCID = "0000-0001-9687-0593")),
   person("Inês", "Santos Martins", role = "aut",
         comment = c(ORCID = "0000-0003-4328-7286")),
@@ -22,7 +22,7 @@ Authors@R: c(
         comment = c(ORCID = "0000-0002-0036-2795")),
   person("Jonathan M.", "Chase", role = "fnd",
         comment = c(ORCID = "0000-0001-5580-4303")),
-  person("Maria", "Dornelas", role = "fnd",
+  person("Maria", "Dornelas", role = c("fnd", "cph"),
         comment = c(ORCID = "0000-0003-2077-7055")),
   person("European Research Council grant AdG BioTIME 250189",
         role = "fnd"),
@@ -54,7 +54,6 @@ Suggests:
     maps,
     knitr,
     rmarkdown,
-    formatR,
     testthat (>= 3.0.0),
     vdiffr
 Config/testthat/edition: 3

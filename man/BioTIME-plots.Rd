@@ -73,3 +73,4 @@ fig1 <- ggplot2::ggplot() +
           themeBioTIME("none", 12, "black", "grey90")
 }
 }
+\keyword{internal}

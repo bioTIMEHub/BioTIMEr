@@ -1,6 +1,5 @@
 #' Plot slopes BioTIME
 #'
-#' @export
 #' @rdname BioTIME-plots
 #' @param x Parameter description
 #' @param metric Parameter description
@@ -10,6 +9,7 @@
 #' @param assemblageID Parameter description
 #' @param divType Parameter description
 #' @returns A plot
+#' @keywords internal
 #' @examples
 #' \dontrun{
 #' library(dplyr)

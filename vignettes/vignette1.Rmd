@@ -52,14 +52,14 @@ file.exists("data/subBTquery.RData")
 
 ### How to use it?
 1. Grid BioTIME data into a discrete global grid based on location (latitude/longitude) using:  
-    - `gridding()`  
+- `gridding()`  
 2. Apply sample-based rarefaction to standardize the number of samples per year within a cell-level time-series with:  
-    - `resampling()`
+- `resampling()`
 3. Calculate a set of standard alpha/beta diversity metrics using:  
-    - `getAlphaMetrics()`
-    - `getBetaMetrics()`
+- `getAlphaMetrics()`
+- `getBetaMetrics()`
 4. Fits linear regression models to step 3 outputs for use in plotting with:  
-    - `getLinearRegressions ()`
+- `getLinearRegressions ()`
 5. Visualize some results
 
 What follows is a detailed run through these different steps, breaking down some of the tasks and our reasoning behind our suggestions. 
@@ -141,7 +141,7 @@ dgg_12 <- dggridR::dgconstruct(res = 12)
 #To make it lighter, we only map the grid cell boundaries for cells which we 
 #have observations.  
 #NOTE:if you are working with the full BioTIME database, this step may take some time. 
-grid_12<- dggridR::dgcellstogrid(dgg_12,grid_samples$cell)
+grid_12 <- dggridR::dgcellstogrid(dgg_12, grid_samples$cell)
 
 
 #Now let's follow the same steps and construct a ~10.7 km2 global grid:
@@ -155,16 +155,16 @@ countries <- ggplot2::map_data("world")
 #Now you can map the all world, but let's just zoom in in the UK and have a look at 
 #STUDY 466 (Marine Fish):
 map_uk_locations <- ggplot() +
-  geom_polygon(data = countries, aes(x = long, y = lat, group = group), fill = NA, color = "grey")+
-  geom_sf(data = grid_12, aes(), color = alpha("blue", 0.4))+
-  coord_sf(xlim = c(-20, 10), ylim = c(50, 60))+
-  geom_rect(aes(xmin = -11, xmax = -0.7, ymin = 57.2, ymax = 59), colour = "red", fill = NA)+
-  labs(x = NULL, y = NULL)+
+  geom_polygon(data = countries, aes(x = long, y = lat, group = group), fill = NA, color = "grey") +
+  geom_sf(data = grid_12, aes(), color = alpha("blue", 0.4)) +
+  coord_sf(xlim = c(-20, 10), ylim = c(50, 60)) +
+  geom_rect(aes(xmin = -11, xmax = -0.7, ymin = 57.2, ymax = 59), colour = "red", fill = NA) +
+  labs(x = NULL, y = NULL) +
   theme_bw() + theme(text = element_text(size = 8))
 
-zoom_in_map<-ggplot() +
-  geom_polygon(data=countries, aes(x = long, y = lat, group = group), fill = NA,
-               color = "grey")   +
+zoom_in_map <- ggplot() +
+  geom_polygon(data = countries, aes(x = long, y = lat, group = group), fill = NA,
+               color = "grey") +
   geom_sf(data = grid_12, aes(), color = alpha("blue", 0.4)) +
   geom_sf(data = grid_14, aes(), color = alpha("red", 0.4)) +
   coord_sf(xlim = c(-11, -0.7), ylim = c(57.2, 59)) +
@@ -187,8 +187,8 @@ Now we will deal with another common issue when working with time-series data, t
 Probably the most common and widely used approach to prevents temporal variation in sampling effort from affecting your diversity estimate is to apply sample-based rarefaction. Here (add link) is a great introduction to it. In this package we provide the `resampling()` function that does this for you, already adapted to BioTIME data and design to run smoothly over a previously gridded dataset. Let's continue with our BioTIME example dataset: 
 
 ```{r resampling_ex, cache=TRUE, echo=TRUE, message=FALSE, tidy=TRUE, include=TRUE} 
-#First if you are working with a BioTIME subset and are not sure you need this step, 
-#you can always check:
+# First if you are working with a BioTIME subset and are not sure you need this step, 
+# you can always check:
 check4 <- grid_samples %>% 
   group_by(STUDY_ID, assemblageID, YEAR) %>% 
   summarise(n_samples = n_distinct(SAMPLE_DESC), n_species = n_distinct(Species))
@@ -199,9 +199,9 @@ check4 %>% head(10) %>% kable()
 Look at the `n_samples` column and you can already see for the few assemblages in this list that there are noted differences in the sampling effort (i.e. number of samples) trough time - There is no doubt here that we need to carry on and standardize for sampling effort:
 
 ```{r resampling_ex1, cache=TRUE, echo=TRUE, message=FALSE, tidy=TRUE, include=TRUE} 
-#let's apply it then:
-grid_rare<- resampling(x = grid_samples, measure ="ABUNDANCE",
-                       resamps = 1L, conservative = FALSE)
+# let's apply it then:
+grid_rare <- resampling(x = grid_samples, measure = "ABUNDANCE",
+                        resamps = 1L, conservative = FALSE)
 ```
 
 ```{r tests1, cache=TRUE, echo=TRUE, message=FALSE, tidy=TRUE, include=FALSE} 
@@ -415,13 +415,13 @@ meta <- select(subBTmeta, STUDY_ID, TAXA, REALM, CLIMATE)
 # Get a slope per assemblageID and metric
 alpha_slopes_simp <- alpha_slopes %>%
   group_by(assemblageID, metric,'pvalue', significance) %>%
-  summarise(slope=unique(slope))
+  summarise(slope = unique(slope))
 
 # Get back the Study ID by separating our assemblageID column into multiple other columns.
 alpha_slopes_simp <- as.data.frame(alpha_slopes_simp %>%
                                      separate(., assemblageID, 
                                               into = c("STUDY_ID", "cell"),
-                                              sep="_", remove = FALSE))
+                                              sep = "_", remove = FALSE))
 #Merge it all
 alpha_slopes_meta <- merge(alpha_slopes_simp, meta, by = "STUDY_ID")
 
@@ -429,7 +429,7 @@ alpha_slopes_meta <- merge(alpha_slopes_simp, meta, by = "STUDY_ID")
 alpha_slop_set <- subset(alpha_slopes_meta, alpha_slopes_meta$metric == "Shannon" & (alpha_slopes_meta$TAXA == "Fish" | alpha_slopes_meta$TAXA == "Birds"))
 
 #Let's put it all together
-ggplot(data=  alpha_slop_set, aes(x = slope, fill=TAXA)) +
+ggplot(data = alpha_slop_set, aes(x = slope, fill = TAXA)) +
   geom_histogram(fill = "grey", bins = 25) + #all assemblages
   geom_histogram(data = alpha_slop_set[alpha_slop_set$significance == 1, ], bins = 25) + #only significant change assemblages
   geom_vline(aes(xintercept = 0), linetype = 3, colour = "black", linewidth = 0.5) + #add slope=0 line
@@ -442,25 +442,25 @@ ggplot(data=  alpha_slop_set, aes(x = slope, fill=TAXA)) +
 
 ```{r trends7, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7.2, fig.height=1.9, include=TRUE,results='hold'} 
 #Now you can see the full distribution of slopes. On the background, in grey, all assemblages 
-# are shown, while in color we only show the subset of assemblages for which
+# are shown, while in colour we only show the subset of assemblages for which
 # moderate evidence (P < 0.05) of change was detected when testing slopes against 0.
 ```
 
 Finally, if you are only working with a few single locations you may be more interested in exploring their individual trends, this has the advantage that one can actually plot the points together with a trend line: 
 ```{r trends8, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7.2, fig.height=6,tidy=FALSE, include=TRUE,results='hold', figures='hold'} 
-#Let's go back to the dataframe with the yearly values and select our relevant data for plotting
+# Let's go back to the data frame with the yearly values and select our relevant data for plotting
 alpha_slopes_set <- subset(alpha_slopes, assemblageID == "18_335699")
 
-#get assemblage ID
+# get assemblage ID
 name_assemblage <- unique(alpha_slopes_set$assemblageID)
 
-alpha_slopes_set<-as.data.frame(alpha_slopes_set)
+alpha_slopes_set <- as.data.frame(alpha_slopes_set)
 
 #Let's put it all together
 ggplot(data = alpha_slopes_set, aes(x = YEAR, y = diversity)) +
   geom_point(colour = "#155f49", size = 1) +   #plot the yearly estimates
   stat_smooth(method = "lm", se = FALSE, linetype = 2, colour = "grey") + #draw all regression line
-  stat_smooth(data = subset(alpha_slopes_set, alpha_slopes_set$significance == 1), #color only trends that are significant
+  stat_smooth(data = subset(alpha_slopes_set, alpha_slopes_set$significance == 1), # colour only trends that are significant
               aes(x = YEAR, y = diversity), method = "lm", se = FALSE, 
               linetype = 2, colour = "#155f49") +
   facet_wrap(~metric, scales = "free") +

@@ -26,7 +26,7 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Faye Moyes (\href{https://orcid.org/0000-0001-9687-0593}{ORCID}) [copyright holder]
+  \item Faye Moyes (\href{https://orcid.org/0000-0001-9687-0593}{ORCID})
   \item Inês Santos Martins (\href{https://orcid.org/0000-0003-4328-7286}{ORCID})
 }
 
@@ -38,7 +38,7 @@ Other contributors:
   \item Ada Fontrodona-Eslava (\href{https://orcid.org/0000-0001-7275-7174}{ORCID}) [contributor]
   \item Anne E. Magurran (\href{https://orcid.org/0000-0002-0036-2795}{ORCID}) [funder]
   \item Jonathan M. Chase (\href{https://orcid.org/0000-0001-5580-4303}{ORCID}) [funder]
-  \item Maria Dornelas (\href{https://orcid.org/0000-0003-2077-7055}{ORCID}) [funder]
+  \item Maria Dornelas (\href{https://orcid.org/0000-0003-2077-7055}{ORCID}) [funder, copyright holder]
   \item European Research Council grant AdG BioTIME 250189 [funder]
   \item European Research Council grant PoC BioCHANGE 727440 [funder]
 }
