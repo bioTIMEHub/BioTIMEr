@@ -59,6 +59,12 @@
       "givenName": "Ada",
       "familyName": "Fontrodona-Eslava",
       "@id": "https://orcid.org/0000-0001-7275-7174"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Laura",
+      "familyName": "Antão",
+      "@id": "https://orcid.org/0000-0001-6612-9366"
     }
   ],
   "copyrightHolder": [
@@ -95,6 +101,10 @@
     {
       "@type": "Organization",
       "name": "European Research Council grant PoC BioCHANGE 727440"
+    },
+    {
+      "@type": "Organization",
+      "name": "European Research Council grant AdG MetaCHANGE 101098020"
     }
   ],
   "maintainer": [
@@ -250,7 +260,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "17952.006KB",
+  "fileSize": "17923.86KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",

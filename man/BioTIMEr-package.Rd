@@ -6,7 +6,7 @@
 \alias{BioTIMEr-package}
 \title{BioTIMEr: Tools to Use and Explore the BioTIME Database}
 \description{
-The BioTIMEr package is developed at GitHub
+The BioTIMEr package is developed in GitHub
 (https://github.com/bioTIMEHub/BioTIMEr). To see the preferable citation of
 the package, type citation("BioTIMEr"). The associated vignette includes an introduction
 to the functions, how to apply them as well as some hints on how to
@@ -26,7 +26,7 @@ Useful links:
 Authors:
 \itemize{
   \item Faye Moyes (\href{https://orcid.org/0000-0001-9687-0593}{ORCID})
-  \item Inês S. Martins (\href{https://orcid.org/0000-0003-4328-7286}{ORCID})
+  \item Inês S. Martins (\href{https://orcid.org/0000-0003-4328-7286}{ORCID}) [reviewer]
 }
 
 Other contributors:
@@ -35,11 +35,13 @@ Other contributors:
   \item Viviana Brambilla (\href{https://orcid.org/0000-0002-0560-4693}{ORCID}) [contributor]
   \item Cher F. Y. Chow (\href{https://orcid.org/0000-0002-1020-8409}{ORCID}) [contributor]
   \item Ada Fontrodona-Eslava (\href{https://orcid.org/0000-0001-7275-7174}{ORCID}) [contributor]
+  \item Laura Antão (\href{https://orcid.org/0000-0001-6612-9366}{ORCID}) [contributor, reviewer]
   \item Anne E. Magurran (\href{https://orcid.org/0000-0002-0036-2795}{ORCID}) [funder]
   \item Jonathan M. Chase (\href{https://orcid.org/0000-0001-5580-4303}{ORCID}) [funder]
   \item Maria Dornelas (\href{https://orcid.org/0000-0003-2077-7055}{ORCID}) [funder, copyright holder]
   \item European Research Council grant AdG BioTIME 250189 [funder]
   \item European Research Council grant PoC BioCHANGE 727440 [funder]
+  \item European Research Council grant AdG MetaCHANGE 101098020 [funder]
 }
 
 }

@@ -16,15 +16,16 @@ two or more column names.}
 
 \item{resamps}{(integer) number of repetitions. Default is 1.}
 
-\item{conservative}{(logical). `FALSE` by default. If `TRUE`, whenever a `NA`
+\item{conservative}{(logical). \code{FALSE} by default. If \code{TRUE},
+whenever a \code{NA}
 is found in the measure field(s), the whole sample is removed instead of the
 missing observations only.}
 }
 \value{
-Returns a single long form `data.frame` containing the total currency
+Returns a single long form \code{data.frame} containing the total currency
 or currencies of interest (sum) for each species in each year within each
-rarefied time series (`assemblageID`). An extra integer column called `resamp`
-indicates the specific iteration.
+rarefied time series (\code{assemblageID}). An extra integer column called
+\code{resamp} indicates the specific iteration.
 }
 \description{
 Takes the output of \code{\link{gridding}} and applies sample-based rarefaction to
@@ -32,21 +33,21 @@ standardise the number of samples per year within each cell-level time-series.
 }
 \details{
 Sample-based rarefaction prevents temporal variation in sampling effort from
-affecting diversity estimates (see Gotelli N.J., Colwell R.K. 2001 Quantifying biodiversity: procedures and pitfalls in the measurement and comparison of species richness. Ecology Letters 4(4), 379-391). `resampling` is a function
+affecting diversity estimates (see Gotelli N.J., Colwell R.K. 2001 Quantifying biodiversity: procedures and pitfalls in the measurement and comparison of species richness. Ecology Letters 4(4), 379-391). \code{resampling} is a function
 used to counted the number of samples taken in each year (sampling effort),
 identified the minimum number of samples, and then use this minimum to
 randomly resample each year down to that number of samples, after which
 standard biodiversity metrics (e.g. \code{\link{getAlphaMetrics}},
-\code{\link{getAlphaMetrics}} can be calculated. `measure` is a `character`
+\code{\link{getAlphaMetrics}} can be calculated. \code{measure} is a \code{character}
 input specifying the chosen currency to be retained during the sample-based
 rarefaction. Can be a single column name or a vector of two or more column
-names - e.g. `measure = c("ABUNDANCE", "BIOMASS")`.
+names - e.g. \code{measure = c("ABUNDANCE", "BIOMASS")}.
 
-By default, any observations with `NA` within the currency field(s) are
+By default, any observations with \code{NA} within the currency field(s) are
 removed. You can choose to remove the full sample where such observations are
-present by setting `conservative` to `TRUE.` `resamps` can be used to define
+present by setting \code{conservative} to \code{TRUE}. \code{resamps} can be used to define
 multiple iterations, effectively creating multiple alternative datasets.
-Note that the function always returns a single data frame, if `resamps` > 1,
+Note that the function always returns a single data frame, if \code{resamps} > 1,
 the returned data frame is the result of individual data frames
 (from each repetition) concatenated together, each identified by a numerical
 unique identifier (see value).
