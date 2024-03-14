@@ -105,6 +105,10 @@
     {
       "@type": "Organization",
       "name": "European Research Council grant AdG MetaCHANGE 101098020"
+    },
+    {
+      "@type": "Organization",
+      "name": "The Leverhulme Centre for Anthropocene Biodiversity grant RC-2018-021"
     }
   ],
   "maintainer": [
@@ -260,7 +264,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "17924.962KB",
+  "fileSize": "17925.154KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",

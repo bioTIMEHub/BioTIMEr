@@ -31,6 +31,8 @@ Authors@R: c(
   person("European Research Council grant PoC BioCHANGE 727440",
         role = "fnd"),
   person("European Research Council grant AdG MetaCHANGE 101098020",
+        role = "fnd"),
+  person("The Leverhulme Centre for Anthropocene Biodiversity grant RC-2018-021",
         role = "fnd")
 	)
 Maintainer: Alban Sagouis <alban.sagouis@idiv.de>

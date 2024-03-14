@@ -36,12 +36,13 @@ Other contributors:
   \item Cher F. Y. Chow (\href{https://orcid.org/0000-0002-1020-8409}{ORCID}) [contributor]
   \item Ada Fontrodona-Eslava (\href{https://orcid.org/0000-0001-7275-7174}{ORCID}) [contributor]
   \item Laura Antão (\href{https://orcid.org/0000-0001-6612-9366}{ORCID}) [contributor, reviewer]
-  \item Anne E. Magurran (\href{https://orcid.org/0000-0002-0036-2795}{ORCID}) [funder]
   \item Jonathan M. Chase (\href{https://orcid.org/0000-0001-5580-4303}{ORCID}) [funder]
   \item Maria Dornelas (\href{https://orcid.org/0000-0003-2077-7055}{ORCID}) [funder, copyright holder]
+  \item Anne E. Magurran (\href{https://orcid.org/0000-0002-0036-2795}{ORCID}) [funder]
   \item European Research Council grant AdG BioTIME 250189 [funder]
   \item European Research Council grant PoC BioCHANGE 727440 [funder]
   \item European Research Council grant AdG MetaCHANGE 101098020 [funder]
+  \item The Leverhulme Centre for Anthropocene Biodiversity grant RC-2018-021 [funder]
 }
 
 }
