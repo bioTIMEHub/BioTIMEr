@@ -46,7 +46,7 @@ A likely following step would be to rarefy communities to a common sampling effo
 
 ```r 
 gridding(subBTmeta, subBTquery) %>% 
-   resampling("A")
+   resampling("ABUNDANCE")
 ```
 
 ## Citation 
