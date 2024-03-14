@@ -22,6 +22,12 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
+    <loc>/reference/BTsubset_data.html</loc>
+  </url>
+  <url>
+    <loc>/reference/BTsubset_meta.html</loc>
+  </url>
+  <url>
     <loc>/reference/BioTIME-palette.html</loc>
   </url>
   <url>
@@ -56,11 +62,5 @@
   </url>
   <url>
     <loc>/reference/resampling.html</loc>
-  </url>
-  <url>
-    <loc>/reference/subBTmeta.html</loc>
-  </url>
-  <url>
-    <loc>/reference/subBTquery.html</loc>
   </url>
 </urlset>
