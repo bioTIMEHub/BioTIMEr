@@ -46,10 +46,9 @@
 #'
 #' @importFrom dplyr %>%
 #' @examples
-#' \dontrun{
 #'   library(BioTIMEr)
-#'   gridding(subBTmeta, subBTquery)
-#' }
+#'   gridded_data <- gridding(subBTmeta, subBTquery)
+#'
 
 gridding <- function(meta, btf, res = 12, resByData = FALSE) {
   checkmate::assert_names(

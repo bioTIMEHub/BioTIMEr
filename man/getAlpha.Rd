@@ -7,10 +7,10 @@
 getAlpha(x, id)
 }
 \arguments{
-\item{x}{(data.frame) First column has to be year and following columns
+\item{x}{(\code{data.frame}) First column has to be year and following columns
 contain species abundances.}
 
-\item{id}{definition of id}
+\item{id}{(\code{character})One AssemblageID}
 }
 \value{
 A data frame with results for S (species richness), N (numerical abundance),

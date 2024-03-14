@@ -77,9 +77,9 @@ getAlphaMetrics <- function(x, measure) {
 
 
 #' Alpha
-#' @param x (data.frame) First column has to be year and following columns
+#' @param x (\code{data.frame}) First column has to be year and following columns
 #' contain species abundances.
-#' @param id definition of id
+#' @param id (\code{character})One AssemblageID
 #' @keywords internal
 #' @examples
 #' \dontrun{
@@ -201,9 +201,9 @@ getBetaMetrics <- function(x, measure) {
 
 
 #' Beta
-#' @param x (\code{data.frame}) First column has to contain year values and following
-#' columns contain species abundances
-#' @param id definition of id
+#' @param x (\code{data.frame}) First column has to be year and following columns
+#' contain species abundances.
+#' @param id (\code{character})One AssemblageID
 #' @returns getBeta returns a data.frame with three beta diversity dissimilarity
 #' metrics
 #' @importFrom vegan vegdist
