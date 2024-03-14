@@ -31,14 +31,13 @@
 #' A subset of the metadata from BioTIME
 #'
 #' @format ## `BTsubset_meta`
-#' A data frame with 12 rows and 26 columns:
+#' A data frame with 12 rows and 25 columns:
 #' \describe{
 #'   \item{STUDY_ID}{BioTIME study unique identifier}
 #'   \item{REALM}{Realm of study location, i.e. Marine}
 #'   \item{CLIMATE}{Climate of study location, i.e. Temperate}
 #'   \item{HABITAT}{Habitat of study location, i.e. Rivers}
 #'   \item{PROTECTED_AREA}{binary variable indicating if the study is within a protected area}
-#'   \item{AREA}{total area of study}
 #'   \item{BIOME_MAP}{Biome of study location (taken from the WWF biomes, i.e. Temperate broadleaf and mixed forests}
 #'   \item{TAXA}{High level taxonomic identity of study species, i.e. Fish}
 #'   \item{ORGANISMS}{More detailed information on taxonomy, i.e. woody plants}
