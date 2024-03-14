@@ -86,7 +86,8 @@ two or more column names.</p></dd>
 
 
 <dt>conservative</dt>
-<dd><p>(logical). `FALSE` by default. If `TRUE`, whenever a `NA`
+<dd><p>(logical). <code>FALSE</code> by default. If <code>TRUE</code>,
+whenever a <code>NA</code>
 is found in the measure field(s), the whole sample is removed instead of the
 missing observations only.</p></dd>
 
@@ -95,28 +96,28 @@ missing observations only.</p></dd>
     <h2>Value</h2>
     
 
-<p>Returns a single long form `data.frame` containing the total currency
+<p>Returns a single long form <code>data.frame</code> containing the total currency
 or currencies of interest (sum) for each species in each year within each
-rarefied time series (`assemblageID`). An extra integer column called `resamp`
-indicates the specific iteration.</p>
+rarefied time series (<code>assemblageID</code>). An extra integer column called
+<code>resamp</code> indicates the specific iteration.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
     <p>Sample-based rarefaction prevents temporal variation in sampling effort from
-affecting diversity estimates (see Gotelli N.J., Colwell R.K. 2001 Quantifying biodiversity: procedures and pitfalls in the measurement and comparison of species richness. Ecology Letters 4(4), 379-391). `resampling` is a function
+affecting diversity estimates (see Gotelli N.J., Colwell R.K. 2001 Quantifying biodiversity: procedures and pitfalls in the measurement and comparison of species richness. Ecology Letters 4(4), 379-391). <code>resampling</code> is a function
 used to counted the number of samples taken in each year (sampling effort),
 identified the minimum number of samples, and then use this minimum to
 randomly resample each year down to that number of samples, after which
 standard biodiversity metrics (e.g. <code><a href="getAlphaMetrics.html">getAlphaMetrics</a></code>,
-<code><a href="getAlphaMetrics.html">getAlphaMetrics</a></code> can be calculated. `measure` is a `character`
+<code><a href="getAlphaMetrics.html">getAlphaMetrics</a></code> can be calculated. <code>measure</code> is a <code>character</code>
 input specifying the chosen currency to be retained during the sample-based
 rarefaction. Can be a single column name or a vector of two or more column
-names - e.g. `measure = c("ABUNDANCE", "BIOMASS")`.</p>
-<p>By default, any observations with `NA` within the currency field(s) are
+names - e.g. <code>measure = c("ABUNDANCE", "BIOMASS")</code>.</p>
+<p>By default, any observations with <code>NA</code> within the currency field(s) are
 removed. You can choose to remove the full sample where such observations are
-present by setting `conservative` to `TRUE.` `resamps` can be used to define
+present by setting <code>conservative</code> to <code>TRUE</code>. <code>resamps</code> can be used to define
 multiple iterations, effectively creating multiple alternative datasets.
-Note that the function always returns a single data frame, if `resamps` &gt; 1,
+Note that the function always returns a single data frame, if <code>resamps</code> &gt; 1,
 the returned data frame is the result of individual data frames
 (from each repetition) concatenated together, each identified by a numerical
 unique identifier (see value).</p>
@@ -143,7 +144,7 @@ unique identifier (see value).</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Alban Sagouis, Faye Moyes, Inês S. Martins, Anne E. Magurran, Jonathan M. Chase, Maria Dornelas, European Research Council grant AdG BioTIME 250189, European Research Council grant PoC BioCHANGE 727440.</p>
+  <p></p><p>Developed by Alban Sagouis, Faye Moyes, Inês S. Martins, Anne E. Magurran, Jonathan M. Chase, Maria Dornelas, European Research Council grant AdG BioTIME 250189, European Research Council grant PoC BioCHANGE 727440, European Research Council grant AdG MetaCHANGE 101098020.</p>
 </div>
 
 <div class="pkgdown">
