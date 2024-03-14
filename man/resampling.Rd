@@ -2,7 +2,7 @@
 % Please edit documentation in R/rarefyBioTIME.R
 \name{resampling}
 \alias{resampling}
-\title{Rarefy BioTIME datato an equal number of samples per year}
+\title{Rarefy BioTIME data to an equal number of samples per year}
 \usage{
 resampling(x, measure, resamps = 1L, conservative = FALSE)
 }
