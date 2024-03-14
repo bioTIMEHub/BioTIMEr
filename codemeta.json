@@ -78,12 +78,6 @@
   "funder": [
     {
       "@type": "Person",
-      "givenName": "Anne E.",
-      "familyName": "Magurran",
-      "@id": "https://orcid.org/0000-0002-0036-2795"
-    },
-    {
-      "@type": "Person",
       "givenName": "Jonathan M.",
       "familyName": "Chase",
       "@id": "https://orcid.org/0000-0001-5580-4303"
@@ -93,6 +87,12 @@
       "givenName": "Maria",
       "familyName": "Dornelas",
       "@id": "https://orcid.org/0000-0003-2077-7055"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Anne E.",
+      "familyName": "Magurran",
+      "@id": "https://orcid.org/0000-0002-0036-2795"
     },
     {
       "@type": "Organization",
@@ -260,7 +260,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "17924.94KB",
+  "fileSize": "17924.954KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
@@ -300,6 +300,11 @@
           "@type": "Person",
           "givenName": "Ada",
           "familyName": "Fontrodona-Eslava"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Laura",
+          "familyName": "Antão"
         },
         {
           "@type": "Person",
