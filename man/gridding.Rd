@@ -7,15 +7,15 @@
 gridding(meta, btf, res = 12, resByData = FALSE)
 }
 \arguments{
-\item{meta}{(data.frame) BioTIME metadata.}
+\item{meta}{(\code{data.frame}) BioTIME metadata.}
 
-\item{btf}{(data.frame) BioTIME data.}
+\item{btf}{(\code{data.frame}) BioTIME data.}
 
-\item{res}{(integer) cell resolution. Must be in the range [0,30]. Larger values
+\item{res}{(\code{integer}) cell resolution. Must be in the range [0,30]. Larger values
 represent finer resolutions. Default: 12 (~96 sq km). Passed to
 \code{\link[dggridR]{dgconstruct}}.}
 
-\item{resByData}{(logical) FALSE by default. If TRUE, the function
+\item{resByData}{(\code{logical}) FALSE by default. If TRUE, the function
 \code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt `res` to
 the data extent.}
 }
@@ -44,9 +44,9 @@ derived from \code{\link[dggridR]{dgconstruct}} and assigning the individual
 samples to the cells across the grid based on its latitude and
 longitude. Specifically, each sample is assigned
 a different combination of study ID and grid cell resulting in a unique
-identifier for each assemblage time-series within each cell
+identifier for each assemblage time series within each cell
 (assemblageID). This allows for the integrity of each study and each sample
-to be maintained, while large extent studies are split into local time-series
+to be maintained, while large extent studies are split into local time series
 at the grid cell level. By default meta represents a long form data frame
 containing the data information for BioTIME studies and \code{btf} is a data frame
 containing long form data from a main BioTIME query (see Example). \code{res}

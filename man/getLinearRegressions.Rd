@@ -11,20 +11,24 @@ getLinearRegressions(x, divType, pThreshold = 0.05)
 functions}
 
 \item{divType}{(`character`) string specifying the nature of the metrics in
-the data; only `divType = "alpha"` or `divType = "beta"` is supported}
+the data; either `divType = "alpha"` or `divType = "beta"` are supported}
 
 \item{pThreshold}{(`numeric`) P-value threshold for statistical significance}
 }
 \value{
-Returns a single long `data.frame`, with the input diversity results concatenated with results of linear regressions (slope, pvalue, significance, intercept) for each year and `assemblageID`.
+Returns a single long `data.frame` with results of linear regressions
+(slope, p-value, significance, intercept) for each `assemblageID`.
 }
 \description{
 Fits linear regression models to \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} outputs
 }
 \details{
-The function `getLinearRegressions` fits simple linear regression models (see \code{\link[stats]{lm}} for details) for a given output ('data') of either \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} function.
+The function `getLinearRegressions` fits simple linear regression models
+(see \code{\link[stats]{lm}} for details) for a given output ('data') of
+either \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} function.
 `divType` needs to be specified in agreement with x.
-The typical model has the form `metric ~ year`. Note that assemblages with less than 3 time points or/and single species time-series are removed.
+The typical model has the form `metric ~ year`. Note that assemblages with
+less than 3 time points and/or single species time series are removed.
 }
 \examples{
   x <- data.frame(

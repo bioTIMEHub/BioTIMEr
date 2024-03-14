@@ -8,7 +8,7 @@ getBetaMetrics(x, measure)
 }
 \arguments{
 \item{x}{(\code{data.frame}) BioTIME data table in the format of the output of the
-\code{\link{gridding}} function and/or \code{\link{resampling}} function.}
+\code{\link{gridding}} function and/or \code{\link{resampling}} functions.}
 
 \item{measure}{(\code{character}) chosen currency defined by a single column name.}
 }
@@ -19,9 +19,11 @@ Returns a \code{data.frame} with results for Jaccard dissimilarity (\code{Jaccar
 Calculates a set of standard beta diversity metrics
 }
 \details{
-The function getBetaMetrics computes three beta diversity metrics, for a given community data frame, where \code{measure} is a character input specifying the chosen currency field used for the calculations. \code{getBetaMetrics} calls the \code{\link[vegan]{vegdist}} function which calculates for each row the following metrics: Jaccard dissimilarity (\code{method = "jaccard"}), Morisita-Horn dissimilarity (\code{method = "horn"}) and Bray-Curtis dissimilarity (\code{method = "bray"}). Here, the dissimilarity are calculated against the baseline year of each assemblage time series i.e. first year of the time-series.
+The function getBetaMetrics computes three beta diversity metrics for a given community data frame, where \code{measure} is a character input specifying the abundance or biomass field used for the calculations. \code{getBetaMetrics} calls the \code{\link[vegan]{vegdist}} function which calculates for each row the following metrics: Jaccard dissimilarity (\code{method = "jaccard"}), Morisita-Horn dissimilarity (\code{method = "horn"}) and Bray-Curtis dissimilarity (\code{method = "bray"}). Here, the dissimilarity metrics are calculated against the baseline year of each assemblage time series i.e.
+the first year of each time series.
 Note that the input data frame needs to be in the format of the output of the
- \code{\link{gridding}} function and/or \code{\link{resampling}} function, this includes keeping to the default BioTIME column names. If such columns are not found an error is issued and all operations are halted.
+ \code{\link{gridding}} and/or \code{\link{resampling}} functions, which includes keeping the default BioTIME data column names. If such columns are not found an error is
+ issued and the computations are halted.
 }
 \examples{
 \dontrun{

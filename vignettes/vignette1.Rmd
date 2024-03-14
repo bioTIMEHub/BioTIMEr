@@ -53,7 +53,7 @@ file.exists("data/subBTquery.RData")
 ### How to use it?
 1. Grid BioTIME data into a discrete global grid based on location (latitude/longitude) using:  
     - `gridding()`  
-2. Apply sample-based rarefaction to standardize the number of samples per year within a cell-level time-series with:  
+2. Apply sample-based rarefaction to standardize the number of samples per year within a cell-level time series with:  
     - `resampling()`
 3. Calculate a set of standard alpha/beta diversity metrics using:  
     - `getAlphaMetrics()`
@@ -78,8 +78,8 @@ grid_samples<-gridding(meta = subBTmeta, btf = subBTquery, res = 12, resByData =
 # Get a look at the output
 # grid_samples %>% head() %>% kable()
 ```
-You can see that each sample is assigned a different combination of study ID and grid cell (based on its latitude and longitude) resulting in a unique identifier which determines our assemblage time-series (assemblageID). 
-Let’s take a look and see how many studies/cells/assemblages time-series are there:
+You can see that each sample is assigned a different combination of study ID and grid cell (based on its latitude and longitude) resulting in a unique identifier which determines our assemblage time series (assemblageID). 
+Let’s take a look and see how many studies/cells/assemblages time series are there:
 
 ```{r gridding_ex_plot, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=FALSE, include=TRUE} 
 check1 <- grid_samples %>% 
@@ -178,11 +178,11 @@ inset <- grid::viewport(width = 0.4, height = 0.4, x = 0.82, y = 0.45)  # the in
 print(zoom_in_map, vp = main)
 print(map_uk_locations, vp = inset)
 ```
-Do you see why reflecting on your `res` may the important? - You can see that the higher the resolution you set the higher is the number of cells in which samples get divided. However there is also the risk of the resulting assemblages time-series becoming too small to have any ecological meaning. A good rule of thumb is to never set `res` higher than the resolution you get when `resByData = TRUE`.
+Do you see why reflecting on your `res` may the important? - You can see that the higher the resolution you set the higher is the number of cells in which samples get divided. However there is also the risk of the resulting assemblages time series becoming too small to have any ecological meaning. A good rule of thumb is to never set `res` higher than the resolution you get when `resByData = TRUE`.
 
 
 ### Why rarefaction is a must!
-Now we will deal with another common issue when working with time-series data, the fact that the number of locations sampled through time may vary across time. A rather common phenomenon in BioTIME studies as well. Why this may be a problem you ask? - Well when looking at changes through time it's important to be able to quantify change independently of the number of samples e.g. alpha diversity has truly increased and is not a sampling artifact resulting from expanding my original sampling of 3 plots to 5 plots in latest years. 
+Now we will deal with another common issue when working with time series data, the fact that the number of locations sampled through time may vary across time. A rather common phenomenon in BioTIME studies as well. Why this may be a problem you ask? - Well when looking at changes through time it's important to be able to quantify change independently of the number of samples e.g. alpha diversity has truly increased and is not a sampling artifact resulting from expanding my original sampling of 3 plots to 5 plots in latest years. 
 
 Probably the most common and widely used approach to prevents temporal variation in sampling effort from affecting your diversity estimate is to apply sample-based rarefaction. Here (add link) is a great introduction to it. In this package we provide the `resampling()` function that does this for you, already adapted to BioTIME data and design to run smoothly over a previously gridded dataset. Let's continue with our BioTIME example dataset: 
 
@@ -212,7 +212,7 @@ grid_rare<- resampling(x = grid_samples, measure ="ABUNDANCE",
 # grid_rare<- resampling(x=grid_samples_test, measure ="BIOMASS", resamps = 1L, conservative = FALSE)
 ```
 
-The function returns a single long form data frame containing the total currency of interest (sum) for each species in each year within an assemblage time-series. You can decide what your currency field is: Abundance, Biomass or both; but note that the above function also tests and removes any `NAs` within any picked currency field(s) before any resampling. So if you choose, for instance, to keep both currency fields of BioTIME, only observations (when `conservative = FALSE`) or full sampling events (when `conservative = TRUE`) in which BOTH Abundance and Biomass were recorded are retain and a warning is issued as follows:
+The function returns a single long form data frame containing the total currency of interest (sum) for each species in each year within an assemblage time series. You can decide what your currency field is: Abundance, Biomass or both; but note that the above function also tests and removes any `NAs` within any picked currency field(s) before any resampling. So if you choose, for instance, to keep both currency fields of BioTIME, only observations (when `conservative = FALSE`) or full sampling events (when `conservative = TRUE`) in which BOTH Abundance and Biomass were recorded are retain and a warning is issued as follows:
 
 ```{r resampling_ex12, cache=TRUE, echo=TRUE, message=FALSE, tidy=TRUE, include=TRUE} 
 #Keep only observations with both abundance and biomass
@@ -225,7 +225,7 @@ grid_rare_abT <- resampling(x = grid_samples, measure = c("ABUNDANCE", "BIOMASS"
 ```
 
 #### **What use do I have for the `resamps` field?**   
-First of all let’s remember that sample-based rarefaction involves randomly selecting for each sampling year a specified number of samples (i.e. sampling events) that are equal to the number of samples in the year with the lowest sampling effort. If the sampling effort through time was equal or relatively stable then you probably don’t need to concern yourself any further; however for some assemblage time-series in BioTIME the sample-based rarefaction process could lead to a different species composition. To help exemplify this point across, let’s pick one of those assemblage time-series from the list and plot the number of samples recorded in each year:
+First of all let’s remember that sample-based rarefaction involves randomly selecting for each sampling year a specified number of samples (i.e. sampling events) that are equal to the number of samples in the year with the lowest sampling effort. If the sampling effort through time was equal or relatively stable then you probably don’t need to concern yourself any further; however for some assemblage time-series in BioTIME the sample-based rarefaction process could lead to a different species composition. To help exemplify this point across, let’s pick one of those assemblage time series from the list and plot the number of samples recorded in each year:
 
 ```{r resampling_ex3, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=FALSE, include=TRUE,results='hold', figures='hold'} 
 #what's the number of samples in the year with the lowest sampling effort?
@@ -240,7 +240,7 @@ ggplot(data = check4[check4$assemblageID == "18_335699",], aes(x = YEAR, y = n_s
 #In this case, that will be 3, as 3 is the number of samples found in the year 1927 (arrow),
 #the year with the lowest sampling effort
 ```
-In this particular case, and if nothing more is done to treat the data, what `resampling()` function will do is to randomly pick and retain only 3 samples from each year of this assemblage time-series. Now you can see in the above plot that we have years with more than 20 sampling events recorded; so if you run the function a second time it’s likely that the sample-based rarefaction process will pick a different combination of 3 sampling events (with the exception of year 1927), which may or may not differ in their species compositions.
+In this particular case, and if nothing more is done to treat the data, what `resampling()` function will do is to randomly pick and retain only 3 samples from each year of this assemblage time series. Now you can see in the above plot that we have years with more than 20 sampling events recorded; so if you run the function a second time it’s likely that the sample-based rarefaction process will pick a different combination of 3 sampling events (with the exception of year 1927), which may or may not differ in their species compositions.
 
 An option is to repeat this process multiple times, effectively creating multiple alternative datasets that can be used in your subsequent sensitivity analysis:
 
@@ -261,12 +261,12 @@ check5 <- grid_rare_n10[grid_rare_n10$resamp < 4,] %>%
 
 check5 %>% head(10) %>% kable()
 ```
-Since sampling events within a study are retrieved with a consistent methodology and observational effort, we don’t expect to see big differences between picking some sampling events over others, however it’s still a advisable check to do. The example above also highlights the fact that during this process (standardise the number of samples per year within each time-series) we may end up discarding quite a bit of data. Additional steps, such as removing low sampling years, before applying the `resampling()` function may minimize this effect. 
+Since sampling events within a study are retrieved with a consistent methodology and observational effort, we don’t expect to see big differences between picking some sampling events over others, however it’s still a advisable check to do. The example above also highlights the fact that during this process (standardise the number of samples per year within each time series) we may end up discarding quite a bit of data. Additional steps, such as removing low sampling years, before applying the `resampling()` function may minimize this effect. 
 
 **Your data is now ready!** - You can stop here and go do your own thing (the world is your oyster!)...or you can follow the next steps and learn how to use the BioTIMEr package to estimate a few standard diversity metrics, as well as some hints on how to quantify and visualize temporal biodiversity change for a given BioTIME dataset.
 
 ### Calculate diversity estimates
-Now the following functions are pretty straightforward. For each year within each assemblage time-series in you BioTIME data set you can use the `getAlphaMetrics()` and `getBetaMetrics()` functions to estimate a set of common alpha and beta diversity metrics. Lets apply it to our now processed BioTIME example dataset:
+Now the following functions are pretty straightforward. For each year within each assemblage time series in you BioTIME data set you can use the `getAlphaMetrics()` and `getBetaMetrics()` functions to estimate a set of common alpha and beta diversity metrics. Lets apply it to our now processed BioTIME example dataset:
 
 ```{r metrics, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=FALSE, include=TRUE, figures='hold'} 
 # Get alpha metrics estimates:
@@ -304,7 +304,7 @@ beta_metrics %>% head(6) %>% kable()
 There are many metrics for measuring biodiversity in community ecology. We cannot possible cover them all here, so instead we focus on the more commonly applied metrics used when measuring temporal changes in biodiversity. In total the functions give estimates for nine alpha diversity metrics: Species richness (`S`), numerical abundance (`N`), maximum numerical abundance (`maxN`), Shannon index, Simpson index, inverse Simpson, McNaughton dominance, probability of intraspecific encounter (`PIE`) and exponential Shannon; and/or three beta diversity metrics: Jaccard dissimilarity, Bray-Curtis dissimilarity and Morisita-Horn dissimilarity. Note that, when `measure=ABUNDANCE` the `N` and `maxN` metrics return numerical abundance whilst with `measure=BIOMASS` they represent biomass.
 
 ### Investigating your trends
-Finally, when looking to measure biodiversity change using temporal data, it is common to estimated temporal trends in alpha diversity and beta diversity by fitting a simple linear regression to your diversity estimates over the duration of your sampling. In this package we again provide a function that does this for you - the `getLinearRegressions()` function, already adapted to BioTIME data and design to run smoothly over an output of the `getAlphaMetrics()` or `getBetaMetrics()` functions. In particular it will provide you with the results of simple linear regressions (slope, p-value, significance, intercept), fit individually to the yearly diversity estimates of each metric within each assemblage time-series in your dataset.
+Finally, when looking to measure biodiversity change using temporal data, it is common to estimated temporal trends in alpha diversity and beta diversity by fitting a simple linear regression to your diversity estimates over the duration of your sampling. In this package we again provide a function that does this for you - the `getLinearRegressions()` function, already adapted to BioTIME data and design to run smoothly over an output of the `getAlphaMetrics()` or `getBetaMetrics()` functions. In particular it will provide you with the results of simple linear regressions (slope, p-value, significance, intercept), fit individually to the yearly diversity estimates of each metric within each assemblage time series in your dataset.
 
 ```{r trends, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=FALSE, include=TRUE,results='hold', figures='hold'} 
 #Let's apply it then:
@@ -334,7 +334,7 @@ check6 <- alpha_slopes %>%
 
 check6 %>% kable() 
 
-# From the assemblages time-series that made the cut, you can see that only a few (<40)
+# From the assemblages time series that made the cut, you can see that only a few (<40)
 # actually show a significant trend of change, independently of the metric used. This also 
 # means that in most locations alpha diversity is not really changing through time.
 ```
@@ -348,7 +348,7 @@ alpha_slopes_simp <- alpha_slopes %>%
   summarise(slope = unique(slope))
 # Note: you may need to simplify your data as by default the getLinearRegressions() function 
 #returns a data frame containing the original input of yearly diversity metrics for each assemblage 
-#time-series merged with the results of a simple linear regression.
+#time series merged with the results of a simple linear regression.
 
 # Calculate the mean slope and CIs
 stats_alpha <- alpha_slopes_simp %>%  

@@ -4,19 +4,19 @@
 \alias{rarefysamples}
 \title{Rarefy BioTIME data
 Applies sample-based rarefaction to standardise the number of samples per year
-   within a cell-level time-series.}
+   within a cell-level time series.}
 \usage{
 rarefysamples(x, measure, resamps)
 }
 \arguments{
-\item{x}{(data.frame) BioTIME gridded data to be resampled (in the format of
+\item{x}{(\code{data.frame}) BioTIME gridded data to be resampled (in the format of
 the output of the \code{\link{gridding}} function).}
 
-\item{measure}{(character) currency to be retained during the sample-based
+\item{measure}{(\code{character}) currency to be retained during the sample-based
 rarefaction. Can be either defined by a single column name or a vector of
 two or more column names.}
 
-\item{resamps}{(integer) number of repetitions. Default is 1.}
+\item{resamps}{(\code{integer}) number of repetitions. Default is 1.}
 }
 \value{
 Returns a single long form data frame containing the total currency
@@ -25,7 +25,7 @@ Returns a single long form data frame containing the total currency
 \description{
 Rarefy BioTIME data
 Applies sample-based rarefaction to standardise the number of samples per year
-   within a cell-level time-series.
+   within a cell-level time series.
 }
 \examples{
 \dontrun{
