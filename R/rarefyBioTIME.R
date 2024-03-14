@@ -51,7 +51,7 @@
 #' \dontrun{
 #'   library(BioTIMEr)
 #'   set.seed(42)
-#'   x <- gridding(subBTmeta, subBTquery)
+#'   x <- gridding(BTsubset_meta, BTsubset_data)
 #'   resampling(x, measure = "BIOMASS")
 #'   resampling(x, measure = "ABUNDANCE")
 #'   resampling(x, measure = c("ABUNDANCE","BIOMASS"))
@@ -126,7 +126,7 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
 #' \dontrun{
 #'   library(dplyr)
 #'   library(BioTIMEr)
-#'   x <- gridding(subBTmeta, subBTquery) %>%
+#'   x <- gridding(BTsubset_meta, BTsubset_data) %>%
 #'     filter(assemblageID == "10_358678")
 #'   rarefysamples(Year = x$YEAR, SampleID = x$SAMPLE_DESC,
 #'     Species = x$Species, currency = x$ABUNDANCE,

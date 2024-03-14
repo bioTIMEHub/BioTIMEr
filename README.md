@@ -37,15 +37,15 @@ Here using the data subset included inside the package.
 
 ```r 
 library(BioTIMEr)
-data("subBTquery.RData")
-data("subBTmeta.RData")
-gridding(subBTmeta, subBTquery)
+data("BTsubset_data.RData")
+data("BTsubset_meta.RData")
+gridding(BTsubset_meta, BTsubset_data)
 ```
 
 A likely following step would be to rarefy communities to a common sampling effort.
 
 ```r 
-gridding(subBTmeta, subBTquery) %>% 
+gridding(BTsubset_meta, BTsubset_data) %>% 
    resampling("ABUNDANCE")
 ```
 

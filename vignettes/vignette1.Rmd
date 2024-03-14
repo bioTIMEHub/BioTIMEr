@@ -34,8 +34,8 @@ loaded together with its metadata. This subset includes 12 studies from marine, 
 
 ```{r data_description, warning=FALSE, message=FALSE, eval=TRUE, include=TRUE}
 # you can run the following commands to retrieve more information about the subsets.
-?subBTmeta
-?subBTquery
+?BTsubset_meta
+?BTsubset_data
 ```
 
 ```{r package info, warning=FALSE, message=FALSE, eval=TRUE, include=TRUE}
@@ -46,8 +46,8 @@ loaded together with its metadata. This subset includes 12 studies from marine, 
 
 ```{r filename_check, include=FALSE, echo=FALSE}
 # Just checking that the file names given above in the vignette are still correct
-file.exists("data/subBTmeta.RData")
-file.exists("data/subBTquery.RData")
+file.exists("data/BTsubset_meta.RData")
+file.exists("data/BTsubset_data.RData")
 ```
 
 
@@ -74,7 +74,7 @@ Typically, a BioTIME study contains distinct samples collected with a consistent
 
 Let's apply `gridding()` to a subset of BioTIME data and see what happens:
 ```{r gridding_ex, cache=TRUE, echo=TRUE, message=FALSE, tidy=FALSE, include=TRUE} 
-grid_samples <- gridding(meta = subBTmeta, btf = subBTquery, res = 12, resByData = FALSE) 
+grid_samples <- gridding(meta = BTsubset_meta, btf = BTsubset_data, res = 12, resByData = FALSE) 
 
 # Get a look at the output
 # grid_samples %>% head() %>% kable()
@@ -107,10 +107,10 @@ By default, the function separates studies into hexagonal cells of ~96 km2 (`res
 
 ```{r gridding_ex2, cache=TRUE, echo=TRUE, message=FALSE, tidy=FALSE, include=TRUE,results='hold'}
 # define a alternative resolution of 14 (~10.7 km2 cells)
-grid_samples_14 <- gridding(meta = subBTmeta, btf = subBTquery, res = 14, resByData = FALSE) 
+grid_samples_14 <- gridding(meta = BTsubset_meta, btf = BTsubset_data, res = 14, resByData = FALSE) 
 
 # allow the spatial extent of the data to define the resolution
-grid_samples_auto <- gridding(meta = subBTmeta, btf = subBTquery, res = 12, resByData = TRUE)
+grid_samples_auto <- gridding(meta = BTsubset_meta, btf = BTsubset_data, res = 12, resByData = TRUE)
 # this option also returns a message with the automatically picked resolution:
 ```
 
@@ -431,8 +431,8 @@ ggplot(data = beta_slopes_simp, aes(x = slope, fill = metric)) +
 That's great! While overall trends are important, you may also want to evaluate the patterns for a specific taxa or climate, and look at both sets of trends (i.e. significant and non-significant) together. For example, let's say you want to have a look at changes in Shannon diversity for the two more represented taxon in our example BioTIME dataset.
 ```{r trends6, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7.2, fig.height=2.3,tidy=FALSE, include=TRUE,results='hold'} 
 # First, we need to check the meta file and retrieve the information for the studies of interest
-#head(subBTmeta)
-meta <- select(subBTmeta, STUDY_ID, TAXA, REALM, CLIMATE)
+#head(BTsubset_meta)
+meta <- select(BTsubset_meta, STUDY_ID, TAXA, REALM, CLIMATE)
 
 # Get a slope per assemblageID and metric
 alpha_slopes_simp <- alpha_slopes %>%

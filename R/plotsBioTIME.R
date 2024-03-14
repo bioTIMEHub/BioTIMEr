@@ -16,8 +16,8 @@
 #' library(tidyr)
 #' library(ggplot2)
 #'
-#' load("./data/subBTmeta.RData")
-#' meta  <-  subBTmeta
+#' load("./data/BTsubset_meta.RData")
+#' meta  <-  BTsubset_meta
 #' meta2 <- select(meta, STUDY_ID, TAXA, REALM)
 #'
 #' alphaSl <- as.data.frame(alphaSl %>% separate(., assemblageID,

@@ -31,7 +31,7 @@ Applies sample-based rarefaction to standardise the number of samples per year
 \dontrun{
   library(dplyr)
   library(BioTIMEr)
-  x <- gridding(subBTmeta, subBTquery) \%>\%
+  x <- gridding(BTsubset_meta, BTsubset_data) \%>\%
     filter(assemblageID == "10_358678")
   rarefysamples(Year = x$YEAR, SampleID = x$SAMPLE_DESC,
     Species = x$Species, currency = x$ABUNDANCE,

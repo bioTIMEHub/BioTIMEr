@@ -1,7 +1,7 @@
 # Loading data for testing resampling
-subBTmeta <- base::readRDS(testthat::test_path("testdata", "data-meta.rds"))
-subBTquery <- base::readRDS(testthat::test_path("testdata", "data-query.rds"))
-test_df <- gridding(subBTmeta, subBTquery)
+BTsubset_meta <- base::readRDS(testthat::test_path("testdata", "data-meta.rds"))
+BTsubset_data <- base::readRDS(testthat::test_path("testdata", "data-query.rds"))
+test_df <- gridding(BTsubset_meta, BTsubset_data)
 
 test_that("resampling runs correctly for Abundance", {
   expect_snapshot({

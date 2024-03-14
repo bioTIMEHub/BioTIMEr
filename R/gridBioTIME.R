@@ -47,7 +47,7 @@
 #' @importFrom dplyr %>%
 #' @examples
 #'   library(BioTIMEr)
-#'   gridded_data <- gridding(subBTmeta, subBTquery)
+#'   gridded_data <- gridding(BTsubset_meta, BTsubset_data)
 #'
 
 gridding <- function(meta, btf, res = 12, resByData = FALSE) {

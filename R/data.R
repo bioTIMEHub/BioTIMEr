@@ -2,7 +2,7 @@
 #'
 #' A subset of data from BioTIME temporal surveys.
 #'
-#' @format ## `subBTquery`
+#' @format ## `BTsubset_data`
 #' A data frame with 81,084 rows and 17 columns:
 #' \describe{
 #'   \item{ID_ALL_RAW_DATA}{Unique BioTIME identifier for record}
@@ -24,13 +24,13 @@
 #'   \item{taxon}{Higher level taxonomic grouping, i.e. Fish}
 #' }
 #' @source <https://biotime.st-andrews.ac.uk/download.php>
-"subBTquery"
+"BTsubset_data"
 
 #' BioTIME subset metadata
 #'
 #' A subset of the metadata from BioTIME
 #'
-#' @format ## `subBTmeta`
+#' @format ## `BTsubset_meta`
 #' A data frame with 12 rows and 26 columns:
 #' \describe{
 #'   \item{STUDY_ID}{BioTIME study unique identifier}
@@ -61,4 +61,4 @@
 #'   \item{SAMPLE_DESC}{concatenation of descriptors comprising the unique sampling event}
 #' }
 #' @source <https://biotime.st-andrews.ac.uk/download.php>
-"subBTmeta"
+"BTsubset_meta"

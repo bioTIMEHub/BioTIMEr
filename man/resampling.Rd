@@ -62,7 +62,7 @@ unique identifier 1:resamps.
 \dontrun{
   library(BioTIMEr)
   set.seed(42)
-  x <- gridding(subBTmeta, subBTquery)
+  x <- gridding(BTsubset_meta, BTsubset_data)
   resampling(x, measure = "BIOMASS")
   resampling(x, measure = "ABUNDANCE")
   resampling(x, measure = c("ABUNDANCE","BIOMASS"))
