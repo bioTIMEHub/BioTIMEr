@@ -134,12 +134,7 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
         tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "intercept")
 
-      d6 <- tidyr::pivot_longer(x, -c("assemblageID", "YEAR"),
-                                names_to = "metric",
-                                values_to = "diversity")
-
-      dftx <- dplyr::left_join(d6, d1, by = c("assemblageID", "metric")) %>%
-        dplyr::left_join(d2, by = c("assemblageID", "metric")) %>%
+      dftx <- dplyr::left_join(d1, d2, by = c("assemblageID", "metric")) %>%
         dplyr::left_join(d4, by = c("assemblageID", "metric")) %>%
         dplyr::left_join(d8, by = c("assemblageID", "metric")) %>%
         as.data.frame()
@@ -214,12 +209,7 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
         tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "intercept")
 
-      d6 <- tidyr::pivot_longer(x, -c("assemblageID", "YEAR"),
-                                names_to = "metric",
-                                values_to = "dissimilarity")
-
-      dftx <- dplyr::left_join(d6, d1, by = c("assemblageID", "metric")) %>%
-        dplyr::left_join(d2, by = c("assemblageID", "metric")) %>%
+      dftx <- dplyr::left_join(d1, d2, by = c("assemblageID", "metric")) %>%
         dplyr::left_join(d4, by = c("assemblageID", "metric")) %>%
         dplyr::left_join(d8, by = c("assemblageID", "metric")) %>%
         as.data.frame()

@@ -469,7 +469,7 @@ ggplot(data = alpha_slopes_set1, aes(x = slope, fill = TAXA)) +
 We might also want to explore the different trends for a given time series, allowing us to visualise the data and the trend line: 
 ```{r trends8, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7.2, fig.height=6,tidy=FALSE, include=TRUE,results='hold', figures='hold'} 
 # Let's go back to the data frame with the yearly values and select our relevant data for plotting
-alpha_slopes_set2 <- subset(alpha_slopes, assemblageID == "18_335699")
+alpha_slopes_set2 <- subset(alpha_slopes, assemblageID == "10_358678")
 
 # get assemblage ID
 name_assemblage <- unique(alpha_slopes_set2$assemblageID)

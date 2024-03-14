@@ -37,8 +37,6 @@ Here using the data subset included inside the package.
 
 ```r 
 library(BioTIMEr)
-data("BTsubset_data.RData")
-data("BTsubset_meta.RData")
 gridding(BTsubset_meta, BTsubset_data)
 ```
 
