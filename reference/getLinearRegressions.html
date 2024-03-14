@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioTIMEr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9018</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -75,7 +75,7 @@ functions</p></dd>
 
 <dt>divType</dt>
 <dd><p>(`character`) string specifying the nature of the metrics in
-the data; only `divType = "alpha"` or `divType = "beta"` is supported</p></dd>
+the data; either `divType = "alpha"` or `divType = "beta"` are supported</p></dd>
 
 
 <dt>pThreshold</dt>
@@ -86,13 +86,17 @@ the data; only `divType = "alpha"` or `divType = "beta"` is supported</p></dd>
     <h2>Value</h2>
     
 
-<p>Returns a single long `data.frame`, with the input diversity results concatenated with results of linear regressions (slope, pvalue, significance, intercept) for each year and `assemblageID`.</p>
+<p>Returns a single long `data.frame` with results of linear regressions
+(slope, p-value, significance, intercept) for each `assemblageID`.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>The function `getLinearRegressions` fits simple linear regression models (see <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></code> for details) for a given output ('data') of either <code><a href="getAlphaMetrics.html">getAlphaMetrics</a></code> or <code><a href="getBetaMetrics.html">getBetaMetrics</a></code> function.
+    <p>The function `getLinearRegressions` fits simple linear regression models
+(see <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></code> for details) for a given output ('data') of
+either <code><a href="getAlphaMetrics.html">getAlphaMetrics</a></code> or <code><a href="getBetaMetrics.html">getBetaMetrics</a></code> function.
 `divType` needs to be specified in agreement with x.
-The typical model has the form `metric ~ year`. Note that assemblages with less than 3 time points or/and single species time-series are removed.</p>
+The typical model has the form `metric ~ year`. Note that assemblages with
+less than 3 time points and/or single species time series are removed.</p>
     </div>
 
     <div id="ref-examples">

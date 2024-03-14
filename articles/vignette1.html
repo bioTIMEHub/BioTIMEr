@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioTIMEr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9018</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -127,7 +127,7 @@ database is accessible <a href="https://biotime.st-andrews.ac.uk/" class="extern
 </ul>
 </li>
 <li>Apply sample-based rarefaction to standardize the number of samples
-per year within a cell-level time-series with:
+per year within a cell-level time series with:
 <ul>
 <li><code><a href="../reference/resampling.html">resampling()</a></code></li>
 </ul>
@@ -178,9 +178,9 @@ dggridR (see <code>vignette(‘dggridR’)</code>).</p>
 <span><span class="co"># grid_samples %&gt;% head() %&gt;% kable()</span></span></code></pre></div>
 <p>You can see that each sample is assigned a different combination of
 study ID and grid cell (based on its latitude and longitude) resulting
-in a unique identifier which determines our assemblage time-series
+in a unique identifier which determines our assemblage time series
 (assemblageID). Let’s take a look and see how many
-studies/cells/assemblages time-series are there:</p>
+studies/cells/assemblages time series are there:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">check1</span> <span class="op">&lt;-</span> <span class="va">grid_samples</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">StudyMethod</span>, <span class="va">STUDY_ID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -371,7 +371,7 @@ work to create:</p>
 Do you see why reflecting on your <code>res</code> may the important? -
 You can see that the higher the resolution you set the higher is the
 number of cells in which samples get divided. However there is also the
-risk of the resulting assemblages time-series becoming too small to have
+risk of the resulting assemblages time series becoming too small to have
 any ecological meaning. A good rule of thumb is to never set
 <code>res</code> higher than the resolution you get when
 <code>resByData = TRUE</code>.</p>
@@ -380,14 +380,14 @@ any ecological meaning. A good rule of thumb is to never set
 <div class="section level3">
 <h3 id="why-rarefaction-is-a-must">Why rarefaction is a must!<a class="anchor" aria-label="anchor" href="#why-rarefaction-is-a-must"></a>
 </h3>
-<p>Now we will deal with another common issue when working with
-time-series data, the fact that the number of locations sampled through
-time may vary across time. A rather common phenomenon in BioTIME studies
-as well. Why this may be a problem you ask? - Well when looking at
-changes through time it’s important to be able to quantify change
-independently of the number of samples e.g. alpha diversity has truly
-increased and is not a sampling artifact resulting from expanding my
-original sampling of 3 plots to 5 plots in latest years.</p>
+<p>Now we will deal with another common issue when working with time
+series data, the fact that the number of locations sampled through time
+may vary across time. A rather common phenomenon in BioTIME studies as
+well. Why this may be a problem you ask? - Well when looking at changes
+through time it’s important to be able to quantify change independently
+of the number of samples e.g. alpha diversity has truly increased and is
+not a sampling artifact resulting from expanding my original sampling of
+3 plots to 5 plots in latest years.</p>
 <p>Probably the most common and widely used approach to prevents
 temporal variation in sampling effort from affecting your diversity
 estimate is to apply sample-based rarefaction. Here (add link) is a
@@ -494,7 +494,7 @@ here that we need to carry on and standardize for sampling effort:</p>
 <span>                       resamps <span class="op">=</span> <span class="fl">1L</span>, conservative <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p>The function returns a single long form data frame containing the
 total currency of interest (sum) for each species in each year within an
-assemblage time-series. You can decide what your currency field is:
+assemblage time series. You can decide what your currency field is:
 Abundance, Biomass or both; but note that the above function also tests
 and removes any <code>NAs</code> within any picked currency field(s)
 before any resampling. So if you choose, for instance, to keep both
@@ -528,7 +528,7 @@ time was equal or relatively stable then you probably don’t need to
 concern yourself any further; however for some assemblage time-series in
 BioTIME the sample-based rarefaction process could lead to a different
 species composition. To help exemplify this point across, let’s pick one
-of those assemblage time-series from the list and plot the number of
+of those assemblage time series from the list and plot the number of
 samples recorded in each year:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#what's the number of samples in the year with the lowest sampling effort?</span></span>
@@ -547,13 +547,12 @@ samples recorded in each year:</p>
 <span><span class="co">#the year with the lowest sampling effort</span></span></code></pre></div>
 <p>In this particular case, and if nothing more is done to treat the
 data, what <code><a href="../reference/resampling.html">resampling()</a></code> function will do is to randomly
-pick and retain only 3 samples from each year of this assemblage
-time-series. Now you can see in the above plot that we have years with
-more than 20 sampling events recorded; so if you run the function a
-second time it’s likely that the sample-based rarefaction process will
-pick a different combination of 3 sampling events (with the exception of
-year 1927), which may or may not differ in their species
-compositions.</p>
+pick and retain only 3 samples from each year of this assemblage time
+series. Now you can see in the above plot that we have years with more
+than 20 sampling events recorded; so if you run the function a second
+time it’s likely that the sample-based rarefaction process will pick a
+different combination of 3 sampling events (with the exception of year
+1927), which may or may not differ in their species compositions.</p>
 <p>An option is to repeat this process multiple times, effectively
 creating multiple alternative datasets that can be used in your
 subsequent sensitivity analysis:</p>
@@ -588,38 +587,38 @@ subsequent sensitivity analysis:</p>
 <td align="left">10_359170</td>
 <td align="right">1</td>
 <td align="right">56</td>
-<td align="right">22</td>
+<td align="right">23</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="right">10</td>
 <td align="left">10_359170</td>
 <td align="right">2</td>
-<td align="right">57</td>
-<td align="right">24</td>
+<td align="right">55</td>
+<td align="right">23</td>
 <td align="right">3</td>
 </tr>
 <tr class="odd">
 <td align="right">10</td>
 <td align="left">10_359170</td>
 <td align="right">3</td>
-<td align="right">56</td>
-<td align="right">23</td>
+<td align="right">58</td>
+<td align="right">24</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="right">18</td>
 <td align="left">18_335699</td>
 <td align="right">1</td>
-<td align="right">704</td>
-<td align="right">79</td>
+<td align="right">732</td>
+<td align="right">74</td>
 <td align="right">29</td>
 </tr>
 <tr class="odd">
 <td align="right">18</td>
 <td align="left">18_335699</td>
 <td align="right">2</td>
-<td align="right">728</td>
+<td align="right">691</td>
 <td align="right">74</td>
 <td align="right">29</td>
 </tr>
@@ -627,8 +626,8 @@ subsequent sensitivity analysis:</p>
 <td align="right">18</td>
 <td align="left">18_335699</td>
 <td align="right">3</td>
-<td align="right">699</td>
-<td align="right">74</td>
+<td align="right">700</td>
+<td align="right">76</td>
 <td align="right">29</td>
 </tr>
 <tr class="odd">
@@ -670,7 +669,7 @@ methodology and observational effort, we don’t expect to see big
 differences between picking some sampling events over others, however
 it’s still a advisable check to do. The example above also highlights
 the fact that during this process (standardise the number of samples per
-year within each time-series) we may end up discarding quite a bit of
+year within each time series) we may end up discarding quite a bit of
 data. Additional steps, such as removing low sampling years, before
 applying the <code><a href="../reference/resampling.html">resampling()</a></code> function may minimize this
 effect.</p>
@@ -685,7 +684,7 @@ visualize temporal biodiversity change for a given BioTIME dataset.</p>
 <h3 id="calculate-diversity-estimates">Calculate diversity estimates<a class="anchor" aria-label="anchor" href="#calculate-diversity-estimates"></a>
 </h3>
 <p>Now the following functions are pretty straightforward. For each year
-within each assemblage time-series in you BioTIME data set you can use
+within each assemblage time series in you BioTIME data set you can use
 the <code><a href="../reference/getAlphaMetrics.html">getAlphaMetrics()</a></code> and <code><a href="../reference/getBetaMetrics.html">getBetaMetrics()</a></code>
 functions to estimate a set of common alpha and beta diversity metrics.
 Lets apply it to our now processed BioTIME example dataset:</p>
@@ -728,79 +727,79 @@ Lets apply it to our now processed BioTIME example dataset:</p>
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="right">21</td>
-<td align="right">2663</td>
-<td align="right">1387</td>
-<td align="right">1.596572</td>
-<td align="right">0.6772013</td>
-<td align="right">3.097906</td>
-<td align="right">0.6774557</td>
-<td align="right">0.6778070</td>
-<td align="right">4.936084</td>
+<td align="right">2903</td>
+<td align="right">1676</td>
+<td align="right">1.454011</td>
+<td align="right">0.6256863</td>
+<td align="right">2.671556</td>
+<td align="right">0.6259019</td>
+<td align="right">0.7113331</td>
+<td align="right">4.280247</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="right">1992</td>
-<td align="right">19</td>
-<td align="right">1947</td>
-<td align="right">942</td>
-<td align="right">1.696199</td>
-<td align="right">0.7098284</td>
-<td align="right">3.446237</td>
-<td align="right">0.7101932</td>
-<td align="right">0.6584489</td>
-<td align="right">5.453179</td>
+<td align="right">18</td>
+<td align="right">1394</td>
+<td align="right">636</td>
+<td align="right">1.744873</td>
+<td align="right">0.7321571</td>
+<td align="right">3.733532</td>
+<td align="right">0.7326827</td>
+<td align="right">0.6291248</td>
+<td align="right">5.725177</td>
 </tr>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="right">1996</td>
 <td align="right">20</td>
-<td align="right">1519</td>
-<td align="right">823</td>
-<td align="right">1.640667</td>
-<td align="right">0.6691263</td>
-<td align="right">3.022302</td>
-<td align="right">0.6695671</td>
-<td align="right">0.6800527</td>
-<td align="right">5.158611</td>
+<td align="right">1560</td>
+<td align="right">819</td>
+<td align="right">1.672919</td>
+<td align="right">0.6842332</td>
+<td align="right">3.166894</td>
+<td align="right">0.6846721</td>
+<td align="right">0.6692308</td>
+<td align="right">5.327697</td>
 </tr>
 <tr class="even">
 <td align="left">18_335699</td>
-<td align="right">1932</td>
-<td align="right">26</td>
-<td align="right">499</td>
-<td align="right">120</td>
-<td align="right">2.468019</td>
-<td align="right">0.8755788</td>
-<td align="right">8.037216</td>
-<td align="right">0.8773370</td>
-<td align="right">0.4068136</td>
-<td align="right">11.799055</td>
+<td align="right">1945</td>
+<td align="right">27</td>
+<td align="right">863</td>
+<td align="right">274</td>
+<td align="right">2.125950</td>
+<td align="right">0.8077216</td>
+<td align="right">5.200792</td>
+<td align="right">0.8086586</td>
+<td align="right">0.5851680</td>
+<td align="right">8.380852</td>
 </tr>
 <tr class="odd">
 <td align="left">18_335699</td>
-<td align="right">1934</td>
-<td align="right">23</td>
-<td align="right">379</td>
-<td align="right">122</td>
-<td align="right">2.353625</td>
-<td align="right">0.8446335</td>
-<td align="right">6.436394</td>
-<td align="right">0.8468680</td>
-<td align="right">0.4828496</td>
-<td align="right">10.523653</td>
+<td align="right">1932</td>
+<td align="right">29</td>
+<td align="right">329</td>
+<td align="right">110</td>
+<td align="right">2.478846</td>
+<td align="right">0.8483292</td>
+<td align="right">6.593227</td>
+<td align="right">0.8509156</td>
+<td align="right">0.4468085</td>
+<td align="right">11.927498</td>
 </tr>
 <tr class="even">
 <td align="left">18_335699</td>
-<td align="right">1937</td>
-<td align="right">25</td>
-<td align="right">576</td>
-<td align="right">144</td>
-<td align="right">2.405977</td>
-<td align="right">0.8696229</td>
-<td align="right">7.670057</td>
-<td align="right">0.8711353</td>
-<td align="right">0.3958333</td>
-<td align="right">11.089261</td>
+<td align="right">1933</td>
+<td align="right">23</td>
+<td align="right">440</td>
+<td align="right">141</td>
+<td align="right">2.330245</td>
+<td align="right">0.8450103</td>
+<td align="right">6.452043</td>
+<td align="right">0.8469352</td>
+<td align="right">0.4613636</td>
+<td align="right">10.280459</td>
 </tr>
 </tbody>
 </table>
@@ -823,44 +822,44 @@ Lets apply it to our now processed BioTIME example dataset:</p>
 <tr class="odd">
 <td align="right">1984</td>
 <td align="left">10_359170</td>
-<td align="right">0.1818182</td>
-<td align="right">0.0069007</td>
-<td align="right">0.1891540</td>
+<td align="right">0.2272727</td>
+<td align="right">0.0310428</td>
+<td align="right">0.3716546</td>
 </tr>
 <tr class="even">
 <td align="right">1992</td>
 <td align="left">10_359170</td>
-<td align="right">0.2916667</td>
-<td align="right">0.0093005</td>
-<td align="right">0.3237685</td>
+<td align="right">0.3600000</td>
+<td align="right">0.0134105</td>
+<td align="right">0.3618642</td>
 </tr>
 <tr class="odd">
 <td align="right">1996</td>
 <td align="left">10_359170</td>
-<td align="right">0.3043478</td>
-<td align="right">0.0172714</td>
-<td align="right">0.1921523</td>
+<td align="right">0.2727273</td>
+<td align="right">0.0244299</td>
+<td align="right">0.1618145</td>
 </tr>
 <tr class="even">
-<td align="right">1932</td>
+<td align="right">1945</td>
 <td align="left">18_335699</td>
-<td align="right">0.5588235</td>
-<td align="right">0.3892322</td>
-<td align="right">0.4829157</td>
+<td align="right">0.6341463</td>
+<td align="right">0.6506529</td>
+<td align="right">0.8087248</td>
 </tr>
 <tr class="odd">
-<td align="right">1934</td>
+<td align="right">1932</td>
 <td align="left">18_335699</td>
-<td align="right">0.4062500</td>
-<td align="right">0.2482298</td>
-<td align="right">0.4139535</td>
+<td align="right">0.5294118</td>
+<td align="right">0.2955655</td>
+<td align="right">0.5118956</td>
 </tr>
 <tr class="even">
-<td align="right">1937</td>
+<td align="right">1933</td>
 <td align="left">18_335699</td>
-<td align="right">0.5476190</td>
-<td align="right">0.5280357</td>
-<td align="right">0.5797101</td>
+<td align="right">0.6052632</td>
+<td align="right">0.3784197</td>
+<td align="right">0.5431205</td>
 </tr>
 </tbody>
 </table>
@@ -893,7 +892,7 @@ data and design to run smoothly over an output of the
 functions. In particular it will provide you with the results of simple
 linear regressions (slope, p-value, significance, intercept), fit
 individually to the yearly diversity estimates of each metric within
-each assemblage time-series in your dataset.</p>
+each assemblage time series in your dataset.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#Let's apply it then:</span></span>
 <span><span class="va">alpha_slopes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getLinearRegressions.html">getLinearRegressions</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">alpha_metrics</span>, divType <span class="op">=</span> <span class="st">"alpha"</span>,</span>
@@ -944,53 +943,53 @@ use depends on your research question.</p>
 <tbody>
 <tr class="odd">
 <td align="left">DomMc</td>
-<td align="right">25</td>
-<td align="right">-0.0080727</td>
+<td align="right">29</td>
+<td align="right">-0.0035896</td>
 </tr>
 <tr class="even">
 <td align="left">N</td>
-<td align="right">29</td>
-<td align="right">-196.1761320</td>
+<td align="right">35</td>
+<td align="right">-193.6536639</td>
 </tr>
 <tr class="odd">
 <td align="left">PIE</td>
-<td align="right">29</td>
-<td align="right">0.0149838</td>
+<td align="right">34</td>
+<td align="right">0.0113134</td>
 </tr>
 <tr class="even">
 <td align="left">S</td>
 <td align="right">25</td>
-<td align="right">-0.0511312</td>
+<td align="right">-0.3304028</td>
 </tr>
 <tr class="odd">
 <td align="left">Shannon</td>
-<td align="right">34</td>
-<td align="right">0.0281371</td>
+<td align="right">45</td>
+<td align="right">0.0149212</td>
 </tr>
 <tr class="even">
 <td align="left">Simpson</td>
-<td align="right">32</td>
-<td align="right">0.0146079</td>
+<td align="right">36</td>
+<td align="right">0.0108112</td>
 </tr>
 <tr class="odd">
 <td align="left">expShannon</td>
-<td align="right">34</td>
-<td align="right">0.0469469</td>
+<td align="right">45</td>
+<td align="right">0.0800434</td>
 </tr>
 <tr class="even">
 <td align="left">invSimpson</td>
-<td align="right">25</td>
-<td align="right">0.1061630</td>
+<td align="right">34</td>
+<td align="right">0.1218169</td>
 </tr>
 <tr class="odd">
 <td align="left">maxN</td>
-<td align="right">34</td>
-<td align="right">-119.3999756</td>
+<td align="right">32</td>
+<td align="right">-155.2310526</td>
 </tr>
 </tbody>
 </table>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># From the assemblages time-series that made the cut, you can see that only a few (&lt;40)</span></span>
+<code class="sourceCode R"><span><span class="co"># From the assemblages time series that made the cut, you can see that only a few (&lt;40)</span></span>
 <span><span class="co"># actually show a significant trend of change, independently of the metric used. This also </span></span>
 <span><span class="co"># means that in most locations alpha diversity is not really changing through time.</span></span></code></pre></div>
 <p>You can also do some summary plots, like these histograms of alpha
@@ -1003,7 +1002,7 @@ diversity change:</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Note: you may need to simplify your data as by default the getLinearRegressions() function </span></span>
 <span><span class="co">#returns a data frame containing the original input of yearly diversity metrics for each assemblage </span></span>
-<span><span class="co">#time-series merged with the results of a simple linear regression.</span></span>
+<span><span class="co">#time series merged with the results of a simple linear regression.</span></span>
 <span></span>
 <span><span class="co"># Calculate the mean slope and CIs</span></span>
 <span><span class="va">stats_alpha</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes_simp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  </span>

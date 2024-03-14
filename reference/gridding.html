@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioTIMEr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9018</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -71,21 +71,21 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>meta</dt>
-<dd><p>(data.frame) BioTIME metadata.</p></dd>
+<dd><p>(<code>data.frame</code>) BioTIME metadata.</p></dd>
 
 
 <dt>btf</dt>
-<dd><p>(data.frame) BioTIME data.</p></dd>
+<dd><p>(<code>data.frame</code>) BioTIME data.</p></dd>
 
 
 <dt>res</dt>
-<dd><p>(integer) cell resolution. Must be in the range [0,30]. Larger values
+<dd><p>(<code>integer</code>) cell resolution. Must be in the range [0,30]. Larger values
 represent finer resolutions. Default: 12 (~96 sq km). Passed to
 <code><a href="https://rdrr.io/pkg/dggridR/man/dgconstruct.html" class="external-link">dgconstruct</a></code>.</p></dd>
 
 
 <dt>resByData</dt>
-<dd><p>(logical) FALSE by default. If TRUE, the function
+<dd><p>(<code>logical</code>) FALSE by default. If TRUE, the function
 <code><a href="https://rdrr.io/pkg/dggridR/man/dg_closest_res_to_area.html" class="external-link">dg_closest_res_to_area</a></code> is called to adapt `res` to
 the data extent.</p></dd>
 
@@ -115,9 +115,9 @@ derived from <code><a href="https://rdrr.io/pkg/dggridR/man/dgconstruct.html" cl
 samples to the cells across the grid based on its latitude and
 longitude. Specifically, each sample is assigned
 a different combination of study ID and grid cell resulting in a unique
-identifier for each assemblage time-series within each cell
+identifier for each assemblage time series within each cell
 (assemblageID). This allows for the integrity of each study and each sample
-to be maintained, while large extent studies are split into local time-series
+to be maintained, while large extent studies are split into local time series
 at the grid cell level. By default meta represents a long form data frame
 containing the data information for BioTIME studies and <code>btf</code> is a data frame
 containing long form data from a main BioTIME query (see Example). <code>res</code>

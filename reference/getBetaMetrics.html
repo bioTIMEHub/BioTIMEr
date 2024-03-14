@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioTIMEr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9018</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -70,7 +70,7 @@
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>(<code>data.frame</code>) BioTIME data table in the format of the output of the
-<code><a href="gridding.html">gridding</a></code> function and/or <code><a href="resampling.html">resampling</a></code> function.</p></dd>
+<code><a href="gridding.html">gridding</a></code> function and/or <code><a href="resampling.html">resampling</a></code> functions.</p></dd>
 
 
 <dt>measure</dt>
@@ -85,9 +85,11 @@
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>The function getBetaMetrics computes three beta diversity metrics, for a given community data frame, where <code>measure</code> is a character input specifying the chosen currency field used for the calculations. <code>getBetaMetrics</code> calls the <code><a href="https://rdrr.io/pkg/vegan/man/vegdist.html" class="external-link">vegdist</a></code> function which calculates for each row the following metrics: Jaccard dissimilarity (<code>method = "jaccard"</code>), Morisita-Horn dissimilarity (<code>method = "horn"</code>) and Bray-Curtis dissimilarity (<code>method = "bray"</code>). Here, the dissimilarity are calculated against the baseline year of each assemblage time series i.e. first year of the time-series.
+    <p>The function getBetaMetrics computes three beta diversity metrics for a given community data frame, where <code>measure</code> is a character input specifying the abundance or biomass field used for the calculations. <code>getBetaMetrics</code> calls the <code><a href="https://rdrr.io/pkg/vegan/man/vegdist.html" class="external-link">vegdist</a></code> function which calculates for each row the following metrics: Jaccard dissimilarity (<code>method = "jaccard"</code>), Morisita-Horn dissimilarity (<code>method = "horn"</code>) and Bray-Curtis dissimilarity (<code>method = "bray"</code>). Here, the dissimilarity metrics are calculated against the baseline year of each assemblage time series i.e.
+the first year of each time series.
 Note that the input data frame needs to be in the format of the output of the
- <code><a href="gridding.html">gridding</a></code> function and/or <code><a href="resampling.html">resampling</a></code> function, this includes keeping to the default BioTIME column names. If such columns are not found an error is issued and all operations are halted.</p>
+ <code><a href="gridding.html">gridding</a></code> and/or <code><a href="resampling.html">resampling</a></code> functions, which includes keeping the default BioTIME data column names. If such columns are not found an error is
+ issued and the computations are halted.</p>
     </div>
 
     <div id="ref-examples">
