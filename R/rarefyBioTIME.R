@@ -48,7 +48,7 @@
 #'
 #' @importFrom dplyr %>%
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'   library(BioTIMEr)
 #'   set.seed(42)
 #'   x <- gridding(BTsubset_meta, BTsubset_data)
