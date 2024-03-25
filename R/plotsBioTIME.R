@@ -10,35 +10,6 @@
 #' @param divType Parameter description
 #' @returns A plot
 #' @keywords internal
-#' @examples
-#' \dontrun{
-#' library(dplyr)
-#' library(tidyr)
-#' library(ggplot2)
-#'
-#' load("./data/BTsubset_meta.RData")
-#' meta  <-  BTsubset_meta
-#' meta2 <- select(meta, STUDY_ID, TAXA, REALM)
-#'
-#' alphaSl <- as.data.frame(alphaSl %>% separate(., assemblageID,
-#'                                             into= c("STUDY_ID", "cell"), sep="_", remove=F))
-#'
-#' ameta <- merge(alphaSl, meta2, by="STUDY_ID")
-#'
-#' betaSl <- as.data.frame(betaSl %>% separate(., assemblageID,
-#'                                           into= c("STUDY_ID", "cell"), sep="_", remove=F))
-#'
-#' bmeta <- merge(betaSl, meta2, by="STUDY_ID")
-#
-#' bio <- c("#00483d","#127c8e","#31b9c2","#86db9c","#d9d956" ,"#c0f176","#ffff67", "#cf7941")
-#' bioCol <- c("#cf7941", "#127c8e","#86db9c","#d9d956")
-#'
-#' plm <- plotSlopes(bmeta, "JaccardDiss", bioCol, "Fish", "metric", "18_9044316", "beta")
-#'
-#' plt <- plotSlopes(ameta, "N", bio, "Fish", "taxa","18_9044316", "alpha")
-#'
-#' plrf <- plotSlopes(bmeta, "N", bioCol, "Fish", "ind","18_9044316", "beta")
-#' }
 
 
 plotSlopes <- function(x, metric, cols, taxa, method, assemblageID, divType) {
@@ -153,7 +124,7 @@ plotSlopes <- function(x, metric, cols, taxa, method, assemblageID, divType) {
 #' @param colx description
 #' @param coly description
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' fig1 <- ggplot2::ggplot() +
 #'           themeBioTIME("none", 12, "black", "grey90")
 #' }
