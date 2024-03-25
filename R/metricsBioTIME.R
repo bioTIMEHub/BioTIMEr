@@ -40,7 +40,6 @@
 
 #' @export
 #' @examples
-#' \dontrun{
 #'   x <- data.frame(
 #'     resamp = 1L,
 #'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
@@ -49,7 +48,6 @@
 #'     assemblageID = rep(LETTERS[1L:8L], each = 24)
 #'   )
 #'   res <- getAlphaMetrics(x, measure = "ABUNDANCE")
-#' }
 
 getAlphaMetrics <- function(x, measure) {
   checkmate::assert_names(x = colnames(x), what = "colnames",
@@ -142,7 +140,6 @@ getAlpha <- function(x, id) {
 #'
 #' @returns Returns a \code{data.frame} with results for Jaccard dissimilarity (\code{JaccardDiss}), Morisita-Horn dissimilarity (\code{MorisitaHornDiss}), and Bray-Curtis dissimilarity (\code{BrayCurtsDiss}) for each year and \code{assemblageID}.
 #' @examples
-#' \dontrun{
 #' x <- data.frame(
 #'   resamp = 1L,
 #'   YEAR = rep(rep(2010:2015, each = 4), times = 4),
@@ -154,7 +151,6 @@ getAlpha <- function(x, id) {
 #'   )
 #'
 #' res <- getBetaMetrics(x, measure = "ABUNDANCE")
-#' }
 
 getBetaMetrics <- function(x, measure) {
   checkmate::assert_names(x = colnames(x), what = "colnames",
