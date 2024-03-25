@@ -10,6 +10,9 @@
 #' @param discrete See Details. default to `FALSE`
 #' @param reverse Default to `FALSE`
 #' @param ... Passed to \code{\link[ggplot2]{discrete_scale}} or  \code{\link[ggplot2]{scale_color_gradient}}
+#' @returns If \code{discrete} is /code{TRUE}, the function returns a colour palette produced by 
+#'     \code{\link[ggplot2]{discrete_scale}} and if \code{discrete} is /code{FALSE}, the function
+#'     returns a colour palette produced by \code{\link[ggplot2]{scale_color_gradient}}.
 #' @details
 #' USAGE NOTE: Remember to change these arguments when plotting colours continuously.
 #' @author Cher F. Y. Chow
@@ -39,6 +42,9 @@ scale_colour_biotime <- scale_color_biotime
 
 #' Scale construction for filling in ggplot
 #' @rdname BioTIME-palette
+#' @returns If \code{discrete} is /code{TRUE}, the function returns a colour palette produced by 
+#'     \code{\link[ggplot2]{discrete_scale}} and if \code{discrete} is /code{FALSE}, the function
+#'     returns a colour palette produced by \code{\link[ggplot2]{scale_color_gradient}}.
 #' @export
 #' @inherit scale_color_biotime author
 #' @inherit scale_color_biotime details
