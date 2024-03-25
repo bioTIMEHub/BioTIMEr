@@ -81,15 +81,6 @@ getAlphaMetrics <- function(x, measure) {
 #' contain species abundances.
 #' @param id (\code{character})One AssemblageID
 #' @keywords internal
-#' @examples
-#' \dontrun{
-#'   x <- data.frame(
-#'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
-#'     matrix(data = rpois(384, 10), ncol = 4)
-#'     )
-#'     res <- getAlpha(x, id = 34)
-#' }
-#'
 #' @returns A data frame with results for S (species richness), N (numerical abundance),
 #' maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
 #' Inverse Simpson, PIE (probability of intraspecific encounter) and
@@ -208,14 +199,6 @@ getBetaMetrics <- function(x, measure) {
 #' metrics
 #' @importFrom vegan vegdist
 #' @keywords internal
-#' @examples
-#' \dontrun{
-#'   x <- data.frame(
-#'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
-#'     matrix(data = rpois(384, 2), ncol = 4)
-#'   )
-#'   res <- getBeta(x, id = "F")
-#' }
 
 getBeta <- function(x, id) {
 
