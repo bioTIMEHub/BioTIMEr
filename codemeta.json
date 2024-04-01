@@ -159,6 +159,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "formatR",
+      "name": "formatR",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=formatR"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "testthat",
       "name": "testthat",
       "version": ">= 3.0.0",
@@ -264,7 +276,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "8221.795KB",
+  "fileSize": "7811.495KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
