@@ -156,7 +156,7 @@ with:
 </ol>
 <p>Below is a detailed run through these different steps, breaking down
 some of the tasks and the reasoning behind our suggestions for best
-practice when analyzing BioTIME data.</p>
+practice when analysing BioTIME data.</p>
 <p>We use the ‘pipe’ operator <code>(%&gt;%)</code> to make our code
 more efficient and streamlined, and we use ggplot2 library for most
 visualizations. This and other libraries required for BioTIMEr to run
@@ -285,13 +285,13 @@ series are there in this subset:</p>
 </table>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># How many samples were there in each study?</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">check1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">STUDY_ID</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">n_aID</span>, fill <span class="op">=</span> <span class="va">res</span> ,<span class="op">)</span>,</span>
+<span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">check1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_bar</span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">STUDY_ID</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">n_aID</span>, fill <span class="op">=</span> <span class="va">res</span> ,<span class="op">)</span>,</span>
 <span>           stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_fill_discrete</a></span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#155f49"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"StudyID"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of assemblages in a study"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">scale_fill_discrete</span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#155f49"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"StudyID"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Number of assemblages in a study"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette1_files/figure-html/gridding_ex_plot-1.png" width="672">
 You can see that several studies are not partitioned, and that’s because
 all their observations were already contained within a single cell.</p>
@@ -328,12 +328,12 @@ over these alternative options with a few examples:</p>
 <span></span>
 <span><span class="va">checks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">check1</span>, <span class="va">check2</span>, <span class="va">check3</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">checks</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">STUDY_ID</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">n_aID</span>, fill <span class="op">=</span> <span class="va">res</span><span class="op">)</span>, </span>
+<span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">checks</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_bar</span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">STUDY_ID</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">n_aID</span>, fill <span class="op">=</span> <span class="va">res</span><span class="op">)</span>, </span>
 <span>           stat <span class="op">=</span> <span class="st">"identity"</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span>  </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_fill_discrete</a></span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#155f49"</span>,<span class="st">"#66c1d1"</span>,<span class="st">"#d9d956"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"StudyID"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of assemblages in a study"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">scale_fill_discrete</span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#155f49"</span>,<span class="st">"#66c1d1"</span>,<span class="st">"#d9d956"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"StudyID"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Number of assemblages in a study"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette1_files/figure-html/gridding_ex3-1.png" width="672">
 The number of cells in each study varies depending on the resolution
 chosen.</p>
@@ -361,21 +361,21 @@ chosen.</p>
 <span></span>
 <span><span class="co">#Now you could map the whole world, but let's just zoom in the UK and have a look at </span></span>
 <span><span class="co">#STUDY 466 (Marine Fish):</span></span>
-<span><span class="va">map_uk_locations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_polygon.html" class="external-link">geom_polygon</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">countries</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, group <span class="op">=</span> <span class="va">group</span><span class="op">)</span>, fill <span class="op">=</span> <span class="cn">NA</span>, color <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">grid_12</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/alpha.html" class="external-link">alpha</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">coord_sf</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">20</span>, <span class="fl">10</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_rect</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="op">-</span><span class="fl">11</span>, xmax <span class="op">=</span> <span class="op">-</span><span class="fl">0.7</span>, ymin <span class="op">=</span> <span class="fl">57.2</span>, ymax <span class="op">=</span> <span class="fl">59</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"red"</span>, fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="cn">NULL</span>, y <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">map_uk_locations</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_polygon</span><span class="op">(</span>data <span class="op">=</span> <span class="va">countries</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, group <span class="op">=</span> <span class="va">group</span><span class="op">)</span>, fill <span class="op">=</span> <span class="cn">NA</span>, color <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_sf</span><span class="op">(</span>data <span class="op">=</span> <span class="va">grid_12</span>, <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu">alpha</span><span class="op">(</span><span class="st">"blue"</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">coord_sf</span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">20</span>, <span class="fl">10</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_rect</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>xmin <span class="op">=</span> <span class="op">-</span><span class="fl">11</span>, xmax <span class="op">=</span> <span class="op">-</span><span class="fl">0.7</span>, ymin <span class="op">=</span> <span class="fl">57.2</span>, ymax <span class="op">=</span> <span class="fl">59</span><span class="op">)</span>, colour <span class="op">=</span> <span class="st">"red"</span>, fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="cn">NULL</span>, y <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme</span><span class="op">(</span>text <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">zoom_in_map</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_polygon.html" class="external-link">geom_polygon</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">countries</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, group <span class="op">=</span> <span class="va">group</span><span class="op">)</span>, fill <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span><span class="va">zoom_in_map</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_polygon</span><span class="op">(</span>data <span class="op">=</span> <span class="va">countries</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, group <span class="op">=</span> <span class="va">group</span><span class="op">)</span>, fill <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>               color <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">grid_12</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/alpha.html" class="external-link">alpha</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">grid_14</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu"><a href="https://scales.r-lib.org/reference/alpha.html" class="external-link">alpha</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">coord_sf</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">11</span>, <span class="op">-</span><span class="fl">0.7</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">57.2</span>, <span class="fl">59</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu">geom_sf</span><span class="op">(</span>data <span class="op">=</span> <span class="va">grid_12</span>, <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu">alpha</span><span class="op">(</span><span class="st">"blue"</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_sf</span><span class="op">(</span>data <span class="op">=</span> <span class="va">grid_14</span>, <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu">alpha</span><span class="op">(</span><span class="st">"red"</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">coord_sf</span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">11</span>, <span class="op">-</span><span class="fl">0.7</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">57.2</span>, <span class="fl">59</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.newpage.html" class="external-link">grid.newpage</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">main</span> <span class="op">&lt;-</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/viewport.html" class="external-link">viewport</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1</span>, height <span class="op">=</span> <span class="fl">1</span>, x <span class="op">=</span> <span class="fl">0.5</span>, y <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>  <span class="co"># the main map</span></span>
@@ -514,10 +514,10 @@ Thus, we should standardize for sampling effort:</p>
 <span>                       resamps <span class="op">=</span> <span class="fl">1</span>, conservative <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p>The function returns a single long form data frame containing the
 total currency of interest (i.e. summed across all samples) for each
-species in each year within eachn assemblage time series. You can
-specify what the currency field is: Abundance, Biomass or both (BioTIME
-studies can include records for either or both). Note that resampling()
-also tests and removes any <code>NAs</code> within the selected currency
+species in each year within each assemblage time series. You can specify
+what the currency field is: Abundance, Biomass or both (BioTIME studies
+can include records for either or both). Note that resampling() also
+tests and removes any <code>NAs</code> within the selected currency
 field(s) before implementing the sample-based rarefaction. Thus, if you
 choose to use both currency fields, only observations (when
 <code>conservative = FALSE</code>) or full sampling events (when
@@ -554,13 +554,13 @@ assemblage time series from the subset and plot the number of samples
 recorded in each year:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#What is the number of samples in the year with the lowest sampling effort?</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">check4</span><span class="op">[</span><span class="va">check4</span><span class="op">$</span><span class="va">assemblageID</span> <span class="op">==</span> <span class="st">"18_335699"</span>,<span class="op">]</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">n_samples</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">n_samples</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"red"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1926</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">n_samples</span><span class="op">)</span> <span class="op">+</span> <span class="fl">3</span>,</span>
+<span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">check4</span><span class="op">[</span><span class="va">check4</span><span class="op">$</span><span class="va">assemblageID</span> <span class="op">==</span> <span class="st">"18_335699"</span>,<span class="op">]</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">n_samples</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_col</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">n_samples</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"red"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_segment</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1926</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">n_samples</span><span class="op">)</span> <span class="op">+</span> <span class="fl">3</span>,</span>
 <span>                   xend <span class="op">=</span> <span class="fl">1927</span>, yend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">n_samples</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>               arrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/arrow.html" class="external-link">arrow</a></span><span class="op">(</span>length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="st">"cm"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Year"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of samples"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>               arrow <span class="op">=</span> <span class="fu">arrow</span><span class="op">(</span>length <span class="op">=</span> <span class="fu">unit</span><span class="op">(</span><span class="fl">0.2</span>, <span class="st">"cm"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Year"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Number of samples"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in geom_segment(aes(x = 1926, y = min(n_samples) + 3, xend = 1927, : All aesthetics have length 1, but the data has 29 rows.</span></span>
 <span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Did you mean to use `annotate()`?</span></span></code></pre>
 <p><img src="vignette1_files/figure-html/resampling_ex3-1.png" width="672"></p>
@@ -620,39 +620,39 @@ that originates from the random sample selection process):</p>
 <td align="left">10_359170</td>
 <td align="right">2</td>
 <td align="right">58</td>
-<td align="right">24</td>
+<td align="right">23</td>
 <td align="right">3</td>
 </tr>
 <tr class="odd">
 <td align="right">10</td>
 <td align="left">10_359170</td>
 <td align="right">3</td>
-<td align="right">56</td>
-<td align="right">24</td>
+<td align="right">58</td>
+<td align="right">23</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="right">18</td>
 <td align="left">18_335699</td>
 <td align="right">1</td>
-<td align="right">715</td>
-<td align="right">77</td>
+<td align="right">697</td>
+<td align="right">74</td>
 <td align="right">29</td>
 </tr>
 <tr class="odd">
 <td align="right">18</td>
 <td align="left">18_335699</td>
 <td align="right">2</td>
-<td align="right">713</td>
-<td align="right">73</td>
+<td align="right">707</td>
+<td align="right">77</td>
 <td align="right">29</td>
 </tr>
 <tr class="even">
 <td align="right">18</td>
 <td align="left">18_335699</td>
 <td align="right">3</td>
-<td align="right">721</td>
-<td align="right">75</td>
+<td align="right">717</td>
+<td align="right">77</td>
 <td align="right">29</td>
 </tr>
 <tr class="odd">
@@ -756,80 +756,80 @@ now processed BioTIME example dataset:</p>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
-<td align="right">18</td>
-<td align="right">3077</td>
-<td align="right">1870</td>
-<td align="right">1.435725</td>
-<td align="right">0.5985860</td>
-<td align="right">2.491194</td>
-<td align="right">0.5987806</td>
-<td align="right">0.7305817</td>
-<td align="right">4.202689</td>
+<td align="right">21</td>
+<td align="right">2163</td>
+<td align="right">1056</td>
+<td align="right">1.667137</td>
+<td align="right">0.7025251</td>
+<td align="right">3.361628</td>
+<td align="right">0.7028500</td>
+<td align="right">0.6786870</td>
+<td align="right">5.296983</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="right">1992</td>
-<td align="right">19</td>
-<td align="right">1378</td>
-<td align="right">612</td>
-<td align="right">1.766210</td>
-<td align="right">0.7398746</td>
-<td align="right">3.844299</td>
-<td align="right">0.7404119</td>
-<td align="right">0.6044993</td>
-<td align="right">5.848643</td>
+<td align="right">20</td>
+<td align="right">1442</td>
+<td align="right">618</td>
+<td align="right">1.717620</td>
+<td align="right">0.7401734</td>
+<td align="right">3.848721</td>
+<td align="right">0.7406871</td>
+<td align="right">0.6289875</td>
+<td align="right">5.571252</td>
 </tr>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="right">1996</td>
 <td align="right">19</td>
-<td align="right">1678</td>
-<td align="right">905</td>
-<td align="right">1.616438</td>
-<td align="right">0.6699161</td>
-<td align="right">3.029533</td>
-<td align="right">0.6703156</td>
-<td align="right">0.6746126</td>
-<td align="right">5.035122</td>
+<td align="right">1318</td>
+<td align="right">604</td>
+<td align="right">1.811157</td>
+<td align="right">0.7386024</td>
+<td align="right">3.825590</td>
+<td align="right">0.7391632</td>
+<td align="right">0.6153263</td>
+<td align="right">6.117520</td>
 </tr>
 <tr class="even">
 <td align="left">18_335699</td>
-<td align="right">1940</td>
-<td align="right">28</td>
-<td align="right">713</td>
-<td align="right">129</td>
-<td align="right">2.577733</td>
-<td align="right">0.8969666</td>
-<td align="right">9.705588</td>
-<td align="right">0.8982264</td>
-<td align="right">0.3478261</td>
-<td align="right">13.167254</td>
+<td align="right">1932</td>
+<td align="right">26</td>
+<td align="right">327</td>
+<td align="right">110</td>
+<td align="right">2.281063</td>
+<td align="right">0.8282131</td>
+<td align="right">5.821166</td>
+<td align="right">0.8307536</td>
+<td align="right">0.5168196</td>
+<td align="right">9.787081</td>
 </tr>
 <tr class="odd">
 <td align="left">18_335699</td>
-<td align="right">1955</td>
-<td align="right">35</td>
-<td align="right">744</td>
-<td align="right">154</td>
-<td align="right">2.630114</td>
-<td align="right">0.8947566</td>
-<td align="right">9.501785</td>
-<td align="right">0.8959609</td>
-<td align="right">0.3373656</td>
-<td align="right">13.875353</td>
+<td align="right">1934</td>
+<td align="right">26</td>
+<td align="right">466</td>
+<td align="right">177</td>
+<td align="right">2.308628</td>
+<td align="right">0.8177808</td>
+<td align="right">5.487895</td>
+<td align="right">0.8195394</td>
+<td align="right">0.4914163</td>
+<td align="right">10.060614</td>
 </tr>
 <tr class="even">
 <td align="left">18_335699</td>
 <td align="right">1935</td>
-<td align="right">25</td>
-<td align="right">704</td>
-<td align="right">239</td>
-<td align="right">2.215048</td>
-<td align="right">0.8145580</td>
-<td align="right">5.392523</td>
-<td align="right">0.8157167</td>
-<td align="right">0.5724432</td>
-<td align="right">9.161850</td>
+<td align="right">28</td>
+<td align="right">554</td>
+<td align="right">164</td>
+<td align="right">2.377217</td>
+<td align="right">0.8395652</td>
+<td align="right">6.233063</td>
+<td align="right">0.8410834</td>
+<td align="right">0.5324910</td>
+<td align="right">10.774877</td>
 </tr>
 </tbody>
 </table>
@@ -852,44 +852,44 @@ now processed BioTIME example dataset:</p>
 <tr class="odd">
 <td align="right">1984</td>
 <td align="left">10_359170</td>
-<td align="right">0.1500000</td>
-<td align="right">0.0507926</td>
-<td align="right">0.3984287</td>
+<td align="right">0.1363636</td>
+<td align="right">0.0116847</td>
+<td align="right">0.2177531</td>
 </tr>
 <tr class="even">
 <td align="right">1992</td>
 <td align="left">10_359170</td>
-<td align="right">0.3181818</td>
-<td align="right">0.0117283</td>
-<td align="right">0.3514196</td>
+<td align="right">0.3333333</td>
+<td align="right">0.0126777</td>
+<td align="right">0.2984774</td>
 </tr>
 <tr class="odd">
 <td align="right">1996</td>
 <td align="left">10_359170</td>
-<td align="right">0.2727273</td>
-<td align="right">0.0285181</td>
-<td align="right">0.1865183</td>
+<td align="right">0.2272727</td>
+<td align="right">0.0246651</td>
+<td align="right">0.1550725</td>
 </tr>
 <tr class="even">
-<td align="right">1940</td>
+<td align="right">1932</td>
 <td align="left">18_335699</td>
-<td align="right">0.4250000</td>
-<td align="right">0.1700051</td>
-<td align="right">0.3466026</td>
+<td align="right">0.5142857</td>
+<td align="right">0.4724545</td>
+<td align="right">0.6393443</td>
 </tr>
 <tr class="odd">
-<td align="right">1955</td>
+<td align="right">1934</td>
 <td align="left">18_335699</td>
-<td align="right">0.4857143</td>
-<td align="right">0.4453069</td>
-<td align="right">0.5610445</td>
+<td align="right">0.5405405</td>
+<td align="right">0.6788880</td>
+<td align="right">0.7389330</td>
 </tr>
 <tr class="even">
 <td align="right">1935</td>
 <td align="left">18_335699</td>
-<td align="right">0.4750000</td>
-<td align="right">0.3652460</td>
-<td align="right">0.4213751</td>
+<td align="right">0.4615385</td>
+<td align="right">0.2564067</td>
+<td align="right">0.5669607</td>
 </tr>
 </tbody>
 </table>
@@ -907,7 +907,7 @@ three beta diversity metrics: Jaccard dissimilarity, Bray-Curtis
 dissimilarity and Morisita-Horn dissimilarity, assuming the first year
 in the time series as the baseline. Note that <code>N</code> and
 <code>maxN</code> metrics return numerical abundance when
-<code>measure=ABUNDANCE</code>, and biomass values whem
+<code>measure=ABUNDANCE</code>, and biomass values when
 <code>measure=BIOMASS</code>.</p>
 </div>
 <div class="section level3">
@@ -944,11 +944,11 @@ dataset.</p>
 <col width="14%">
 <col width="5%">
 <col width="12%">
+<col width="14%">
 <col width="13%">
+<col width="10%">
 <col width="14%">
-<col width="11%">
-<col width="14%">
-<col width="14%">
+<col width="15%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">assemblageID</th>
@@ -965,61 +965,61 @@ dataset.</p>
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">S</td>
-<td align="right">18.000000</td>
-<td align="right">0.0892857</td>
-<td align="right">0.2122956</td>
+<td align="right">21.0000000</td>
+<td align="right">-0.1607143</td>
+<td align="right">0.1210377</td>
 <td align="right">0</td>
-<td align="right">-159.07143</td>
+<td align="right">339.928571</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">N</td>
-<td align="right">3077.000000</td>
-<td align="right">-130.2678571</td>
-<td align="right">0.3180886</td>
+<td align="right">2163.0000000</td>
+<td align="right">-73.2321429</td>
+<td align="right">0.1255256</td>
 <td align="right">0</td>
-<td align="right">261364.21429</td>
+<td align="right">147421.785714</td>
 </tr>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">maxN</td>
-<td align="right">1870.000000</td>
-<td align="right">-91.3928571</td>
-<td align="right">0.3551815</td>
+<td align="right">1056.0000000</td>
+<td align="right">-40.1071429</td>
+<td align="right">0.1949547</td>
 <td align="right">0</td>
-<td align="right">183061.71429</td>
+<td align="right">80599.285714</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">Shannon</td>
-<td align="right">1.435725</td>
-<td align="right">0.0188096</td>
-<td align="right">0.5112505</td>
+<td align="right">1.6671374</td>
+<td align="right">0.0111886</td>
+<td align="right">0.2298457</td>
 <td align="right">0</td>
-<td align="right">-35.83755</td>
+<td align="right">-20.540746</td>
 </tr>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">Simpson</td>
-<td align="right">0.598586</td>
-<td align="right">0.0076180</td>
-<td align="right">0.5420610</td>
+<td align="right">0.7025251</td>
+<td align="right">0.0032492</td>
+<td align="right">0.2357813</td>
 <td align="right">0</td>
-<td align="right">-14.49547</td>
+<td align="right">-5.741066</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">invSimpson</td>
-<td align="right">2.491194</td>
-<td align="right">0.0626154</td>
-<td align="right">0.6203715</td>
+<td align="right">3.3616278</td>
+<td align="right">0.0418383</td>
+<td align="right">0.2390979</td>
 <td align="right">0</td>
-<td align="right">-121.52467</td>
+<td align="right">-79.607402</td>
 </tr>
 </tbody>
 </table>
@@ -1059,54 +1059,54 @@ question.</p>
 <tbody>
 <tr class="odd">
 <td align="left">DomMc</td>
-<td align="right">27</td>
-<td align="right">-0.0032769</td>
+<td align="right">26</td>
+<td align="right">-0.0077087</td>
 </tr>
 <tr class="even">
 <td align="left">N</td>
 <td align="right">29</td>
-<td align="right">-284.8834888</td>
+<td align="right">-200.3056255</td>
 </tr>
 <tr class="odd">
 <td align="left">PIE</td>
-<td align="right">39</td>
-<td align="right">0.0121938</td>
+<td align="right">33</td>
+<td align="right">0.0126555</td>
 </tr>
 <tr class="even">
 <td align="left">S</td>
-<td align="right">24</td>
-<td align="right">-0.2750992</td>
+<td align="right">30</td>
+<td align="right">-0.2103123</td>
 </tr>
 <tr class="odd">
 <td align="left">Shannon</td>
-<td align="right">42</td>
-<td align="right">0.0184407</td>
+<td align="right">39</td>
+<td align="right">0.0275366</td>
 </tr>
 <tr class="even">
 <td align="left">Simpson</td>
-<td align="right">41</td>
-<td align="right">0.0124342</td>
+<td align="right">36</td>
+<td align="right">0.0130231</td>
 </tr>
 <tr class="odd">
 <td align="left">expShannon</td>
-<td align="right">43</td>
-<td align="right">-0.0602463</td>
+<td align="right">40</td>
+<td align="right">0.0216076</td>
 </tr>
 <tr class="even">
 <td align="left">invSimpson</td>
-<td align="right">30</td>
-<td align="right">-0.0459946</td>
+<td align="right">31</td>
+<td align="right">0.0661598</td>
 </tr>
 <tr class="odd">
 <td align="left">maxN</td>
-<td align="right">31</td>
-<td align="right">-194.1957810</td>
+<td align="right">35</td>
+<td align="right">-104.3182486</td>
 </tr>
 </tbody>
 </table>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># We can see that only a few (&lt;40) of the assemblage time series</span></span>
-<span><span class="co"># actually show a significant trend of change over time, independently of the metric used. This indicates that in most time series in the studies we analyzed alpha diversity is not really changing through time.</span></span></code></pre></div>
+<span><span class="co"># actually show a significant trend of change over time, independently of the metric used. This indicates that in most time series in the studies we analysed alpha diversity is not really changing through time.</span></span></code></pre></div>
 <p>Let’s do some summary plots showing the variation of alpha diversity
 change:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
@@ -1126,20 +1126,20 @@ change:</p>
 <span>            ci_slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">qt</a></span><span class="op">(</span><span class="fl">0.95</span>, df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">slope</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co">#margin of error</span></span>
 <span></span>
 <span><span class="co"># Let's put it all together</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">alpha_slopes_simp</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">slope</span>, fill <span class="op">=</span> <span class="va">metric</span><span class="op">)</span>, bins <span class="op">=</span> <span class="fl">25</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">alpha_slopes_simp</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_histogram</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">slope</span>, fill <span class="op">=</span> <span class="va">metric</span><span class="op">)</span>, bins <span class="op">=</span> <span class="fl">25</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="co">#geom_density(alpha=0.5)+ #in case you what a density plot instead</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="fl">3</span>, colour <span class="op">=</span> <span class="st">"grey"</span>,linewidth <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span> <span class="co">#add slope=0 line</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">stats_alpha</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">mean_slope</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="fu">geom_vline</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="fl">3</span>, colour <span class="op">=</span> <span class="st">"grey"</span>,linewidth <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span> <span class="co">#add slope=0 line</span></span>
+<span>  <span class="fu">geom_vline</span><span class="op">(</span>data <span class="op">=</span> <span class="va">stats_alpha</span>, <span class="fu">aes</span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">mean_slope</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>             linewidth <span class="op">=</span> <span class="fl">0.5</span>,colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span> <span class="co">#mean</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">stats_alpha</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">mean_slope</span> <span class="op">-</span> <span class="va">ci_slope</span><span class="op">)</span>,</span>
+<span>  <span class="fu">geom_vline</span><span class="op">(</span>data <span class="op">=</span> <span class="va">stats_alpha</span>, <span class="fu">aes</span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">mean_slope</span> <span class="op">-</span> <span class="va">ci_slope</span><span class="op">)</span>,</span>
 <span>             linetype <span class="op">=</span> <span class="fl">2</span>, linewidth <span class="op">=</span> <span class="fl">0.5</span>, colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span> <span class="co">#lower confidence interval</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">stats_alpha</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">mean_slope</span> <span class="op">+</span> <span class="va">ci_slope</span><span class="op">)</span>,</span>
+<span>  <span class="fu">geom_vline</span><span class="op">(</span>data <span class="op">=</span> <span class="va">stats_alpha</span>, <span class="fu">aes</span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">mean_slope</span> <span class="op">+</span> <span class="va">ci_slope</span><span class="op">)</span>,</span>
 <span>             linetype <span class="op">=</span> <span class="fl">2</span>, linewidth <span class="op">=</span> <span class="fl">0.5</span>, colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span> <span class="co">#upper confidence interval</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">metric</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">metric</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/BioTIME-palette.html">scale_fill_biotime</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>  <span class="co">#using the customize BioTIME colour scale. See help("scale_color_biotime") for more options.</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="co">#add slope=0 line</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="co">#add slope=0 line</span></span>
+<span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette1_files/figure-html/trends3-1.png" width="691.2">
 Now the same for beta diversity change:
 <img src="vignette1_files/figure-html/trends4-1.png" width="691.2"></p>
@@ -1164,7 +1164,7 @@ dataset.</p>
 <span></span>
 <span><span class="co"># Get back the Study ID by separating our assemblageID column into multiple other columns.</span></span>
 <span><span class="va">alpha_slopes_simp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">alpha_slopes_simp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>                                     <span class="fu"><a href="https://tidyr.tidyverse.org/reference/separate.html" class="external-link">separate</a></span><span class="op">(</span><span class="va">.</span>, <span class="va">assemblageID</span>, </span>
+<span>                                     <span class="fu">separate</span><span class="op">(</span><span class="va">.</span>, <span class="va">assemblageID</span>, </span>
 <span>                                              into <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDY_ID"</span>, <span class="st">"cell"</span><span class="op">)</span>,</span>
 <span>                                              sep <span class="op">=</span> <span class="st">"_"</span>, remove <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#Merge it all</span></span>
@@ -1174,14 +1174,14 @@ dataset.</p>
 <span><span class="va">alpha_slopes_set1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">alpha_slopes_meta</span>, <span class="va">alpha_slopes_meta</span><span class="op">$</span><span class="va">metric</span> <span class="op">==</span> <span class="st">"Shannon"</span> <span class="op">&amp;</span> <span class="op">(</span><span class="va">alpha_slopes_meta</span><span class="op">$</span><span class="va">TAXA</span> <span class="op">==</span> <span class="st">"Fish"</span> <span class="op">|</span> <span class="va">alpha_slopes_meta</span><span class="op">$</span><span class="va">TAXA</span> <span class="op">==</span> <span class="st">"Birds"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#Let's put it all together</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">alpha_slopes_set1</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">slope</span>, fill <span class="op">=</span> <span class="va">TAXA</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"grey"</span>, bins <span class="op">=</span> <span class="fl">25</span><span class="op">)</span> <span class="op">+</span> <span class="co">#all assemblages</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">alpha_slopes_set1</span><span class="op">[</span><span class="va">alpha_slopes_set1</span><span class="op">$</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>, bins <span class="op">=</span> <span class="fl">25</span><span class="op">)</span> <span class="op">+</span> <span class="co">#only significant change assemblages</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="fl">3</span>, colour <span class="op">=</span> <span class="st">"black"</span>, linewidth <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span> <span class="co">#add slope=0 line</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">TAXA</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">alpha_slopes_set1</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">slope</span>, fill <span class="op">=</span> <span class="va">TAXA</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_histogram</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"grey"</span>, bins <span class="op">=</span> <span class="fl">25</span><span class="op">)</span> <span class="op">+</span> <span class="co">#all assemblages</span></span>
+<span>  <span class="fu">geom_histogram</span><span class="op">(</span>data <span class="op">=</span> <span class="va">alpha_slopes_set1</span><span class="op">[</span><span class="va">alpha_slopes_set1</span><span class="op">$</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>, bins <span class="op">=</span> <span class="fl">25</span><span class="op">)</span> <span class="op">+</span> <span class="co">#only significant change assemblages</span></span>
+<span>  <span class="fu">geom_vline</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="fl">3</span>, colour <span class="op">=</span> <span class="st">"black"</span>, linewidth <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span> <span class="co">#add slope=0 line</span></span>
+<span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">TAXA</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/BioTIME-palette.html">scale_fill_biotime</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"Shannon-Weiner Species Diversity Index"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="co">#add slope=0 line</span></span></code></pre></div>
+<span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Shannon-Weiner Species Diversity Index"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme</span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="co">#add slope=0 line</span></span></code></pre></div>
 <p><img src="vignette1_files/figure-html/trends6-1.png" width="691.2"></p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#Now we see the full distribution of slopes of change for the Shannon index for the birds and fish time series in our subset: all slopes are shown in grey, while in colour we show the subset of assemblages for which</span></span></code></pre></div>
@@ -1196,16 +1196,16 @@ series, allowing us to visualise the data and the trend line:</p>
 <span></span>
 <span></span>
 <span><span class="co">#Let's put it all together</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">alpha_slopes_set2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">diversity</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"#155f49"</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span>   <span class="co">#plot the yearly estimates</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">stat_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, linetype <span class="op">=</span> <span class="fl">2</span>, colour <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span> <span class="op">+</span> <span class="co">#draw all regression line</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">stat_smooth</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">alpha_slopes_set2</span>, <span class="va">alpha_slopes_set2</span><span class="op">$</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>,</span>
-<span>              <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">diversity</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">alpha_slopes_set2</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">diversity</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"#155f49"</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span>   <span class="co">#plot the yearly estimates</span></span>
+<span>  <span class="fu">stat_smooth</span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, linetype <span class="op">=</span> <span class="fl">2</span>, colour <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span> <span class="op">+</span> <span class="co">#draw all regression line</span></span>
+<span>  <span class="fu">stat_smooth</span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">alpha_slopes_set2</span>, <span class="va">alpha_slopes_set2</span><span class="op">$</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>              <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">diversity</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, </span>
 <span>              linetype <span class="op">=</span> <span class="fl">2</span>, colour <span class="op">=</span> <span class="st">"#155f49"</span><span class="op">)</span> <span class="op">+</span> <span class="co">#colour only trends that are significant</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">metric</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">metric</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/BioTIME-palette.html">scale_fill_biotime</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Assemblage"</span>, <span class="va">name_assemblage</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Diversity"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Assemblage"</span>, <span class="va">name_assemblage</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Diversity"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme</span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette1_files/figure-html/trends8-1.png" width="691.2"></p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#Hint: If you want to draw the p-value on the plot, you can try using the ggpmisc::stat_fit_glance which takes anything passed through lm() in R and allows it to processed and printed using ggplot2.</span></span></code></pre></div>
