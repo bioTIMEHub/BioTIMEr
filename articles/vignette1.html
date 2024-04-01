@@ -524,15 +524,16 @@ choose to use both currency fields, only observations (when
 <code>conservative = TRUE</code>) in which BOTH Abundance and Biomass
 were recorded are retained and a warning is issued as follows:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#Keep only observations with both abundance and biomass</span></span>
+<code class="sourceCode R"><span><span class="co"># Keep only observations with both abundance and biomass</span></span>
 <span><span class="va">grid_rare_ab</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/resampling.html">resampling</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">grid_samples</span>, measure <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABUNDANCE"</span>, <span class="st">"BIOMASS"</span><span class="op">)</span>,</span>
-<span>                           resamps <span class="op">=</span> <span class="fl">1</span>, conservative <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span>    resamps <span class="op">=</span> <span class="fl">1</span>, conservative <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in resampling(x = grid_samples, measure = c("ABUNDANCE", "BIOMASS"), : NA values found and removed.</span></span>
 <span><span class="co">## Only a subset of `x` is used.</span></span></code></pre>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Keep only sampling events where all observations within had both abundance and biomass to start with</span></span>
+<code class="sourceCode R"><span><span class="co"># Keep only sampling events where all observations within had both abundance</span></span>
+<span><span class="co"># and biomass to start with</span></span>
 <span><span class="va">grid_rare_abT</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/resampling.html">resampling</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">grid_samples</span>, measure <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABUNDANCE"</span>, <span class="st">"BIOMASS"</span><span class="op">)</span>,</span>
-<span>                            resamps <span class="op">=</span> <span class="fl">1</span>, conservative <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span>    resamps <span class="op">=</span> <span class="fl">1</span>, conservative <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in resampling(x = grid_samples, measure = c("ABUNDANCE", "BIOMASS"), : NA values found and whole samples removed since `conservative` is TRUE.</span></span>
 <span><span class="co">## Only a subset of `x` is used.</span></span></code></pre>
 <div class="section level4">
@@ -611,7 +612,7 @@ that originates from the random sample selection process):</p>
 <td align="right">10</td>
 <td align="left">10_359170</td>
 <td align="right">1</td>
-<td align="right">58</td>
+<td align="right">57</td>
 <td align="right">24</td>
 <td align="right">3</td>
 </tr>
@@ -619,15 +620,15 @@ that originates from the random sample selection process):</p>
 <td align="right">10</td>
 <td align="left">10_359170</td>
 <td align="right">2</td>
-<td align="right">58</td>
-<td align="right">23</td>
+<td align="right">60</td>
+<td align="right">25</td>
 <td align="right">3</td>
 </tr>
 <tr class="odd">
 <td align="right">10</td>
 <td align="left">10_359170</td>
 <td align="right">3</td>
-<td align="right">58</td>
+<td align="right">56</td>
 <td align="right">23</td>
 <td align="right">3</td>
 </tr>
@@ -635,7 +636,7 @@ that originates from the random sample selection process):</p>
 <td align="right">18</td>
 <td align="left">18_335699</td>
 <td align="right">1</td>
-<td align="right">697</td>
+<td align="right">666</td>
 <td align="right">74</td>
 <td align="right">29</td>
 </tr>
@@ -643,16 +644,16 @@ that originates from the random sample selection process):</p>
 <td align="right">18</td>
 <td align="left">18_335699</td>
 <td align="right">2</td>
-<td align="right">707</td>
-<td align="right">77</td>
+<td align="right">702</td>
+<td align="right">75</td>
 <td align="right">29</td>
 </tr>
 <tr class="even">
 <td align="right">18</td>
 <td align="left">18_335699</td>
 <td align="right">3</td>
-<td align="right">717</td>
-<td align="right">77</td>
+<td align="right">709</td>
+<td align="right">73</td>
 <td align="right">29</td>
 </tr>
 <tr class="odd">
@@ -756,80 +757,80 @@ now processed BioTIME example dataset:</p>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
-<td align="right">21</td>
-<td align="right">2163</td>
-<td align="right">1056</td>
-<td align="right">1.667137</td>
-<td align="right">0.7025251</td>
-<td align="right">3.361628</td>
-<td align="right">0.7028500</td>
-<td align="right">0.6786870</td>
-<td align="right">5.296983</td>
+<td align="right">19</td>
+<td align="right">2213</td>
+<td align="right">1288</td>
+<td align="right">1.473156</td>
+<td align="right">0.6229949</td>
+<td align="right">2.652484</td>
+<td align="right">0.6232766</td>
+<td align="right">0.7216448</td>
+<td align="right">4.362984</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="right">1992</td>
-<td align="right">20</td>
-<td align="right">1442</td>
-<td align="right">618</td>
-<td align="right">1.717620</td>
-<td align="right">0.7401734</td>
-<td align="right">3.848721</td>
-<td align="right">0.7406871</td>
-<td align="right">0.6289875</td>
-<td align="right">5.571252</td>
+<td align="right">17</td>
+<td align="right">1593</td>
+<td align="right">942</td>
+<td align="right">1.475247</td>
+<td align="right">0.6156974</td>
+<td align="right">2.602116</td>
+<td align="right">0.6160842</td>
+<td align="right">0.7294413</td>
+<td align="right">4.372115</td>
 </tr>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="right">1996</td>
-<td align="right">19</td>
-<td align="right">1318</td>
-<td align="right">604</td>
-<td align="right">1.811157</td>
-<td align="right">0.7386024</td>
-<td align="right">3.825590</td>
-<td align="right">0.7391632</td>
-<td align="right">0.6153263</td>
-<td align="right">6.117520</td>
+<td align="right">20</td>
+<td align="right">1243</td>
+<td align="right">565</td>
+<td align="right">1.831635</td>
+<td align="right">0.7402807</td>
+<td align="right">3.850311</td>
+<td align="right">0.7408768</td>
+<td align="right">0.6363636</td>
+<td align="right">6.244086</td>
 </tr>
 <tr class="even">
 <td align="left">18_335699</td>
-<td align="right">1932</td>
-<td align="right">26</td>
-<td align="right">327</td>
-<td align="right">110</td>
-<td align="right">2.281063</td>
-<td align="right">0.8282131</td>
-<td align="right">5.821166</td>
-<td align="right">0.8307536</td>
-<td align="right">0.5168196</td>
-<td align="right">9.787081</td>
+<td align="right">1933</td>
+<td align="right">24</td>
+<td align="right">432</td>
+<td align="right">196</td>
+<td align="right">2.211526</td>
+<td align="right">0.7708119</td>
+<td align="right">4.363228</td>
+<td align="right">0.7726003</td>
+<td align="right">0.5416667</td>
+<td align="right">9.129638</td>
 </tr>
 <tr class="odd">
 <td align="left">18_335699</td>
-<td align="right">1934</td>
-<td align="right">26</td>
-<td align="right">466</td>
-<td align="right">177</td>
-<td align="right">2.308628</td>
-<td align="right">0.8177808</td>
-<td align="right">5.487895</td>
-<td align="right">0.8195394</td>
-<td align="right">0.4914163</td>
-<td align="right">10.060614</td>
+<td align="right">1946</td>
+<td align="right">33</td>
+<td align="right">572</td>
+<td align="right">173</td>
+<td align="right">2.555842</td>
+<td align="right">0.8656964</td>
+<td align="right">7.445815</td>
+<td align="right">0.8672125</td>
+<td align="right">0.4335664</td>
+<td align="right">12.882143</td>
 </tr>
 <tr class="even">
 <td align="left">18_335699</td>
-<td align="right">1935</td>
-<td align="right">28</td>
-<td align="right">554</td>
-<td align="right">164</td>
-<td align="right">2.377217</td>
-<td align="right">0.8395652</td>
-<td align="right">6.233063</td>
-<td align="right">0.8410834</td>
-<td align="right">0.5324910</td>
-<td align="right">10.774877</td>
+<td align="right">1954</td>
+<td align="right">30</td>
+<td align="right">603</td>
+<td align="right">158</td>
+<td align="right">2.601609</td>
+<td align="right">0.8859022</td>
+<td align="right">8.764408</td>
+<td align="right">0.8873738</td>
+<td align="right">0.3698176</td>
+<td align="right">13.485422</td>
 </tr>
 </tbody>
 </table>
@@ -852,44 +853,44 @@ now processed BioTIME example dataset:</p>
 <tr class="odd">
 <td align="right">1984</td>
 <td align="left">10_359170</td>
-<td align="right">0.1363636</td>
-<td align="right">0.0116847</td>
-<td align="right">0.2177531</td>
+<td align="right">0.1052632</td>
+<td align="right">0.0024192</td>
+<td align="right">0.1907514</td>
 </tr>
 <tr class="even">
 <td align="right">1992</td>
 <td align="left">10_359170</td>
-<td align="right">0.3333333</td>
-<td align="right">0.0126777</td>
-<td align="right">0.2984774</td>
+<td align="right">0.3043478</td>
+<td align="right">0.0337894</td>
+<td align="right">0.3431713</td>
 </tr>
 <tr class="odd">
 <td align="right">1996</td>
 <td align="left">10_359170</td>
-<td align="right">0.2272727</td>
-<td align="right">0.0246651</td>
-<td align="right">0.1550725</td>
+<td align="right">0.3913043</td>
+<td align="right">0.0380818</td>
+<td align="right">0.2249647</td>
 </tr>
 <tr class="even">
-<td align="right">1932</td>
+<td align="right">1933</td>
 <td align="left">18_335699</td>
-<td align="right">0.5142857</td>
-<td align="right">0.4724545</td>
-<td align="right">0.6393443</td>
+<td align="right">0.5000000</td>
+<td align="right">0.1752863</td>
+<td align="right">0.3984064</td>
 </tr>
 <tr class="odd">
-<td align="right">1934</td>
+<td align="right">1946</td>
 <td align="left">18_335699</td>
-<td align="right">0.5405405</td>
-<td align="right">0.6788880</td>
-<td align="right">0.7389330</td>
+<td align="right">0.4117647</td>
+<td align="right">0.2174414</td>
+<td align="right">0.4125604</td>
 </tr>
 <tr class="even">
-<td align="right">1935</td>
+<td align="right">1954</td>
 <td align="left">18_335699</td>
-<td align="right">0.4615385</td>
-<td align="right">0.2564067</td>
-<td align="right">0.5669607</td>
+<td align="right">0.5263158</td>
+<td align="right">0.2618132</td>
+<td align="right">0.4383906</td>
 </tr>
 </tbody>
 </table>
@@ -946,9 +947,9 @@ dataset.</p>
 <col width="12%">
 <col width="14%">
 <col width="13%">
-<col width="10%">
+<col width="11%">
 <col width="14%">
-<col width="15%">
+<col width="14%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">assemblageID</th>
@@ -965,61 +966,61 @@ dataset.</p>
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">S</td>
-<td align="right">21.0000000</td>
-<td align="right">-0.1607143</td>
-<td align="right">0.1210377</td>
+<td align="right">19.0000000</td>
+<td align="right">0.0357143</td>
+<td align="right">0.9087421</td>
 <td align="right">0</td>
-<td align="right">339.928571</td>
+<td align="right">-52.42857</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">N</td>
-<td align="right">2163.0000000</td>
-<td align="right">-73.2321429</td>
-<td align="right">0.1255256</td>
-<td align="right">0</td>
-<td align="right">147421.785714</td>
+<td align="right">2213.0000000</td>
+<td align="right">-80.3571429</td>
+<td align="right">0.0195966</td>
+<td align="right">1</td>
+<td align="right">161647.28571</td>
 </tr>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">maxN</td>
-<td align="right">1056.0000000</td>
-<td align="right">-40.1071429</td>
-<td align="right">0.1949547</td>
+<td align="right">1288.0000000</td>
+<td align="right">-57.8214286</td>
+<td align="right">0.1367940</td>
 <td align="right">0</td>
-<td align="right">80599.285714</td>
+<td align="right">116034.85714</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">Shannon</td>
-<td align="right">1.6671374</td>
-<td align="right">0.0111886</td>
-<td align="right">0.2298457</td>
+<td align="right">1.4731562</td>
+<td align="right">0.0256429</td>
+<td align="right">0.4511464</td>
 <td align="right">0</td>
-<td align="right">-20.540746</td>
+<td align="right">-49.45321</td>
 </tr>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">Simpson</td>
-<td align="right">0.7025251</td>
-<td align="right">0.0032492</td>
-<td align="right">0.2357813</td>
+<td align="right">0.6229949</td>
+<td align="right">0.0082472</td>
+<td align="right">0.4876093</td>
 <td align="right">0</td>
-<td align="right">-5.741066</td>
+<td align="right">-15.75786</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">invSimpson</td>
-<td align="right">3.3616278</td>
-<td align="right">0.0418383</td>
-<td align="right">0.2390979</td>
+<td align="right">2.6524841</td>
+<td align="right">0.0846596</td>
+<td align="right">0.4770670</td>
 <td align="right">0</td>
-<td align="right">-79.607402</td>
+<td align="right">-165.49417</td>
 </tr>
 </tbody>
 </table>
@@ -1059,48 +1060,48 @@ question.</p>
 <tbody>
 <tr class="odd">
 <td align="left">DomMc</td>
-<td align="right">26</td>
-<td align="right">-0.0077087</td>
+<td align="right">25</td>
+<td align="right">-0.0099928</td>
 </tr>
 <tr class="even">
 <td align="left">N</td>
-<td align="right">29</td>
-<td align="right">-200.3056255</td>
+<td align="right">32</td>
+<td align="right">-238.7551479</td>
 </tr>
 <tr class="odd">
 <td align="left">PIE</td>
-<td align="right">33</td>
-<td align="right">0.0126555</td>
+<td align="right">31</td>
+<td align="right">0.0146449</td>
 </tr>
 <tr class="even">
 <td align="left">S</td>
-<td align="right">30</td>
-<td align="right">-0.2103123</td>
+<td align="right">29</td>
+<td align="right">-0.3032795</td>
 </tr>
 <tr class="odd">
 <td align="left">Shannon</td>
-<td align="right">39</td>
-<td align="right">0.0275366</td>
+<td align="right">38</td>
+<td align="right">0.0344037</td>
 </tr>
 <tr class="even">
 <td align="left">Simpson</td>
-<td align="right">36</td>
-<td align="right">0.0130231</td>
+<td align="right">32</td>
+<td align="right">0.0147596</td>
 </tr>
 <tr class="odd">
 <td align="left">expShannon</td>
-<td align="right">40</td>
-<td align="right">0.0216076</td>
+<td align="right">35</td>
+<td align="right">0.0762656</td>
 </tr>
 <tr class="even">
 <td align="left">invSimpson</td>
-<td align="right">31</td>
-<td align="right">0.0661598</td>
+<td align="right">26</td>
+<td align="right">0.1253995</td>
 </tr>
 <tr class="odd">
 <td align="left">maxN</td>
-<td align="right">35</td>
-<td align="right">-104.3182486</td>
+<td align="right">28</td>
+<td align="right">-75.2801256</td>
 </tr>
 </tbody>
 </table>
