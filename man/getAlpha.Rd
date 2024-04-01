@@ -21,14 +21,4 @@ McNaughton's Dominance.
 \description{
 Alpha
 }
-\examples{
-\dontrun{
-  x <- data.frame(
-    YEAR = rep(rep(2010:2015, each = 4), times = 4),
-    matrix(data = rpois(384, 10), ncol = 4)
-    )
-    res <- getAlpha(x, id = 34)
-}
-
-}
 \keyword{internal}

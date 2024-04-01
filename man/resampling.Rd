@@ -59,7 +59,7 @@ together, one from each iteration identified by a numerical
 unique identifier 1:resamps.
 }
 \examples{
-\dontrun{
+\donttest{
   library(BioTIMEr)
   set.seed(42)
   x <- gridding(BTsubset_meta, BTsubset_data)

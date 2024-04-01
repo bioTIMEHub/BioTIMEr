@@ -63,7 +63,7 @@ file.exists("data/BTsubset_data.RData")
     - `getLinearRegressions ()`
 5. Visualise the results.
 
-Below is a detailed run through these different steps, breaking down some of the tasks and the reasoning behind our suggestions for best practice when analyzing BioTIME data. 
+Below is a detailed run through these different steps, breaking down some of the tasks and the reasoning behind our suggestions for best practice when analysing BioTIME data. 
 
 
 We use the ‘pipe’ operator `(%>%)` to make our code more efficient and streamlined, and we use ggplot2 library for most visualizations. This and other libraries required for BioTIMEr to run will be, if needed, installed at the same time BioTIMEr is installed.  
@@ -219,7 +219,7 @@ grid_rare <- resampling(x = grid_samples, measure = "ABUNDANCE",
 # grid_rare <- resampling( x= grid_samples_test, measure ="BIOMASS", resamps = 1L, conservative = FALSE)
 ```
 
-The function returns a single long form data frame containing the total currency of interest (i.e. summed across all samples) for each species in each year within eachn assemblage time series. You can specify what the currency field is: Abundance, Biomass or both (BioTIME studies can include records for either or both). Note that resampling() also tests and removes any `NAs` within the selected currency field(s) before implementing the sample-based rarefaction. Thus, if you choose to use both currency fields, only observations (when `conservative = FALSE`) or full sampling events (when `conservative = TRUE`) in which BOTH Abundance and Biomass were recorded are retained and a warning is issued as follows:
+The function returns a single long form data frame containing the total currency of interest (i.e. summed across all samples) for each species in each year within each assemblage time series. You can specify what the currency field is: Abundance, Biomass or both (BioTIME studies can include records for either or both). Note that resampling() also tests and removes any `NAs` within the selected currency field(s) before implementing the sample-based rarefaction. Thus, if you choose to use both currency fields, only observations (when `conservative = FALSE`) or full sampling events (when `conservative = TRUE`) in which BOTH Abundance and Biomass were recorded are retained and a warning is issued as follows:
 
 ```{r resampling_ex12, cache=TRUE, echo=TRUE, message=FALSE, tidy=TRUE, include=TRUE} 
 #Keep only observations with both abundance and biomass
@@ -314,7 +314,7 @@ beta_metrics %>% head(6) %>% kable()
 # beta_metrics %>% head(6) %>% kable()
 ```
 
-There are many metrics for measuring biodiversity in community ecology. Here, we focused on the more commonly used metrics when measuring temporal changes in biodiversity. getAlphaMetrics() estimates nine alpha diversity metrics: Species richness (`S`), numerical abundance (`N`), maximum numerical abundance (`maxN`), Shannon index, Simpson index, inverse Simpson, McNaughton dominance, probability of intraspecific encounter (`PIE`) and exponential Shannon. getBetaMetrics() estimates three beta diversity metrics: Jaccard dissimilarity, Bray-Curtis dissimilarity and Morisita-Horn dissimilarity, assuming the first year in the time series as the baseline. Note that `N` and `maxN` metrics return numerical abundance when `measure=ABUNDANCE`, and biomass values whem `measure=BIOMASS`.
+There are many metrics for measuring biodiversity in community ecology. Here, we focused on the more commonly used metrics when measuring temporal changes in biodiversity. getAlphaMetrics() estimates nine alpha diversity metrics: Species richness (`S`), numerical abundance (`N`), maximum numerical abundance (`maxN`), Shannon index, Simpson index, inverse Simpson, McNaughton dominance, probability of intraspecific encounter (`PIE`) and exponential Shannon. getBetaMetrics() estimates three beta diversity metrics: Jaccard dissimilarity, Bray-Curtis dissimilarity and Morisita-Horn dissimilarity, assuming the first year in the time series as the baseline. Note that `N` and `maxN` metrics return numerical abundance when `measure=ABUNDANCE`, and biomass values when `measure=BIOMASS`.
 
 ### Investigating biodiversity trends
 Finally, when looking to measure biodiversity change using temporal data, it is common to estimate temporal trends in alpha diversity and beta diversity by fitting a simple linear regression to the diversity estimates over the duration of the time series. The `getLinearRegressions()` function implements linear models as a function of year and is designed to run smoothly over an output of either the `getAlphaMetrics()` or `getBetaMetrics()` functions. Specifically, it provides the results of simple linear regressions (slope, p-value, significance, intercept) using lm(), and fit individually to the yearly diversity estimates of each metric within each assemblage time series in your dataset.
@@ -353,7 +353,7 @@ check6 <- alpha_slopes %>%
 check6 %>% kable() 
 
 # We can see that only a few (<40) of the assemblage time series
-# actually show a significant trend of change over time, independently of the metric used. This indicates that in most time series in the studies we analyzed alpha diversity is not really changing through time.
+# actually show a significant trend of change over time, independently of the metric used. This indicates that in most time series in the studies we analysed alpha diversity is not really changing through time.
 
 ```
 

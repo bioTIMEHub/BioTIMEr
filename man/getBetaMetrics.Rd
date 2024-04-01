@@ -26,7 +26,6 @@ Note that the input data frame needs to be in the format of the output of the
  issued and the computations are halted.
 }
 \examples{
-\dontrun{
 x <- data.frame(
   resamp = 1L,
   YEAR = rep(rep(2010:2015, each = 4), times = 4),
@@ -38,5 +37,4 @@ x <- data.frame(
   )
 
 res <- getBetaMetrics(x, measure = "ABUNDANCE")
-}
 }

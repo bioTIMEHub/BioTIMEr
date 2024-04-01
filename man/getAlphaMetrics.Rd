@@ -50,7 +50,6 @@ Note that the input data frame needs to be in the format of the output of the
  are not found an error is issued and the computations are halted.
 }
 \examples{
-\dontrun{
   x <- data.frame(
     resamp = 1L,
     YEAR = rep(rep(2010:2015, each = 4), times = 4),
@@ -59,5 +58,4 @@ Note that the input data frame needs to be in the format of the output of the
     assemblageID = rep(LETTERS[1L:8L], each = 24)
   )
   res <- getAlphaMetrics(x, measure = "ABUNDANCE")
-}
 }
