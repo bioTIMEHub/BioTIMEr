@@ -10,4 +10,4 @@ ENV PATH=$PATH:/usr/local/texlive/bin/linux
 
 RUN /rocker_scripts/install_verse.sh
 
-RUN R -q -e 'install.packages("checkmate","vegan","dggridR")'
+RUN install2.r checkmate vegan dggridR
