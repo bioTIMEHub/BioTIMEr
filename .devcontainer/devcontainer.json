@@ -1,8 +1,8 @@
-/*{
-    "image": "ghcr.io/rocker-org/devcontainer/r-ver:4.2"
-}*/
 {
+    "image": "ghcr.io/rocker-org/devcontainer/r-ver:4.2"
+}
+/*{
     "build": {
         "dockerfile": "Dockerfile"
     }
-}
+}*/
