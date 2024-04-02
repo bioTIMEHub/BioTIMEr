@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioTIMEr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
       </span>
     </div>
 
@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Inês S.
 Martins</h4>
             
-            <h4 data-toc-skip class="date">2024-04-01</h4>
+            <h4 data-toc-skip class="date">2024-04-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/bioTIMEHub/BioTIMEr/blob/HEAD/vignettes/vignette1.Rmd" class="external-link"><code>vignettes/vignette1.Rmd</code></a></small>
       <div class="hidden name"><code>vignette1.Rmd</code></div>
@@ -197,11 +197,11 @@ similar spatial extent between them.</p>
 <p>Let’s take a look and see how many studies/cells/assemblages time
 series are there in this subset:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">check1</span> <span class="op">&lt;-</span> <span class="va">grid_samples</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">StudyMethod</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>n_cell <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">cell</span><span class="op">)</span>, n_aID <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, res <span class="op">=</span> <span class="st">"res12"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">check1</span> <span class="op">&lt;-</span> <span class="va">grid_samples</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">StudyMethod</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">summarise</span><span class="op">(</span>n_cell <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">cell</span><span class="op">)</span>, n_aID <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, res <span class="op">=</span> <span class="st">"res12"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">check1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">check1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">STUDY_ID</th>
@@ -318,13 +318,13 @@ over these alternative options with a few examples:</p>
 <pre><code><span><span class="co">## Resolution: 15, Area (km^2): 3.55473501726709, Spacing (km): 1.86210705534755, CLS (km): 2.12744663988395</span></span></code></pre>
 <p>So what changed with different <code>res</code> values?</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">check2</span> <span class="op">&lt;-</span> <span class="va">grid_samples_14</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">StudyMethod</span>, <span class="va">STUDY_ID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>n_cell <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">cell</span><span class="op">)</span>, n_aID <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, res <span class="op">=</span> <span class="st">"res14"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">check2</span> <span class="op">&lt;-</span> <span class="va">grid_samples_14</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">StudyMethod</span>, <span class="va">STUDY_ID</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">summarise</span><span class="op">(</span>n_cell <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">cell</span><span class="op">)</span>, n_aID <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, res <span class="op">=</span> <span class="st">"res14"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">check3</span> <span class="op">&lt;-</span> <span class="va">grid_samples_auto</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">StudyMethod</span>, <span class="va">STUDY_ID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>n_cell <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">cell</span><span class="op">)</span>, n_aID <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, res <span class="op">=</span> <span class="st">"res15"</span><span class="op">)</span> </span>
+<span><span class="va">check3</span> <span class="op">&lt;-</span> <span class="va">grid_samples_auto</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">StudyMethod</span>, <span class="va">STUDY_ID</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">summarise</span><span class="op">(</span>n_cell <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">cell</span><span class="op">)</span>, n_aID <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, res <span class="op">=</span> <span class="st">"res15"</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="va">checks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">check1</span>, <span class="va">check2</span>, <span class="va">check3</span><span class="op">)</span></span>
 <span></span>
@@ -418,11 +418,11 @@ randomly resample each year down to that number.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#First, if you are not sure you need this step, </span></span>
 <span><span class="co">#you can always check how many samples there are in every year of the different time series:</span></span>
-<span><span class="va">check4</span> <span class="op">&lt;-</span> <span class="va">grid_samples</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">assemblageID</span>, <span class="va">YEAR</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>n_samples <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">SAMPLE_DESC</span><span class="op">)</span>, n_species <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">check4</span> <span class="op">&lt;-</span> <span class="va">grid_samples</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">assemblageID</span>, <span class="va">YEAR</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">summarise</span><span class="op">(</span>n_samples <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">SAMPLE_DESC</span><span class="op">)</span>, n_species <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">check4</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
+<span><span class="va">check4</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">STUDY_ID</th>
@@ -593,11 +593,11 @@ that originates from the random sample selection process):</p>
 <span><span class="co"># Each resampling iteration will be identified as resamp = 1:n, in this case 1:10.</span></span>
 <span><span class="co">#Now we can check if there are differences across the first 3 of these iterations: </span></span>
 <span></span>
-<span><span class="va">check5</span> <span class="op">&lt;-</span> <span class="va">grid_rare_n10</span><span class="op">[</span><span class="va">grid_rare_n10</span><span class="op">$</span><span class="va">resamp</span> <span class="op">&lt;</span> <span class="fl">4</span>,<span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">assemblageID</span>, <span class="va">resamp</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>n_obs <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span>, n_species <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span>, n_year <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">YEAR</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">check5</span> <span class="op">&lt;-</span> <span class="va">grid_rare_n10</span><span class="op">[</span><span class="va">grid_rare_n10</span><span class="op">$</span><span class="va">resamp</span> <span class="op">&lt;</span> <span class="fl">4</span>,<span class="op">]</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">assemblageID</span>, <span class="va">resamp</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">summarise</span><span class="op">(</span>n_obs <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span>, n_species <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">Species</span><span class="op">)</span>, n_year <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">YEAR</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">check5</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">check5</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">STUDY_ID</th>
@@ -612,48 +612,48 @@ that originates from the random sample selection process):</p>
 <td align="right">10</td>
 <td align="left">10_359170</td>
 <td align="right">1</td>
-<td align="right">58</td>
-<td align="right">24</td>
+<td align="right">57</td>
+<td align="right">25</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="right">10</td>
 <td align="left">10_359170</td>
 <td align="right">2</td>
-<td align="right">58</td>
-<td align="right">24</td>
+<td align="right">54</td>
+<td align="right">22</td>
 <td align="right">3</td>
 </tr>
 <tr class="odd">
 <td align="right">10</td>
 <td align="left">10_359170</td>
 <td align="right">3</td>
-<td align="right">58</td>
-<td align="right">23</td>
+<td align="right">59</td>
+<td align="right">25</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="right">18</td>
 <td align="left">18_335699</td>
 <td align="right">1</td>
-<td align="right">715</td>
-<td align="right">73</td>
+<td align="right">688</td>
+<td align="right">74</td>
 <td align="right">29</td>
 </tr>
 <tr class="odd">
 <td align="right">18</td>
 <td align="left">18_335699</td>
 <td align="right">2</td>
-<td align="right">688</td>
-<td align="right">73</td>
+<td align="right">709</td>
+<td align="right">71</td>
 <td align="right">29</td>
 </tr>
 <tr class="even">
 <td align="right">18</td>
 <td align="left">18_335699</td>
 <td align="right">3</td>
-<td align="right">696</td>
-<td align="right">74</td>
+<td align="right">712</td>
+<td align="right">73</td>
 <td align="right">29</td>
 </tr>
 <tr class="odd">
@@ -725,7 +725,7 @@ now processed BioTIME example dataset:</p>
 <span><span class="co">#see also help("getAlphaMetrics") for more details on the metrics</span></span>
 <span></span>
 <span><span class="co">#Have a quick look at the output</span></span>
-<span><span class="va">alpha_metrics</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">alpha_metrics</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
 <col width="14%">
@@ -757,80 +757,80 @@ now processed BioTIME example dataset:</p>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
-<td align="right">20</td>
-<td align="right">3150</td>
-<td align="right">1910</td>
-<td align="right">1.462781</td>
-<td align="right">0.6020336</td>
-<td align="right">2.512775</td>
-<td align="right">0.6022247</td>
-<td align="right">0.7177778</td>
-<td align="right">4.317951</td>
+<td align="right">21</td>
+<td align="right">2879</td>
+<td align="right">1506</td>
+<td align="right">1.614198</td>
+<td align="right">0.6774717</td>
+<td align="right">3.100503</td>
+<td align="right">0.6777071</td>
+<td align="right">0.6776659</td>
+<td align="right">5.023857</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="right">1992</td>
 <td align="right">18</td>
-<td align="right">1534</td>
-<td align="right">768</td>
-<td align="right">1.625192</td>
-<td align="right">0.6971030</td>
-<td align="right">3.301452</td>
-<td align="right">0.6975577</td>
-<td align="right">0.6460235</td>
-<td align="right">5.079395</td>
+<td align="right">1682</td>
+<td align="right">978</td>
+<td align="right">1.479919</td>
+<td align="right">0.6241388</td>
+<td align="right">2.660557</td>
+<td align="right">0.6245101</td>
+<td align="right">0.7336504</td>
+<td align="right">4.392589</td>
 </tr>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="right">1996</td>
-<td align="right">18</td>
-<td align="right">1482</td>
-<td align="right">754</td>
-<td align="right">1.632954</td>
-<td align="right">0.6903043</td>
-<td align="right">3.228976</td>
-<td align="right">0.6907705</td>
-<td align="right">0.6801619</td>
-<td align="right">5.118975</td>
+<td align="right">19</td>
+<td align="right">1408</td>
+<td align="right">789</td>
+<td align="right">1.564838</td>
+<td align="right">0.6491911</td>
+<td align="right">2.850555</td>
+<td align="right">0.6496525</td>
+<td align="right">0.6938920</td>
+<td align="right">4.781900</td>
 </tr>
 <tr class="even">
 <td align="left">18_335699</td>
 <td align="right">1945</td>
-<td align="right">32</td>
-<td align="right">1058</td>
-<td align="right">301</td>
-<td align="right">2.272563</td>
-<td align="right">0.8370217</td>
-<td align="right">6.135788</td>
-<td align="right">0.8378136</td>
-<td align="right">0.5245747</td>
-<td align="right">9.704239</td>
+<td align="right">37</td>
+<td align="right">1265</td>
+<td align="right">286</td>
+<td align="right">2.421958</td>
+<td align="right">0.8688628</td>
+<td align="right">7.625602</td>
+<td align="right">0.8695502</td>
+<td align="right">0.4292490</td>
+<td align="right">11.267901</td>
 </tr>
 <tr class="odd">
 <td align="left">18_335699</td>
-<td align="right">1935</td>
-<td align="right">34</td>
-<td align="right">603</td>
-<td align="right">95</td>
-<td align="right">2.766135</td>
-<td align="right">0.9142513</td>
-<td align="right">11.661984</td>
-<td align="right">0.9157700</td>
-<td align="right">0.2935323</td>
-<td align="right">15.897065</td>
+<td align="right">1933</td>
+<td align="right">23</td>
+<td align="right">528</td>
+<td align="right">190</td>
+<td align="right">2.393187</td>
+<td align="right">0.8369706</td>
+<td align="right">6.133861</td>
+<td align="right">0.8385587</td>
+<td align="right">0.4507576</td>
+<td align="right">10.948333</td>
 </tr>
 <tr class="even">
 <td align="left">18_335699</td>
-<td align="right">1936</td>
-<td align="right">37</td>
-<td align="right">1049</td>
-<td align="right">281</td>
-<td align="right">2.505993</td>
-<td align="right">0.8645903</td>
-<td align="right">7.384994</td>
-<td align="right">0.8654153</td>
-<td align="right">0.4632984</td>
-<td align="right">12.255716</td>
+<td align="right">1935</td>
+<td align="right">25</td>
+<td align="right">569</td>
+<td align="right">304</td>
+<td align="right">1.754323</td>
+<td align="right">0.6803599</td>
+<td align="right">3.128519</td>
+<td align="right">0.6815577</td>
+<td align="right">0.6713533</td>
+<td align="right">5.779532</td>
 </tr>
 </tbody>
 </table>
@@ -840,7 +840,7 @@ now processed BioTIME example dataset:</p>
 <span><span class="co">#see also help("getBetaMetrics") for more details on the metrics</span></span>
 <span></span>
 <span><span class="co">#Have a quick look at the output</span></span>
-<span><span class="va">beta_metrics</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">beta_metrics</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">YEAR</th>
@@ -853,44 +853,44 @@ now processed BioTIME example dataset:</p>
 <tr class="odd">
 <td align="right">1984</td>
 <td align="left">10_359170</td>
-<td align="right">0.1000000</td>
-<td align="right">0.0231599</td>
-<td align="right">0.3569599</td>
+<td align="right">0.2272727</td>
+<td align="right">0.0128275</td>
+<td align="right">0.2742820</td>
 </tr>
 <tr class="even">
 <td align="right">1992</td>
 <td align="left">10_359170</td>
-<td align="right">0.2727273</td>
-<td align="right">0.0243829</td>
-<td align="right">0.3976684</td>
+<td align="right">0.2608696</td>
+<td align="right">0.0108011</td>
+<td align="right">0.3729881</td>
 </tr>
 <tr class="odd">
 <td align="right">1996</td>
 <td align="left">10_359170</td>
-<td align="right">0.2857143</td>
-<td align="right">0.0161639</td>
-<td align="right">0.1140584</td>
+<td align="right">0.3913043</td>
+<td align="right">0.0065911</td>
+<td align="right">0.1631068</td>
 </tr>
 <tr class="even">
 <td align="right">1945</td>
 <td align="left">18_335699</td>
-<td align="right">0.4651163</td>
-<td align="right">0.2915361</td>
-<td align="right">0.4521373</td>
+<td align="right">0.5714286</td>
+<td align="right">0.5246228</td>
+<td align="right">0.5493586</td>
 </tr>
 <tr class="odd">
-<td align="right">1935</td>
+<td align="right">1933</td>
 <td align="left">18_335699</td>
-<td align="right">0.4318182</td>
-<td align="right">0.3164948</td>
-<td align="right">0.4788799</td>
+<td align="right">0.6521739</td>
+<td align="right">0.6161285</td>
+<td align="right">0.7055616</td>
 </tr>
 <tr class="even">
-<td align="right">1936</td>
+<td align="right">1935</td>
 <td align="left">18_335699</td>
-<td align="right">0.4250000</td>
-<td align="right">0.2746469</td>
-<td align="right">0.4767784</td>
+<td align="right">0.5000000</td>
+<td align="right">0.4304092</td>
+<td align="right">0.5459305</td>
 </tr>
 </tbody>
 </table>
@@ -933,7 +933,7 @@ dataset.</p>
 <span></span>
 <span></span>
 <span><span class="co">#Have a quick look at the output </span></span>
-<span><span class="va">alpha_slopes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">alpha_slopes</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">beta_slopes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getLinearRegressions.html">getLinearRegressions</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">beta_metrics</span>, divType <span class="op">=</span> <span class="st">"beta"</span>,</span>
 <span>                                    pThreshold <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span>  <span class="co">#for beta metrics</span></span>
@@ -966,61 +966,61 @@ dataset.</p>
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">S</td>
-<td align="right">20.0000000</td>
-<td align="right">-0.1785714</td>
-<td align="right">0.2122956</td>
+<td align="right">21.0000000</td>
+<td align="right">-0.1964286</td>
+<td align="right">0.4245912</td>
 <td align="right">0</td>
-<td align="right">374.14286</td>
+<td align="right">4.103571e+02</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">N</td>
-<td align="right">3150.0000000</td>
-<td align="right">-148.0000000</td>
-<td align="right">0.1948401</td>
+<td align="right">2879.0000000</td>
+<td align="right">-126.4464286</td>
+<td align="right">0.1002263</td>
 <td align="right">0</td>
-<td align="right">296674.00000</td>
+<td align="right">2.537024e+05</td>
 </tr>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">maxN</td>
-<td align="right">1910.0000000</td>
-<td align="right">-102.9642857</td>
-<td align="right">0.2055782</td>
-<td align="right">0</td>
-<td align="right">206111.57143</td>
+<td align="right">1506.0000000</td>
+<td align="right">-60.6428571</td>
+<td align="right">0.0486093</td>
+<td align="right">1</td>
+<td align="right">1.218107e+05</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">Shannon</td>
-<td align="right">1.4627809</td>
-<td align="right">0.0150554</td>
-<td align="right">0.1865749</td>
+<td align="right">1.6141980</td>
+<td align="right">-0.0059235</td>
+<td align="right">0.6422148</td>
 <td align="right">0</td>
-<td align="right">-28.39671</td>
+<td align="right">1.334480e+01</td>
 </tr>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">Simpson</td>
-<td align="right">0.6020336</td>
-<td align="right">0.0080027</td>
-<td align="right">0.2531282</td>
+<td align="right">0.6774717</td>
+<td align="right">-0.0029724</td>
+<td align="right">0.5233897</td>
 <td align="right">0</td>
-<td align="right">-15.26761</td>
+<td align="right">6.567363e+00</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
 <td align="left">invSimpson</td>
-<td align="right">2.5127747</td>
-<td align="right">0.0652408</td>
-<td align="right">0.2652772</td>
+<td align="right">3.1005035</td>
+<td align="right">-0.0257097</td>
+<td align="right">0.4956467</td>
 <td align="right">0</td>
-<td align="right">-126.85827</td>
+<td align="right">5.404991e+01</td>
 </tr>
 </tbody>
 </table>
@@ -1045,12 +1045,12 @@ question.</p>
 <p>Right, let’s start will some overall summaries and trends:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># First, how many assemblages in our dataset show a moderate evidence (P &lt; 0.05) of change in alpha diversity?</span></span>
-<span><span class="va">check6</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">metric</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>   <span class="co"># or use filter(pvalue&lt;0.05)</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>n_sig <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">n_distinct</a></span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">check6</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">metric</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>   <span class="co"># or use filter(pvalue&lt;0.05)</span></span>
+<span>  <span class="fu">summarise</span><span class="op">(</span>n_sig <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">check6</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
+<span><span class="va">check6</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">metric</th>
@@ -1060,48 +1060,48 @@ question.</p>
 <tbody>
 <tr class="odd">
 <td align="left">DomMc</td>
-<td align="right">28</td>
-<td align="right">-0.0051229</td>
+<td align="right">21</td>
+<td align="right">-0.0044290</td>
 </tr>
 <tr class="even">
 <td align="left">N</td>
-<td align="right">35</td>
-<td align="right">-169.0759517</td>
+<td align="right">34</td>
+<td align="right">-195.6058175</td>
 </tr>
 <tr class="odd">
 <td align="left">PIE</td>
-<td align="right">34</td>
-<td align="right">0.0142620</td>
+<td align="right">29</td>
+<td align="right">0.0105196</td>
 </tr>
 <tr class="even">
 <td align="left">S</td>
-<td align="right">27</td>
-<td align="right">-0.3225858</td>
+<td align="right">29</td>
+<td align="right">-0.1688536</td>
 </tr>
 <tr class="odd">
 <td align="left">Shannon</td>
-<td align="right">37</td>
-<td align="right">0.0259273</td>
+<td align="right">36</td>
+<td align="right">0.0140208</td>
 </tr>
 <tr class="even">
 <td align="left">Simpson</td>
-<td align="right">35</td>
-<td align="right">0.0139778</td>
+<td align="right">30</td>
+<td align="right">0.0113595</td>
 </tr>
 <tr class="odd">
 <td align="left">expShannon</td>
-<td align="right">40</td>
-<td align="right">0.0120851</td>
+<td align="right">34</td>
+<td align="right">0.0088655</td>
 </tr>
 <tr class="even">
 <td align="left">invSimpson</td>
-<td align="right">32</td>
-<td align="right">-0.0464353</td>
+<td align="right">24</td>
+<td align="right">0.0558363</td>
 </tr>
 <tr class="odd">
 <td align="left">maxN</td>
 <td align="right">31</td>
-<td align="right">-105.0490811</td>
+<td align="right">-99.5907041</td>
 </tr>
 </tbody>
 </table>
@@ -1112,18 +1112,18 @@ question.</p>
 change:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#Get a slope per assemblageID and metric</span></span>
-<span><span class="va">alpha_slopes_simp</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">assemblageID</span>, <span class="va">metric</span>, <span class="va">pvalue</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>   <span class="co">#select only the assemblages with significant trends</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">alpha_slopes_simp</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">assemblageID</span>, <span class="va">metric</span>, <span class="va">pvalue</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>   <span class="co">#select only the assemblages with significant trends</span></span>
+<span>  <span class="fu">summarise</span><span class="op">(</span>slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Note: you may need to simplify your data as by default the getLinearRegressions() function </span></span>
 <span><span class="co">#returns a data frame containing the original input of yearly diversity metrics for each assemblage </span></span>
 <span><span class="co">#time series merged with the results of a simple linear regression.</span></span>
 <span></span>
 <span><span class="co"># Calculate the mean slope and CIs</span></span>
-<span><span class="va">stats_alpha</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes_simp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">metric</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>mean_slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span>, <span class="co">#mean</span></span>
+<span><span class="va">stats_alpha</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes_simp</span> <span class="op">%&gt;%</span>  </span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">metric</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu">summarise</span><span class="op">(</span>mean_slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span>, <span class="co">#mean</span></span>
 <span>            ci_slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">qt</a></span><span class="op">(</span><span class="fl">0.95</span>, df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">slope</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co">#margin of error</span></span>
 <span></span>
 <span><span class="co"># Let's put it all together</span></span>
@@ -1156,15 +1156,15 @@ dataset.</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># First, we need to check the meta file and retrieve the information for the studies of interest</span></span>
 <span><span class="co">#head(BTsubset_meta)</span></span>
-<span><span class="va">meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">BTsubset_meta</span>, <span class="va">STUDY_ID</span>, <span class="va">TAXA</span>, <span class="va">REALM</span>, <span class="va">CLIMATE</span><span class="op">)</span></span>
+<span><span class="va">meta</span> <span class="op">&lt;-</span> <span class="fu">select</span><span class="op">(</span><span class="va">BTsubset_meta</span>, <span class="va">STUDY_ID</span>, <span class="va">TAXA</span>, <span class="va">REALM</span>, <span class="va">CLIMATE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Get a slope per assemblageID and metric</span></span>
-<span><span class="va">alpha_slopes_simp</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">assemblageID</span>, <span class="va">metric</span>,<span class="st">'pvalue'</span>, <span class="va">significance</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">alpha_slopes_simp</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">assemblageID</span>, <span class="va">metric</span>,<span class="st">'pvalue'</span>, <span class="va">significance</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu">summarise</span><span class="op">(</span>slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Get back the Study ID by separating our assemblageID column into multiple other columns.</span></span>
-<span><span class="va">alpha_slopes_simp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">alpha_slopes_simp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">alpha_slopes_simp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">alpha_slopes_simp</span> <span class="op">%&gt;%</span></span>
 <span>                                     <span class="fu">separate</span><span class="op">(</span><span class="va">.</span>, <span class="va">assemblageID</span>, </span>
 <span>                                              into <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDY_ID"</span>, <span class="st">"cell"</span><span class="op">)</span>,</span>
 <span>                                              sep <span class="op">=</span> <span class="st">"_"</span>, remove <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
