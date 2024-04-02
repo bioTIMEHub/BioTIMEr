@@ -121,18 +121,6 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
 #' @returns Returns a single long form data frame containing the total currency
 #'    of interest (sum) for each species in each year.
 #' @keywords internal
-#'
-#' @examples
-#' \dontrun{
-#'   library(dplyr)
-#'   library(BioTIMEr)
-#'   x <- gridding(BTsubset_meta, BTsubset_data) %>%
-#'     filter(assemblageID == "10_358678")
-#'   rarefysamples(Year = x$YEAR, SampleID = x$SAMPLE_DESC,
-#'     Species = x$Species, currency = x$ABUNDANCE,
-#'     resamps = 3)
-#'}
-#'
 
 rarefysamples <- function(x, measure, resamps) {
   # Computing minimal effort per year in this assemblageID

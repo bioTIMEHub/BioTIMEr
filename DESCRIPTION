@@ -1,7 +1,7 @@
 Package: BioTIMEr
 Type: Package
 Title: Tools to Use and Explore the 'BioTIME' Database
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: c(
   person("Alban", "Sagouis", role = c("aut","cre"),
         email = "alban.sagouis@idiv.de",
@@ -45,7 +45,7 @@ Description: The 'BioTIME' database was first published in
     was created.
     The 'BioTIMEr' package provides tools designed to interact with the
     'BioTIME' database. The functions provided include the 'BioTIME' recommended
-    methods for preparing ('gridding' and rarefaction) time series data, a
+    methods for preparing (gridding and rarefaction) time series data, a
     selection of standard biodiversity metrics (including species richness,
     numerical abundance and exponential Shannon) alongside examples on how to
     display change over time. It also includes a sample subset of both the query

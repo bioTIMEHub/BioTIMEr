@@ -1,3 +1,3 @@
-# BioTIMEr 0.2.1
+# BioTIMEr 0.2.2
 
 * Initial CRAN submission.

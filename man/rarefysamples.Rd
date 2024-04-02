@@ -27,16 +27,4 @@ Rarefy BioTIME data
 Applies sample-based rarefaction to standardise the number of samples per year
    within a cell-level time series.
 }
-\examples{
-\dontrun{
-  library(dplyr)
-  library(BioTIMEr)
-  x <- gridding(BTsubset_meta, BTsubset_data) \%>\%
-    filter(assemblageID == "10_358678")
-  rarefysamples(Year = x$YEAR, SampleID = x$SAMPLE_DESC,
-    Species = x$Species, currency = x$ABUNDANCE,
-    resamps = 3)
-}
-
-}
 \keyword{internal}
