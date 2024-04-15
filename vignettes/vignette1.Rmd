@@ -476,16 +476,22 @@ name_assemblage <- unique(alpha_slopes_set2$assemblageID)
 
 
 #Let's put it all together
-ggplot(data = alpha_slopes_set2, aes(x = YEAR, y = diversity)) +
-  geom_point(colour = "#155f49", size = 1) +   #plot the yearly estimates
-  stat_smooth(method = "lm", se = FALSE, linetype = 2, colour = "grey") + #draw all regression line
-  stat_smooth(data = subset(alpha_slopes_set2, alpha_slopes_set2$significance == 1),
-              aes(x = YEAR, y = diversity), method = "lm", se = FALSE, 
-              linetype = 2, colour = "#155f49") + #colour only trends that are significant
-  facet_wrap(~metric, scales = "free") +
-  scale_fill_biotime() +
-  ggtitle(paste("Assemblage", name_assemblage)) + ylab("Diversity") +
-  theme_bw() + theme(plot.title = element_text(size = 11, hjust = 0.5))
+if (!file.exists("trends8.rds")) {
+  p <- ggplot(data = alpha_slopes_set2, aes(x = YEAR, y = diversity)) +
+    geom_point(colour = "#155f49", size = 1) +   #plot the yearly estimates
+    stat_smooth(method = "lm", se = FALSE, linetype = 2, colour = "grey") + #draw all regression line
+    stat_smooth(data = subset(alpha_slopes_set2, alpha_slopes_set2$significance == 1),
+                aes(x = YEAR, y = diversity), method = "lm", se = FALSE, 
+                linetype = 2, colour = "#155f49") + #colour only trends that are significant
+    facet_wrap(~metric, scales = "free") +
+    scale_fill_biotime() +
+    ggtitle(paste("Assemblage", name_assemblage)) + ylab("Diversity") +
+    theme_bw() + theme(plot.title = element_text(size = 11, hjust = 0.5))
+  saveRDS(p, file = "trends8.rds")
+} else {
+  p <- readRDS(file = "trends8.rds")
+}
+p
 
 ```
 
