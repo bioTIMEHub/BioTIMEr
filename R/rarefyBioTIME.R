@@ -135,7 +135,7 @@ rarefysamples <- function(x, measure, resamps) {
         X = unique(x$YEAR),
         FUN = function(y) {
           samps <- unique(x$SAMPLE_DESC[x$YEAR == y])
-          sam <- sample(samps, minsample, replace = TRUE)
+          sam <- sample(samps, minsample, replace = FALSE)
           return(which(x$SAMPLE_DESC %in% sam & x$YEAR == y))
         })) # end of loop on years
 

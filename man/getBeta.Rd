@@ -10,7 +10,7 @@ getBeta(x, id)
 \item{x}{(\code{data.frame}) First column has to be year and following columns
 contain species abundances.}
 
-\item{id}{(\code{character})One AssemblageID}
+\item{id}{(\code{character}) One assemblageID}
 }
 \value{
 getBeta returns a data.frame with three beta diversity dissimilarity

@@ -77,7 +77,7 @@ getAlphaMetrics <- function(x, measure) {
 #' Alpha
 #' @param x (\code{data.frame}) First column has to be year and following columns
 #' contain species abundances.
-#' @param id (\code{character})One AssemblageID
+#' @param id (\code{character}) One assemblageID
 #' @keywords internal
 #' @returns A data frame with results for S (species richness), N (numerical abundance),
 #' maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
@@ -190,7 +190,7 @@ getBetaMetrics <- function(x, measure) {
 #' Beta
 #' @param x (\code{data.frame}) First column has to be year and following columns
 #' contain species abundances.
-#' @param id (\code{character})One AssemblageID
+#' @param id (\code{character}) One assemblageID
 #' @returns getBeta returns a data.frame with three beta diversity dissimilarity
 #' metrics
 #' @importFrom vegan vegdist

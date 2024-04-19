@@ -19,6 +19,7 @@ BuildType: Package
 PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source --resave-data
 PackageBuildArgs: --resave-data
+PackageCheckArgs: --as-cran
 PackageRoxygenize: rd,collate,namespace
 
 UseNativePipeOperator: No
