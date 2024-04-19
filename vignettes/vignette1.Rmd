@@ -467,13 +467,12 @@ ggplot(data = alpha_slopes_set1, aes(x = slope, fill = TAXA)) +
 ```
 
 We might also want to explore the different trends for a given time series, allowing us to visualise the data and the trend line: 
-```{r trends8, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7.2, fig.height=6,tidy=FALSE, include=TRUE,results='hold', figures='hold'} 
+```{r trends8_hidden, cache=TRUE, echo=FALSE, message=FALSE, fig.width=7.2, fig.height=6,tidy=FALSE, include=FALSE, eval=TRUE, results='hold', figures='hold'} 
 # Let's go back to the data frame with the yearly values and select our relevant data for plotting
 alpha_slopes_set2 <- subset(alpha_slopes, assemblageID == "18_335699")
 
 # get assemblage ID
 name_assemblage <- unique(alpha_slopes_set2$assemblageID)
-
 
 #Let's put it all together
 if (!file.exists("trends8.rds")) {
@@ -495,6 +494,27 @@ p
 
 ```
 
+```{r trends8_shown, cache=FALSE, echo=FALSE, message=FALSE, tidy=FALSE, include=TRUE, eval=FALSE,results='hold', figures='hold'} 
+# Let's go back to the data frame with the yearly values and select our relevant data for plotting
+alpha_slopes_set2 <- subset(alpha_slopes, assemblageID == "18_335699")
+
+# get assemblage ID
+name_assemblage <- unique(alpha_slopes_set2$assemblageID)
+
+#Let's put it all together
+ggplot(data = alpha_slopes_set2, aes(x = YEAR, y = diversity)) +
+    geom_point(colour = "#155f49", size = 1) +   #plot the yearly estimates
+    stat_smooth(method = "lm", se = FALSE, linetype = 2, colour = "grey") + #draw all regression line
+    stat_smooth(data = subset(alpha_slopes_set2, alpha_slopes_set2$significance == 1),
+                aes(x = YEAR, y = diversity), method = "lm", se = FALSE, 
+                linetype = 2, colour = "#155f49") + #colour only trends that are significant
+    facet_wrap(~metric, scales = "free") +
+    scale_fill_biotime() +
+    ggtitle(paste("Assemblage", name_assemblage)) + ylab("Diversity") +
+    theme_bw() + theme(plot.title = element_text(size = 11, hjust = 0.5))
+
+```
+
 ```{r trends9, cache=TRUE, echo=TRUE, message=FALSE, fig.width=10, fig.height=7,tidy=FALSE, include=TRUE,results='hold', figures='hold'} 
 #Hint: If you want to draw the p-value on the plot, you can try using the ggpmisc::stat_fit_glance which takes anything passed through lm() in R and allows it to processed and printed using ggplot2.
 ```
@@ -511,6 +531,6 @@ This R package was developed by the BioTIME team. The functions and documentatio
 ```{r citation, cache=TRUE, echo=FALSE, message=FALSE, fig.width=10, fig.height=7,tidy=FALSE, include=FALSE,results='hold', figures='hold'} 
 citation("BioTIMEr")
 ```
-Sagouis A, Moyes F, Martins IS, Blowes SA, Brambilla V, Chow CFY, Fontrodona-Eslava A, Chase JM,
+Sagouis A, Moyes F, Martins IS, Blowes SA, Brambilla V, Chow CFY, Fontrodona-Eslava A, Antão L, Chase JM,
 Dornelas M, Magurran AE (2024). BioTIMEr: tools to use and explore the BioTIME database. https://github.com/bioTIMEHub/BioTIMEr
 
