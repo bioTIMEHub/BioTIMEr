@@ -9,10 +9,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-The `BioTIMEr` package provides tools designed to interact with the BioTIME database, which contains assemblage time series from multiple habitats and for multiple taxa (Dornelas et al 2018, 2024). The functions provided include the BioTIME recommended methods for preparing time series data (gridding and rarefaction) calculating a selection of standard biodiversity metrics (e.g. species richness, numerical abundance and exponential Shannon index) per year, alongside examples on how to calculate and plot linear trends of  biodiversity change over time.  
+The `BioTIMEr` package provides tools designed to interact with the BioTIME database, which contains assemblage time series from multiple habitats and for multiple taxa (Dornelas et al 2018, 2024). The functions provided include the BioTIME recommended methods for preparing time series data (gridding and rarefaction), calculating a selection of standard biodiversity metrics (e.g. species richness, numerical abundance and exponential Shannon index) per year, alongside examples on how to calculate and plot linear trends of biodiversity change over time.
+
 Note that each study in BioTIME is identified by a unique Study_ID and that all the functions in BioTIMEr assume that the variables are named as in the BioTIME data.
 
-## Load the required libraries
+#### **Load the required libraries** 
 ```{r setup, include=FALSE}
 library(knitr)
 opts_chunk$set(echo = TRUE)
@@ -30,7 +31,7 @@ library(dggridR)
 library(BioTIMEr)
 ```
 When loading the BioTIMEr package, a subset of BioTIME data is
-loaded together with its metadata. This subset includes 12 studies from marine, terrestrial and freshwater time series and different taxonomic groups. The whole BioTIME database is accessible [here](https://biotime.st-andrews.ac.uk/)
+loaded together with its metadata. This subset includes 12 studies from marine, terrestrial and freshwater time series across different taxonomic groups. The whole BioTIME database is accessible [here](https://biotime.st-andrews.ac.uk/)
 
 ```{r data_description, warning=FALSE, message=FALSE, eval=TRUE, include=TRUE}
 # you can run the following commands to retrieve more information about the subsets.
@@ -43,7 +44,6 @@ loaded together with its metadata. This subset includes 12 studies from marine, 
 ??BioTIMEr
 ```
 
-
 ```{r filename_check, include=FALSE, echo=FALSE}
 # Just checking that the file names given above in the vignette are still correct
 file.exists("data/BTsubset_meta.RData")
@@ -52,7 +52,7 @@ file.exists("data/BTsubset_data.RData")
 
 
 ### How to use BioTIMEr?
-1. Grid BioTIME data into a discrete global grid based on on the samples’ location (latitude/longitude) to standardize the spatial extent between different studies using:  
+1. Grid BioTIME data into a discrete global grid based on the samples’ location (latitude/longitude) to standardize the spatial extent between different studies using:  
     - `gridding()`  
 2. Apply sample-based rarefaction to standardize the number of samples per year within each cell-level time series using:  
     - `resampling()`
@@ -65,12 +65,11 @@ file.exists("data/BTsubset_data.RData")
 
 Below is a detailed run through these different steps, breaking down some of the tasks and the reasoning behind our suggestions for best practice when analysing BioTIME data. 
 
-
-We use the ‘pipe’ operator `(%>%)` to make our code more efficient and streamlined, and we use ggplot2 library for most visualizations. This and other libraries required for BioTIMEr to run will be, if needed, installed at the same time BioTIMEr is installed.  
+We use the ‘pipe’ operator `(%>%)` to make our code more efficient and streamlined, and we use ggplot2 library for most visualisations. This and other libraries required for BioTIMEr to run will be, if needed, installed at the same time BioTIMEr is installed.  
 
 ----------------------------------------------------------------------  
-### Why bother with separating observations into into using a global grid? 
-Typically, a BioTIME study contains distinct samples collected with a consistent methodology for a given period of time. However, the spatial extent and sample distribution among studies can vary substantially depending on the of the study and the taxon being sampled (e.g. forest quadrants, bird transects, fish tows, etc., which can be implemented within smaller or larger areas). Because the spatial extent varies among studies, an advisable step is to grid those studies that have large extents and multiple sapling locations into smaller equal-sized subsets. The `gridding()` function is designed to perform such task using a global grid of hexagonal cells derived from dggridR (see `vignette(‘dggridR’)`). By implementing this gridding, the large scales studies are split into multiple cell-level assemblages, while the small scale studies can be assigned to a single cell.
+### Why bother with separating observations using a global grid? 
+Typically, a BioTIME study contains distinct samples collected with a consistent methodology for a given period of time. However, the spatial extent and sample distribution among studies can vary substantially depending on the study and the taxon being sampled (e.g. forest quadrants, bird transects, fish tows, etc.; which can be implemented within smaller or larger areas). Because the spatial extent varies among studies, an advisable step is to grid those studies that have large extents and multiple sampling locations into smaller equal-sized subsets. The `gridding()` function is designed to perform such task using a global grid of hexagonal cells derived from dggridR (see `vignette(‘dggridR’)`). By implementing this gridding, the large scales studies are split into multiple cell-level assemblages, while the small scale studies are assigned to a single cell.
 
 Let's apply `gridding()` to a subset of BioTIME data and see what happens:
 ```{r gridding_ex, cache=TRUE, echo=TRUE, message=FALSE, tidy=FALSE, include=TRUE} 
@@ -79,10 +78,9 @@ grid_samples <- gridding(meta = BTsubset_meta, btf = BTsubset_data, res = 12, re
 # Get a look at the output
 # grid_samples %>% head() %>% kable()
 ```
-You can see that each sample is assigned a different combination of study ID and grid cell (based on its latitude and longitude) resulting in a unique identifier which determines our assemblage time series (`assemblageID`). This `assemblageID` can now be used as the study unit for analysis of biodiversity change based on similar spatial extent between them.  
+You can see that each sample is assigned a different combination of study ID and grid cell (based on its latitude and longitude) resulting in a unique identifier that determines our assemblage time series (`assemblageID`). This `assemblageID` can now be used as the study unit for analysis of biodiversity change based on similar spatial extent between them.  
 
 Let’s take a look and see how many studies/cells/assemblages time series are there in this subset:
-
 ```{r gridding_ex_plot, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=FALSE, include=TRUE} 
 check1 <- grid_samples %>% 
   group_by(STUDY_ID, StudyMethod) %>% 
@@ -92,7 +90,7 @@ check1 %>% head(10) %>% kable()
 
 # How many samples were there in each study?
 ggplot(data = check1) +
-  geom_bar(mapping = aes(x = as.character(STUDY_ID), y = n_aID, fill = res ,),
+  geom_bar(mapping = aes(x = as.character(STUDY_ID), y = n_aID, fill = res),
            stat = "identity") +
   scale_fill_discrete(type = c("#155f49")) +
   xlab("StudyID") + ylab("Number of assemblages in a study") +
@@ -106,7 +104,7 @@ You can see that several studies are not partitioned, and that's because all the
 By default, the function separates studies into hexagonal cells of ~96 km2 (`res=12`), as this resolution was found to be the most appropriate when working on the whole BioTIME database. Yet sometimes, particularly when working with a subset of BioTIME, you may want to explore alternative grid resolutions. The function has two options: you can either directly define a new resolution (see `vignette(‘dggridR’)`) or allow the function to find the best resolution based on the average study extent of your dataset. Let’s run over these alternative options with a few examples:
 
 ```{r gridding_ex2, cache=TRUE, echo=TRUE, message=FALSE, tidy=FALSE, include=TRUE,results='hold'}
-# define a alternative resolution of 14 (~10.7 km2 cells)
+# define an alternative resolution of 14 (~10.7 km2 cells)
 grid_samples_14 <- gridding(meta = BTsubset_meta, btf = BTsubset_data, res = 14, resByData = FALSE) 
 
 # allow the spatial extent of the data to define the resolution
@@ -137,7 +135,7 @@ The number of cells in each study varies depending on the resolution chosen.
 
 You can also map what happens when gridding the data:
 ```{r gridding_map, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=FALSE, include=TRUE,results='hold', figures='hold'}
-## The following example is built on the demonstrations shown in
+## The following example is built on the demonstrations in
 ## https://cran.r-project.org/web/packages/dggridR/vignettes/dggridR.html.
 
 #First we build the ~96 km2 global grid
@@ -148,11 +146,9 @@ dgg_12 <- dggridR::dgconstruct(res = 12)
 #NOTE: if you are working with the full BioTIME database, this step may take some time. 
 grid_12 <- dggridR::dgcellstogrid(dgg_12, grid_samples$cell)
 
-
 #Now let's follow the same steps and build a ~10.7 km2 global grid:
 dgg_14 <- dggridR::dgconstruct(res = 14)
 grid_14 <- dggridR::dgcellstogrid(dgg_14, grid_samples_14$cell)
-
 
 #And we get some polygons for each country of the world, to create a background:
 countries <- ggplot2::map_data("world")
