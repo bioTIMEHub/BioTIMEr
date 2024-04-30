@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Inês S.
 Martins</h4>
             
-            <h4 data-toc-skip class="date">2024-04-19</h4>
+            <h4 data-toc-skip class="date">2024-04-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/bioTIMEHub/BioTIMEr/blob/HEAD/vignettes/vignette1.Rmd" class="external-link"><code>vignettes/vignette1.Rmd</code></a></small>
       <div class="hidden name"><code>vignette1.Rmd</code></div>
@@ -95,24 +95,25 @@ Martins</h4>
 with the BioTIME database, which contains assemblage time series from
 multiple habitats and for multiple taxa (Dornelas et al 2018, 2024). The
 functions provided include the BioTIME recommended methods for preparing
-time series data (gridding and rarefaction) calculating a selection of
+time series data (gridding and rarefaction), calculating a selection of
 standard biodiversity metrics (e.g. species richness, numerical
 abundance and exponential Shannon index) per year, alongside examples on
 how to calculate and plot linear trends of biodiversity change over
-time.<br>
-Note that each study in BioTIME is identified by a unique Study_ID and
-that all the functions in BioTIMEr assume that the variables are named
-as in the BioTIME data.</p>
-<div class="section level2">
-<h2 id="load-the-required-libraries">Load the required libraries<a class="anchor" aria-label="anchor" href="#load-the-required-libraries"></a>
-</h2>
+time.</p>
+<p>Note that each study in BioTIME is identified by a unique Study_ID
+and that all the functions in BioTIMEr assume that the variables are
+named as in the BioTIME data.</p>
+<div class="section level4">
+<h4 id="load-the-required-libraries">
+<strong>Load the required libraries</strong><a class="anchor" aria-label="anchor" href="#load-the-required-libraries"></a>
+</h4>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Install and load the latest version of BioTIMEr</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bioTIMEHub/BioTIMEr" class="external-link">BioTIMEr</a></span><span class="op">)</span></span></code></pre></div>
 <p>When loading the BioTIMEr package, a subset of BioTIME data is loaded
 together with its metadata. This subset includes 12 studies from marine,
-terrestrial and freshwater time series and different taxonomic groups.
-The whole BioTIME database is accessible <a href="https://biotime.st-andrews.ac.uk/" class="external-link">here</a></p>
+terrestrial and freshwater time series across different taxonomic
+groups. The whole BioTIME database is accessible <a href="https://biotime.st-andrews.ac.uk/" class="external-link">here</a></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># you can run the following commands to retrieve more information about the subsets.</span></span>
 <span><span class="op">?</span><span class="va">BTsubset_meta</span></span>
@@ -120,13 +121,14 @@ The whole BioTIME database is accessible <a href="https://biotime.st-andrews.ac.
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># you can also see a full list of BioTIMEr functions and help pages by:</span></span>
 <span><span class="op">?</span><span class="op">?</span><span class="va">BioTIMEr</span></span></code></pre></div>
+</div>
 <div class="section level3">
 <h3 id="how-to-use-biotimer">How to use BioTIMEr?<a class="anchor" aria-label="anchor" href="#how-to-use-biotimer"></a>
 </h3>
 <ol style="list-style-type: decimal">
-<li>Grid BioTIME data into a discrete global grid based on on the
-samples’ location (latitude/longitude) to standardize the spatial extent
-between different studies using:
+<li>Grid BioTIME data into a discrete global grid based on the samples’
+location (latitude/longitude) to standardize the spatial extent between
+different studies using:
 <ul>
 <li>
 <code><a href="../reference/gridding.html">gridding()</a></code><br>
@@ -159,28 +161,27 @@ some of the tasks and the reasoning behind our suggestions for best
 practice when analysing BioTIME data.</p>
 <p>We use the ‘pipe’ operator <code>(%&gt;%)</code> to make our code
 more efficient and streamlined, and we use ggplot2 library for most
-visualizations. This and other libraries required for BioTIMEr to run
+visualisations. This and other libraries required for BioTIMEr to run
 will be, if needed, installed at the same time BioTIMEr is
 installed.</p>
 <hr>
 </div>
 <div class="section level3">
-<h3 id="why-bother-with-separating-observations-into-into-using-a-global-grid">Why bother with separating observations into into using a global
-grid?<a class="anchor" aria-label="anchor" href="#why-bother-with-separating-observations-into-into-using-a-global-grid"></a>
+<h3 id="why-bother-with-separating-observations-using-a-global-grid">Why bother with separating observations using a global grid?<a class="anchor" aria-label="anchor" href="#why-bother-with-separating-observations-using-a-global-grid"></a>
 </h3>
 <p>Typically, a BioTIME study contains distinct samples collected with a
 consistent methodology for a given period of time. However, the spatial
 extent and sample distribution among studies can vary substantially
-depending on the of the study and the taxon being sampled (e.g. forest
-quadrants, bird transects, fish tows, etc., which can be implemented
+depending on the study and the taxon being sampled (e.g. forest
+quadrants, bird transects, fish tows, etc.; which can be implemented
 within smaller or larger areas). Because the spatial extent varies among
 studies, an advisable step is to grid those studies that have large
-extents and multiple sapling locations into smaller equal-sized subsets.
-The <code><a href="../reference/gridding.html">gridding()</a></code> function is designed to perform such task
-using a global grid of hexagonal cells derived from dggridR (see
-<code>vignette(‘dggridR’)</code>). By implementing this gridding, the
-large scales studies are split into multiple cell-level assemblages,
-while the small scale studies can be assigned to a single cell.</p>
+extents and multiple sampling locations into smaller equal-sized
+subsets. The <code><a href="../reference/gridding.html">gridding()</a></code> function is designed to perform
+such task using a global grid of hexagonal cells derived from dggridR
+(see <code>vignette(‘dggridR’)</code>). By implementing this gridding,
+the large scales studies are split into multiple cell-level assemblages,
+while the small scale studies are assigned to a single cell.</p>
 <p>Let’s apply <code><a href="../reference/gridding.html">gridding()</a></code> to a subset of BioTIME data and
 see what happens:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -190,7 +191,7 @@ see what happens:</p>
 <span><span class="co"># grid_samples %&gt;% head() %&gt;% kable()</span></span></code></pre></div>
 <p>You can see that each sample is assigned a different combination of
 study ID and grid cell (based on its latitude and longitude) resulting
-in a unique identifier which determines our assemblage time series
+in a unique identifier that determines our assemblage time series
 (<code>assemblageID</code>). This <code>assemblageID</code> can now be
 used as the study unit for analysis of biodiversity change based on
 similar spatial extent between them.</p>
@@ -286,7 +287,7 @@ series are there in this subset:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># How many samples were there in each study?</span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">check1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_bar</span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">STUDY_ID</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">n_aID</span>, fill <span class="op">=</span> <span class="va">res</span> ,<span class="op">)</span>,</span>
+<span>  <span class="fu">geom_bar</span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">STUDY_ID</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">n_aID</span>, fill <span class="op">=</span> <span class="va">res</span><span class="op">)</span>,</span>
 <span>           stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">scale_fill_discrete</span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#155f49"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"StudyID"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Number of assemblages in a study"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -309,7 +310,7 @@ options: you can either directly define a new resolution (see
 resolution based on the average study extent of your dataset. Let’s run
 over these alternative options with a few examples:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># define a alternative resolution of 14 (~10.7 km2 cells)</span></span>
+<code class="sourceCode R"><span><span class="co"># define an alternative resolution of 14 (~10.7 km2 cells)</span></span>
 <span><span class="va">grid_samples_14</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gridding.html">gridding</a></span><span class="op">(</span>meta <span class="op">=</span> <span class="va">BTsubset_meta</span>, btf <span class="op">=</span> <span class="va">BTsubset_data</span>, res <span class="op">=</span> <span class="fl">14</span>, resByData <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="co"># allow the spatial extent of the data to define the resolution</span></span>
@@ -339,7 +340,7 @@ The number of cells in each study varies depending on the resolution
 chosen.</p>
 <p>You can also map what happens when gridding the data:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## The following example is built on the demonstrations shown in</span></span>
+<code class="sourceCode R"><span><span class="co">## The following example is built on the demonstrations in</span></span>
 <span><span class="co">## https://cran.r-project.org/web/packages/dggridR/vignettes/dggridR.html.</span></span>
 <span></span>
 <span><span class="co">#First we build the ~96 km2 global grid</span></span>
@@ -350,11 +351,9 @@ chosen.</p>
 <span><span class="co">#NOTE: if you are working with the full BioTIME database, this step may take some time. </span></span>
 <span><span class="va">grid_12</span> <span class="op">&lt;-</span> <span class="fu">dggridR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dggridR/man/dgcellstogrid.html" class="external-link">dgcellstogrid</a></span><span class="op">(</span><span class="va">dgg_12</span>, <span class="va">grid_samples</span><span class="op">$</span><span class="va">cell</span><span class="op">)</span></span>
 <span></span>
-<span></span>
 <span><span class="co">#Now let's follow the same steps and build a ~10.7 km2 global grid:</span></span>
 <span><span class="va">dgg_14</span> <span class="op">&lt;-</span> <span class="fu">dggridR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dggridR/man/dgconstruct.html" class="external-link">dgconstruct</a></span><span class="op">(</span>res <span class="op">=</span> <span class="fl">14</span><span class="op">)</span></span>
 <span><span class="va">grid_14</span> <span class="op">&lt;-</span> <span class="fu">dggridR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dggridR/man/dgcellstogrid.html" class="external-link">dgcellstogrid</a></span><span class="op">(</span><span class="va">dgg_14</span>, <span class="va">grid_samples_14</span><span class="op">$</span><span class="va">cell</span><span class="op">)</span></span>
-<span></span>
 <span></span>
 <span><span class="co">#And we get some polygons for each country of the world, to create a background:</span></span>
 <span><span class="va">countries</span> <span class="op">&lt;-</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/map_data.html" class="external-link">map_data</a></span><span class="op">(</span><span class="st">"world"</span><span class="op">)</span></span>
@@ -563,7 +562,8 @@ recorded in each year:</p>
 <span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Year"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Number of samples"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in geom_segment(aes(x = 1926, y = min(n_samples) + 3, xend = 1927, : All aesthetics have length 1, but the data has 29 rows.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Did you mean to use `annotate()`?</span></span></code></pre>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please consider using `annotate()` or provide this layer with data containing</span></span>
+<span><span class="co">##   a single row.</span></span></code></pre>
 <p><img src="vignette1_files/figure-html/resampling_ex3-1.png" width="672"></p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#In this case, that will be 3, as 3 is the number of samples found in the year 1927 (arrow),</span></span>
@@ -1199,14 +1199,11 @@ sporadically.</p>
 Fontrodona-Eslava A, Antão L, Chase JM, Dornelas M, Magurran AE (2024).
 BioTIMEr: tools to use and explore the BioTIME database. <a href="https://github.com/bioTIMEHub/BioTIMEr" class="external-link uri">https://github.com/bioTIMEHub/BioTIMEr</a></p>
 </div>
-</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+      </div>
 
 </div>
 
