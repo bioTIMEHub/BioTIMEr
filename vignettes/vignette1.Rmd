@@ -141,7 +141,7 @@ You can also map what happens when gridding the data:
 #First we build the ~96 km2 global grid
 dgg_12 <- dggridR::dgconstruct(res = 12)
 
-#To make simplify, we only map the grid cell boundaries for cells which we 
+#To simplify, we only map the grid cell boundaries for cells which 
 #have observations.  
 #NOTE: if you are working with the full BioTIME database, this step may take some time. 
 grid_12 <- dggridR::dgcellstogrid(dgg_12, grid_samples$cell)
@@ -185,22 +185,20 @@ We can see that the higher the resolution set the higher the number of cells int
 ### Why rarefaction is a must!
 Now we will deal with another common issue when working with time series data: the fact that the number of samples may vary over time. When evaluating changes through time it's important to be able to quantify change independently of the number of samples, i.e. we want to be able to assess whether e.g. alpha diversity has truly increased or decreased over time and that such signal is not a sampling artifact due to uneven sampling effort – i.e. resulting from having more or fewer samples in different years or periods of the time series being compared. 
 
-Probably the most common and widely used approach to prevents temporal variation in sampling effort from affecting diversity estimate is to apply sample-based rarefaction. Here (add link) is a great introduction to it. BioTIMEr provides the `resampling()` function that implements sample-based rarefaction, already adapted to BioTIME data and designed to run smoothly over the previously gridded dataset as done above. The function identifies the minimum number of samples across all years in a time series, and then uses this minimum to randomly resample each year down to that number.
+Probably the most common and widely used approach to prevent temporal variation in sampling effort from affecting diversity estimate is to apply sample-based rarefaction. Here (add link) is a great introduction to it. BioTIMEr provides the `resampling()` function that implements sample-based rarefaction, already adapted to BioTIME data and designed to run smoothly over the previously gridded dataset as done above. The function identifies the minimum number of samples across all years in a time series and then uses this minimum to randomly resample each year down to that number.
 
 Let's continue with our BioTIME example subset dataset: 
-
 ```{r resampling_ex, cache=TRUE, echo=TRUE, message=FALSE, tidy=FALSE, include=TRUE} 
 #First, if you are not sure you need this step, 
 #you can always check how many samples there are in every year of the different time series:
-check4 <- grid_samples %>% 
+check_samples <- grid_samples %>% 
   group_by(STUDY_ID, assemblageID, YEAR) %>% 
   summarise(n_samples = n_distinct(SAMPLE_DESC), n_species = n_distinct(Species))
 
-check4 %>% head(10) %>% kable() 
+check_samples %>% head(10) %>% kable() 
 
 ```
-Looking at the `n_samples` column we can already see for the few assemblages in this subset that there are substantial differences in sampling effort (i.e. number of samples) thought time. Thus, we should standardize for sampling effort:
-
+Looking at the `n_samples` column we can already see for the few assemblages in this subset that there are substantial differences in sampling effort (i.e. number of samples) through time. Thus, we should standardize for sampling effort:
 
 ```{r resampling_ex1, cache=TRUE, echo=TRUE, message=FALSE, tidy=FALSE, include=TRUE} 
 #Let's apply resampling() then, using the data frame of the gridded data:
@@ -212,10 +210,10 @@ grid_rare <- resampling(x = grid_samples, measure = "ABUNDANCE",
 #let's apply it then:
 
 #g rid_samples_temp <- subset(grid_samples, !grid_samples$BIOMASS==0) #to be deleted after Faye reviews the data and makes all 0=NAs
-# grid_rare <- resampling( x= grid_samples_test, measure ="BIOMASS", resamps = 1L, conservative = FALSE)
+# grid_rare <- resampling( x= grid_samples_test, measure ="BIOMASS", resamps = 1, conservative = FALSE)
 ```
 
-The function returns a single long form data frame containing the total currency of interest (i.e. summed across all samples) for each species in each year within each assemblage time series. You can specify what the currency field is: Abundance, Biomass or both (BioTIME studies can include records for either or both). Note that resampling() also tests and removes any `NAs` within the selected currency field(s) before implementing the sample-based rarefaction. Thus, if you choose to use both currency fields, only observations (when `conservative = FALSE`) or full sampling events (when `conservative = TRUE`) in which BOTH Abundance and Biomass were recorded are retained and a warning is issued as follows:
+The function returns a single long-form data frame containing the total currency of interest (i.e. summed across all samples) for each species in each year within each assemblage time series. You can specify what the currency field is: Abundance, Biomass or both (BioTIME studies can include records for either or both). Note that resampling() also tests and removes any `NAs` within the selected currency field(s) before implementing the sample-based rarefaction. Thus, if you choose to use both currency fields, only observations (when `conservative = FALSE`) or full sampling events (when `conservative = TRUE`) in which BOTH Abundance and Biomass were recorded are retained and a warning is issued as follows:
 
 ```{r resampling_ex12, cache=TRUE, echo=TRUE, message=FALSE, tidy=TRUE, include=TRUE} 
 #Keep only observations with both abundance and biomass
@@ -228,7 +226,7 @@ grid_rare_abT <- resampling(x = grid_samples, measure = c("ABUNDANCE", "BIOMASS"
 ```
 
 #### **How many resampling iterations should we implement?**      
-Remember that sample-based rarefaction involves randomly selecting a specified number of samples (i.e. sampling events) for each year, this number being equal to the number of samples in the year with the lowest sampling effort in each time series. If the sampling effort through time was equal or relatively stable, then you probably don’t need to concern yourself any further. However, for many time series in BioTIME (or indeed other biodiversity data) sampling effort can vary substantially, and thus the sample-based rarefaction process can lead to different species diversity and composition -s simply by randomly selecting different samples. To help exemplify this point across, let’s pick one assemblage time series from the subset and plot the number of samples recorded in each year:
+Remember that sample-based rarefaction involves randomly selecting a specified number of samples (i.e. sampling events) for each year, this number being equal to the number of samples in the year with the lowest sampling effort in each time series. If the sampling effort through time was equal or relatively stable, then you probably do not need to concern yourself any further. However, for many time series in BioTIME (or indeed other biodiversity data) sampling effort can vary substantially, and thus the sample-based rarefaction process can lead to different species diversity and composition simply by randomly selecting different samples. To help exemplify this point across, let’s pick one assemblage time series from the subset and plot the number of samples recorded in each year:
 
 ```{r resampling_ex3, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=FALSE, include=TRUE,results='hold', figures='hold'} 
 #What is the number of samples in the year with the lowest sampling effort?
@@ -240,33 +238,33 @@ ggplot(data = check4[check4$assemblageID == "18_335699",], aes(x = YEAR, y = n_s
   xlab("Year") + ylab("Number of samples") +
   theme_bw()
 
-#In this case, that will be 3, as 3 is the number of samples found in the year 1927 (arrow),
-#the year with the lowest sampling effort
+#In this case,the year 1927 had the lowest sampling effort, with 3 samples (arrow).
 ```
 In this particular case, what `resampling()`will do is to randomly select and retain only 3 samples from each year of this time series. As you can see in the plot, several years have 20 samples or more; so if you run the function a second time it’s likely that the sample-based rarefaction process will select a different combination of 3 samples (with the exception of year 1927), which may or may not differ in their species diversity and composition.
 
-One option to deal with this issue is to repeat this random sampling process multiple times, effectively creating multiple alternative datasets for the same time series (and which can be used in  subsequent sensitivity analysis or to estimate the variability in diversity metrics that originates from the random sample selection process):
+One option to deal with this issue is to repeat this random sampling process multiple times, effectively creating multiple alternative datasets for the same time series (and which can be used in subsequent sensitivity analysis or to estimate the variability in diversity metrics that originates from the random sample selection process):
 
 ```{r resampling_ex4, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7, fig.height=3,tidy=FALSE, include=TRUE,results='hold', figures='hold'} 
 #Let's implement the sample-based rarefaction by resampling the dataset 10 times.
 grid_rare_n10 <- resampling(x = grid_samples, measure = "ABUNDANCE", resamps = 10,
                             conservative = FALSE)
 
-#Note that you may want to resample many more times (e.g. at least 30-100+ times, but up to 199 if e.g. working with the whole BioTIME data),  
-#depending on how many iterations you want a subsequent bootstrap analysis to have. 
+#Note that you may want to resample many more times (e.g. at least 30-100+ times, but up to 199 
+#if e.g. working with the whole BioTIME data), depending on how many iterations you want a 
+#subsequent bootstrap analysis to have. 
 #This may also take some computation time, so if you are working with a big subset of BioTIME 
 #is advisable to break it down in smaller subsets.
 
-# Each resampling iteration will be identified as resamp = 1:n, in this case 1:10.
+#Each resampling iteration will be identified as resamp = 1:n, in this case 1:10.
 #Now we can check if there are differences across the first 3 of these iterations: 
 
-check5 <- grid_rare_n10[grid_rare_n10$resamp < 4,] %>% 
+check_resamps <- grid_rare_n10[grid_rare_n10$resamp < 4,] %>% 
   group_by(STUDY_ID, assemblageID, resamp) %>% 
   summarise(n_obs = n(), n_species = n_distinct(Species), n_year = n_distinct(YEAR))
 
-check5 %>% head(10) %>% kable()
+check_resamps %>% head(10) %>% kable()
 ```
-Since sampling events within a study are retrieved with a consistent methodology and observational effort, we don’t expect to see big differences between picking some sampling events over others, however it’s still a advisable check to do. The example above also highlights the fact that during the process of standardising the number of samples per year within each time series a lot of data will be discarded. Additional steps, such as removing low sampling years, before applying the `resampling()` function may minimize this effect. 
+Since sampling events within a study are retrieved with a consistent methodology and observational effort, we don’t expect to see big differences between picking some sampling events over others, however it’s still an advisable check to do. The example above also highlights the fact that during the process of standardising the number of samples per year within each time series, a lot of data will be discarded. Additional steps, such as removing low sampling years, before applying the `resampling()` function may minimize this effect. 
 
 **Your data is now ready for analysis!** You can stop here and go do your own thing (the world is your oyster!)...or you can follow the next steps and learn how to use the BioTIMEr package to estimate a few standard diversity metrics, as well as some hints on how to quantify and visualize temporal biodiversity change for a given BioTIME data subset.  
 
