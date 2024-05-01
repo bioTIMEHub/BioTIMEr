@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Inês S.
 Martins</h4>
             
-            <h4 data-toc-skip class="date">2024-04-30</h4>
+            <h4 data-toc-skip class="date">2024-05-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/bioTIMEHub/BioTIMEr/blob/HEAD/vignettes/vignette1.Rmd" class="external-link"><code>vignettes/vignette1.Rmd</code></a></small>
       <div class="hidden name"><code>vignette1.Rmd</code></div>
@@ -198,11 +198,11 @@ similar spatial extent between them.</p>
 <p>Let’s take a look and see how many studies/cells/assemblages time
 series are there in this subset:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">check1</span> <span class="op">&lt;-</span> <span class="va">grid_samples</span> <span class="op">%&gt;%</span> </span>
+<code class="sourceCode R"><span><span class="va">check_res_1</span> <span class="op">&lt;-</span> <span class="va">grid_samples</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">StudyMethod</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>n_cell <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">cell</span><span class="op">)</span>, n_aID <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, res <span class="op">=</span> <span class="st">"res12"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">check1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">check_res_1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">STUDY_ID</th>
@@ -286,7 +286,7 @@ series are there in this subset:</p>
 </table>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># How many samples were there in each study?</span></span>
-<span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">check1</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">check_res_1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_bar</span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">STUDY_ID</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">n_aID</span>, fill <span class="op">=</span> <span class="va">res</span><span class="op">)</span>,</span>
 <span>           stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">scale_fill_discrete</span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#155f49"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -319,15 +319,15 @@ over these alternative options with a few examples:</p>
 <pre><code><span><span class="co">## Resolution: 15, Area (km^2): 3.55473501726709, Spacing (km): 1.86210705534755, CLS (km): 2.12744663988395</span></span></code></pre>
 <p>So what changed with different <code>res</code> values?</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">check2</span> <span class="op">&lt;-</span> <span class="va">grid_samples_14</span> <span class="op">%&gt;%</span> </span>
+<code class="sourceCode R"><span><span class="va">check_res_2</span> <span class="op">&lt;-</span> <span class="va">grid_samples_14</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">StudyMethod</span>, <span class="va">STUDY_ID</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>n_cell <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">cell</span><span class="op">)</span>, n_aID <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, res <span class="op">=</span> <span class="st">"res14"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">check3</span> <span class="op">&lt;-</span> <span class="va">grid_samples_auto</span> <span class="op">%&gt;%</span> </span>
+<span><span class="va">check_res_3</span> <span class="op">&lt;-</span> <span class="va">grid_samples_auto</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">StudyMethod</span>, <span class="va">STUDY_ID</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>n_cell <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">cell</span><span class="op">)</span>, n_aID <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, res <span class="op">=</span> <span class="st">"res15"</span><span class="op">)</span> </span>
 <span></span>
-<span><span class="va">checks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">check1</span>, <span class="va">check2</span>, <span class="va">check3</span><span class="op">)</span></span>
+<span><span class="va">checks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">check_res_1</span>, <span class="va">check_res_2</span>, <span class="va">check_res_3</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">checks</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_bar</span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">STUDY_ID</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">n_aID</span>, fill <span class="op">=</span> <span class="va">res</span><span class="op">)</span>, </span>
@@ -343,23 +343,23 @@ chosen.</p>
 <code class="sourceCode R"><span><span class="co">## The following example is built on the demonstrations in</span></span>
 <span><span class="co">## https://cran.r-project.org/web/packages/dggridR/vignettes/dggridR.html.</span></span>
 <span></span>
-<span><span class="co">#First we build the ~96 km2 global grid</span></span>
+<span><span class="co"># First we build the ~96 km2 global grid</span></span>
 <span><span class="va">dgg_12</span> <span class="op">&lt;-</span> <span class="fu">dggridR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dggridR/man/dgconstruct.html" class="external-link">dgconstruct</a></span><span class="op">(</span>res <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#To make simplify, we only map the grid cell boundaries for cells which we </span></span>
-<span><span class="co">#have observations.  </span></span>
-<span><span class="co">#NOTE: if you are working with the full BioTIME database, this step may take some time. </span></span>
+<span><span class="co"># To simplify, we only map the grid cell boundaries for cells which </span></span>
+<span><span class="co"># have observations.  </span></span>
+<span><span class="co"># NOTE: if you are working with the full BioTIME database, this step may take some time. </span></span>
 <span><span class="va">grid_12</span> <span class="op">&lt;-</span> <span class="fu">dggridR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dggridR/man/dgcellstogrid.html" class="external-link">dgcellstogrid</a></span><span class="op">(</span><span class="va">dgg_12</span>, <span class="va">grid_samples</span><span class="op">$</span><span class="va">cell</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#Now let's follow the same steps and build a ~10.7 km2 global grid:</span></span>
+<span><span class="co"># Now let's follow the same steps and build a ~10.7 km2 global grid:</span></span>
 <span><span class="va">dgg_14</span> <span class="op">&lt;-</span> <span class="fu">dggridR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dggridR/man/dgconstruct.html" class="external-link">dgconstruct</a></span><span class="op">(</span>res <span class="op">=</span> <span class="fl">14</span><span class="op">)</span></span>
 <span><span class="va">grid_14</span> <span class="op">&lt;-</span> <span class="fu">dggridR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dggridR/man/dgcellstogrid.html" class="external-link">dgcellstogrid</a></span><span class="op">(</span><span class="va">dgg_14</span>, <span class="va">grid_samples_14</span><span class="op">$</span><span class="va">cell</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#And we get some polygons for each country of the world, to create a background:</span></span>
+<span><span class="co"># And we get some polygons for each country of the world, to create a background:</span></span>
 <span><span class="va">countries</span> <span class="op">&lt;-</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/map_data.html" class="external-link">map_data</a></span><span class="op">(</span><span class="st">"world"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#Now you could map the whole world, but let's just zoom in the UK and have a look at </span></span>
-<span><span class="co">#STUDY 466 (Marine Fish):</span></span>
+<span><span class="co"># Now you could map the whole world, but let's just zoom in the UK and have a look at </span></span>
+<span><span class="co"># STUDY 466 (Marine Fish):</span></span>
 <span><span class="va">map_uk_locations</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_polygon</span><span class="op">(</span>data <span class="op">=</span> <span class="va">countries</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, group <span class="op">=</span> <span class="va">group</span><span class="op">)</span>, fill <span class="op">=</span> <span class="cn">NA</span>, color <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_sf</span><span class="op">(</span>data <span class="op">=</span> <span class="va">grid_12</span>, <span class="fu">aes</span><span class="op">(</span><span class="op">)</span>, color <span class="op">=</span> <span class="fu">alpha</span><span class="op">(</span><span class="st">"blue"</span>, <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -380,7 +380,7 @@ chosen.</p>
 <span><span class="va">main</span> <span class="op">&lt;-</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/viewport.html" class="external-link">viewport</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1</span>, height <span class="op">=</span> <span class="fl">1</span>, x <span class="op">=</span> <span class="fl">0.5</span>, y <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>  <span class="co"># the main map</span></span>
 <span><span class="va">inset</span> <span class="op">&lt;-</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/viewport.html" class="external-link">viewport</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.4</span>, height <span class="op">=</span> <span class="fl">0.4</span>, x <span class="op">=</span> <span class="fl">0.82</span>, y <span class="op">=</span> <span class="fl">0.45</span><span class="op">)</span>  <span class="co"># the inset in bottom left</span></span>
 <span></span>
-<span><span class="co">#The resulting distribution of different size cells appears as follows:</span></span>
+<span><span class="co"># The resulting distribution of different size cells appears as follows:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">zoom_in_map</span>, vp <span class="op">=</span> <span class="va">main</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">map_uk_locations</span>, vp <span class="op">=</span> <span class="va">inset</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette1_files/figure-html/gridding_map-1.png" width="672">
@@ -404,24 +404,24 @@ decreased over time and that such signal is not a sampling artifact due
 to uneven sampling effort – i.e. resulting from having more or fewer
 samples in different years or periods of the time series being
 compared.</p>
-<p>Probably the most common and widely used approach to prevents
-temporal variation in sampling effort from affecting diversity estimate
-is to apply sample-based rarefaction. Here (add link) is a great
-introduction to it. BioTIMEr provides the <code><a href="../reference/resampling.html">resampling()</a></code>
-function that implements sample-based rarefaction, already adapted to
-BioTIME data and designed to run smoothly over the previously gridded
-dataset as done above. The function identifies the minimum number of
-samples across all years in a time series, and then uses this minimum to
-randomly resample each year down to that number.</p>
+<p>Probably the most common and widely used approach to prevent temporal
+variation in sampling effort from affecting diversity estimate is to
+apply sample-based rarefaction. Here (add link) is a great introduction
+to it. BioTIMEr provides the <code><a href="../reference/resampling.html">resampling()</a></code> function that
+implements sample-based rarefaction, already adapted to BioTIME data and
+designed to run smoothly over the previously gridded dataset as done
+above. The function identifies the minimum number of samples across all
+years in a time series and then uses this minimum to randomly resample
+each year down to that number.</p>
 <p>Let’s continue with our BioTIME example subset dataset:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#First, if you are not sure you need this step, </span></span>
-<span><span class="co">#you can always check how many samples there are in every year of the different time series:</span></span>
-<span><span class="va">check4</span> <span class="op">&lt;-</span> <span class="va">grid_samples</span> <span class="op">%&gt;%</span> </span>
+<code class="sourceCode R"><span><span class="co"># First, if you are not sure you need this step, </span></span>
+<span><span class="co"># you can always check how many samples there are in every year of the different time series:</span></span>
+<span><span class="va">check_samples</span> <span class="op">&lt;-</span> <span class="va">grid_samples</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">assemblageID</span>, <span class="va">YEAR</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>n_samples <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">SAMPLE_DESC</span><span class="op">)</span>, n_species <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">check4</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
+<span><span class="va">check_samples</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">STUDY_ID</th>
@@ -505,13 +505,13 @@ randomly resample each year down to that number.</p>
 </table>
 <p>Looking at the <code>n_samples</code> column we can already see for
 the few assemblages in this subset that there are substantial
-differences in sampling effort (i.e. number of samples) thought time.
+differences in sampling effort (i.e. number of samples) through time.
 Thus, we should standardize for sampling effort:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#Let's apply resampling() then, using the data frame of the gridded data:</span></span>
+<code class="sourceCode R"><span><span class="co"># Let's apply resampling() then, using the data frame of the gridded data:</span></span>
 <span><span class="va">grid_rare</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/resampling.html">resampling</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">grid_samples</span>, measure <span class="op">=</span> <span class="st">"ABUNDANCE"</span>,</span>
 <span>                       resamps <span class="op">=</span> <span class="fl">1</span>, conservative <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p>The function returns a single long form data frame containing the
+<p>The function returns a single long-form data frame containing the
 total currency of interest (i.e. summed across all samples) for each
 species in each year within each assemblage time series. You can specify
 what the currency field is: Abundance, Biomass or both (BioTIME studies
@@ -544,17 +544,17 @@ implement?</strong><a class="anchor" aria-label="anchor" href="#how-many-resampl
 specified number of samples (i.e. sampling events) for each year, this
 number being equal to the number of samples in the year with the lowest
 sampling effort in each time series. If the sampling effort through time
-was equal or relatively stable, then you probably don’t need to concern
+was equal or relatively stable, then you probably do not need to concern
 yourself any further. However, for many time series in BioTIME (or
 indeed other biodiversity data) sampling effort can vary substantially,
 and thus the sample-based rarefaction process can lead to different
-species diversity and composition -s simply by randomly selecting
-different samples. To help exemplify this point across, let’s pick one
-assemblage time series from the subset and plot the number of samples
-recorded in each year:</p>
+species diversity and composition simply by randomly selecting different
+samples. To help exemplify this point across, let’s pick one assemblage
+time series from the subset and plot the number of samples recorded in
+each year:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#What is the number of samples in the year with the lowest sampling effort?</span></span>
-<span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">check4</span><span class="op">[</span><span class="va">check4</span><span class="op">$</span><span class="va">assemblageID</span> <span class="op">==</span> <span class="st">"18_335699"</span>,<span class="op">]</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">n_samples</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="co"># What is the number of samples in the year with the lowest sampling effort?</span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">check_samples</span><span class="op">[</span><span class="va">check_samples</span><span class="op">$</span><span class="va">assemblageID</span> <span class="op">==</span> <span class="st">"18_335699"</span>,<span class="op">]</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">n_samples</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_col</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">n_samples</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"red"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_segment</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1926</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">n_samples</span><span class="op">)</span> <span class="op">+</span> <span class="fl">3</span>,</span>
 <span>                   xend <span class="op">=</span> <span class="fl">1927</span>, yend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">n_samples</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -566,8 +566,7 @@ recorded in each year:</p>
 <span><span class="co">##   a single row.</span></span></code></pre>
 <p><img src="vignette1_files/figure-html/resampling_ex3-1.png" width="672"></p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#In this case, that will be 3, as 3 is the number of samples found in the year 1927 (arrow),</span></span>
-<span><span class="co">#the year with the lowest sampling effort</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># In this case,the year 1927 had the lowest sampling effort, with 3 samples (arrow).</span></span></code></pre></div>
 <p>In this particular case, what <code><a href="../reference/resampling.html">resampling()</a></code>will do is to
 randomly select and retain only 3 samples from each year of this time
 series. As you can see in the plot, several years have 20 samples or
@@ -581,23 +580,24 @@ datasets for the same time series (and which can be used in subsequent
 sensitivity analysis or to estimate the variability in diversity metrics
 that originates from the random sample selection process):</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#Let's implement the sample-based rarefaction by resampling the dataset 10 times.</span></span>
+<code class="sourceCode R"><span><span class="co"># Let's implement the sample-based rarefaction by resampling the dataset 10 times.</span></span>
 <span><span class="va">grid_rare_n10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/resampling.html">resampling</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">grid_samples</span>, measure <span class="op">=</span> <span class="st">"ABUNDANCE"</span>, resamps <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>                            conservative <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#Note that you may want to resample many more times (e.g. at least 30-100+ times, but up to 199 if e.g. working with the whole BioTIME data),  </span></span>
-<span><span class="co">#depending on how many iterations you want a subsequent bootstrap analysis to have. </span></span>
-<span><span class="co">#This may also take some computation time, so if you are working with a big subset of BioTIME </span></span>
-<span><span class="co">#is advisable to break it down in smaller subsets.</span></span>
+<span><span class="co"># Note that you may want to resample many more times (e.g. at least 30-100+ times, but up to 199 </span></span>
+<span><span class="co"># if e.g. working with the whole BioTIME data), depending on how many iterations you want a </span></span>
+<span><span class="co"># subsequent bootstrap analysis to have. </span></span>
+<span><span class="co"># This may also take some computation time, so if you are working with a big subset of BioTIME </span></span>
+<span><span class="co"># is advisable to break it down in smaller subsets.</span></span>
 <span></span>
 <span><span class="co"># Each resampling iteration will be identified as resamp = 1:n, in this case 1:10.</span></span>
-<span><span class="co">#Now we can check if there are differences across the first 3 of these iterations: </span></span>
+<span><span class="co"># Now we can check if there are differences across the first 3 of these iterations: </span></span>
 <span></span>
-<span><span class="va">check5</span> <span class="op">&lt;-</span> <span class="va">grid_rare_n10</span><span class="op">[</span><span class="va">grid_rare_n10</span><span class="op">$</span><span class="va">resamp</span> <span class="op">&lt;</span> <span class="fl">4</span>,<span class="op">]</span> <span class="op">%&gt;%</span> </span>
+<span><span class="va">check_resamps</span> <span class="op">&lt;-</span> <span class="va">grid_rare_n10</span><span class="op">[</span><span class="va">grid_rare_n10</span><span class="op">$</span><span class="va">resamp</span> <span class="op">&lt;</span> <span class="fl">4</span>,<span class="op">]</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">assemblageID</span>, <span class="va">resamp</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>n_obs <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span>, n_species <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">Species</span><span class="op">)</span>, n_year <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">YEAR</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">check5</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">check_resamps</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">STUDY_ID</th>
@@ -693,9 +693,9 @@ that originates from the random sample selection process):</p>
 <p>Since sampling events within a study are retrieved with a consistent
 methodology and observational effort, we don’t expect to see big
 differences between picking some sampling events over others, however
-it’s still a advisable check to do. The example above also highlights
+it’s still an advisable check to do. The example above also highlights
 the fact that during the process of standardising the number of samples
-per year within each time series a lot of data will be discarded.
+per year within each time series, a lot of data will be discarded.
 Additional steps, such as removing low sampling years, before applying
 the <code><a href="../reference/resampling.html">resampling()</a></code> function may minimize this effect.</p>
 <p><strong>Your data is now ready for analysis!</strong> You can stop
@@ -722,9 +722,9 @@ now processed BioTIME example dataset:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get alpha metrics estimates:</span></span>
 <span><span class="va">alpha_metrics</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getAlphaMetrics.html">getAlphaMetrics</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">grid_rare</span>, measure <span class="op">=</span> <span class="st">"ABUNDANCE"</span><span class="op">)</span></span>
-<span><span class="co">#see also help("getAlphaMetrics") for more details on the metrics</span></span>
+<span><span class="co"># see also help("getAlphaMetrics") for more details on the metrics</span></span>
 <span></span>
-<span><span class="co">#Have a quick look at the output</span></span>
+<span><span class="co"># Have a quick look at the output</span></span>
 <span><span class="va">alpha_metrics</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
@@ -839,7 +839,7 @@ now processed BioTIME example dataset:</p>
 <span><span class="va">beta_metrics</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getBetaMetrics.html">getBetaMetrics</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">grid_rare</span>, measure <span class="op">=</span> <span class="st">"ABUNDANCE"</span><span class="op">)</span></span>
 <span><span class="co">#see also help("getBetaMetrics") for more details on the metrics</span></span>
 <span></span>
-<span><span class="co">#Have a quick look at the output</span></span>
+<span><span class="co"># Have a quick look at the output</span></span>
 <span><span class="va">beta_metrics</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
@@ -895,7 +895,7 @@ now processed BioTIME example dataset:</p>
 </tbody>
 </table>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#NOTE the functions used the rarefied data with only one resampling iteration</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># NOTE the functions used the rarefied data with only one resampling iteration</span></span></code></pre></div>
 <p>There are many metrics for measuring biodiversity in community
 ecology. Here, we focused on the more commonly used metrics when
 measuring temporal changes in biodiversity. getAlphaMetrics() estimates
@@ -927,19 +927,19 @@ intercept) using lm(), and fit individually to the yearly diversity
 estimates of each metric within each assemblage time series in your
 dataset.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#Let's apply it then:</span></span>
+<code class="sourceCode R"><span><span class="co"># Let's apply it then:</span></span>
 <span><span class="va">alpha_slopes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getLinearRegressions.html">getLinearRegressions</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">alpha_metrics</span>, divType <span class="op">=</span> <span class="st">"alpha"</span>,</span>
 <span>                                     pThreshold <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span> <span class="co">#for alpha metrics</span></span>
 <span></span>
 <span></span>
-<span><span class="co">#Have a quick look at the output </span></span>
+<span><span class="co"># Have a quick look at the output </span></span>
 <span><span class="va">alpha_slopes</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">beta_slopes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getLinearRegressions.html">getLinearRegressions</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">beta_metrics</span>, divType <span class="op">=</span> <span class="st">"beta"</span>,</span>
 <span>                                    pThreshold <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span>  <span class="co">#for beta metrics</span></span>
 <span></span>
-<span><span class="co">#Have a quick look at the output</span></span>
-<span><span class="co">#beta_slopes %&gt;% head(6) %&gt;% kable()</span></span></code></pre></div>
+<span><span class="co"># Have a quick look at the output</span></span>
+<span><span class="co"># beta_slopes %&gt;% head(6) %&gt;% kable()</span></span></code></pre></div>
 <table class="table">
 <colgroup>
 <col width="17%">
@@ -1015,7 +1015,7 @@ column called <code>significance</code> is also provided, where 1
 indicates the threshold is met, i.e. the estimated slope is significant
 at the specified p-value level.</p>
 <p>Also note that some biodiversity analysis may benefit from additional
-transformations and scaling of data before modelling(check a nice
+transformations and scaling of data before modelling (check a nice
 tutorial on the subject <a href="https://ourcodingclub.github.io/tutorials/data-scaling/" class="external-link">here</a>).</p>
 </div>
 <div class="section level3">
@@ -1029,12 +1029,14 @@ question.</p>
 <p>Right, let’s start will some overall summaries and trends:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># First, how many assemblages in our dataset show a moderate evidence (P &lt; 0.05) of change in alpha diversity?</span></span>
-<span><span class="va">check6</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op">%&gt;%</span></span>
+<span><span class="va">alpha_slopes</span><span class="op">$</span><span class="va">metric</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">alpha_slopes</span><span class="op">$</span><span class="va">metric</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"S"</span>, <span class="st">"N"</span>, <span class="st">"maxN"</span>, <span class="st">"Shannon"</span>,<span class="st">"expShannon"</span>, <span class="st">"Simpson"</span>, <span class="st">"invSimpson"</span>, <span class="st">"PIE"</span>, <span class="st">"DomMc"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">check_alpha_trend</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">metric</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>   <span class="co"># or use filter(pvalue&lt;0.05)</span></span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>n_sig <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">check6</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
+<span><span class="va">check_alpha_trend</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">metric</th>
@@ -1043,9 +1045,9 @@ question.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">DomMc</td>
-<td align="right">25</td>
-<td align="right">-0.0038871</td>
+<td align="left">S</td>
+<td align="right">29</td>
+<td align="right">-0.0102637</td>
 </tr>
 <tr class="even">
 <td align="left">N</td>
@@ -1053,24 +1055,14 @@ question.</p>
 <td align="right">-83.9281283</td>
 </tr>
 <tr class="odd">
-<td align="left">PIE</td>
-<td align="right">34</td>
-<td align="right">0.0119244</td>
+<td align="left">maxN</td>
+<td align="right">32</td>
+<td align="right">-9.4407103</td>
 </tr>
 <tr class="even">
-<td align="left">S</td>
-<td align="right">29</td>
-<td align="right">-0.0102637</td>
-</tr>
-<tr class="odd">
 <td align="left">Shannon</td>
 <td align="right">38</td>
 <td align="right">0.0012323</td>
-</tr>
-<tr class="even">
-<td align="left">Simpson</td>
-<td align="right">35</td>
-<td align="right">0.0116811</td>
 </tr>
 <tr class="odd">
 <td align="left">expShannon</td>
@@ -1078,31 +1070,42 @@ question.</p>
 <td align="right">-0.0037308</td>
 </tr>
 <tr class="even">
+<td align="left">Simpson</td>
+<td align="right">35</td>
+<td align="right">0.0116811</td>
+</tr>
+<tr class="odd">
 <td align="left">invSimpson</td>
 <td align="right">29</td>
 <td align="right">0.1492593</td>
 </tr>
+<tr class="even">
+<td align="left">PIE</td>
+<td align="right">34</td>
+<td align="right">0.0119244</td>
+</tr>
 <tr class="odd">
-<td align="left">maxN</td>
-<td align="right">32</td>
-<td align="right">-9.4407103</td>
+<td align="left">DomMc</td>
+<td align="right">25</td>
+<td align="right">-0.0038871</td>
 </tr>
 </tbody>
 </table>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># We can see that only a few (&lt;40) of the assemblage time series</span></span>
-<span><span class="co"># actually show a significant trend of change over time, independently of the metric used. This indicates that in most time series in the studies we analysed alpha diversity is not really changing through time.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># We can see that only a few (&lt;40) of the assemblage time series actually show a significant</span></span>
+<span><span class="co"># trend of change over time, independently of the metric used. This indicates that in most</span></span>
+<span><span class="co"># time series in the studies we analysed alpha diversity is not really changing through time.</span></span></code></pre></div>
 <p>Let’s do some summary plots showing the variation of alpha diversity
 change:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#Get a slope per assemblageID and metric</span></span>
+<code class="sourceCode R"><span><span class="co"># Get a slope per assemblageID and metric</span></span>
 <span><span class="va">alpha_slopes_simp</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">assemblageID</span>, <span class="va">metric</span>, <span class="va">pvalue</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>   <span class="co">#select only the assemblages with significant trends</span></span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Note: you may need to simplify your data as by default the getLinearRegressions() function </span></span>
-<span><span class="co">#returns a data frame containing the original input of yearly diversity metrics for each assemblage </span></span>
-<span><span class="co">#time series merged with the results of a simple linear regression.</span></span>
+<span><span class="co"># returns a data frame containing the original input of yearly diversity metrics for each assemblage </span></span>
+<span><span class="co"># time series merged with the results of a simple linear regression.</span></span>
 <span></span>
 <span><span class="co"># Calculate the mean slope and CIs</span></span>
 <span><span class="va">stats_alpha</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes_simp</span> <span class="op">%&gt;%</span>  </span>
@@ -1123,14 +1126,15 @@ change:</p>
 <span>             linetype <span class="op">=</span> <span class="fl">2</span>, linewidth <span class="op">=</span> <span class="fl">0.5</span>, colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span> <span class="co">#upper confidence interval</span></span>
 <span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">metric</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/BioTIME-palette.html">scale_fill_biotime</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>  <span class="co">#using the customize BioTIME colour scale. See help("scale_color_biotime") for more options.</span></span>
-<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="co">#add slope=0 line</span></span>
-<span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Alpha diversity change"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span>,plot.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette1_files/figure-html/trends3-1.png" width="691.2">
 Now the same for beta diversity change:
 <img src="vignette1_files/figure-html/trends4-1.png" width="691.2"></p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#Hint: If you wish to plot all metrics together, simply merge you alpha_slopes and </span></span>
-<span><span class="co">#beta_slopes dataframes beforehand.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Hint: If you wish to plot all metrics together, simply merge you alpha_slopes and </span></span>
+<span><span class="co"># beta_slopes dataframes beforehand.</span></span></code></pre></div>
 <p>That’s great! While overall trends are important, you may also want
 to evaluate the patterns for a specific taxa or climate, and look at
 both sets of trends (i.e. significant and non-significant) together. For
@@ -1152,13 +1156,13 @@ dataset.</p>
 <span>                                     <span class="fu">separate</span><span class="op">(</span><span class="va">.</span>, <span class="va">assemblageID</span>, </span>
 <span>                                              into <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDY_ID"</span>, <span class="st">"cell"</span><span class="op">)</span>,</span>
 <span>                                              sep <span class="op">=</span> <span class="st">"_"</span>, remove <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#Merge it all</span></span>
+<span><span class="co"># Merge it all</span></span>
 <span><span class="va">alpha_slopes_meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">alpha_slopes_simp</span>, <span class="va">meta</span>, by <span class="op">=</span> <span class="st">"STUDY_ID"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#select relevant data for plotting</span></span>
+<span><span class="co"># Select relevant data for plotting</span></span>
 <span><span class="va">alpha_slopes_set1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">alpha_slopes_meta</span>, <span class="va">alpha_slopes_meta</span><span class="op">$</span><span class="va">metric</span> <span class="op">==</span> <span class="st">"Shannon"</span> <span class="op">&amp;</span> <span class="op">(</span><span class="va">alpha_slopes_meta</span><span class="op">$</span><span class="va">TAXA</span> <span class="op">==</span> <span class="st">"Fish"</span> <span class="op">|</span> <span class="va">alpha_slopes_meta</span><span class="op">$</span><span class="va">TAXA</span> <span class="op">==</span> <span class="st">"Birds"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#Let's put it all together</span></span>
+<span><span class="co"># Let's put it all together</span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">alpha_slopes_set1</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">slope</span>, fill <span class="op">=</span> <span class="va">TAXA</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_histogram</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"grey"</span>, bins <span class="op">=</span> <span class="fl">25</span><span class="op">)</span> <span class="op">+</span> <span class="co">#all assemblages</span></span>
 <span>  <span class="fu">geom_histogram</span><span class="op">(</span>data <span class="op">=</span> <span class="va">alpha_slopes_set1</span><span class="op">[</span><span class="va">alpha_slopes_set1</span><span class="op">$</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>, bins <span class="op">=</span> <span class="fl">25</span><span class="op">)</span> <span class="op">+</span> <span class="co">#only significant change assemblages</span></span>
@@ -1166,21 +1170,24 @@ dataset.</p>
 <span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">TAXA</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/BioTIME-palette.html">scale_fill_biotime</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Shannon-Weiner Species Diversity Index"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme</span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="co">#add slope=0 line</span></span></code></pre></div>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">theme</span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette1_files/figure-html/trends6-1.png" width="691.2"></p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#Now we see the full distribution of slopes of change for the Shannon index for the birds and fish time series in our subset: all slopes are shown in grey, while in colour we show the subset of assemblages for which</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Now we see the full distribution of slopes of change for the Shannon index for the birds </span></span>
+<span><span class="co"># and fish time series in our subset: all slopes are shown in grey, while in color we show </span></span>
+<span><span class="co"># the subset of assemblages for which evidence (P &lt; 0.05) of change was detected.</span></span></code></pre></div>
 <p>We might also want to explore the different trends for a given time
 series, allowing us to visualise the data and the trend line:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#Hint: If you want to draw the p-value on the plot, you can try using the ggpmisc::stat_fit_glance which takes anything passed through lm() in R and allows it to processed and printed using ggplot2.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Hint: If you want to draw the p-value on the plot, you can try using the ggpmisc::stat_fit_glance which takes anything passed through lm() in R and allows it to processed and printed using ggplot2.</span></span></code></pre></div>
 <p>We can see that results vary depending on the dataset and the metric
 of change used. It is important to remember that biodiversity metrics
 are just a tool used to measure changes, and each have diverse abilities
 to detect changes in different biodiversity dimensions and under
-different scenarios e.g.. They thus provide different pieces of a
-complex puzzle and may strongly affect our interpretation of
-biodiversity change.</p>
+different scenarios e.g.They thus provide different pieces of a complex
+puzzle and may strongly affect our interpretation of biodiversity
+change.</p>
 </div>
 <div class="section level3">
 <h3 id="credits-and-disclaimer">Credits and Disclaimer<a class="anchor" aria-label="anchor" href="#credits-and-disclaimer"></a>
