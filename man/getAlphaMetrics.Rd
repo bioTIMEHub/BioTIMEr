@@ -14,7 +14,7 @@ getAlphaMetrics(x, measure)
 }
 \value{
 Returns a data frame with results for species richness (\code{S}), numerical
- abundance (\code{N}), maximum numerical abundance (\code{MaxN}), Shannon Index (\code{Shannon}),
+ abundance (\code{N}), maximum numerical abundance (\code{maxN}), Shannon Index (\code{Shannon}),
  Exponential Shannon (\code{expShannon}), Simpson's Index (Simpson), Inverse Simpson
  (\code{InvSimpson}), Probability of intraspecific encounter (\code{PIE}) and McNaughton's
  Dominance (\code{DomMc}) for each year and \code{assemblageID}.
@@ -34,7 +34,7 @@ the following metrics:
 - Numerical abundance (\code{N}) as the total currency (sum) in each year
 (either total abundance or total biomass).
 
-- Maximum Numerical abundance (MaxN) as the highest currency value reported in each year.
+- Maximum Numerical abundance (maxN) as the highest currency value reported in each year.
 
 - Shannon or Shannon–Weaver index is calculated as \eqn{\sum_{i}p_{i}log_{b}p_{i}}, where \eqn{p_{i}} is the proportional abundance of species i and b is the base of the logarithm (natural logarithms), while exponential Shannon is given by \code{exp(Shannon)}.
 
