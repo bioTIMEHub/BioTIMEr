@@ -31,6 +31,7 @@ The typical model has the form `metric ~ year`. Note that assemblages with
 less than 3 time points and/or single species time series are removed.
 }
 \examples{
+  library(BioTIMEr)
   x <- data.frame(
     resamp = 1L,
     YEAR = rep(rep(2010:2015, each = 4), times = 4),
