@@ -60,6 +60,8 @@ Imports:
     vegan,
     dggridR,
     checkmate
+Remotes:
+    SebKrantz/dggridR
 Suggests:
     maps,
     knitr,

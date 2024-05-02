@@ -260,7 +260,7 @@
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=dggridR"
+      "sameAs": "https://github.com/SebKrantz/dggridR"
     },
     "7": {
       "@type": "SoftwareApplication",
@@ -276,7 +276,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "6066.547KB",
+  "fileSize": "5904.965KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",

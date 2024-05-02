@@ -24,6 +24,7 @@ library(tidyr)
 library(ggplot2)
 library(dggridR)
 
+set.seed(42)
 ```
 
 ```{r bt_package_loading, warning=FALSE, message=FALSE, eval=TRUE}
@@ -42,12 +43,6 @@ loaded together with its metadata. This subset includes 12 studies from marine, 
 ```{r package info, warning=FALSE, message=FALSE, eval=TRUE, include=TRUE}
 # you can also see a full list of BioTIMEr functions and help pages by:
 ??BioTIMEr
-```
-
-```{r filename_check, include=FALSE, echo=FALSE}
-# Just checking that the file names given above in the vignette are still correct
-file.exists("data/BTsubset_meta.RData")
-file.exists("data/BTsubset_data.RData")
 ```
 
 
@@ -472,34 +467,8 @@ ggplot(data = alpha_slopes_set1, aes(x = slope, fill = TAXA)) +
 ```
 
 We might also want to explore the different trends for a given time series, allowing us to visualise the data and the trend line: 
-```{r trends8_hidden, cache=TRUE, echo=FALSE, message=FALSE, fig.width=7.2, fig.height=6,tidy=FALSE, include=FALSE, eval=TRUE, results='hold', figures='hold'} 
-# Let's go back to the data frame with the yearly values and select our relevant data for plotting
-alpha_slopes_set2 <- subset(alpha_slopes, assemblageID == "18_335699")
 
-# Get assemblage ID
-name_assemblage <- unique(alpha_slopes_set2$assemblageID)
-
-# Let's put it all together
-if (!file.exists("trends8.rds")) {
-  p <- ggplot(data = alpha_slopes_set2, aes(x = YEAR, y = diversity)) +
-    geom_point(colour = "#155f49", size = 1) +   #plot the yearly estimates
-    stat_smooth(method = "lm", se = FALSE, linetype = 2, colour = "grey") + #draw all regression line
-    stat_smooth(data = subset(alpha_slopes_set2, alpha_slopes_set2$significance == 1),
-                aes(x = YEAR, y = diversity), method = "lm", se = FALSE, 
-                linetype = 2, colour = "#155f49") + #colour only trends that are significant
-    facet_wrap(~metric, scales = "free") +
-    scale_fill_biotime() +
-    ggtitle(paste("Assemblage", name_assemblage)) + ylab("Diversity") +
-    theme_bw() + theme(plot.title = element_text(size = 11, hjust = 0.5))
-  saveRDS(p, file = "trends8.rds")
-} else {
-  p <- readRDS(file = "trends8.rds")
-}
-#p
-
-```
-
-```{r trends8_shown, cache=FALSE, echo=FALSE, message=FALSE, tidy=FALSE, include=TRUE, eval=FALSE,results='hold', figures='hold'} 
+```{r trends8, cache=FALSE, echo=FALSE, message=FALSE, tidy=FALSE, include=TRUE, eval=FALSE,results='hold', figures='hold'} 
 # Let's go back to the data frame with the yearly values and select our relevant data for plotting
 alpha_slopes_set2 <- subset(alpha_slopes, assemblageID == "18_335699")
 
