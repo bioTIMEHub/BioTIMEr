@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Inês S.
 Martins</h4>
             
-            <h4 data-toc-skip class="date">2024-05-02</h4>
+            <h4 data-toc-skip class="date">2024-05-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/bioTIMEHub/BioTIMEr/blob/HEAD/vignettes/vignette1.Rmd" class="external-link"><code>vignettes/vignette1.Rmd</code></a></small>
       <div class="hidden name"><code>vignette1.Rmd</code></div>
@@ -584,17 +584,17 @@ that originates from the random sample selection process):</p>
 <span><span class="va">grid_rare_n10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/resampling.html">resampling</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">grid_samples</span>, measure <span class="op">=</span> <span class="st">"ABUNDANCE"</span>, resamps <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>                            conservative <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Note that you may want to resample many more times (e.g. at least 30-100+ times, but up to 199 </span></span>
-<span><span class="co"># if e.g. working with the whole BioTIME data), depending on how many iterations you want a </span></span>
-<span><span class="co"># subsequent bootstrap analysis to have. </span></span>
-<span><span class="co"># This may also take some computation time, so if you are working with a big subset of BioTIME </span></span>
+<span><span class="co"># Note that you may want to resample many more times (e.g. at least 30-100+ times, but up to 199</span></span>
+<span><span class="co"># if e.g. working with the whole BioTIME data), depending on how many iterations you want a</span></span>
+<span><span class="co"># subsequent bootstrap analysis to have.</span></span>
+<span><span class="co"># This may also take some computation time, so if you are working with a big subset of BioTIME</span></span>
 <span><span class="co"># is advisable to break it down in smaller subsets.</span></span>
 <span></span>
 <span><span class="co"># Each resampling iteration will be identified as resamp = 1:n, in this case 1:10.</span></span>
-<span><span class="co"># Now we can check if there are differences across the first 3 of these iterations: </span></span>
+<span><span class="co"># Now we can check if there are differences across the first 3 of these iterations:</span></span>
 <span></span>
-<span><span class="va">check_resamps</span> <span class="op">&lt;-</span> <span class="va">grid_rare_n10</span><span class="op">[</span><span class="va">grid_rare_n10</span><span class="op">$</span><span class="va">resamp</span> <span class="op">&lt;</span> <span class="fl">4</span>,<span class="op">]</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">assemblageID</span>, <span class="va">resamp</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span><span class="va">check_resamps</span> <span class="op">&lt;-</span> <span class="va">grid_rare_n10</span><span class="op">[</span><span class="va">grid_rare_n10</span><span class="op">$</span><span class="va">resamp</span> <span class="op">&lt;</span> <span class="fl">4</span>,<span class="op">]</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">assemblageID</span>, <span class="va">resamp</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>n_obs <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span>, n_species <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">Species</span><span class="op">)</span>, n_year <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">YEAR</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">check_resamps</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -621,22 +621,22 @@ that originates from the random sample selection process):</p>
 <td align="left">10_359170</td>
 <td align="right">2</td>
 <td align="right">61</td>
-<td align="right">25</td>
+<td align="right">24</td>
 <td align="right">3</td>
 </tr>
 <tr class="odd">
 <td align="right">10</td>
 <td align="left">10_359170</td>
 <td align="right">3</td>
-<td align="right">59</td>
-<td align="right">23</td>
+<td align="right">61</td>
+<td align="right">25</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="right">18</td>
 <td align="left">18_335699</td>
 <td align="right">1</td>
-<td align="right">746</td>
+<td align="right">738</td>
 <td align="right">75</td>
 <td align="right">29</td>
 </tr>
@@ -644,16 +644,16 @@ that originates from the random sample selection process):</p>
 <td align="right">18</td>
 <td align="left">18_335699</td>
 <td align="right">2</td>
-<td align="right">730</td>
-<td align="right">75</td>
+<td align="right">740</td>
+<td align="right">76</td>
 <td align="right">29</td>
 </tr>
 <tr class="even">
 <td align="right">18</td>
 <td align="left">18_335699</td>
 <td align="right">3</td>
-<td align="right">713</td>
-<td align="right">74</td>
+<td align="right">718</td>
+<td align="right">72</td>
 <td align="right">29</td>
 </tr>
 <tr class="odd">
@@ -757,28 +757,28 @@ now processed BioTIME example dataset:</p>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="right">1984</td>
-<td align="right">21</td>
-<td align="right">3216</td>
-<td align="right">1634</td>
-<td align="right">1.660380</td>
-<td align="right">0.6913408</td>
-<td align="right">3.239819</td>
-<td align="right">0.6915558</td>
-<td align="right">0.6654229</td>
-<td align="right">5.261310</td>
+<td align="right">19</td>
+<td align="right">3427</td>
+<td align="right">1863</td>
+<td align="right">1.557755</td>
+<td align="right">0.6598196</td>
+<td align="right">2.939616</td>
+<td align="right">0.6600122</td>
+<td align="right">0.6798950</td>
+<td align="right">4.748150</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="right">1992</td>
-<td align="right">19</td>
-<td align="right">2107</td>
-<td align="right">1001</td>
-<td align="right">1.681682</td>
-<td align="right">0.7131466</td>
-<td align="right">3.486101</td>
-<td align="right">0.7134852</td>
-<td align="right">0.6687233</td>
-<td align="right">5.374588</td>
+<td align="right">20</td>
+<td align="right">2029</td>
+<td align="right">920</td>
+<td align="right">1.760637</td>
+<td align="right">0.7347483</td>
+<td align="right">3.770004</td>
+<td align="right">0.7351106</td>
+<td align="right">0.6106456</td>
+<td align="right">5.816141</td>
 </tr>
 <tr class="odd">
 <td align="left">10_359170</td>
@@ -795,42 +795,42 @@ now processed BioTIME example dataset:</p>
 </tr>
 <tr class="even">
 <td align="left">18_335699</td>
-<td align="right">1933</td>
-<td align="right">27</td>
-<td align="right">375</td>
-<td align="right">91</td>
-<td align="right">2.605472</td>
-<td align="right">0.8893298</td>
-<td align="right">9.035854</td>
-<td align="right">0.8917077</td>
-<td align="right">0.3626667</td>
-<td align="right">13.537621</td>
+<td align="right">1932</td>
+<td align="right">28</td>
+<td align="right">376</td>
+<td align="right">110</td>
+<td align="right">2.246459</td>
+<td align="right">0.8274955</td>
+<td align="right">5.796949</td>
+<td align="right">0.8297021</td>
+<td align="right">0.5425532</td>
+<td align="right">9.454203</td>
 </tr>
 <tr class="odd">
 <td align="left">18_335699</td>
-<td align="right">1935</td>
-<td align="right">29</td>
-<td align="right">471</td>
-<td align="right">114</td>
-<td align="right">2.540475</td>
-<td align="right">0.8827223</td>
-<td align="right">8.526771</td>
-<td align="right">0.8846004</td>
-<td align="right">0.3736730</td>
-<td align="right">12.685690</td>
+<td align="right">1937</td>
+<td align="right">27</td>
+<td align="right">616</td>
+<td align="right">144</td>
+<td align="right">2.369010</td>
+<td align="right">0.8611539</td>
+<td align="right">7.202217</td>
+<td align="right">0.8625541</td>
+<td align="right">0.4399351</td>
+<td align="right">10.686803</td>
 </tr>
 <tr class="even">
 <td align="left">18_335699</td>
-<td align="right">1937</td>
-<td align="right">28</td>
-<td align="right">831</td>
-<td align="right">183</td>
-<td align="right">2.434566</td>
-<td align="right">0.8687835</td>
-<td align="right">7.620993</td>
-<td align="right">0.8698302</td>
-<td align="right">0.4404332</td>
-<td align="right">11.410862</td>
+<td align="right">1942</td>
+<td align="right">32</td>
+<td align="right">1613</td>
+<td align="right">274</td>
+<td align="right">2.537124</td>
+<td align="right">0.8922122</td>
+<td align="right">9.277486</td>
+<td align="right">0.8927657</td>
+<td align="right">0.3279603</td>
+<td align="right">12.643251</td>
 </tr>
 </tbody>
 </table>
@@ -853,44 +853,44 @@ now processed BioTIME example dataset:</p>
 <tr class="odd">
 <td align="right">1984</td>
 <td align="left">10_359170</td>
-<td align="right">0.1818182</td>
-<td align="right">0.0077661</td>
-<td align="right">0.2301334</td>
+<td align="right">0.0500000</td>
+<td align="right">0.0175351</td>
+<td align="right">0.2727273</td>
 </tr>
 <tr class="even">
 <td align="right">1992</td>
 <td align="left">10_359170</td>
-<td align="right">0.2916667</td>
-<td align="right">0.0067858</td>
-<td align="right">0.2369389</td>
+<td align="right">0.3043478</td>
+<td align="right">0.0078712</td>
+<td align="right">0.2672215</td>
 </tr>
 <tr class="odd">
 <td align="right">1996</td>
 <td align="left">10_359170</td>
-<td align="right">0.3043478</td>
-<td align="right">0.0145296</td>
-<td align="right">0.1476774</td>
+<td align="right">0.2608696</td>
+<td align="right">0.0209460</td>
+<td align="right">0.1452106</td>
 </tr>
 <tr class="even">
-<td align="right">1933</td>
+<td align="right">1932</td>
 <td align="left">18_335699</td>
-<td align="right">0.4864865</td>
-<td align="right">0.2878024</td>
-<td align="right">0.4988180</td>
+<td align="right">0.5526316</td>
+<td align="right">0.1687027</td>
+<td align="right">0.4193548</td>
 </tr>
 <tr class="odd">
-<td align="right">1935</td>
-<td align="left">18_335699</td>
-<td align="right">0.4722222</td>
-<td align="right">0.3144680</td>
-<td align="right">0.5273632</td>
-</tr>
-<tr class="even">
 <td align="right">1937</td>
 <td align="left">18_335699</td>
-<td align="right">0.5581395</td>
-<td align="right">0.3312800</td>
-<td align="right">0.6829897</td>
+<td align="right">0.5000000</td>
+<td align="right">0.5046294</td>
+<td align="right">0.7506285</td>
+</tr>
+<tr class="even">
+<td align="right">1942</td>
+<td align="left">18_335699</td>
+<td align="right">0.4878049</td>
+<td align="right">0.6203689</td>
+<td align="right">0.6270598</td>
 </tr>
 </tbody>
 </table>
@@ -942,11 +942,11 @@ dataset.</p>
 <span><span class="co"># beta_slopes %&gt;% head(6) %&gt;% kable()</span></span></code></pre></div>
 <table class="table">
 <colgroup>
-<col width="18%">
-<col width="15%">
-<col width="16%">
+<col width="17%">
+<col width="14%">
+<col width="17%">
 <col width="13%">
-<col width="18%">
+<col width="17%">
 <col width="18%">
 </colgroup>
 <thead><tr class="header">
@@ -961,50 +961,50 @@ dataset.</p>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="left">S</td>
-<td align="right">-0.1071429</td>
-<td align="right">0.5456289</td>
+<td align="right">0.0892857</td>
+<td align="right">0.2122956</td>
 <td align="right">0</td>
-<td align="right">2.332857e+02</td>
+<td align="right">-158.071429</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="left">N</td>
-<td align="right">-90.9464286</td>
-<td align="right">0.2713185</td>
+<td align="right">-111.1785714</td>
+<td align="right">0.2927126</td>
 <td align="right">0</td>
-<td align="right">1.835584e+05</td>
+<td align="right">223878.142857</td>
 </tr>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="left">maxN</td>
-<td align="right">-45.6607143</td>
-<td align="right">0.3600373</td>
+<td align="right">-67.5535714</td>
+<td align="right">0.3647395</td>
 <td align="right">0</td>
-<td align="right">9.215793e+04</td>
+<td align="right">135788.642857</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="left">Shannon</td>
-<td align="right">0.0002877</td>
-<td align="right">0.9115369</td>
+<td align="right">0.0108605</td>
+<td align="right">0.5460426</td>
 <td align="right">0</td>
-<td align="right">1.094391e+00</td>
+<td align="right">-19.960516</td>
 </tr>
 <tr class="odd">
 <td align="left">10_359170</td>
 <td align="left">expShannon</td>
-<td align="right">0.0015353</td>
-<td align="right">0.9111816</td>
+<td align="right">0.0552380</td>
+<td align="right">0.5646626</td>
 <td align="right">0</td>
-<td align="right">2.240499e+00</td>
+<td align="right">-104.687532</td>
 </tr>
 <tr class="even">
 <td align="left">10_359170</td>
 <td align="left">Simpson</td>
-<td align="right">0.0000687</td>
-<td align="right">0.9809871</td>
+<td align="right">0.0032689</td>
+<td align="right">0.6471082</td>
 <td align="right">0</td>
-<td align="right">5.602721e-01</td>
+<td align="right">-5.813447</td>
 </tr>
 </tbody>
 </table>
@@ -1029,8 +1029,6 @@ question.</p>
 <p>Right, let’s start will some overall summaries and trends:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># First, how many assemblages in our dataset show a moderate evidence (P &lt; 0.05) of change in alpha diversity?</span></span>
-<span><span class="va">alpha_slopes</span><span class="op">$</span><span class="va">metric</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">alpha_slopes</span><span class="op">$</span><span class="va">metric</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"S"</span>, <span class="st">"N"</span>, <span class="st">"maxN"</span>, <span class="st">"Shannon"</span>,<span class="st">"expShannon"</span>, <span class="st">"Simpson"</span>, <span class="st">"invSimpson"</span>, <span class="st">"PIE"</span>, <span class="st">"DomMc"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
 <span><span class="va">check_alpha_trend</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">metric</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>   <span class="co"># or use filter(pvalue&lt;0.05)</span></span>
@@ -1046,48 +1044,48 @@ question.</p>
 <tbody>
 <tr class="odd">
 <td align="left">S</td>
-<td align="right">26</td>
-<td align="right">-0.0507909</td>
+<td align="right">28</td>
+<td align="right">-0.2974563</td>
 </tr>
 <tr class="even">
 <td align="left">N</td>
-<td align="right">27</td>
-<td align="right">-80.1033888</td>
+<td align="right">30</td>
+<td align="right">-202.7290130</td>
 </tr>
 <tr class="odd">
 <td align="left">maxN</td>
-<td align="right">27</td>
-<td align="right">6.4830416</td>
+<td align="right">37</td>
+<td align="right">-113.9073305</td>
 </tr>
 <tr class="even">
 <td align="left">Shannon</td>
-<td align="right">35</td>
-<td align="right">0.0116837</td>
+<td align="right">41</td>
+<td align="right">0.0001359</td>
 </tr>
 <tr class="odd">
 <td align="left">expShannon</td>
-<td align="right">35</td>
-<td align="right">-0.0258624</td>
+<td align="right">42</td>
+<td align="right">-0.1089916</td>
 </tr>
 <tr class="even">
 <td align="left">Simpson</td>
-<td align="right">33</td>
-<td align="right">0.0107417</td>
+<td align="right">38</td>
+<td align="right">0.0136529</td>
 </tr>
 <tr class="odd">
 <td align="left">invSimpson</td>
-<td align="right">30</td>
-<td align="right">0.1109505</td>
+<td align="right">32</td>
+<td align="right">0.1099690</td>
 </tr>
 <tr class="even">
 <td align="left">PIE</td>
-<td align="right">32</td>
-<td align="right">0.0102109</td>
+<td align="right">36</td>
+<td align="right">0.0139697</td>
 </tr>
 <tr class="odd">
 <td align="left">DomMc</td>
-<td align="right">22</td>
-<td align="right">-0.0054942</td>
+<td align="right">28</td>
+<td align="right">-0.0088458</td>
 </tr>
 </tbody>
 </table>
@@ -1103,11 +1101,8 @@ change:</p>
 <span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">assemblageID</span>, <span class="va">metric</span>, <span class="va">pvalue</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>   <span class="co">#select only the assemblages with significant trends</span></span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co"># Note: you may need to simplify your data as by default the getLinearRegressions() function </span></span>
-<span><span class="co"># returns a data frame containing the original input of yearly diversity metrics for each assemblage </span></span>
-<span><span class="co"># time series merged with the results of a simple linear regression.</span></span>
 <span></span>
-<span><span class="co"># Calculate the mean slope and CIs</span></span>
+<span><span class="co"># Calculate the mean slope and CIs </span></span>
 <span><span class="va">stats_alpha</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes_simp</span> <span class="op">%&gt;%</span>  </span>
 <span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">metric</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>mean_slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span>, <span class="co">#mean</span></span>
@@ -1129,8 +1124,8 @@ change:</p>
 <span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Alpha diversity change"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span>,plot.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="vignette1_files/figure-html/trends3-1.png" width="691.2">
-Now the same for beta diversity change:
+<p><img src="vignette1_files/figure-html/trends3-1.png" width="691.2"></p>
+<p>Now the same for beta diversity change:
 <img src="vignette1_files/figure-html/trends4-1.png" width="691.2"></p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Hint: If you wish to plot all metrics together, simply merge you alpha_slopes and </span></span>
@@ -1178,9 +1173,8 @@ dataset.</p>
 <span><span class="co"># and fish time series in our subset: all slopes are shown in grey, while in color we show </span></span>
 <span><span class="co"># the subset of assemblages for which evidence (P &lt; 0.05) of change was detected.</span></span></code></pre></div>
 <p>We might also want to explore the different trends for a given time
-series, allowing us to visualise the data and the trend line:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Hint: If you want to draw the p-value on the plot, you can try using the ggpmisc::stat_fit_glance which takes anything passed through lm() in R and allows it to processed and printed using ggplot2.</span></span></code></pre></div>
+series, allowing us to visualise the data and the trend line:
+<img src="vignette1_files/figure-html/trends8-1.png" width="691.2"></p>
 <p>We can see that results vary depending on the dataset and the metric
 of change used. It is important to remember that biodiversity metrics
 are just a tool used to measure changes, and each have diverse abilities
