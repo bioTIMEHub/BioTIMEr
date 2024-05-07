@@ -465,10 +465,16 @@ We might also want to explore the different trends for a given time series, allo
 # Let's go back to the data frame with the yearly values and select our relevant data for plotting
 alpha_metrics_set <- subset(alpha_metrics, assemblageID == "18_335699")
 
-alpha_metrics_set2<-reshape2::melt(alpha_metrics_set,c("assemblageID", "YEAR"))
+alpha_metrics_set2 <- pivot_longer(alpha_metrics_set,
+                                   cols = c("S", "N", "maxN", "Shannon", "expShannon",
+                                   "Simpson", "invSimpson", "PIE", "DomMc"),
+                                   names_to = "metric",
+                                   names_transform = as.factor)
+
 alpha_slopes_set <- subset(alpha_slopes, assemblageID == "18_335699")
 
-alpha_metrics_set1<-merge(alpha_metrics_set2,alpha_slopes_set, by.x = c("assemblageID", "variable"), by.y=c("assemblageID", "metric"))
+alpha_metrics_set1 <- left_join(alpha_slopes_set, alpha_metrics_set2,
+                                join_by(assemblageID, metric))
 
 # Get assemblage ID
 name_assemblage <- unique(alpha_slopes_set$assemblageID)
@@ -480,7 +486,7 @@ ggplot(data = alpha_metrics_set1, aes(x = YEAR, y = value)) +
     stat_smooth(data = subset(alpha_metrics_set1, alpha_metrics_set1$significance == 1),
                 aes(x = YEAR, y = value), method = "lm", se = FALSE, 
                 linetype = 2, colour = "#155f49") + #color only trends that are significant
-    facet_wrap(~variable, scales = "free") +
+    facet_wrap(~metric, scales = "free") +
     scale_fill_biotime() +
     ggtitle(paste("Assemblage", name_assemblage)) + ylab("Diversity") +
     theme_bw() + theme(plot.title = element_text(size = 11, hjust = 0.5))
