@@ -24,7 +24,7 @@ library(tidyr)
 library(ggplot2)
 library(dggridR)
 
-set.seed(42)
+set.seed(19)
 ```
 
 ```{r bt_package_loading, warning=FALSE, message=FALSE, eval=TRUE}
@@ -244,17 +244,17 @@ One option to deal with this issue is to repeat this random sampling process mul
 grid_rare_n10 <- resampling(x = grid_samples, measure = "ABUNDANCE", resamps = 10,
                             conservative = FALSE)
 
-# Note that you may want to resample many more times (e.g. at least 30-100+ times, but up to 199 
-# if e.g. working with the whole BioTIME data), depending on how many iterations you want a 
-# subsequent bootstrap analysis to have. 
-# This may also take some computation time, so if you are working with a big subset of BioTIME 
+# Note that you may want to resample many more times (e.g. at least 30-100+ times, but up to 199
+# if e.g. working with the whole BioTIME data), depending on how many iterations you want a
+# subsequent bootstrap analysis to have.
+# This may also take some computation time, so if you are working with a big subset of BioTIME
 # is advisable to break it down in smaller subsets.
 
 # Each resampling iteration will be identified as resamp = 1:n, in this case 1:10.
-# Now we can check if there are differences across the first 3 of these iterations: 
+# Now we can check if there are differences across the first 3 of these iterations:
 
-check_resamps <- grid_rare_n10[grid_rare_n10$resamp < 4,] %>% 
-  group_by(STUDY_ID, assemblageID, resamp) %>% 
+check_resamps <- grid_rare_n10[grid_rare_n10$resamp < 4,] %>%
+  group_by(STUDY_ID, assemblageID, resamp) %>%
   summarise(n_obs = n(), n_species = n_distinct(Species), n_year = n_distinct(YEAR))
 
 check_resamps %>% head(10) %>% kable()
@@ -334,8 +334,6 @@ Right, let's start will some overall summaries and trends:
 
 ```{r trends2, cache=TRUE, echo=TRUE, message=FALSE, fig.width=10, fig.height=7,tidy=FALSE, include=TRUE} 
 # First, how many assemblages in our dataset show a moderate evidence (P < 0.05) of change in alpha diversity?
-alpha_slopes$metric <- factor(alpha_slopes$metric, levels = c("S", "N", "maxN", "Shannon","expShannon", "Simpson", "invSimpson", "PIE", "DomMc"))
-
 check_alpha_trend <- alpha_slopes %>%
   group_by(metric) %>% 
   filter(significance == 1) %>%   # or use filter(pvalue<0.05)
@@ -346,21 +344,18 @@ check_alpha_trend %>% kable()
 # We can see that only a few (<40) of the assemblage time series actually show a significant
 # trend of change over time, independently of the metric used. This indicates that in most
 # time series in the studies we analysed alpha diversity is not really changing through time.
-
 ```
 
 Let’s do some summary plots showing the variation of alpha diversity change:
 ```{r trends3, cache=TRUE, echo=TRUE, message=FALSE, fig.width=7.2, fig.height=5,tidy=FALSE, include=TRUE,results='hold'} 
+
 # Get a slope per assemblageID and metric
 alpha_slopes_simp <- alpha_slopes %>% 
   group_by(assemblageID, metric, pvalue) %>% 
   filter(significance == 1) %>%   #select only the assemblages with significant trends
   summarise(slope = unique(slope))
-# Note: you may need to simplify your data as by default the getLinearRegressions() function 
-# returns a data frame containing the original input of yearly diversity metrics for each assemblage 
-# time series merged with the results of a simple linear regression.
 
-# Calculate the mean slope and CIs
+# Calculate the mean slope and CIs 
 stats_alpha <- alpha_slopes_simp %>%  
   group_by(metric) %>%
   summarise(mean_slope = mean(slope), #mean
@@ -384,14 +379,13 @@ ggplot(data = alpha_slopes_simp) +
   theme(legend.position = "none",plot.title = element_text(size = 11, hjust = 0.5))
 
 ```
+
 Now the same for beta diversity change:
 ```{r trends4, cache=TRUE, echo=FALSE, message=FALSE, fig.width=7.2, fig.height=1.9,tidy=FALSE, include=TRUE,results='hold'}
-# Sort the data
-beta_slopes$metric <- factor(beta_slopes$metric, levels = c("JaccardDiss", "MorisitaHornDiss", "BrayCurtisDiss"))
 
 # Get a slope per assemblageID and metric
 beta_slopes_simp <- beta_slopes %>% 
-  group_by(assemblageID, metric, 'pvalue') %>%
+  group_by(assemblageID, metric, pvalue) %>%
   filter(significance == 1) %>%     #select only the assemblages with significant trends
   summarise(slope = unique(slope))
 
@@ -467,37 +461,41 @@ ggplot(data = alpha_slopes_set1, aes(x = slope, fill = TAXA)) +
 ```
 
 We might also want to explore the different trends for a given time series, allowing us to visualise the data and the trend line: 
-
-```{r trends8, cache=FALSE, echo=FALSE, message=FALSE, tidy=FALSE, include=TRUE, eval=FALSE,results='hold', figures='hold'} 
+```{r trends8, cache=FALSE, echo=FALSE, message=FALSE, tidy=FALSE, include=TRUE,fig.width=7.2, fig.height=5, eval=TRUE,results='hold', figures='hold'} 
 # Let's go back to the data frame with the yearly values and select our relevant data for plotting
-alpha_slopes_set2 <- subset(alpha_slopes, assemblageID == "18_335699")
+alpha_metrics_set <- subset(alpha_metrics, assemblageID == "18_335699")
+
+alpha_metrics_set2<-reshape2::melt(alpha_metrics_set,c("assemblageID", "YEAR"))
+alpha_slopes_set <- subset(alpha_slopes, assemblageID == "18_335699")
+
+alpha_metrics_set1<-merge(alpha_metrics_set2,alpha_slopes_set, by.x = c("assemblageID", "variable"), by.y=c("assemblageID", "metric"))
 
 # Get assemblage ID
-name_assemblage <- unique(alpha_slopes_set2$assemblageID)
+name_assemblage <- unique(alpha_slopes_set$assemblageID)
 
 # Let's put it all together
-ggplot(data = alpha_slopes_set2, aes(x = YEAR, y = diversity)) +
+ggplot(data = alpha_metrics_set1, aes(x = YEAR, y = value)) +
     geom_point(colour = "#155f49", size = 1) +   #plot the yearly estimates
     stat_smooth(method = "lm", se = FALSE, linetype = 2, colour = "grey") + #draw all regression line
-    stat_smooth(data = subset(alpha_slopes_set2, alpha_slopes_set2$significance == 1),
-                aes(x = YEAR, y = diversity), method = "lm", se = FALSE, 
+    stat_smooth(data = subset(alpha_metrics_set1, alpha_metrics_set1$significance == 1),
+                aes(x = YEAR, y = value), method = "lm", se = FALSE, 
                 linetype = 2, colour = "#155f49") + #color only trends that are significant
-    facet_wrap(~metric, scales = "free") +
+    facet_wrap(~variable, scales = "free") +
     scale_fill_biotime() +
     ggtitle(paste("Assemblage", name_assemblage)) + ylab("Diversity") +
     theme_bw() + theme(plot.title = element_text(size = 11, hjust = 0.5))
 
 ```
 
-```{r trends9, cache=TRUE, echo=TRUE, message=FALSE, fig.width=10, fig.height=7,tidy=FALSE, include=TRUE,results='hold', figures='hold'} 
-# Hint: If you want to draw the p-value on the plot, you can try using the ggpmisc::stat_fit_glance which takes anything passed through lm() in R and allows it to processed and printed using ggplot2.
+```{r trends9, cache=TRUE, echo=TRUE, message=FALSE, fig.width=10, fig.height=7,tidy=FALSE, include=FALSE,results='hold', figures='hold'} 
+# Hint: If you want to draw the p-value on the plot, you can try using the #ggpmisc::stat_fit_glance which takes anything passed through lm() in R and 
+#allows it to processed and printed using ggplot2.
 ```
 
 We can see that results vary depending on the dataset and the metric of change used. It is important to remember that biodiversity metrics are just a tool used to measure changes, and each have diverse abilities to detect changes in different biodiversity dimensions and under different scenarios e.g.They thus provide different pieces of a complex puzzle and may strongly affect our interpretation of biodiversity change.
 
 
 ### Credits and Disclaimer
-
 This R package was developed by the BioTIME team. The functions and documentation were developed predominantly by Alban Sagouis, Faye Moyes and Inês S. Martins. For optimal use, the package should operate in the manner described here. Feedback is appreciated, particularly if you come across any errors or would like to suggest changes. Updates will be made sporadically.
 
 ### How to cite BioTIMEr
