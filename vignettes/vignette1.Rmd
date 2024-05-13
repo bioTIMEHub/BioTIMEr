@@ -461,29 +461,33 @@ ggplot(data = alpha_slopes_set1, aes(x = slope, fill = TAXA)) +
 ```
 
 We might also want to explore the different trends for a given time series, allowing us to visualise the data and the trend line: 
-```{r trends8, cache=FALSE, echo=FALSE, message=FALSE, tidy=FALSE, include=TRUE,fig.width=7.2, fig.height=5, eval=TRUE,results='hold', figures='hold'} 
+```{r trends8, cache=TRUE, echo=TRUE, message=FALSE, tidy=FALSE, include=TRUE,fig.width=7.2, fig.height=5, eval=TRUE,results='hold', figures='hold'} 
+
 # Let's go back to the data frame with the yearly values and select our relevant data for plotting
 alpha_metrics_set <- subset(alpha_metrics, assemblageID == "18_335699")
 
-alpha_metrics_set2 <- pivot_longer(alpha_metrics_set,
+#transform data
+alpha_metrics_set_long <- pivot_longer(alpha_metrics_set,
                                    cols = c("S", "N", "maxN", "Shannon", "expShannon",
                                    "Simpson", "invSimpson", "PIE", "DomMc"),
                                    names_to = "metric",
                                    names_transform = as.factor)
 
-alpha_slopes_set <- subset(alpha_slopes, assemblageID == "18_335699")
-
-alpha_metrics_set1 <- left_join(alpha_slopes_set, alpha_metrics_set2,
-                                join_by(assemblageID, metric))
+# Get assemblage ID slope of change
+alpha_slopes_set2 <- subset(alpha_slopes, assemblageID == "18_335699")
 
 # Get assemblage ID
-name_assemblage <- unique(alpha_slopes_set$assemblageID)
+name_assemblage <- unique(alpha_slopes_set2$assemblageID)
+
+# merge info
+alpha_metr_slop<- left_join(alpha_slopes_set2, alpha_metrics_set_long,
+                                join_by(assemblageID, metric))
 
 # Let's put it all together
-ggplot(data = alpha_metrics_set1, aes(x = YEAR, y = value)) +
+ggplot(data = alpha_metr_slop, aes(x = YEAR, y = value)) +
     geom_point(colour = "#155f49", size = 1) +   #plot the yearly estimates
     stat_smooth(method = "lm", se = FALSE, linetype = 2, colour = "grey") + #draw all regression line
-    stat_smooth(data = subset(alpha_metrics_set1, alpha_metrics_set1$significance == 1),
+    stat_smooth(data = subset(alpha_metr_slop, alpha_metr_slop$significance == 1),
                 aes(x = YEAR, y = value), method = "lm", se = FALSE, 
                 linetype = 2, colour = "#155f49") + #color only trends that are significant
     facet_wrap(~metric, scales = "free") +
