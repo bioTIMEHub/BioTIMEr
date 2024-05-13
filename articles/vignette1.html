@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Inês S.
 Martins</h4>
             
-            <h4 data-toc-skip class="date">2024-05-07</h4>
+            <h4 data-toc-skip class="date">2024-05-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/bioTIMEHub/BioTIMEr/blob/HEAD/vignettes/vignette1.Rmd" class="external-link"><code>vignettes/vignette1.Rmd</code></a></small>
       <div class="hidden name"><code>vignette1.Rmd</code></div>
@@ -1173,8 +1173,40 @@ dataset.</p>
 <span><span class="co"># and fish time series in our subset: all slopes are shown in grey, while in color we show </span></span>
 <span><span class="co"># the subset of assemblages for which evidence (P &lt; 0.05) of change was detected.</span></span></code></pre></div>
 <p>We might also want to explore the different trends for a given time
-series, allowing us to visualise the data and the trend line:
-<img src="vignette1_files/figure-html/trends8-1.png" width="691.2"></p>
+series, allowing us to visualise the data and the trend line:</p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Let's go back to the data frame with the yearly values and select our relevant data for plotting</span></span>
+<span><span class="va">alpha_metrics_set</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">alpha_metrics</span>, <span class="va">assemblageID</span> <span class="op">==</span> <span class="st">"18_335699"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#transform data</span></span>
+<span><span class="va">alpha_metrics_set_long</span> <span class="op">&lt;-</span> <span class="fu">pivot_longer</span><span class="op">(</span><span class="va">alpha_metrics_set</span>,</span>
+<span>                                   cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"S"</span>, <span class="st">"N"</span>, <span class="st">"maxN"</span>, <span class="st">"Shannon"</span>, <span class="st">"expShannon"</span>,</span>
+<span>                                   <span class="st">"Simpson"</span>, <span class="st">"invSimpson"</span>, <span class="st">"PIE"</span>, <span class="st">"DomMc"</span><span class="op">)</span>,</span>
+<span>                                   names_to <span class="op">=</span> <span class="st">"metric"</span>,</span>
+<span>                                   names_transform <span class="op">=</span> <span class="va">as.factor</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Get assemblage ID slope of change</span></span>
+<span><span class="va">alpha_slopes_set2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">alpha_slopes</span>, <span class="va">assemblageID</span> <span class="op">==</span> <span class="st">"18_335699"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Get assemblage ID</span></span>
+<span><span class="va">name_assemblage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">alpha_slopes_set2</span><span class="op">$</span><span class="va">assemblageID</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># merge info</span></span>
+<span><span class="va">alpha_metr_slop</span><span class="op">&lt;-</span> <span class="fu">left_join</span><span class="op">(</span><span class="va">alpha_slopes_set2</span>, <span class="va">alpha_metrics_set_long</span>,</span>
+<span>                                <span class="fu">join_by</span><span class="op">(</span><span class="va">assemblageID</span>, <span class="va">metric</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Let's put it all together</span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">alpha_metr_slop</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">geom_point</span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"#155f49"</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span>   <span class="co">#plot the yearly estimates</span></span>
+<span>    <span class="fu">stat_smooth</span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, linetype <span class="op">=</span> <span class="fl">2</span>, colour <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span> <span class="op">+</span> <span class="co">#draw all regression line</span></span>
+<span>    <span class="fu">stat_smooth</span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">alpha_metr_slop</span>, <span class="va">alpha_metr_slop</span><span class="op">$</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">value</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>                linetype <span class="op">=</span> <span class="fl">2</span>, colour <span class="op">=</span> <span class="st">"#155f49"</span><span class="op">)</span> <span class="op">+</span> <span class="co">#color only trends that are significant</span></span>
+<span>    <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">metric</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/BioTIME-palette.html">scale_fill_biotime</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Assemblage"</span>, <span class="va">name_assemblage</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Diversity"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme</span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="vignette1_files/figure-html/trends8-1.png" width="691.2"></p>
 <p>We can see that results vary depending on the dataset and the metric
 of change used. It is important to remember that biodiversity metrics
 are just a tool used to measure changes, and each have diverse abilities
