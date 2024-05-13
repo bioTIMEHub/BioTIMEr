@@ -466,7 +466,7 @@ We might also want to explore the different trends for a given time series, allo
 # Let's go back to the data frame with the yearly values and select our relevant data for plotting
 alpha_metrics_set <- subset(alpha_metrics, assemblageID == "18_335699")
 
-#transform data
+# Transform data
 alpha_metrics_set_long <- pivot_longer(alpha_metrics_set,
                                    cols = c("S", "N", "maxN", "Shannon", "expShannon",
                                    "Simpson", "invSimpson", "PIE", "DomMc"),
@@ -479,7 +479,7 @@ alpha_slopes_set2 <- subset(alpha_slopes, assemblageID == "18_335699")
 # Get assemblage ID
 name_assemblage <- unique(alpha_slopes_set2$assemblageID)
 
-# merge info
+# Merge info
 alpha_metr_slop<- left_join(alpha_slopes_set2, alpha_metrics_set_long,
                                 join_by(assemblageID, metric))
 
