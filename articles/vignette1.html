@@ -1178,7 +1178,7 @@ series, allowing us to visualise the data and the trend line:</p>
 <code class="sourceCode R"><span><span class="co"># Let's go back to the data frame with the yearly values and select our relevant data for plotting</span></span>
 <span><span class="va">alpha_metrics_set</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">alpha_metrics</span>, <span class="va">assemblageID</span> <span class="op">==</span> <span class="st">"18_335699"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#transform data</span></span>
+<span><span class="co"># Transform data</span></span>
 <span><span class="va">alpha_metrics_set_long</span> <span class="op">&lt;-</span> <span class="fu">pivot_longer</span><span class="op">(</span><span class="va">alpha_metrics_set</span>,</span>
 <span>                                   cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"S"</span>, <span class="st">"N"</span>, <span class="st">"maxN"</span>, <span class="st">"Shannon"</span>, <span class="st">"expShannon"</span>,</span>
 <span>                                   <span class="st">"Simpson"</span>, <span class="st">"invSimpson"</span>, <span class="st">"PIE"</span>, <span class="st">"DomMc"</span><span class="op">)</span>,</span>
@@ -1191,7 +1191,7 @@ series, allowing us to visualise the data and the trend line:</p>
 <span><span class="co"># Get assemblage ID</span></span>
 <span><span class="va">name_assemblage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">alpha_slopes_set2</span><span class="op">$</span><span class="va">assemblageID</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># merge info</span></span>
+<span><span class="co"># Merge info</span></span>
 <span><span class="va">alpha_metr_slop</span><span class="op">&lt;-</span> <span class="fu">left_join</span><span class="op">(</span><span class="va">alpha_slopes_set2</span>, <span class="va">alpha_metrics_set_long</span>,</span>
 <span>                                <span class="fu">join_by</span><span class="op">(</span><span class="va">assemblageID</span>, <span class="va">metric</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
