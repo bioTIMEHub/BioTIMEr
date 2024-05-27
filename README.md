@@ -26,12 +26,6 @@ pak::pkg_install("bioTIMEHub//BioTIMEr") # dev version
 
 ## Getting Started 
 
-There are several long-form articles that can help get you started:
-
-* [Getting Started](https://docs.ropensci.org/rgbif/articles/rgbif.html)
-* [Getting Occurrence Data From GBIF](https://docs.ropensci.org/rgbif/articles/getting_occurrence_data.html)
-* [Working With Taxonomic Names](https://docs.ropensci.org/rgbif/articles/taxonomic_names.html)
-
 Most BioTIME users are interested in standardising the extent of the datasets.
 Here using the data subset included inside the package.
 
@@ -49,7 +43,7 @@ gridding(BTsubset_meta, BTsubset_data) %>%
 
 ## Citation 
 
-Under the terms of the BioTIME data user agreement, users who download data agree to cite a DOI. Please see GBIF’s [citation guidelines](https://www.gbif.org/citation-guidelines) and [Citing GBIF Mediated Data](https://docs.ropensci.org/rgbif/articles/gbif_citations.html).
+Under the terms of the BioTIME data user agreement, users who download data agree to cite a DOI.
 
 Please also cite **BioTIMEr** by running `citation(package = "BioTIMEr")`.
 
