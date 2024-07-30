@@ -254,13 +254,14 @@
       "@type": "SoftwareApplication",
       "identifier": "dggridR",
       "name": "dggridR",
+      "version": ">= 3.1.0",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://github.com/SebKrantz/dggridR"
+      "sameAs": "https://CRAN.R-project.org/package=dggridR"
     },
     "7": {
       "@type": "SoftwareApplication",
@@ -276,7 +277,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "5905.069KB",
+  "fileSize": "5567.842KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
