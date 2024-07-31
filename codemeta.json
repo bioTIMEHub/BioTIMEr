@@ -7,13 +7,19 @@
   "codeRepository": "https://github.com/bioTIMEHub/BioTIMEr",
   "issueTracker": "https://github.com/bioTIMEHub/BioTIMEr/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
   "runtimePlatform": "R version 4.3.2 (2023-10-31)",
+  "provider": {
+    "@id": "https://cran.r-project.org",
+    "@type": "Organization",
+    "name": "Comprehensive R Archive Network (CRAN)",
+    "url": "https://cran.r-project.org"
+  },
   "author": [
     {
       "@type": "Person",
