@@ -7,10 +7,10 @@
 getBeta(x, id)
 }
 \arguments{
-\item{x}{(data.frame) First column has to contain year values and following
-columns contain species abundances}
+\item{x}{(\code{data.frame}) First column has to be year and following columns
+contain species abundances.}
 
-\item{id}{definition of id}
+\item{id}{(\code{character}) One assemblageID}
 }
 \value{
 getBeta returns a data.frame with three beta diversity dissimilarity
@@ -18,14 +18,5 @@ metrics
 }
 \description{
 Beta
-}
-\examples{
-\dontrun{
-  x <- data.frame(
-    YEAR = rep(rep(2010:2015, each = 4), times = 4),
-    matrix(data = rpois(384, 2), ncol = 4)
-  )
-  res <- getBeta(x, id = "F")
-}
 }
 \keyword{internal}

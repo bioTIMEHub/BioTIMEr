@@ -2,12 +2,12 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "BioTIMEr",
-  "description": "The BioTIMEr package provides tools designed to interact with the BioTIME database. The functions provided include the BioTIME recommended methods for preparing (gridding and rarefaction) time-series data, a selection of standard biodiversity metrics (including species richness, numerical abundance and exponential Shannon) alongside examples on how to display change over time. It also includes a sample subset of both the query and meta data, the full versions of which are freely available on the BioTIME website <https://biotime.st-andrews.ac.uk/home.php>.",
-  "name": "BioTIMEr: Tools to Use and Explore the BioTIME Database",
+  "description": "The 'BioTIME' database was first published in 2018 and inspired ideas, questions, project and research article. To make it even more accessible, an R package was created. The 'BioTIMEr' package provides tools designed to interact with the 'BioTIME' database. The functions provided include the 'BioTIME' recommended methods for preparing (gridding and rarefaction) time series data, a selection of standard biodiversity metrics (including species richness, numerical abundance and exponential Shannon) alongside examples on how to display change over time. It also includes a sample subset of both the query and meta data, the full versions of which are freely available on the 'BioTIME' website <https://biotime.st-andrews.ac.uk/home.php>.",
+  "name": "BioTIMEr: Tools to Use and Explore the 'BioTIME' Database",
   "codeRepository": "https://github.com/bioTIMEHub/BioTIMEr",
   "issueTracker": "https://github.com/bioTIMEHub/BioTIMEr/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.1.9018",
+  "version": "0.2.3",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -59,6 +59,12 @@
       "givenName": "Ada",
       "familyName": "Fontrodona-Eslava",
       "@id": "https://orcid.org/0000-0001-7275-7174"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Laura",
+      "familyName": "Antão",
+      "@id": "https://orcid.org/0000-0001-6612-9366"
     }
   ],
   "copyrightHolder": [
@@ -72,12 +78,6 @@
   "funder": [
     {
       "@type": "Person",
-      "givenName": "Anne E.",
-      "familyName": "Magurran",
-      "@id": "https://orcid.org/0000-0002-0036-2795"
-    },
-    {
-      "@type": "Person",
       "givenName": "Jonathan M.",
       "familyName": "Chase",
       "@id": "https://orcid.org/0000-0001-5580-4303"
@@ -89,12 +89,26 @@
       "@id": "https://orcid.org/0000-0003-2077-7055"
     },
     {
+      "@type": "Person",
+      "givenName": "Anne E.",
+      "familyName": "Magurran",
+      "@id": "https://orcid.org/0000-0002-0036-2795"
+    },
+    {
       "@type": "Organization",
       "name": "European Research Council grant AdG BioTIME 250189"
     },
     {
       "@type": "Organization",
       "name": "European Research Council grant PoC BioCHANGE 727440"
+    },
+    {
+      "@type": "Organization",
+      "name": "European Research Council grant AdG MetaCHANGE 101098020"
+    },
+    {
+      "@type": "Organization",
+      "name": "The Leverhulme Centre for Anthropocene Biodiversity grant RC-2018-021"
     }
   ],
   "maintainer": [
@@ -142,6 +156,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=rmarkdown"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "formatR",
+      "name": "formatR",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=formatR"
     },
     {
       "@type": "SoftwareApplication",
@@ -228,6 +254,7 @@
       "@type": "SoftwareApplication",
       "identifier": "dggridR",
       "name": "dggridR",
+      "version": ">= 3.1.0",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
@@ -250,7 +277,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "8226.733KB",
+  "fileSize": "5567.842KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
@@ -290,6 +317,11 @@
           "@type": "Person",
           "givenName": "Ada",
           "familyName": "Fontrodona-Eslava"
+        },
+        {
+          "@type": "Person",
+          "givenName": "Laura",
+          "familyName": "Antão"
         },
         {
           "@type": "Person",

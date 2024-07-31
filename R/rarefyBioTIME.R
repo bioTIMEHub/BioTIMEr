@@ -1,48 +1,57 @@
-#' rarefy BioTIME data
+#' Rarefy BioTIME data to an equal number of samples per year
+#'
 #' Takes the output of \code{\link{gridding}} and applies sample-based rarefaction to
-#' standardise the number of samples per year within each cell-level time-series.
+#' standardise the number of samples per year within each cell-level time series
+#' (i.e. assemblageID).
 #' @export
-#' @param x (data.frame) BioTIME gridded data to be resampled (in the format of
+#' @param x (\code{data.frame}) BioTIME gridded data to be resampled (in the format of
 #' the output of the \code{\link{gridding}} function).
-#' @param measure (character) currency to be retained during the sample-based
+#' @param measure (\code{character}) currency to be retained during the sample-based
 #' rarefaction. Can be either defined by a single column name or a vector of
 #' two or more column names.
-#' @param resamps (integer) number of repetitions. Default is 1.
-#' @param conservative (logical). `FALSE` by default. If `TRUE`, whenever a `NA`
+#' @param resamps (\code{integer}) number of repetitions. Default is 1.
+#' @param conservative (\code{logical}). \code{FALSE} by default. If \code{TRUE},
+#' whenever a \code{NA}
 #' is found in the measure field(s), the whole sample is removed instead of the
 #' missing observations only.
-#' @returns Returns a single long form `data.frame` containing the total currency
+#'
+#' @returns Returns a single long form \code{data.frame} containing the total currency
 #' or currencies of interest (sum) for each species in each year within each
-#' rarefied time series (`assemblageID`). An extra integer column called `resamp`
-#' indicates the specific iteration.
+#' rarefied time series (i.e. \code{assemblageID}). An extra integer column called
+#' \code{resamp} indicates the specific iteration.
 #'
 #' @details
 #' Sample-based rarefaction prevents temporal variation in sampling effort from
-#' affecting diversity estimates (see Gotelli N.J., Colwell R.K. 2001 Quantifying biodiversity: procedures and pitfalls in the measurement and comparison of species richness. Ecology Letters 4(4), 379-391). `resampling` is a function
-#' used to counted the number of samples taken in each year (sampling effort),
-#' identified the minimum number of samples, and then use this minimum to
-#' randomly resample each year down to that number of samples, after which
-#' standard biodiversity metrics (e.g. \code{\link{getAlphaMetrics}},
-#' \code{\link{getAlphaMetrics}} can be calculated. `measure` is a `character`
-#' input specifying the chosen currency to be retained during the sample-based
-#' rarefaction. Can be a single column name or a vector of two or more column
-#' names - e.g. `measure = c("ABUNDANCE", "BIOMASS")`.
+#' affecting diversity estimates (see Gotelli N.J., Colwell R.K. 2001 Quantifying biodiversity: procedures and pitfalls in the measurement and comparison of species richness. Ecology Letters 4(4), 379-391) by selecting an equal number of samples across all years in a time series.
+#' \code{resampling} counts the number of unique samples taken in each year (sampling effort),
+#' identifies the minimum number of samples across all years, and then uses this minimum to
+#' randomly resample each year down to that number. Thus, standardising the
+#' sampling effort between years,
+#' standard biodiversity metrics can be calculated based on an equal number of
+#' samples (e.g. using \code{\link{getAlphaMetrics}}, \code{\link{getAlphaMetrics}}).
+#'  \code{measure} is a \code{character}
+#' input specifying the chosen currency to be used during the sample-based
+#' rarefaction. It can be a single column name or a vector of two or more column
+#' names - e.g. for BioTIME, \code{measure="ABUNDANCE"}, \code{measure="BIOMASS"}
+#' or \code{measure = c("ABUNDANCE", "BIOMASS")}.
 #'
-#' By default, any observations with `NA` within the currency field(s) are
+#' By default, any observations with \code{NA} within the currency field(s) are
 #' removed. You can choose to remove the full sample where such observations are
-#' present by setting `conservative` to `TRUE.` `resamps` can be used to define
-#' multiple iterations, effectively creating multiple alternative datasets.
-#' Note that the function always returns a single data frame, if `resamps` > 1,
-#' the returned data frame is the result of individual data frames
-#' (from each repetition) concatenated together, each identified by a numerical
-#' unique identifier (see value).
+#' present by setting \code{conservative} to \code{TRUE}. \code{resamps} can be used to define
+#' multiple iterations, effectively creating multiple alternative datasets
+#' as in each iteration different samples will be randomly selected for the
+#' years where number of samples > minimum.
+#' Note that the function always returns a single data frame, i.e. if \code{resamps} > 1,
+#' the returned data frame is the result of individual data frames concatenated
+#' together, one from each iteration identified by a numerical
+#' unique identifier 1:resamps.
 #'
 #' @importFrom dplyr %>%
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'   library(BioTIMEr)
 #'   set.seed(42)
-#'   x <- gridding(subBTmeta, subBTquery)
+#'   x <- gridding(BTsubset_meta, BTsubset_data)
 #'   resampling(x, measure = "BIOMASS")
 #'   resampling(x, measure = "ABUNDANCE")
 #'   resampling(x, measure = c("ABUNDANCE","BIOMASS"))
@@ -107,23 +116,11 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
 
 #' Rarefy BioTIME data
 #' Applies sample-based rarefaction to standardise the number of samples per year
-#'    within a cell-level time-series.
+#'    within a cell-level time series.
 #' @inheritParams resampling
 #' @returns Returns a single long form data frame containing the total currency
 #'    of interest (sum) for each species in each year.
 #' @keywords internal
-#'
-#' @examples
-#' \dontrun{
-#'   library(dplyr)
-#'   library(BioTIMEr)
-#'   x <- gridding(subBTmeta, subBTquery) %>%
-#'     filter(assemblageID == "10_358678")
-#'   rarefysamples(Year = x$YEAR, SampleID = x$SAMPLE_DESC,
-#'     Species = x$Species, currency = x$ABUNDANCE,
-#'     resamps = 3)
-#'}
-#'
 
 rarefysamples <- function(x, measure, resamps) {
   # Computing minimal effort per year in this assemblageID
@@ -138,7 +135,7 @@ rarefysamples <- function(x, measure, resamps) {
         X = unique(x$YEAR),
         FUN = function(y) {
           samps <- unique(x$SAMPLE_DESC[x$YEAR == y])
-          sam <- sample(samps, minsample, replace = TRUE)
+          sam <- sample(samps, minsample, replace = FALSE)
           return(which(x$SAMPLE_DESC %in% sam & x$YEAR == y))
         })) # end of loop on years
 

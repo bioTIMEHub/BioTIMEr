@@ -7,10 +7,10 @@
 getAlpha(x, id)
 }
 \arguments{
-\item{x}{(data.frame) First column has to be year and following columns
+\item{x}{(\code{data.frame}) First column has to be year and following columns
 contain species abundances.}
 
-\item{id}{definition of id}
+\item{id}{(\code{character}) One assemblageID}
 }
 \value{
 A data frame with results for S (species richness), N (numerical abundance),
@@ -20,15 +20,5 @@ McNaughton's Dominance.
 }
 \description{
 Alpha
-}
-\examples{
-\dontrun{
-  x <- data.frame(
-    YEAR = rep(rep(2010:2015, each = 4), times = 4),
-    matrix(data = rpois(384, 10), ncol = 4)
-    )
-    res <- getAlpha(x, id = 34)
-}
-
 }
 \keyword{internal}

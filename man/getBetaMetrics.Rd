@@ -2,31 +2,30 @@
 % Please edit documentation in R/metricsBioTIME.R
 \name{getBetaMetrics}
 \alias{getBetaMetrics}
-\title{Beta diversity metrics
-Calculates a set of standard beta diversity metrics}
+\title{Beta diversity metrics}
 \usage{
 getBetaMetrics(x, measure)
 }
 \arguments{
-\item{x}{(`data.frame`) BioTIME data table in the format of the output of the
-\code{\link{gridding}} function and/or \code{\link{resampling}} function.}
+\item{x}{(\code{data.frame}) BioTIME data table in the format of the output of the
+\code{\link{gridding}} function and/or \code{\link{resampling}} functions.}
 
-\item{measure}{(character) chosen currency defined by a single column name.}
+\item{measure}{(\code{character}) chosen currency defined by a single column name.}
 }
 \value{
-Returns a `data.frame` with results for Jaccard dissimilarity (`JaccardDiss`), Morisita-Horn dissimilarity (`MorisitaHornDiss`), and Bray-Curtis dissimilarity (`BrayCurtsDiss`) for each year and `assemblageID.`
+Returns a \code{data.frame} with results for Jaccard dissimilarity (\code{JaccardDiss}), Morisita-Horn dissimilarity (\code{MorisitaHornDiss}), and Bray-Curtis dissimilarity (\code{BrayCurtsDiss}) for each year and \code{assemblageID}.
 }
 \description{
-Beta diversity metrics
 Calculates a set of standard beta diversity metrics
 }
 \details{
-The function getBetaMetrics computes three beta diversity metrics, for a given community data frame, where `measure` is a character input specifying the chosen currency field used for the calculations. `getBetaMetrics` calls the \code{\link[vegan]{vegdist}} function which calculates for each row the following metrics: Jaccard dissimilarity (`method = "jaccard"`), Morisita-Horn dissimilarity (`method = "horn"`) and Bray-Curtis dissimilarity (`method = "bray"`). Here, the dissimilarity are calculated against the baseline year of each assemblage time series i.e. first year of the time-series.
+The function getBetaMetrics computes three beta diversity metrics for a given community data frame, where \code{measure} is a character input specifying the abundance or biomass field used for the calculations. \code{getBetaMetrics} calls the \code{\link[vegan]{vegdist}} function which calculates for each row the following metrics: Jaccard dissimilarity (\code{method = "jaccard"}), Morisita-Horn dissimilarity (\code{method = "horn"}) and Bray-Curtis dissimilarity (\code{method = "bray"}). Here, the dissimilarity metrics are calculated against the baseline year of each assemblage time series i.e.
+the first year of each time series.
 Note that the input data frame needs to be in the format of the output of the
- \code{\link{gridding}} function and/or \code{\link{resampling}} function, this includes keeping to the default BioTIME column names. If such columns are not found an error is issued and all operations are halted.
+ \code{\link{gridding}} and/or \code{\link{resampling}} functions, which includes keeping the default BioTIME data column names. If such columns are not found an error is
+ issued and the computations are halted.
 }
 \examples{
-\dontrun{
 x <- data.frame(
   resamp = 1L,
   YEAR = rep(rep(2010:2015, each = 4), times = 4),
@@ -38,5 +37,4 @@ x <- data.frame(
   )
 
 res <- getBetaMetrics(x, measure = "ABUNDANCE")
-}
 }

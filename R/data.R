@@ -2,7 +2,7 @@
 #'
 #' A subset of data from BioTIME temporal surveys.
 #'
-#' @format ## `subBTquery`
+#' @format ## `BTsubset_data`
 #' A data frame with 81,084 rows and 17 columns:
 #' \describe{
 #'   \item{ID_ALL_RAW_DATA}{Unique BioTIME identifier for record}
@@ -24,21 +24,20 @@
 #'   \item{taxon}{Higher level taxonomic grouping, i.e. Fish}
 #' }
 #' @source <https://biotime.st-andrews.ac.uk/download.php>
-"subBTquery"
+"BTsubset_data"
 
 #' BioTIME subset metadata
 #'
 #' A subset of the metadata from BioTIME
 #'
-#' @format ## `subBTmeta`
-#' A data frame with 12 rows and 26 columns:
+#' @format ## `BTsubset_meta`
+#' A data frame with 12 rows and 25 columns:
 #' \describe{
 #'   \item{STUDY_ID}{BioTIME study unique identifier}
 #'   \item{REALM}{Realm of study location, i.e. Marine}
 #'   \item{CLIMATE}{Climate of study location, i.e. Temperate}
 #'   \item{HABITAT}{Habitat of study location, i.e. Rivers}
 #'   \item{PROTECTED_AREA}{binary variable indicating if the study is within a protected area}
-#'   \item{AREA}{total area of study}
 #'   \item{BIOME_MAP}{Biome of study location (taken from the WWF biomes, i.e. Temperate broadleaf and mixed forests}
 #'   \item{TAXA}{High level taxonomic identity of study species, i.e. Fish}
 #'   \item{ORGANISMS}{More detailed information on taxonomy, i.e. woody plants}
@@ -61,4 +60,4 @@
 #'   \item{SAMPLE_DESC}{concatenation of descriptors comprising the unique sampling event}
 #' }
 #' @source <https://biotime.st-andrews.ac.uk/download.php>
-"subBTmeta"
+"BTsubset_meta"

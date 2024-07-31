@@ -7,53 +7,58 @@
 gridding(meta, btf, res = 12, resByData = FALSE)
 }
 \arguments{
-\item{meta}{(data.frame) BioTIME metadata.}
+\item{meta}{(\code{data.frame}) BioTIME metadata.}
 
-\item{btf}{(data.frame) BioTIME data.}
+\item{btf}{(\code{data.frame}) BioTIME data.}
 
-\item{res}{(integer) cell resolution. Must be in the range [0,30]. Larger values
+\item{res}{(\code{integer}) cell resolution. Must be in the range [0,30]. Larger values
 represent finer resolutions. Default: 12 (~96 sq km). Passed to
 \code{\link[dggridR]{dgconstruct}}.}
 
-\item{resByData}{(logical) FALSE by default. If TRUE, the function
+\item{resByData}{(\code{logical}) FALSE by default. If TRUE, the function
 \code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt `res` to
 the data extent.}
 }
 \value{
-Returns a `'data.frame'`, with selected columns from the `btf` and
-`meta` data frames, an extra integer column called `'cell'` and two character
-columns called 'StudyMethod' and 'assemblageID' (concatenation of `study_ID`
-and `cell`).
+Returns a \code{'data.frame'}, with selected columns from the
+\code{btf} and \code{meta} data frames, an extra integer column called
+\code{'cell'} and two character columns called 'StudyMethod' and 'assemblageID'
+(concatenation of \code{study_ID} and \code{cell}).
 }
 \description{
-grids BioTIME data into a discrete global grid based on location
-   (latitude/longitude).
+grids BioTIME data into a discrete global grid based on the
+   location of the samples (latitude/longitude).
 }
 \details{
-Each BioTIME study contains distinct samples measured (with a consistent
-methodology) over time, which could be fixed plots (i.e. SL or
+Each BioTIME study contains distinct samples which were collected with a consistent
+methodology over time, and each with unique coordinates and date.
+These samples can be fixed plots (i.e. SL or
 'single-location' studies where measures are taken from a set of specific
 georeferenced sites at any given time) or wide-ranging surveys, transects,
 tows, and so on (i.e. ML or 'multi-location' studies where measures are taken
-from multiple sampling locations that may or may not align from year to year,
-see `runResampling`. `gridding` is a function designed to identify, separate
-and standardise both SL and ML studies using a global grid of hexagonal cells
-derived from \code{\link[dggridR]{dgconstruct}}. Here each sample is assigned
-a different combination of study ID and grid cell (based on its latitude and
-longitude) resulting in a unique identifier for each assemblage time-series
-(assemblageID), thus allowing for the integrity of each study and each sample
-to be maintained. By default meta represents a long form data frame
-containing the data information for BioTIME studies and `btf` is a data frame
-containing long form data from a main BioTIME query (see Example). `res` = 12
-was found to be the most appropriate value when working on the whole BioTIME
-database, but the function gives the user the possibility to define their own
-grid resolution (e.g. `res` = 14, see `vignette("dggridR")`) or when
-`resbyData = TRUE` allow the function to find the best `res` based on the
-average study extent.
+from multiple sampling locations over large extents that may or may not align
+from year to year,
+see \code{runResampling}. \code{gridding} is a function designed to deal with the issue
+of varying spatial extent between studies by using a global grid of hexagonal cells
+derived from \code{\link[dggridR]{dgconstruct}} and assigning the individual
+samples to the cells across the grid based on its latitude and
+longitude. Specifically, each sample is assigned
+a different combination of study ID and grid cell resulting in a unique
+identifier for each assemblage time series within each cell
+(assemblageID). This allows for the integrity of each study and each sample
+to be maintained, while large extent studies are split into local time series
+at the grid cell level. By default meta represents a long form data frame
+containing the data information for BioTIME studies and \code{btf} is a data frame
+containing long form data from a main BioTIME query (see Example). \code{res}
+defines the global grid cell resolution, thus determining the size of the
+cells (see \code{vignette("dggridR")}). \code{res = 12} was found to be the most
+appropriate value when working on the whole BioTIME database(corresponding
+to ~96 km2 cell area), but the user can define their own grid resolution
+(e.g. \code{res = 14}, or when \code{resbyData = TRUE} allow the function to find the
+best \code{res} based on the average study extent.
 }
 \examples{
-\dontrun{
   library(BioTIMEr)
-  gridding(subBTmeta, subBTquery)
-}
+  gridded_data <- gridding(BTsubset_meta, BTsubset_data)
+
 }
