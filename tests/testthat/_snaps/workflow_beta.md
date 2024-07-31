@@ -2,8 +2,8 @@
 
     Code
       set.seed(42)
-      gridding(meta, btf) %>% resampling(measure = "ABUNDANCE", resamps = 1L) %>%
-        getBetaMetrics(measure = "ABUNDANCE") %>% getLinearRegressions(divType = "beta")
+      getLinearRegressions(getBetaMetrics(resampling(gridding(meta, btf), measure = "ABUNDANCE",
+      resamps = 1L), measure = "ABUNDANCE"), divType = "beta")
     Message
       OK: all SL studies have 1 grid cell
     Output
@@ -2120,8 +2120,8 @@
 
     Code
       set.seed(42)
-      gridding(meta, btf) %>% resampling(measure = "BIOMASS", resamps = 1L) %>%
-        getBetaMetrics(measure = "BIOMASS") %>% getLinearRegressions(divType = "beta")
+      getLinearRegressions(getBetaMetrics(resampling(gridding(meta, btf), measure = "BIOMASS",
+      resamps = 1L), measure = "BIOMASS"), divType = "beta")
     Message
       OK: all SL studies have 1 grid cell
     Condition

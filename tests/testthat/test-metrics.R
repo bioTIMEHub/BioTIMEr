@@ -1,6 +1,6 @@
 # Load data
 # example_df <- base::readRDS(testthat::test_path("testdata", "data-query.rds"))
-# example_df <- example_df %>%
+# example_df <- example_df |>
 #   dplyr::filter(STUDY_ID == 10L) %>%
 #   tidyr::pivot_wider(id_cols = c(STUDY_ID, SAMPLE_DESC, YEAR), names_from = ID_SPECIES,
 #                      values_from = ABUNDANCE, values_fn = sum)

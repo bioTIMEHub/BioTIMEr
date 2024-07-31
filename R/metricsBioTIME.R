@@ -60,8 +60,8 @@ getAlphaMetrics <- function(x, measure) {
   for (id in unique(x$assemblageID)) {
     df <- x[x$assemblageID == id, ]
     if (dplyr::n_distinct(df$YEAR) > 1L && dplyr::n_distinct(df$Species) > 1L) {
-      y <- df %>%
-        dplyr::select("YEAR", "Species", dplyr::all_of(measure)) %>%
+      y <- df |>
+        dplyr::select("YEAR", "Species", dplyr::all_of(measure)) |>
         tidyr::pivot_wider(names_from = "Species",
                            values_from = dplyr::all_of(measure),
                            values_fill = 0)
@@ -172,11 +172,11 @@ getBetaMetrics <- function(x, measure) {
                                  MorisitaHornDiss = NA,
                                  BrayCurtisDiss = NA))
     } else if (nyear[[id]] > 1L && nsp[[id]] > 1L) {
-      rbeta <- df %>%
-        dplyr::select("YEAR", "Species", dplyr::all_of(measure)) %>%
+      rbeta <- df |>
+        dplyr::select("YEAR", "Species", dplyr::all_of(measure)) |>
         tidyr::pivot_wider(names_from = "Species",
                            values_from = dplyr::all_of(measure),
-                           values_fill = 0) %>%
+                           values_fill = 0) |>
         getBeta(id = id)
       xd <- rbind(xd, rbeta)
     } # end if

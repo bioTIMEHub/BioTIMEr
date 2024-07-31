@@ -19,7 +19,6 @@
 #' The typical model has the form `metric ~ year`. Note that assemblages with
 #' less than 3 time points and/or single species time series are removed.
 #'
-#' @importFrom dplyr %>%
 #' @examples
 #'   library(BioTIMEr)
 #'   x <- data.frame(
@@ -52,9 +51,9 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
 
       x <- subset(x, x$S != 1)
 
-      y <- x %>%
-        dplyr::group_by(.data$assemblageID) %>%
-        dplyr::summarise(nsp = dplyr::n_distinct(.data$YEAR)) %>%
+      y <- x |>
+        dplyr::group_by(.data$assemblageID) |>
+        dplyr::summarise(nsp = dplyr::n_distinct(.data$YEAR)) |>
         dplyr::filter(.data$nsp < 3)
 
       x <- dplyr::anti_join(x, y, by = "assemblageID")
@@ -97,7 +96,7 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
 
       dft[, -1L] <- apply(dft[, -1L], 2,
                           function(x) as.numeric(as.character(x)))
-      dft <- dft %>% dplyr::mutate(
+      dft <- dft |> dplyr::mutate(
         sp =  dplyr::if_else(.data$SPval < pThreshold, 1, 0),
         np =  dplyr::if_else(.data$NPval < pThreshold, 1, 0),
         maxNp = dplyr::if_else(.data$maxNPval < pThreshold, 1, 0),
@@ -113,39 +112,39 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
       d1 <- dplyr::select(dft, "assemblageID", S = "SS", N = "NS", maxN = "maxNS",
                           Shannon = "shanS", expShannon = "expShS",
                           Simpson = "simpS", invSimpson = "invSS",
-                          PIE = "PIES", DomMc = "domMS") %>%
+                          PIE = "PIES", DomMc = "domMS") |>
         tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "slope")
 
       d2 <- dplyr::select(dft, "assemblageID", S = "SPval", N = "NPval", maxN = "maxNPval",
                           Shannon = "shanPval", expShannon = "expShPval",
                           Simpson = "simpPval", invSimpson = "invSPval",
-                          PIE = "PIEPval", DomMc = "domMPval") %>%
+                          PIE = "PIEPval", DomMc = "domMPval") |>
         tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "pvalue")
 
       d4 <- dplyr::select(dft, "assemblageID", S = "sp", N = "np", maxN = "maxNp",
                           Shannon = "shp", expShannon = "esp",
                           Simpson = "sip", invSimpson = "isp",
-                          PIE = "pp", DomMc = "dmp") %>%
+                          PIE = "pp", DomMc = "dmp") |>
         tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "significance")
 
       d8 <- dplyr::select(dft, "assemblageID", S = "SI", N = "NI", maxN = "maxNI",
                           Shannon = "shanI", expShannon = "expShI",
                           Simpson = "simpI", invSimpson = "invSI",
-                          PIE = "PIEI", DomMc = "domMI") %>%
+                          PIE = "PIEI", DomMc = "domMI") |>
         tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "intercept")
 
-      dftx <- dplyr::left_join(d1, d2, by = c("assemblageID", "metric")) %>%
-        dplyr::left_join(d4, by = c("assemblageID", "metric")) %>%
-        dplyr::left_join(d8, by = c("assemblageID", "metric")) %>%
+      dftx <- dplyr::left_join(d1, d2, by = c("assemblageID", "metric")) |>
+        dplyr::left_join(d4, by = c("assemblageID", "metric")) |>
+        dplyr::left_join(d8, by = c("assemblageID", "metric")) |>
         dplyr::mutate(metric = factor(.data$metric,
                                       levels = c("S", "N", "maxN",
                                                  "Shannon","expShannon",
                                                  'Simpson', "invSimpson",
-                                                 "PIE", "DomMc"))) %>%
+                                                 "PIE", "DomMc"))) |>
         as.data.frame()
     },
 
@@ -161,9 +160,9 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
                     !is.na(x$MorisitaHornDiss) &
                     !is.na(x$BrayCurtisDiss))
 
-      y <- x %>%
-        dplyr::group_by(.data$assemblageID) %>%
-        dplyr::summarise(nsp = dplyr::n_distinct(.data$YEAR)) %>%
+      y <- x |>
+        dplyr::group_by(.data$assemblageID) |>
+        dplyr::summarise(nsp = dplyr::n_distinct(.data$YEAR)) |>
         dplyr::filter(.data$nsp < 3)
 
       x <- dplyr::anti_join(x, y, by = "assemblageID")
@@ -189,7 +188,7 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
                          "bcS", "bcPval", "jdI", "mhI", "bcI")
       dft[, 2L:10L] <- apply(dft[, 2L:10L], 2,
                              function(x) as.numeric(as.character(x)))
-      dft <- dft %>% dplyr::mutate(
+      dft <- dft |> dplyr::mutate(
         jdp = dplyr::if_else(.data$jdPval < pThreshold, 1, 0),
         mhp = dplyr::if_else(.data$mhPval < pThreshold, 1, 0),
         bcp = dplyr::if_else(.data$bcPval < pThreshold, 1, 0)
@@ -197,35 +196,35 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
 
       #####################################
       d1 <- dplyr::select(dft, "assemblageID", JaccardDiss = "jdS",
-                          MorisitaHornDiss = "mhS", BrayCurtisDiss = "bcS") %>%
+                          MorisitaHornDiss = "mhS", BrayCurtisDiss = "bcS") |>
         tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "slope")
 
       d2 <- dplyr::select(dft, "assemblageID", JaccardDiss = "jdPval",
                           MorisitaHornDiss = "mhPval",
-                          BrayCurtisDiss = "bcPval") %>%
+                          BrayCurtisDiss = "bcPval") |>
         tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "pvalue")
 
       d4 <- dplyr::select(dft, "assemblageID", JaccardDiss = "jdp",
                           MorisitaHornDiss = "mhp",
-                          BrayCurtisDiss = "bcp") %>%
+                          BrayCurtisDiss = "bcp") |>
         tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "significance")
 
       d8 <- dplyr::select(dft, "assemblageID", JaccardDiss = "jdI",
                           MorisitaHornDiss = "mhI",
-                          BrayCurtisDiss = "bcI") %>%
+                          BrayCurtisDiss = "bcI") |>
         tidyr::pivot_longer(-"assemblageID", names_to = "metric",
                             values_to = "intercept")
 
-      dftx <- dplyr::left_join(d1, d2, by = c("assemblageID", "metric")) %>%
-        dplyr::left_join(d4, by = c("assemblageID", "metric")) %>%
-        dplyr::left_join(d8, by = c("assemblageID", "metric")) %>%
+      dftx <- dplyr::left_join(d1, d2, by = c("assemblageID", "metric")) |>
+        dplyr::left_join(d4, by = c("assemblageID", "metric")) |>
+        dplyr::left_join(d8, by = c("assemblageID", "metric")) |>
         dplyr::mutate(metric = factor(.data$metric,
                                       levels = c("JaccardDiss",
                                                  "MorisitaHornDiss",
-                                                 "BrayCurtisDiss"))) %>%
+                                                 "BrayCurtisDiss"))) |>
         as.data.frame()
     })
   return(dftx)

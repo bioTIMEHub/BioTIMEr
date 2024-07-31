@@ -37,7 +37,7 @@ gridding(BTsubset_meta, BTsubset_data)
 A likely following step would be to rarefy communities to a common sampling effort.
 
 ```r 
-gridding(BTsubset_meta, BTsubset_data) %>% 
+gridding(BTsubset_meta, BTsubset_data) |>
    resampling("ABUNDANCE")
 ```
 
