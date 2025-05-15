@@ -3,6 +3,9 @@
 [![R-CMD-check](https://github.com/bioTIMEHub/BioTIMEr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bioTIMEHub/BioTIMEr/actions/workflows/R-CMD-check.yaml)
 [![rstudio mirror downloads](https://cranlogs.r-pkg.org/badges/BioTIMEr)](https://github.com/r-hub/cranlogs.app)
 [![cran version](https://www.r-pkg.org/badges/version/BioTIMEr)](https://cran.r-project.org/package=BioTIMEr)
+
+[![codecov.io](https://codecov.io/github/bioTIMEHub/BioTIMEr/coverage.svg?branch=main)](https://codecov.io/github/bioTIMEHub/BioTIMEr?branch=main)
+
 <!-- badges: end -->
 
 # BioTIMEr
@@ -11,7 +14,7 @@
 
 **BioTIME** (the Global database of assemblage time series for quantifying and
 understanding biodiversity change) is an international network and an open access
-database, free to anyone, anywhere in the world to use for education, research, 
+database, free to anyone, anywhere in the world to use for education, research,
 and conservation.
 
 ## Installation
@@ -24,24 +27,24 @@ install.packages("BioTIMEr") # CRAN version
 pak::pkg_install("bioTIMEHub//BioTIMEr") # dev version
 ```
 
-## Getting Started 
+## Getting Started
 
 Most BioTIME users are interested in standardising the extent of the datasets.
 Here using the data subset included inside the package.
 
-```r 
+```r
 library(BioTIMEr)
 gridding(BTsubset_meta, BTsubset_data)
 ```
 
 A likely following step would be to rarefy communities to a common sampling effort.
 
-```r 
+```r
 gridding(BTsubset_meta, BTsubset_data) |>
    resampling("ABUNDANCE")
 ```
 
-## Citation 
+## Citation
 
 Under the terms of the BioTIME data user agreement, users who download data agree to cite a DOI.
 
