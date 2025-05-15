@@ -4,5 +4,5 @@ bibentry(
   author = "Alban Sagouis, Faye Moyes, Inês S. Martins, Shane A. Blowes, Viviana Brambilla, Cher F. Y. Chow, Ada Fontrodona-Eslava, Laura Antão, Jonathan M. Chase, Maria Dornelas, Anne E. Magurran",
   year = 2024,
   url = "https://github.com/bioTIMEHub/BioTIMEr",
-  doi = "https://doi.org/10.32614/CRAN.package.BioTIMEr"
+  doi = "10.32614/CRAN.package.BioTIMEr"
 )

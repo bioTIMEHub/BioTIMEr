@@ -13,7 +13,13 @@
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.3.2 (2023-10-31)",
+  "runtimePlatform": "R version 4.4.3 (2025-02-28)",
+  "provider": {
+    "@id": "https://cran.r-project.org",
+    "@type": "Organization",
+    "name": "Comprehensive R Archive Network (CRAN)",
+    "url": "https://cran.r-project.org"
+  },
   "author": [
     {
       "@type": "Person",
@@ -277,7 +283,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "5567.842KB",
+  "fileSize": "5567.884KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
@@ -340,11 +346,15 @@
         }
       ],
       "name": "BioTIMEr: tools to use and explore the BioTIME database",
-      "url": "https://github.com/bioTIMEHub/BioTIMEr"
+      "identifier": "10.32614/CRAN.package.BioTIMEr",
+      "url": "https://github.com/bioTIMEHub/BioTIMEr",
+      "@id": "https://doi.org/10.32614/CRAN.package.BioTIMEr",
+      "sameAs": "https://doi.org/10.32614/CRAN.package.BioTIMEr"
     }
   ],
-  "releaseNotes": "https://github.com/bioTIMEHub/BioTIMEr/blob/master/NEWS.md",
+  "releaseNotes": "https://github.com/bioTIMEHub/BioTIMEr/blob/main/NEWS.md",
   "readme": "https://github.com/bioTIMEHub/BioTIMEr/blob/main/README.md",
   "contIntegration": "https://github.com/bioTIMEHub/BioTIMEr/actions/workflows/R-CMD-check.yaml",
-  "developmentStatus": "https://lifecycle.r-lib.org/articles/stages.html#experimental"
+  "developmentStatus": "https://lifecycle.r-lib.org/articles/stages.html#experimental",
+  "keywords": ["ecology", "geospatial", "r", "r-package", "rstats"]
 }
