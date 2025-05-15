@@ -24,8 +24,7 @@
       NA values found and removed.
       Only a subset of `x` is used.
 
-# resampling runs correctly for Abundance and Biomass together
-          2 iterations, conservative
+# resampling runs correctly for Abundance and Biomass together          2 iterations, conservative
 
     Code
       result <- resampling(x = test_df, measure = c("ABUNDANCE", "BIOMASS"), resamps = 2L,
