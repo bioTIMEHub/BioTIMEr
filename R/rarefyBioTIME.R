@@ -46,7 +46,6 @@
 #' together, one from each iteration identified by a numerical
 #' unique identifier 1:resamps.
 #'
-#' @importFrom dplyr %>%
 #' @examples
 #' \donttest{
 #'   library(BioTIMEr)
@@ -73,12 +72,20 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
 
   if (anyNA(x[, measure])) {
     if (conservative) {
-      x <- stats::aggregate(x = x[, measure, drop = FALSE],
-                            by = list(SAMPLE_DESC = x$SAMPLE_DESC),
-                            function(j) anyNA(j)) %>%
-        dplyr::mutate(na_values = rowSums(dplyr::select(., dplyr::all_of(measure)))) |>
-        dplyr::filter(.data$na_values == 0L) %>%
-        dplyr::semi_join(x = x, y = ., by = "SAMPLE_DESC")
+
+      x = dplyr::semi_join(
+        x = x,
+        y = stats::aggregate(
+          x = x[, measure, drop = FALSE],
+          by = list(SAMPLE_DESC = x$SAMPLE_DESC),
+          function(j) anyNA(j)
+        ) |>
+          dplyr::mutate(
+            na_values = rowSums(dplyr::pick(dplyr::all_of(measure)))
+          ) |>
+          dplyr::filter(.data$na_values == 0L),
+        by = dplyr::join_by("SAMPLE_DESC")
+      )
 
       warning(paste0("NA values found and whole samples removed since `conservative` is TRUE.\n",
                      "Only a subset of `x` is used."))
