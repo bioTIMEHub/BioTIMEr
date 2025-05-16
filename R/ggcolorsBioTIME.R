@@ -10,7 +10,7 @@
 #' @param discrete See Details. default to `FALSE`
 #' @param reverse Default to `FALSE`
 #' @param ... Passed to \code{\link[ggplot2]{discrete_scale}} or \code{\link[ggplot2]{scale_color_gradient}}
-#' @returns If \code{discrete} is \code{TRUE}, the function returns a colour palette produced by 
+#' @returns If \code{discrete} is \code{TRUE}, the function returns a colour palette produced by
 #'     \code{\link[ggplot2]{discrete_scale}} and if \code{discrete} is \code{FALSE}, the function
 #'     returns a colour palette produced by \code{\link[ggplot2]{scale_color_gradient}}.
 #' @details
@@ -28,7 +28,7 @@ scale_color_biotime <- function(palette = "realms", discrete = TRUE,
 
   pal <- biotime_cols(palette = palette, reverse = reverse)
   if (discrete) {
-    ggplot2::discrete_scale("color", paste("biotime_", palette, sep = ''),
+    ggplot2::discrete_scale(aesthetics = "color",
                             palette = pal, ...)
   } else {
     ggplot2::scale_color_gradientn(colours = pal(256), ...)
@@ -42,7 +42,7 @@ scale_colour_biotime <- scale_color_biotime
 
 #' Scale construction for filling in ggplot
 #' @rdname BioTIME-palette
-#' @returns If \code{discrete} is \code{TRUE}, the function returns a colour palette produced by 
+#' @returns If \code{discrete} is \code{TRUE}, the function returns a colour palette produced by
 #'     \code{\link[ggplot2]{discrete_scale}} and if \code{discrete} is \code{FALSE}, the function
 #'     returns a colour palette produced by \code{\link[ggplot2]{scale_color_gradient}}.
 #' @export
@@ -54,15 +54,13 @@ scale_colour_biotime <- scale_color_biotime
 scale_fill_biotime <- function(palette = "realms",
                                discrete = TRUE,
                                reverse = FALSE, ...) {
-  checkmate::assert_choice(x = palette, choices = c("realms", "gradient",
-                                                    "cool", "warm"))
+  checkmate::assert_choice(x = palette, choices = names(biotime_palettes))
   checkmate::assert_logical(x = discrete, max.len = 1L, null.ok = FALSE)
   checkmate::assert_logical(x = reverse, max.len = 1L, null.ok = FALSE)
 
   pal <- biotime_cols(palette = palette, reverse = reverse)
   if (discrete) {
-    ggplot2::discrete_scale("fill",
-                            paste("biotime_", palette, sep = ''),
+    ggplot2::discrete_scale(aesthetics = "fill",
                             palette = pal,
                             ...)
   } else {
@@ -79,8 +77,14 @@ biotime_palettes <- list(
   'warm' = c("#d9d956","#cf7941"))
 
 intPalette <- function(colors, ...) {
+  checkmate::assert_list(
+    list(...),
+    types = "numeric",
+    any.missing = FALSE,
+    names = "named")
   ramp <- grDevices::colorRamp(colors, ...)
   function(n) {
+    checkmate::assert_integerish(n, lower = 1L)
     if (n > length(colors)) {x <- ramp(seq.int(0, 1, length.out = n))
     if (ncol(x) == 4L)
       grDevices::rgb(x[, 1L], x[, 2L], x[, 3L], x[, 4L], maxColorValue = 255)
