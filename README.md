@@ -14,6 +14,8 @@ understanding biodiversity change) is an international network and an open acces
 database, free to anyone, anywhere in the world to use for education, research, 
 and conservation.
 
+For a complete description of the database, please refer to our open access publication entitled [_BioTIME 2.0: Expanding and Improving a Database of Biodiversity Time Series._](https://doi.org/10.1111/geb.70003)
+
 ## Installation
 
 ```r
