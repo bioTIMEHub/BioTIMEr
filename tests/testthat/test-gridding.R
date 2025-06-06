@@ -10,13 +10,32 @@ test_that("gridding returns a data frame", {
 
 test_that("gridding returns the expected columns", {
   expected_cols <- c(
-    "CLIMATE", "REALM", "TAXA", "StudyMethod", "SAMPLE_DESC",
-    "ABUNDANCE_TYPE", "BIOMASS_TYPE", "assemblageID", "STUDY_ID", "YEAR", "PLOT",
-    "cell", "Species", "DAY", "MONTH", "ABUNDANCE", "BIOMASS", "taxon",
-    "LATITUDE", "LONGITUDE", "resolution"
+    "CLIMATE",
+    "REALM",
+    "TAXA",
+    "StudyMethod",
+    "SAMPLE_DESC",
+    "ABUNDANCE_TYPE",
+    "BIOMASS_TYPE",
+    "assemblageID",
+    "STUDY_ID",
+    "YEAR",
+    "cell",
+    "Species",
+    "DAY",
+    "MONTH",
+    "ABUNDANCE",
+    "BIOMASS",
+    "taxon",
+    "LATITUDE",
+    "LONGITUDE",
+    "resolution"
   )
-  checkmate::expect_names(x = colnames(result), what = "colnames",
-                          permutation.of = expected_cols)
+  checkmate::expect_names(
+    x = colnames(result),
+    what = "colnames",
+    permutation.of = expected_cols
+  )
 })
 
 test_that("gridding returns correct number of rows", {

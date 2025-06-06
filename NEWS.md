@@ -1,3 +1,7 @@
+# BioTIMEr 0.2.4
+
+* Data update matching structure from BioTIME v2.0.
+
 # BioTIMEr 0.2.3
 
 * Update of the vignette for clarity

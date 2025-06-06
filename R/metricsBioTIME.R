@@ -50,8 +50,10 @@
 #'   res <- getAlphaMetrics(x, measure = "ABUNDANCE")
 
 getAlphaMetrics <- function(x, measure) {
-  checkmate::assert_names(x = colnames(x), what = "colnames",
-                          must.include = c(measure, "YEAR", "Species", "assemblageID")
+  checkmate::assert_names(
+    x = colnames(x),
+    what = "colnames",
+    must.include = c(measure, "YEAR", "Species", "assemblageID")
   )
 
   xd <- data.frame()
@@ -60,18 +62,19 @@ getAlphaMetrics <- function(x, measure) {
   for (id in unique(x$assemblageID)) {
     df <- x[x$assemblageID == id, ]
     if (dplyr::n_distinct(df$YEAR) > 1L && dplyr::n_distinct(df$Species) > 1L) {
-      y <- df %>%
-        dplyr::select("YEAR", "Species", dplyr::all_of(measure)) %>%
-        tidyr::pivot_wider(names_from = "Species",
-                           values_from = dplyr::all_of(measure),
-                           values_fill = 0)
+      y <- df |>
+        dplyr::select("YEAR", "Species", dplyr::all_of(measure)) |>
+        tidyr::pivot_wider(
+          names_from = "Species",
+          values_from = dplyr::all_of(measure),
+          values_fill = 0
+        )
       xd <- rbind(xd, getAlpha(x = y, id = id))
     } # end if
   } # end for
 
   return(xd)
 }
-
 
 
 #' Alpha
@@ -88,20 +91,22 @@ getAlpha <- function(x, id) {
   yr <- unique(x[, 1L])
   x <- x[, -1L]
 
-  S <-     apply(x > 0, 1, sum)
-  N <-     apply(x, 1, sum)
-  maxN <-  apply(x, 1, max)
+  S <- apply(x > 0, 1, sum)
+  N <- apply(x, 1, sum)
+  maxN <- apply(x, 1, max)
 
   DomMc = apply(x, 1, function(s) {
     y <- sort(s, decreasing = TRUE)
-    (y[[1L]] + y[[2L]]) / sum(y)})
+    (y[[1L]] + y[[2L]]) / sum(y)
+  })
 
   PIE = apply(x, 1, function(s) {
     n <- sum(s)
-    (n / (n - 1)) * (1 - sum((s / n)^2))})
+    (n / (n - 1)) * (1 - sum((s / n)^2))
+  })
 
   x <- base::sweep(x, 1, N, "/")
-  Shannon <- apply( -x * log(x), 1, sum, na.rm = TRUE)
+  Shannon <- apply(-x * log(x), 1, sum, na.rm = TRUE)
   H <- apply(x * x, 1, sum, na.rm = TRUE)
 
   return(
@@ -153,30 +158,39 @@ getAlpha <- function(x, id) {
 #' res <- getBetaMetrics(x, measure = "ABUNDANCE")
 
 getBetaMetrics <- function(x, measure) {
-  checkmate::assert_names(x = colnames(x), what = "colnames",
-                          must.include = c(measure, "YEAR", "Species", "assemblageID")
+  checkmate::assert_names(
+    x = colnames(x),
+    what = "colnames",
+    must.include = c(measure, "YEAR", "Species", "assemblageID")
   )
 
   xd <- data.frame()
 
   x <- x[!is.na(x[, measure]), ]
   nyear <- tapply(x$YEAR, x$assemblageID, dplyr::n_distinct)
-  nsp   <- tapply(x$Species, x$assemblageID, dplyr::n_distinct)
+  nsp <- tapply(x$Species, x$assemblageID, dplyr::n_distinct)
 
   for (id in unique(x$assemblageID)) {
     df <- x[x$assemblageID == id, ]
     if (nyear[[id]] < 2L || nsp[[id]] < 2L) {
-      xd <- rbind(xd, data.frame(YEAR = unique(df$YEAR),
-                                 assemblageID = id,
-                                 JaccardDiss = NA,
-                                 MorisitaHornDiss = NA,
-                                 BrayCurtisDiss = NA))
+      xd <- rbind(
+        xd,
+        data.frame(
+          YEAR = unique(df$YEAR),
+          assemblageID = id,
+          JaccardDiss = NA,
+          MorisitaHornDiss = NA,
+          BrayCurtisDiss = NA
+        )
+      )
     } else if (nyear[[id]] > 1L && nsp[[id]] > 1L) {
-      rbeta <- df %>%
-        dplyr::select("YEAR", "Species", dplyr::all_of(measure)) %>%
-        tidyr::pivot_wider(names_from = "Species",
-                           values_from = dplyr::all_of(measure),
-                           values_fill = 0) %>%
+      rbeta <- df |>
+        dplyr::select("YEAR", "Species", dplyr::all_of(measure)) |>
+        tidyr::pivot_wider(
+          names_from = "Species",
+          values_from = dplyr::all_of(measure),
+          values_fill = 0
+        ) |>
         getBeta(id = id)
       xd <- rbind(xd, rbeta)
     } # end if
@@ -184,7 +198,6 @@ getBetaMetrics <- function(x, measure) {
 
   return(xd)
 }
-
 
 
 #' Beta
@@ -197,7 +210,6 @@ getBetaMetrics <- function(x, measure) {
 #' @keywords internal
 
 getBeta <- function(x, id) {
-
   yr <- unique(x[, 1L])
   x <- x[, -1L]
   xb <- x
@@ -207,10 +219,15 @@ getBeta <- function(x, id) {
   getbc <- vegan::vegdist(x, "bray") #4
 
   jacc <- c(1, getj[1L:nrow(x)])[-1]
-  mh <-  c(1, getmh[1L:nrow(x)])[-1]
-  bc <-  c(1, getbc[1L:nrow(x)])[-1]
+  mh <- c(1, getmh[1L:nrow(x)])[-1]
+  bc <- c(1, getbc[1L:nrow(x)])[-1]
 
-  xf <- data.frame(YEAR = yr, assemblageID = id, JaccardDiss = jacc,
-                   MorisitaHornDiss = mh, BrayCurtisDiss = bc)
+  xf <- data.frame(
+    YEAR = yr,
+    assemblageID = id,
+    JaccardDiss = jacc,
+    MorisitaHornDiss = mh,
+    BrayCurtisDiss = bc
+  )
   return(xf)
 }

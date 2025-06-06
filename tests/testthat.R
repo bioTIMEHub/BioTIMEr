@@ -1,3 +1,2 @@
-library("testthat")
-library(dplyr)
+library(testthat)
 test_check("BioTIMEr")

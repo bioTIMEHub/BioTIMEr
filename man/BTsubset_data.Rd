@@ -13,7 +13,6 @@ A data frame with 81,084 rows and 17 columns:
   \item{BIOMASS}{Double representing the biomass for the record (see metadata for details of BIOMASS_TYPE}
   \item{ID_SPECIES}{Unique identifier linking to the species table}
   \item{SAMPLE_DESC}{Concatenation of variables comprising unique sampling event}
-  \item{PLOT}{Name or identifier of plot field, only used for fixed plots such as forest quadrats}
   \item{LATITUDE}{Latitude of record}
   \item{LONGITUDE}{Longitude of record}
   \item{DEPTH}{Depth or elevation of record if available}

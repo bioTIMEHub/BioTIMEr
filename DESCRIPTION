@@ -1,7 +1,7 @@
 Package: BioTIMEr
 Type: Package
 Title: Tools to Use and Explore the 'BioTIME' Database
-Version: 0.2.3
+Version: 0.2.4
 Authors@R: c(
   person("Alban", "Sagouis", role = c("aut","cre"),
         email = "alban.sagouis@idiv.de",
@@ -39,9 +39,9 @@ Maintainer: Alban Sagouis <alban.sagouis@idiv.de>
 License: MIT + file LICENSE
 URL: https://github.com/bioTIMEHub/BioTIMEr
 BugReports: https://github.com/bioTIMEHub/BioTIMEr/issues
-Description: The 'BioTIME' database was first published in 
+Description: The 'BioTIME' database was first published in
     2018 and inspired ideas, questions, project and research
-    article. To make it even more accessible, an R package 
+    article. To make it even more accessible, an R package
     was created.
     The 'BioTIMEr' package provides tools designed to interact with the
     'BioTIME' database. The functions provided include the 'BioTIME' recommended
@@ -52,7 +52,7 @@ Description: The 'BioTIME' database was first published in
     and meta data, the full versions of which are freely available on the 'BioTIME'
     website <https://biotime.st-andrews.ac.uk/home.php>.
 Depends:
-    R (>= 3.5.0)
+    R (>= 4.3.0)
 Imports:
     dplyr,
     tidyr,

@@ -22,11 +22,11 @@ scale_fill_biotime(palette = "realms", discrete = TRUE, reverse = FALSE, ...)
 \item{...}{Passed to \code{\link[ggplot2]{discrete_scale}} or \code{\link[ggplot2]{scale_color_gradient}}}
 }
 \value{
-If \code{discrete} is \code{TRUE}, the function returns a colour palette produced by 
+If \code{discrete} is \code{TRUE}, the function returns a colour palette produced by
     \code{\link[ggplot2]{discrete_scale}} and if \code{discrete} is \code{FALSE}, the function
     returns a colour palette produced by \code{\link[ggplot2]{scale_color_gradient}}.
 
-If \code{discrete} is \code{TRUE}, the function returns a colour palette produced by 
+If \code{discrete} is \code{TRUE}, the function returns a colour palette produced by
     \code{\link[ggplot2]{discrete_scale}} and if \code{discrete} is \code{FALSE}, the function
     returns a colour palette produced by \code{\link[ggplot2]{scale_color_gradient}}.
 }

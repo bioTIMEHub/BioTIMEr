@@ -46,7 +46,6 @@
 #' together, one from each iteration identified by a numerical
 #' unique identifier 1:resamps.
 #'
-#' @importFrom dplyr %>%
 #' @examples
 #' \donttest{
 #'   library(BioTIMEr)
@@ -60,35 +59,58 @@
 
 resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
   checkmate::assert_names(
-    x = colnames(x), what = "colnames",
-    must.include = c("YEAR", "SAMPLE_DESC", "Species", measure))
+    x = colnames(x),
+    what = "colnames",
+    must.include = c("YEAR", "SAMPLE_DESC", "Species", measure)
+  )
   base::stopifnot("measure must be > 0" = all(x[, measure] > 0, na.rm = TRUE))
-  checkmate::assert_number(x = resamps, lower = 1L,
-                           na.ok = FALSE, null.ok = FALSE)
+  checkmate::assert_number(
+    x = resamps,
+    lower = 1L,
+    na.ok = FALSE,
+    null.ok = FALSE
+  )
   checkmate::assert_integer(x = x$YEAR, lower = 1300L, null.ok = FALSE)
-  checkmate::assert_logical(x = conservative, len = 1L,
-                            null.ok = FALSE, any.missing = FALSE)
-
-
+  checkmate::assert_logical(
+    x = conservative,
+    len = 1L,
+    null.ok = FALSE,
+    any.missing = FALSE
+  )
 
   if (anyNA(x[, measure])) {
     if (conservative) {
-      x <- stats::aggregate(x = x[, measure, drop = FALSE],
-                              by = list(SAMPLE_DESC = x$SAMPLE_DESC),
-                              function(j) anyNA(j)) %>%
-        dplyr::mutate(na_values = rowSums(dplyr::select(., dplyr::all_of(measure)))) %>%
-        dplyr::filter(.data$na_values == 0L) %>%
-        dplyr::semi_join(x = x, y = ., by = "SAMPLE_DESC")
+      x = dplyr::semi_join(
+        x = x,
+        y = stats::aggregate(
+          x = x[, measure, drop = FALSE],
+          by = list(SAMPLE_DESC = x$SAMPLE_DESC),
+          function(j) anyNA(j)
+        ) |>
+          dplyr::mutate(
+            na_values = rowSums(dplyr::pick(dplyr::all_of(measure)))
+          ) |>
+          dplyr::filter(.data$na_values == 0L),
+        by = dplyr::join_by("SAMPLE_DESC")
+      )
 
-      warning(paste0("NA values found and whole samples removed since `conservative` is TRUE.\n",
-                     "Only a subset of `x` is used."))
+      warning(paste0(
+        "NA values found and whole samples removed since `conservative` is TRUE.\n",
+        "Only a subset of `x` is used."
+      ))
     } else {
-      x <- dplyr::filter(x, !apply(
-        X = dplyr::select(x, dplyr::all_of(measure)),
-        MARGIN = 1,
-        FUN = anyNA))
-      warning(paste0("NA values found and removed.\n",
-                     "Only a subset of `x` is used."))
+      x <- dplyr::filter(
+        x,
+        !apply(
+          X = dplyr::select(x, dplyr::all_of(measure)),
+          MARGIN = 1,
+          FUN = anyNA
+        )
+      )
+      warning(paste0(
+        "NA values found and removed.\n",
+        "Only a subset of `x` is used."
+      ))
     }
   }
 
@@ -97,21 +119,32 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
     X = rfIDs,
     FUN = function(i) {
       temp_data <- x[x$assemblageID == i, ]
-      rarefysamples(x = temp_data,
-                    measure = measure,
-                    resamps = resamps)},
-    USE.NAMES = TRUE, simplify = FALSE)
+      rarefysamples(x = temp_data, measure = measure, resamps = resamps)
+    },
+    USE.NAMES = TRUE,
+    simplify = FALSE
+  )
 
-  dplyr::bind_rows(TSrf) %>%
-    dplyr::mutate(rfID = rep(rfIDs, times = sapply(TSrf, nrow))) %>%
-    tidyr::separate("rfID", into =  c("STUDY_ID", "cell"),
-                    sep = "_", remove = FALSE) %>%
-    dplyr::mutate(STUDY_ID = as.integer(.data$STUDY_ID)) %>%
-    dplyr::select("resamp", assemblageID = "rfID", "STUDY_ID", "YEAR", "Species",
-                  dplyr::all_of(measure)) %>%
-    return()
+  return({
+    dplyr::bind_rows(TSrf) |>
+      dplyr::mutate(rfID = rep(rfIDs, times = sapply(TSrf, nrow))) |>
+      tidyr::separate(
+        "rfID",
+        into = c("STUDY_ID", "cell"),
+        sep = "_",
+        remove = FALSE
+      ) |>
+      dplyr::mutate(STUDY_ID = as.integer(.data$STUDY_ID)) |>
+      dplyr::select(
+        "resamp",
+        assemblageID = "rfID",
+        "STUDY_ID",
+        "YEAR",
+        "Species",
+        dplyr::all_of(measure)
+      )
+  })
 }
-
 
 
 #' Rarefy BioTIME data
@@ -124,34 +157,36 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
 
 rarefysamples <- function(x, measure, resamps) {
   # Computing minimal effort per year in this assemblageID
-  minsample <- min(tapply(x$SAMPLE_DESC,
-                          x$YEAR,
-                          function(x) length(unique(x))))
+  minsample <- min(tapply(x$SAMPLE_DESC, x$YEAR, function(x) length(unique(x))))
 
-  rareftab_list <- lapply( # beginning loop on repetitions
+  rareftab_list <- lapply(
+    # beginning loop on repetitions
     X = seq_len(resamps),
     FUN = function(i) {
-      selected_indices <- unlist(lapply( # beginning sub loop on years
+      selected_indices <- unlist(lapply(
+        # beginning sub loop on years
         X = unique(x$YEAR),
         FUN = function(y) {
           samps <- unique(x$SAMPLE_DESC[x$YEAR == y])
           sam <- sample(samps, minsample, replace = FALSE)
           return(which(x$SAMPLE_DESC %in% sam & x$YEAR == y))
-        })) # end of loop on years
+        }
+      )) # end of loop on years
 
-      tYear    <- x[selected_indices, "YEAR"]
+      tYear <- x[selected_indices, "YEAR"]
       tSpecies <- x[selected_indices, "Species"]
       tcurrency <- x[selected_indices, measure, drop = FALSE]
 
-      raref <- stats::aggregate(x = tcurrency,
-                                by = list(YEAR = tYear, Species = tSpecies),
-                                FUN = sum)
+      raref <- stats::aggregate(
+        x = tcurrency,
+        by = list(YEAR = tYear, Species = tSpecies),
+        FUN = sum
+      )
       raref$resamp <- i
       return(raref)
-
-    }) # end of loop on repetitions
+    }
+  ) # end of loop on repetitions
 
   rareftab <- dplyr::bind_rows(rareftab_list)
   return(rareftab)
-
 } # end of function
