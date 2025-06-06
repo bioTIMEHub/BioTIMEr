@@ -1,9 +1,8 @@
 <!-- badges: start -->
-[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![Lifecycle: stable](https://img.shields.io/badge/Lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![R-CMD-check](https://github.com/bioTIMEHub/BioTIMEr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bioTIMEHub/BioTIMEr/actions/workflows/R-CMD-check.yaml)
-[![rstudio mirror downloads](https://cranlogs.r-pkg.org/badges/BioTIMEr)](https://github.com/r-hub/cranlogs.app)
 [![cran version](https://www.r-pkg.org/badges/version/BioTIMEr)](https://cran.r-project.org/package=BioTIMEr)
-
+[![rstudio mirror downloads](https://cranlogs.r-pkg.org/badges/BioTIMEr)](https://github.com/r-hub/cranlogs.app)
 [![codecov.io](https://codecov.io/github/bioTIMEHub/BioTIMEr/coverage.svg?branch=main)](https://app.codecov.io/github/bioTIMEHub/BioTIMEr?branch=main)
 
 <!-- badges: end -->
