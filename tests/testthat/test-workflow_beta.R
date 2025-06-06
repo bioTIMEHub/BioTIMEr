@@ -20,5 +20,4 @@ test_that("Whole workflow works consistently", {
       getBetaMetrics(measure = "BIOMASS") |>
       getLinearRegressions(divType = "beta")
   })
-
 })

@@ -4,7 +4,8 @@ test_df <- data.frame(
   SAMPLE_DESC = rep(LETTERS[1L:8L], each = 24),
   Species = unlist(lapply(
     X = 1L:8L,
-    function(x) letters[sample(length(letters), 24L, replace = FALSE)])),
+    function(x) letters[sample(length(letters), 24L, replace = FALSE)]
+  )),
   ABUNDANCE = rpois(24 * 8, 10)
 )
 

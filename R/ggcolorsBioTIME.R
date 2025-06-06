@@ -19,17 +19,22 @@
 #' @importFrom ggplot2 discrete_scale
 #' @importFrom ggplot2 scale_fill_gradientn
 
-scale_color_biotime <- function(palette = "realms", discrete = TRUE,
-                                reverse = FALSE, ...) {
-  checkmate::assert_choice(x = palette, choices = c("realms", "gradient",
-                                                    "cool", "warm"))
+scale_color_biotime <- function(
+  palette = "realms",
+  discrete = TRUE,
+  reverse = FALSE,
+  ...
+) {
+  checkmate::assert_choice(
+    x = palette,
+    choices = c("realms", "gradient", "cool", "warm")
+  )
   checkmate::assert_logical(x = discrete, max.len = 1L, null.ok = FALSE)
   checkmate::assert_logical(x = reverse, max.len = 1L, null.ok = FALSE)
 
   pal <- biotime_cols(palette = palette, reverse = reverse)
   if (discrete) {
-    ggplot2::discrete_scale(aesthetics = "color",
-                            palette = pal, ...)
+    ggplot2::discrete_scale(aesthetics = "color", palette = pal, ...)
   } else {
     ggplot2::scale_color_gradientn(colours = pal(256), ...)
   }
@@ -51,18 +56,19 @@ scale_colour_biotime <- scale_color_biotime
 #' @importFrom ggplot2 discrete_scale
 #' @importFrom ggplot2 scale_fill_gradientn
 
-scale_fill_biotime <- function(palette = "realms",
-                               discrete = TRUE,
-                               reverse = FALSE, ...) {
+scale_fill_biotime <- function(
+  palette = "realms",
+  discrete = TRUE,
+  reverse = FALSE,
+  ...
+) {
   checkmate::assert_choice(x = palette, choices = names(biotime_palettes))
   checkmate::assert_logical(x = discrete, max.len = 1L, null.ok = FALSE)
   checkmate::assert_logical(x = reverse, max.len = 1L, null.ok = FALSE)
 
   pal <- biotime_cols(palette = palette, reverse = reverse)
   if (discrete) {
-    ggplot2::discrete_scale(aesthetics = "fill",
-                            palette = pal,
-                            ...)
+    ggplot2::discrete_scale(aesthetics = "fill", palette = pal, ...)
   } else {
     ggplot2::scale_fill_gradientn(colours = pal(256), ...)
   }
@@ -71,25 +77,41 @@ scale_fill_biotime <- function(palette = "realms",
 
 ## BioTIME palettes set up
 biotime_palettes <- list(
-  'realms' = c("#155f49","#66c1d1","#d9d956","#cf7941"),
-  'gradient' = c("#00483d","#127c8e","#31b9c2","#86db9c","#c0f176","#ffff67"),
-  'cool' = c("#155f49","#67b6c4"),
-  'warm' = c("#d9d956","#cf7941"))
+  'realms' = c("#155f49", "#66c1d1", "#d9d956", "#cf7941"),
+  'gradient' = c(
+    "#00483d",
+    "#127c8e",
+    "#31b9c2",
+    "#86db9c",
+    "#c0f176",
+    "#ffff67"
+  ),
+  'cool' = c("#155f49", "#67b6c4"),
+  'warm' = c("#d9d956", "#cf7941")
+)
 
 intPalette <- function(colors, ...) {
   checkmate::assert_list(
     list(...),
     types = "numeric",
     any.missing = FALSE,
-    names = "named")
+    names = "named"
+  )
   ramp <- grDevices::colorRamp(colors, ...)
   function(n) {
     checkmate::assert_integerish(n, lower = 1L)
-    if (n > length(colors)) {x <- ramp(seq.int(0, 1, length.out = n))
-    if (ncol(x) == 4L)
-      grDevices::rgb(x[, 1L], x[, 2L], x[, 3L], x[, 4L], maxColorValue = 255)
-    else grDevices::rgb(x[, 1L], x[, 2L], x[, 3L], maxColorValue = 255)}
-    else colors[sort(sample(x = c(1:length(colors)), size = n, replace = FALSE))]
+    if (n > length(colors)) {
+      x <- ramp(seq.int(0, 1, length.out = n))
+      if (ncol(x) == 4L)
+        grDevices::rgb(
+          x[, 1L],
+          x[, 2L],
+          x[, 3L],
+          x[, 4L],
+          maxColorValue = 255
+        ) else grDevices::rgb(x[, 1L], x[, 2L], x[, 3L], maxColorValue = 255)
+    } else
+      colors[sort(sample(x = c(1:length(colors)), size = n, replace = FALSE))]
   }
 }
 

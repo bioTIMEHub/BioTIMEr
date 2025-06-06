@@ -4,7 +4,7 @@
 [![rstudio mirror downloads](https://cranlogs.r-pkg.org/badges/BioTIMEr)](https://github.com/r-hub/cranlogs.app)
 [![cran version](https://www.r-pkg.org/badges/version/BioTIMEr)](https://cran.r-project.org/package=BioTIMEr)
 
-[![codecov.io](https://codecov.io/github/bioTIMEHub/BioTIMEr/coverage.svg?branch=main)](https://codecov.io/github/bioTIMEHub/BioTIMEr?branch=main)
+[![codecov.io](https://codecov.io/github/bioTIMEHub/BioTIMEr/coverage.svg?branch=main)](https://app.codecov.io/github/bioTIMEHub/BioTIMEr?branch=main)
 
 <!-- badges: end -->
 

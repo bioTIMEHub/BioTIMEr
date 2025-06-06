@@ -20,5 +20,4 @@ test_that("Whole workflow works consistently", {
       getAlphaMetrics(measure = "BIOMASS") |>
       getLinearRegressions(divType = "alpha")
   })
-
 })

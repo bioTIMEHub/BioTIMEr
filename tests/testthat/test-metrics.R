@@ -19,8 +19,19 @@ test_that("getAlpha returns a data frame", {
 
 test_that("getAlpha returns the expected columns", {
   result <- getAlpha(x = data, id = "TestID")
-  expected_cols <- c("assemblageID","YEAR", "S", "N", "maxN", "Shannon","Simpson",
-                     "invSimpson","PIE","DomMc","expShannon")
+  expected_cols <- c(
+    "assemblageID",
+    "YEAR",
+    "S",
+    "N",
+    "maxN",
+    "Shannon",
+    "Simpson",
+    "invSimpson",
+    "PIE",
+    "DomMc",
+    "expShannon"
+  )
   expect_equal(colnames(result), expected_cols)
 })
 
@@ -54,7 +65,8 @@ dataMetrics <- data.frame(
   YEAR = rep(rep(2010:2015, each = 4), times = 4),
   Species = c(replicate(
     n = 8L,
-    sample(letters, 24L, replace = FALSE))),
+    sample(letters, 24L, replace = FALSE)
+  )),
   ABUNDANCE = rpois(24 * 8, 10),
   BIOMASS = rpois(24 * 8, 1000),
   assemblageID = rep(LETTERS[1L:8L], each = 24)
