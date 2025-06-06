@@ -1,5 +1,5 @@
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![R-CMD-check](https://github.com/bioTIMEHub/BioTIMEr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bioTIMEHub/BioTIMEr/actions/workflows/R-CMD-check.yaml)
 [![rstudio mirror downloads](https://cranlogs.r-pkg.org/badges/BioTIMEr)](https://github.com/r-hub/cranlogs.app)
 [![cran version](https://www.r-pkg.org/badges/version/BioTIMEr)](https://cran.r-project.org/package=BioTIMEr)
@@ -26,7 +26,7 @@ install.packages("BioTIMEr") # CRAN version
 ```
 
 ```r
-pak::pkg_install("bioTIMEHub//BioTIMEr") # dev version
+remotes::github_install("bioTIMEHub//BioTIMEr") # dev version
 ```
 
 ## Getting Started
