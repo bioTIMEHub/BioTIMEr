@@ -5,24 +5,36 @@
 \alias{themeBioTIME}
 \title{Plot slopes BioTIME}
 \usage{
-plotSlopes(x, metric, cols, taxa, method, assemblageID, divType)
+plotSlopes(
+  x,
+  metric,
+  cols,
+  taxa = c("Amphibians & reptiles", "Birds", "Chromista", "Fish", "Fungi", "Mammals",
+    "Plants"),
+  method = c("metric", "taxa", "ind"),
+  assemblageID,
+  divType = c("alpha", "beta")
+)
 
 themeBioTIME(lp, fontSize, colx, coly)
 }
 \arguments{
 \item{x}{Parameter description}
 
-\item{metric}{Parameter description}
+\item{metric}{If `divtype` is alpha, `metric` must be one of "S", "N", "maxN",
+"Shannon", "Simpson", "invSimpson", "PIE", "DomMc","expShannon".
+If `divtype` is beta, `metric` must be one of "JaccardDiss", "MorisitaHornDiss",
+"BrayCurtisDiss"}
 
 \item{cols}{Parameter description}
 
 \item{taxa}{Parameter description}
 
-\item{method}{Parameter description}
+\item{method}{Character can be one of "metric", "taxa", "ind"}
 
 \item{assemblageID}{Parameter description}
 
-\item{divType}{Parameter description}
+\item{divType}{"alpha" or "beta"}
 
 \item{lp}{description}
 

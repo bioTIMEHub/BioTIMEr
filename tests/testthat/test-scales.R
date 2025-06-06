@@ -1,6 +1,7 @@
 # Testing BioTIME scales
 
 # Helper dummy data
+set.seed(42)
 df_discrete <- data.frame(x = letters[1:4], y = 1:4)
 df_continuous <- data.frame(x = rnorm(100), y = rnorm(100), z = rnorm(100))
 
@@ -33,15 +34,24 @@ test_that("scale_color_biotime and scale_fill_biotime handle all combinations", 
   for (pal in test_palettes) {
     for (reverse in c(TRUE, FALSE)) {
       for (discrete in c(TRUE, FALSE)) {
-        p1 <- ggplot2::ggplot(df_discrete, ggplot2::aes(x = x, y = y, color = x)) +
+        p1 <- ggplot2::ggplot(
+          df_discrete,
+          ggplot2::aes(x = x, y = y, color = x)
+        ) +
           ggplot2::geom_point() +
           scale_color_biotime(palette = pal, reverse = reverse, discrete = TRUE)
 
-        p2 <- ggplot2::ggplot(df_discrete, ggplot2::aes(x = x, y = y, fill = x)) +
+        p2 <- ggplot2::ggplot(
+          df_discrete,
+          ggplot2::aes(x = x, y = y, fill = x)
+        ) +
           ggplot2::geom_col() +
           scale_fill_biotime(palette = pal, reverse = reverse, discrete = TRUE)
 
-        p3 <- ggplot2::ggplot(df_continuous, ggplot2::aes(x = x, y = y, color = z)) +
+        p3 <- ggplot2::ggplot(
+          df_continuous,
+          ggplot2::aes(x = x, y = y, color = z)
+        ) +
           ggplot2::geom_point() +
           scale_color_biotime(
             palette = pal,
@@ -49,15 +59,30 @@ test_that("scale_color_biotime and scale_fill_biotime handle all combinations", 
             discrete = FALSE
           )
 
-        p4 <- ggplot2::ggplot(df_continuous, ggplot2::aes(x = x, y = y, fill = z)) +
+        p4 <- ggplot2::ggplot(
+          df_continuous,
+          ggplot2::aes(x = x, y = y, fill = z)
+        ) +
           ggplot2::geom_tile() +
           scale_fill_biotime(palette = pal, reverse = reverse, discrete = FALSE)
 
         # Visual tests
-        vdiffr::expect_doppelganger(sprintf("color-%s-%s-%s", pal, reverse, discrete), p1)
-        vdiffr::expect_doppelganger(sprintf("fill-%s-%s-%s", pal, reverse, discrete), p2)
-        vdiffr::expect_doppelganger(sprintf("color-continuous-%s-%s", pal, reverse), p3)
-        vdiffr::expect_doppelganger(sprintf("fill-continuous-%s-%s", pal, reverse), p4)
+        vdiffr::expect_doppelganger(
+          sprintf("color-%s-%s-%s", pal, reverse, discrete),
+          p1
+        )
+        vdiffr::expect_doppelganger(
+          sprintf("fill-%s-%s-%s", pal, reverse, discrete),
+          p2
+        )
+        vdiffr::expect_doppelganger(
+          sprintf("color-continuous-%s-%s", pal, reverse),
+          p3
+        )
+        vdiffr::expect_doppelganger(
+          sprintf("fill-continuous-%s-%s", pal, reverse),
+          p4
+        )
       }
     }
   }
@@ -65,9 +90,18 @@ test_that("scale_color_biotime and scale_fill_biotime handle all combinations", 
 
 # ---- Argument checks ----
 test_that("scale functions validate inputs", {
-  expect_error(scale_color_biotime(palette = "invalid"), "Must be element of set")
-  expect_error(scale_fill_biotime(palette = "invalid"), "Must be element of set")
-  expect_error(scale_color_biotime(discrete = NULL), "Must be of type 'logical'")
+  expect_error(
+    scale_color_biotime(palette = "invalid"),
+    "Must be element of set"
+  )
+  expect_error(
+    scale_fill_biotime(palette = "invalid"),
+    "Must be element of set"
+  )
+  expect_error(
+    scale_color_biotime(discrete = NULL),
+    "Must be of type 'logical'"
+  )
   expect_error(scale_fill_biotime(reverse = NULL), "Must be of type 'logical'")
 })
 

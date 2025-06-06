@@ -2,25 +2,34 @@
 #'
 #' @rdname BioTIME-plots
 #' @param x Parameter description
-#' @param metric Parameter description
+#' @param metric If `divtype` is alpha, `metric` must be one of "S", "N", "maxN",
+#'    "Shannon", "Simpson", "invSimpson", "PIE", "DomMc","expShannon".
+#'    If `divtype` is beta, `metric` must be one of "JaccardDiss", "MorisitaHornDiss",
+#'    "BrayCurtisDiss"
 #' @param cols Parameter description
 #' @param taxa Parameter description
-#' @param method Parameter description
+#' @param method Character can be one of "metric", "taxa", "ind"
 #' @param assemblageID Parameter description
-#' @param divType Parameter description
+#' @param divType "alpha" or "beta"
 #' @returns A plot
 #' @keywords internal
 
 
-plotSlopes <- function(x, metric, cols, taxa, method, assemblageID, divType) {
+plotSlopes <- function(x,
+                       metric,
+                       cols,
+                       taxa = c("Amphibians & reptiles", "Birds", "Chromista",
+                                "Fish", "Fungi", "Mammals", "Plants"),
+                       method = c("metric", "taxa", "ind"),
+                       assemblageID,
+                       divType = c("alpha", "beta")) {
 
-  checkmate::assertChoice(x = taxa,
-                          choices = c("Amphibians & reptiles", "Birds", "Chromista",
-                                      "Fish", "Fungi", "Mammals", "Plants"))
-  checkmate::assertChoice(x = method, choices = c("metric", "taxa", "ind"))
-  checkmate::assertChoice(x = divType, choices = c("beta", "alpha"))
-  base::stopifnot("The provided assemblageID is not valid" =
-                    base::is.element(assemblageID, x$assemblageID))
+  taxa <- match.arg(taxa)
+  method <- match.arg(method)
+  divType <- match.arg(divType)
+
+  stopifnot("The provided assemblageID is not valid" =
+              assemblageID %in% x$assemblageID)
 
   base::switch(
     divType,
@@ -123,6 +132,12 @@ plotSlopes <- function(x, metric, cols, taxa, method, assemblageID, divType) {
 #' @param fontSize description
 #' @param colx description
 #' @param coly description
+#' @importFrom ggplot2 theme_bw
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 element_text
+#' @importFrom ggplot2 element_blank
+#' @importFrom ggplot2 element_line
+#' @importFrom ggplot2 element_rect
 #' @examples
 #' \donttest{
 #' fig1 <- ggplot2::ggplot() +
@@ -130,22 +145,27 @@ plotSlopes <- function(x, metric, cols, taxa, method, assemblageID, divType) {
 #' }
 
 themeBioTIME <- function(lp, fontSize, colx, coly) {
-  ggplot2::theme_bw() +
-    ggplot2::theme(
-      axis.text = ggplot2::element_text(size = fontSize, color = colx),
-      axis.title = ggplot2::element_text(size = fontSize + 1, face = "bold"),
+  checkmate::assert_choice(lp, c("none", "left", "right", "bottom", "top"))
+  checkmate::assert_number(fontSize, lower = 1)
+  checkmate::assert_string(colx)
+  checkmate::assert_string(coly)
+
+  theme_bw() +
+    theme(
+      axis.text = element_text(size = fontSize, color = colx),
+      axis.title = element_text(size = fontSize + 1, face = "bold"),
       legend.position = lp,
-      legend.text = ggplot2::element_text(size = fontSize),
-      legend.title = ggplot2::element_text(size = fontSize + 1),
+      legend.text = element_text(size = fontSize),
+      legend.title = element_text(size = fontSize + 1),
       legend.direction = "vertical",
-      plot.title = ggplot2::element_text(size = fontSize + 2,
+      plot.title = element_text(size = fontSize + 2,
                                          face = "bold",
                                          hjust = 0.5),
-      plot.background = ggplot2::element_blank(),
-      panel.grid.major = ggplot2::element_blank(),
-      panel.grid.minor = ggplot2::element_blank(),
-      strip.text = ggplot2::element_text(size = fontSize - 2),
-      strip.background = ggplot2::element_rect(fill = coly),
-      axis.line = ggplot2::element_line(color = colx)
+      plot.background = element_blank(),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      strip.text = element_text(size = fontSize - 2),
+      strip.background = element_rect(fill = coly),
+      axis.line = element_line(color = colx)
     )
 }
