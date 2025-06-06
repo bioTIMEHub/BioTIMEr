@@ -18,7 +18,7 @@ ggplot2 theme for BioTIME plots"><!-- mathjax --><script src="https://cdnjs.clou
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioTIMEr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
       </span>
     </div>
 
@@ -65,7 +65,16 @@ ggplot2 theme for BioTIME plots"><!-- mathjax --><script src="https://cdnjs.clou
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotSlopes</span><span class="op">(</span><span class="va">x</span>, <span class="va">metric</span>, <span class="va">cols</span>, <span class="va">taxa</span>, <span class="va">method</span>, <span class="va">assemblageID</span>, <span class="va">divType</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotSlopes</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">metric</span>,</span>
+<span>  <span class="va">cols</span>,</span>
+<span>  taxa <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Amphibians &amp; reptiles"</span>, <span class="st">"Birds"</span>, <span class="st">"Chromista"</span>, <span class="st">"Fish"</span>, <span class="st">"Fungi"</span>, <span class="st">"Mammals"</span>,</span>
+<span>    <span class="st">"Plants"</span><span class="op">)</span>,</span>
+<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"metric"</span>, <span class="st">"taxa"</span>, <span class="st">"ind"</span><span class="op">)</span>,</span>
+<span>  <span class="va">assemblageID</span>,</span>
+<span>  divType <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpha"</span>, <span class="st">"beta"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">themeBioTIME</span><span class="op">(</span><span class="va">lp</span>, <span class="va">fontSize</span>, <span class="va">colx</span>, <span class="va">coly</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -79,7 +88,10 @@ ggplot2 theme for BioTIME plots"><!-- mathjax --><script src="https://cdnjs.clou
 
 
 <dt id="arg-metric">metric<a class="anchor" aria-label="anchor" href="#arg-metric"></a></dt>
-<dd><p>Parameter description</p></dd>
+<dd><p>If `divtype` is alpha, `metric` must be one of "S", "N", "maxN",
+"Shannon", "Simpson", "invSimpson", "PIE", "DomMc","expShannon".
+If `divtype` is beta, `metric` must be one of "JaccardDiss", "MorisitaHornDiss",
+"BrayCurtisDiss"</p></dd>
 
 
 <dt id="arg-cols">cols<a class="anchor" aria-label="anchor" href="#arg-cols"></a></dt>
@@ -91,7 +103,7 @@ ggplot2 theme for BioTIME plots"><!-- mathjax --><script src="https://cdnjs.clou
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>Parameter description</p></dd>
+<dd><p>Character can be one of "metric", "taxa", "ind"</p></dd>
 
 
 <dt id="arg-assemblageid">assemblageID<a class="anchor" aria-label="anchor" href="#arg-assemblageid"></a></dt>
@@ -99,7 +111,7 @@ ggplot2 theme for BioTIME plots"><!-- mathjax --><script src="https://cdnjs.clou
 
 
 <dt id="arg-divtype">divType<a class="anchor" aria-label="anchor" href="#arg-divtype"></a></dt>
-<dd><p>Parameter description</p></dd>
+<dd><p>"alpha" or "beta"</p></dd>
 
 
 <dt id="arg-lp">lp<a class="anchor" aria-label="anchor" href="#arg-lp"></a></dt>
@@ -143,7 +155,7 @@ ggplot2 theme for BioTIME plots"><!-- mathjax --><script src="https://cdnjs.clou
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
       </footer></div>

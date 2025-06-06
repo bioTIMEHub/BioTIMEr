@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">BioTIMEr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.4</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@
                         <h4 data-toc-skip class="author">Inês S.
 Martins</h4>
             
-            <h4 data-toc-skip class="date">2025-05-16</h4>
+            <h4 data-toc-skip class="date">2025-06-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/bioTIMEHub/BioTIMEr/blob/main/vignettes/vignette1.Rmd" class="external-link"><code>vignettes/vignette1.Rmd</code></a></small>
       <div class="hidden name"><code>vignette1.Rmd</code></div>
@@ -129,9 +129,7 @@ groups. The whole BioTIME database is accessible <a href="https://biotime.st-and
 location (latitude/longitude) to standardize the spatial extent between
 different studies using:
 <ul>
-<li>
-<code><a href="../reference/gridding.html">gridding()</a></code><br>
-</li>
+<li><code><a href="../reference/gridding.html">gridding()</a></code></li>
 </ul>
 </li>
 <li>Apply sample-based rarefaction to standardize the number of samples
@@ -158,8 +156,8 @@ with:
 <p>Below is a detailed run through these different steps, breaking down
 some of the tasks and the reasoning behind our suggestions for best
 practice when analysing BioTIME data.</p>
-<p>We use the ‘pipe’ operator <code>(%&gt;%)</code> to make our code
-more efficient and streamlined, and we use ggplot2 library for most
+<p>We use the ‘pipe’ operator <code>(|&gt;)</code> to make our code more
+efficient and streamlined, and we use ggplot2 library for most
 visualisations. This and other libraries required for BioTIMEr to run
 will be, if needed, installed at the same time BioTIMEr is
 installed.</p>
@@ -184,10 +182,10 @@ while the small scale studies are assigned to a single cell.</p>
 <p>Let’s apply <code><a href="../reference/gridding.html">gridding()</a></code> to a subset of BioTIME data and
 see what happens:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grid_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gridding.html">gridding</a></span><span class="op">(</span>meta <span class="op">=</span> <span class="va">BTsubset_meta</span>, btf <span class="op">=</span> <span class="va">BTsubset_data</span>, res <span class="op">=</span> <span class="fl">12</span>, resByData <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> </span>
+<code class="sourceCode R"><span><span class="va">grid_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gridding.html">gridding</a></span><span class="op">(</span>meta <span class="op">=</span> <span class="va">BTsubset_meta</span>, btf <span class="op">=</span> <span class="va">BTsubset_data</span>, res <span class="op">=</span> <span class="fl">12</span>, resByData <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Get a look at the output</span></span>
-<span><span class="co"># grid_samples %&gt;% head() %&gt;% kable()</span></span></code></pre></div>
+<span><span class="co"># grid_samples |&gt; head() |&gt; kable()</span></span></code></pre></div>
 <p>You can see that each sample is assigned a different combination of
 study ID and grid cell (based on its latitude and longitude) resulting
 in a unique identifier that determines our assemblage time series
@@ -197,11 +195,11 @@ similar spatial extent between them.</p>
 <p>Let’s take a look and see how many studies/cells/assemblages time
 series are there in this subset:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">check_res_1</span> <span class="op">&lt;-</span> <span class="va">grid_samples</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">StudyMethod</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<code class="sourceCode R"><span><span class="va">check_res_1</span> <span class="op">&lt;-</span> <span class="va">grid_samples</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">StudyMethod</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>n_cell <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">cell</span><span class="op">)</span>, n_aID <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, res <span class="op">=</span> <span class="st">"res12"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">check_res_1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">check_res_1</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">STUDY_ID</th>
@@ -310,7 +308,7 @@ resolution based on the average study extent of your dataset. Let’s run
 over these alternative options with a few examples:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># define an alternative resolution of 14 (~10.7 km2 cells)</span></span>
-<span><span class="va">grid_samples_14</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gridding.html">gridding</a></span><span class="op">(</span>meta <span class="op">=</span> <span class="va">BTsubset_meta</span>, btf <span class="op">=</span> <span class="va">BTsubset_data</span>, res <span class="op">=</span> <span class="fl">14</span>, resByData <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> </span>
+<span><span class="va">grid_samples_14</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gridding.html">gridding</a></span><span class="op">(</span>meta <span class="op">=</span> <span class="va">BTsubset_meta</span>, btf <span class="op">=</span> <span class="va">BTsubset_data</span>, res <span class="op">=</span> <span class="fl">14</span>, resByData <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># allow the spatial extent of the data to define the resolution</span></span>
 <span><span class="va">grid_samples_auto</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/gridding.html">gridding</a></span><span class="op">(</span>meta <span class="op">=</span> <span class="va">BTsubset_meta</span>, btf <span class="op">=</span> <span class="va">BTsubset_data</span>, res <span class="op">=</span> <span class="fl">12</span>, resByData <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -318,19 +316,19 @@ over these alternative options with a few examples:</p>
 <pre><code><span><span class="co">## Resolution: 15, Area (km^2): 3.55473501726709, Spacing (km): 1.86210705534755, CLS (km): 2.12744663988395</span></span></code></pre>
 <p>So what changed with different <code>res</code> values?</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">check_res_2</span> <span class="op">&lt;-</span> <span class="va">grid_samples_14</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">StudyMethod</span>, <span class="va">STUDY_ID</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<code class="sourceCode R"><span><span class="va">check_res_2</span> <span class="op">&lt;-</span> <span class="va">grid_samples_14</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">StudyMethod</span>, <span class="va">STUDY_ID</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>n_cell <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">cell</span><span class="op">)</span>, n_aID <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, res <span class="op">=</span> <span class="st">"res14"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">check_res_3</span> <span class="op">&lt;-</span> <span class="va">grid_samples_auto</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">StudyMethod</span>, <span class="va">STUDY_ID</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">summarise</span><span class="op">(</span>n_cell <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">cell</span><span class="op">)</span>, n_aID <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, res <span class="op">=</span> <span class="st">"res15"</span><span class="op">)</span> </span>
+<span><span class="va">check_res_3</span> <span class="op">&lt;-</span> <span class="va">grid_samples_auto</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">StudyMethod</span>, <span class="va">STUDY_ID</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">summarise</span><span class="op">(</span>n_cell <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">cell</span><span class="op">)</span>, n_aID <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, res <span class="op">=</span> <span class="st">"res15"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">checks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">check_res_1</span>, <span class="va">check_res_2</span>, <span class="va">check_res_3</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">checks</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_bar</span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">STUDY_ID</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">n_aID</span>, fill <span class="op">=</span> <span class="va">res</span><span class="op">)</span>, </span>
-<span>           stat <span class="op">=</span> <span class="st">"identity"</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span>  </span>
+<span>  <span class="fu">geom_bar</span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">STUDY_ID</span><span class="op">)</span>, y <span class="op">=</span> <span class="va">n_aID</span>, fill <span class="op">=</span> <span class="va">res</span><span class="op">)</span>,</span>
+<span>           stat <span class="op">=</span> <span class="st">"identity"</span>, position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">scale_fill_discrete</span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#155f49"</span>,<span class="st">"#66c1d1"</span>,<span class="st">"#d9d956"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"StudyID"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Number of assemblages in a study"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -345,9 +343,9 @@ chosen.</p>
 <span><span class="co"># First we build the ~96 km2 global grid</span></span>
 <span><span class="va">dgg_12</span> <span class="op">&lt;-</span> <span class="fu">dggridR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dggridR/man/dgconstruct.html" class="external-link">dgconstruct</a></span><span class="op">(</span>res <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># To simplify, we only map the grid cell boundaries for cells which </span></span>
-<span><span class="co"># have observations.  </span></span>
-<span><span class="co"># NOTE: if you are working with the full BioTIME database, this step may take some time. </span></span>
+<span><span class="co"># To simplify, we only map the grid cell boundaries for cells which</span></span>
+<span><span class="co"># have observations.</span></span>
+<span><span class="co"># NOTE: if you are working with the full BioTIME database, this step may take some time.</span></span>
 <span><span class="va">grid_12</span> <span class="op">&lt;-</span> <span class="fu">dggridR</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dggridR/man/dgcellstogrid.html" class="external-link">dgcellstogrid</a></span><span class="op">(</span><span class="va">dgg_12</span>, <span class="va">grid_samples</span><span class="op">$</span><span class="va">cell</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Now let's follow the same steps and build a ~10.7 km2 global grid:</span></span>
@@ -357,7 +355,7 @@ chosen.</p>
 <span><span class="co"># And we get some polygons for each country of the world, to create a background:</span></span>
 <span><span class="va">countries</span> <span class="op">&lt;-</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/map_data.html" class="external-link">map_data</a></span><span class="op">(</span><span class="st">"world"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Now you could map the whole world, but let's just zoom in the UK and have a look at </span></span>
+<span><span class="co"># Now you could map the whole world, but let's just zoom in the UK and have a look at</span></span>
 <span><span class="co"># STUDY 466 (Marine Fish):</span></span>
 <span><span class="va">map_uk_locations</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_polygon</span><span class="op">(</span>data <span class="op">=</span> <span class="va">countries</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">long</span>, y <span class="op">=</span> <span class="va">lat</span>, group <span class="op">=</span> <span class="va">group</span><span class="op">)</span>, fill <span class="op">=</span> <span class="cn">NA</span>, color <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -414,13 +412,13 @@ years in a time series and then uses this minimum to randomly resample
 each year down to that number.</p>
 <p>Let’s continue with our BioTIME example subset dataset:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># First, if you are not sure you need this step, </span></span>
+<code class="sourceCode R"><span><span class="co"># First, if you are not sure you need this step,</span></span>
 <span><span class="co"># you can always check how many samples there are in every year of the different time series:</span></span>
-<span><span class="va">check_samples</span> <span class="op">&lt;-</span> <span class="va">grid_samples</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">assemblageID</span>, <span class="va">YEAR</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span><span class="va">check_samples</span> <span class="op">&lt;-</span> <span class="va">grid_samples</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">assemblageID</span>, <span class="va">YEAR</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>n_samples <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">SAMPLE_DESC</span><span class="op">)</span>, n_species <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">check_samples</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
+<span><span class="va">check_samples</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">STUDY_ID</th>
@@ -592,11 +590,11 @@ that originates from the random sample selection process):</p>
 <span><span class="co"># Each resampling iteration will be identified as resamp = 1:n, in this case 1:10.</span></span>
 <span><span class="co"># Now we can check if there are differences across the first 3 of these iterations:</span></span>
 <span></span>
-<span><span class="va">check_resamps</span> <span class="op">&lt;-</span> <span class="va">grid_rare_n10</span><span class="op">[</span><span class="va">grid_rare_n10</span><span class="op">$</span><span class="va">resamp</span> <span class="op">&lt;</span> <span class="fl">4</span>,<span class="op">]</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">assemblageID</span>, <span class="va">resamp</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span><span class="va">check_resamps</span> <span class="op">&lt;-</span> <span class="va">grid_rare_n10</span><span class="op">[</span><span class="va">grid_rare_n10</span><span class="op">$</span><span class="va">resamp</span> <span class="op">&lt;</span> <span class="fl">4</span>,<span class="op">]</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">STUDY_ID</span>, <span class="va">assemblageID</span>, <span class="va">resamp</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>n_obs <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span>, n_species <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">Species</span><span class="op">)</span>, n_year <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">YEAR</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">check_resamps</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">check_resamps</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">STUDY_ID</th>
@@ -611,15 +609,15 @@ that originates from the random sample selection process):</p>
 <td align="right">10</td>
 <td align="left">10_359170</td>
 <td align="right">1</td>
-<td align="right">60</td>
-<td align="right">25</td>
+<td align="right">59</td>
+<td align="right">24</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="right">10</td>
 <td align="left">10_359170</td>
 <td align="right">2</td>
-<td align="right">61</td>
+<td align="right">60</td>
 <td align="right">24</td>
 <td align="right">3</td>
 </tr>
@@ -724,7 +722,7 @@ now processed BioTIME example dataset:</p>
 <span><span class="co"># see also help("getAlphaMetrics") for more details on the metrics</span></span>
 <span></span>
 <span><span class="co"># Have a quick look at the output</span></span>
-<span><span class="va">alpha_metrics</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">alpha_metrics</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
 <col width="14%">
@@ -839,7 +837,7 @@ now processed BioTIME example dataset:</p>
 <span><span class="co">#see also help("getBetaMetrics") for more details on the metrics</span></span>
 <span></span>
 <span><span class="co"># Have a quick look at the output</span></span>
-<span><span class="va">beta_metrics</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">beta_metrics</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">YEAR</th>
@@ -931,14 +929,14 @@ dataset.</p>
 <span>                                     pThreshold <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span> <span class="co">#for alpha metrics</span></span>
 <span></span>
 <span></span>
-<span><span class="co"># Have a quick look at the output </span></span>
-<span><span class="va">alpha_slopes</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># Have a quick look at the output</span></span>
+<span><span class="va">alpha_slopes</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">beta_slopes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getLinearRegressions.html">getLinearRegressions</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">beta_metrics</span>, divType <span class="op">=</span> <span class="st">"beta"</span>,</span>
 <span>                                    pThreshold <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span>  <span class="co">#for beta metrics</span></span>
 <span></span>
 <span><span class="co"># Have a quick look at the output</span></span>
-<span><span class="co"># beta_slopes %&gt;% head(6) %&gt;% kable()</span></span></code></pre></div>
+<span><span class="co"># beta_slopes |&gt; head(6) |&gt; kable()</span></span></code></pre></div>
 <table class="table">
 <colgroup>
 <col width="17%">
@@ -1028,12 +1026,12 @@ question.</p>
 <p>Right, let’s start will some overall summaries and trends:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># First, how many assemblages in our dataset show a moderate evidence (P &lt; 0.05) of change in alpha diversity?</span></span>
-<span><span class="va">check_alpha_trend</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">metric</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>   <span class="co"># or use filter(pvalue&lt;0.05)</span></span>
+<span><span class="va">check_alpha_trend</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">metric</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span>   <span class="co"># or use filter(pvalue&lt;0.05)</span></span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>n_sig <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">check_alpha_trend</span> <span class="op">%&gt;%</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
+<span><span class="va">check_alpha_trend</span> <span class="op">|&gt;</span> <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">metric</th>
@@ -1043,48 +1041,48 @@ question.</p>
 <tbody>
 <tr class="odd">
 <td align="left">S</td>
-<td align="right">28</td>
-<td align="right">-0.2974563</td>
+<td align="right">32</td>
+<td align="right">-0.2871529</td>
 </tr>
 <tr class="even">
 <td align="left">N</td>
-<td align="right">30</td>
-<td align="right">-202.7290130</td>
+<td align="right">38</td>
+<td align="right">-205.9537852</td>
 </tr>
 <tr class="odd">
 <td align="left">maxN</td>
-<td align="right">37</td>
-<td align="right">-113.9073305</td>
+<td align="right">34</td>
+<td align="right">-122.0155009</td>
 </tr>
 <tr class="even">
 <td align="left">Shannon</td>
 <td align="right">41</td>
-<td align="right">0.0001359</td>
+<td align="right">0.0029688</td>
 </tr>
 <tr class="odd">
 <td align="left">expShannon</td>
-<td align="right">42</td>
-<td align="right">-0.1089916</td>
+<td align="right">38</td>
+<td align="right">-0.0733975</td>
 </tr>
 <tr class="even">
 <td align="left">Simpson</td>
-<td align="right">38</td>
-<td align="right">0.0136529</td>
+<td align="right">36</td>
+<td align="right">0.0113787</td>
 </tr>
 <tr class="odd">
 <td align="left">invSimpson</td>
 <td align="right">32</td>
-<td align="right">0.1099690</td>
+<td align="right">-0.0055302</td>
 </tr>
 <tr class="even">
 <td align="left">PIE</td>
-<td align="right">36</td>
-<td align="right">0.0139697</td>
+<td align="right">35</td>
+<td align="right">0.0105492</td>
 </tr>
 <tr class="odd">
 <td align="left">DomMc</td>
-<td align="right">28</td>
-<td align="right">-0.0088458</td>
+<td align="right">23</td>
+<td align="right">-0.0072704</td>
 </tr>
 </tbody>
 </table>
@@ -1096,14 +1094,14 @@ question.</p>
 change:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get a slope per assemblageID and metric</span></span>
-<span><span class="va">alpha_slopes_simp</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">assemblageID</span>, <span class="va">metric</span>, <span class="va">pvalue</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>   <span class="co">#select only the assemblages with significant trends</span></span>
+<span><span class="va">alpha_slopes_simp</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">assemblageID</span>, <span class="va">metric</span>, <span class="va">pvalue</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span>   <span class="co">#select only the assemblages with significant trends</span></span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Calculate the mean slope and CIs </span></span>
-<span><span class="va">stats_alpha</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes_simp</span> <span class="op">%&gt;%</span>  </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">metric</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span><span class="co"># Calculate the mean slope and CIs</span></span>
+<span><span class="va">stats_alpha</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes_simp</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">metric</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>mean_slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span>, <span class="co">#mean</span></span>
 <span>            ci_slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">qt</a></span><span class="op">(</span><span class="fl">0.95</span>, df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">slope</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co">#margin of error</span></span>
 <span></span>
@@ -1127,7 +1125,7 @@ change:</p>
 <p>Now the same for beta diversity change:
 <img src="vignette1_files/figure-html/trends4-1.png" width="691.2"></p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Hint: If you wish to plot all metrics together, simply merge you alpha_slopes and </span></span>
+<code class="sourceCode R"><span><span class="co"># Hint: If you wish to plot all metrics together, simply merge you alpha_slopes and</span></span>
 <span><span class="co"># beta_slopes dataframes beforehand.</span></span></code></pre></div>
 <p>That’s great! While overall trends are important, you may also want
 to evaluate the patterns for a specific taxa or climate, and look at
@@ -1141,35 +1139,52 @@ dataset.</p>
 <span><span class="va">meta</span> <span class="op">&lt;-</span> <span class="fu">select</span><span class="op">(</span><span class="va">BTsubset_meta</span>, <span class="va">STUDY_ID</span>, <span class="va">TAXA</span>, <span class="va">REALM</span>, <span class="va">CLIMATE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Get a slope per assemblageID and metric</span></span>
-<span><span class="va">alpha_slopes_simp</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">assemblageID</span>, <span class="va">metric</span>,<span class="st">'pvalue'</span>, <span class="va">significance</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span><span class="va">alpha_slopes_simp</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">assemblageID</span>, <span class="va">metric</span>, <span class="st">'pvalue'</span>, <span class="va">significance</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">summarise</span><span class="op">(</span>slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Get back the Study ID by separating our assemblageID column into multiple other columns.</span></span>
-<span><span class="va">alpha_slopes_simp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">alpha_slopes_simp</span> <span class="op">%&gt;%</span></span>
-<span>                                     <span class="fu">separate</span><span class="op">(</span><span class="va">.</span>, <span class="va">assemblageID</span>, </span>
-<span>                                              into <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDY_ID"</span>, <span class="st">"cell"</span><span class="op">)</span>,</span>
-<span>                                              sep <span class="op">=</span> <span class="st">"_"</span>, remove <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">alpha_slopes_simp</span> <span class="op">&lt;-</span> <span class="va">alpha_slopes_simp</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">separate_wider_delim</span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="va">assemblageID</span>,</span>
+<span>    names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDY_ID"</span>, <span class="st">"cell"</span><span class="op">)</span>,</span>
+<span>    delim <span class="op">=</span> <span class="st">"_"</span>,</span>
+<span>    cols_remove <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Merge it all</span></span>
 <span><span class="va">alpha_slopes_meta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">alpha_slopes_simp</span>, <span class="va">meta</span>, by <span class="op">=</span> <span class="st">"STUDY_ID"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Select relevant data for plotting</span></span>
-<span><span class="va">alpha_slopes_set1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">alpha_slopes_meta</span>, <span class="va">alpha_slopes_meta</span><span class="op">$</span><span class="va">metric</span> <span class="op">==</span> <span class="st">"Shannon"</span> <span class="op">&amp;</span> <span class="op">(</span><span class="va">alpha_slopes_meta</span><span class="op">$</span><span class="va">TAXA</span> <span class="op">==</span> <span class="st">"Fish"</span> <span class="op">|</span> <span class="va">alpha_slopes_meta</span><span class="op">$</span><span class="va">TAXA</span> <span class="op">==</span> <span class="st">"Birds"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">alpha_slopes_set1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span></span>
+<span>  <span class="va">alpha_slopes_meta</span>,</span>
+<span>  <span class="va">alpha_slopes_meta</span><span class="op">$</span><span class="va">metric</span> <span class="op">==</span> <span class="st">"Shannon"</span> <span class="op">&amp;</span></span>
+<span>    <span class="op">(</span><span class="va">alpha_slopes_meta</span><span class="op">$</span><span class="va">TAXA</span> <span class="op">==</span> <span class="st">"Fish"</span> <span class="op">|</span> <span class="va">alpha_slopes_meta</span><span class="op">$</span><span class="va">TAXA</span> <span class="op">==</span> <span class="st">"Birds"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Let's put it all together</span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">alpha_slopes_set1</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">slope</span>, fill <span class="op">=</span> <span class="va">TAXA</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_histogram</span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"grey"</span>, bins <span class="op">=</span> <span class="fl">25</span><span class="op">)</span> <span class="op">+</span> <span class="co">#all assemblages</span></span>
-<span>  <span class="fu">geom_histogram</span><span class="op">(</span>data <span class="op">=</span> <span class="va">alpha_slopes_set1</span><span class="op">[</span><span class="va">alpha_slopes_set1</span><span class="op">$</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>, bins <span class="op">=</span> <span class="fl">25</span><span class="op">)</span> <span class="op">+</span> <span class="co">#only significant change assemblages</span></span>
-<span>  <span class="fu">geom_vline</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="fl">3</span>, colour <span class="op">=</span> <span class="st">"black"</span>, linewidth <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span> <span class="co">#add slope=0 line</span></span>
+<span>  <span class="fu">geom_histogram</span><span class="op">(</span></span>
+<span>    data <span class="op">=</span> <span class="va">alpha_slopes_set1</span><span class="op">[</span><span class="va">alpha_slopes_set1</span><span class="op">$</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>,</span>
+<span>    bins <span class="op">=</span> <span class="fl">25</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span> <span class="co">#only significant change assemblages</span></span>
+<span>  <span class="fu">geom_vline</span><span class="op">(</span></span>
+<span>    <span class="fu">aes</span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
+<span>    linetype <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>    colour <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>    linewidth <span class="op">=</span> <span class="fl">0.5</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span> <span class="co">#add slope=0 line</span></span>
 <span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">TAXA</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/BioTIME-palette.html">scale_fill_biotime</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Shannon-Weiner Species Diversity Index"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme</span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="vignette1_files/figure-html/trends6-1.png" width="691.2"></p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Now we see the full distribution of slopes of change for the Shannon index for the birds </span></span>
-<span><span class="co"># and fish time series in our subset: all slopes are shown in grey, while in color we show </span></span>
+<code class="sourceCode R"><span><span class="co"># Now we see the full distribution of slopes of change for the Shannon index for the birds</span></span>
+<span><span class="co"># and fish time series in our subset: all slopes are shown in grey, while in color we show</span></span>
 <span><span class="co"># the subset of assemblages for which evidence (P &lt; 0.05) of change was detected.</span></span></code></pre></div>
 <p>We might also want to explore the different trends for a given time
 series, allowing us to visualise the data and the trend line:</p>
@@ -1199,7 +1214,7 @@ series, allowing us to visualise the data and the trend line:</p>
 <span>    <span class="fu">geom_point</span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"#155f49"</span>, size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span>   <span class="co">#plot the yearly estimates</span></span>
 <span>    <span class="fu">stat_smooth</span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, linetype <span class="op">=</span> <span class="fl">2</span>, colour <span class="op">=</span> <span class="st">"grey"</span><span class="op">)</span> <span class="op">+</span> <span class="co">#draw all regression line</span></span>
 <span>    <span class="fu">stat_smooth</span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">alpha_metr_slop</span>, <span class="va">alpha_metr_slop</span><span class="op">$</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>,</span>
-<span>                <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">value</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>                <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">value</span><span class="op">)</span>, method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>                linetype <span class="op">=</span> <span class="fl">2</span>, colour <span class="op">=</span> <span class="st">"#155f49"</span><span class="op">)</span> <span class="op">+</span> <span class="co">#color only trends that are significant</span></span>
 <span>    <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">metric</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/BioTIME-palette.html">scale_fill_biotime</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1227,9 +1242,6 @@ sporadically.</p>
 <div class="section level3">
 <h3 id="how-to-cite-biotimer">How to cite BioTIMEr<a class="anchor" aria-label="anchor" href="#how-to-cite-biotimer"></a>
 </h3>
-<p>Sagouis A, Moyes F, Martins IS, Blowes SA, Brambilla V, Chow CFY,
-Fontrodona-Eslava A, Antão L, Chase JM, Dornelas M, Magurran AE (2024).
-BioTIMEr: tools to use and explore the BioTIME database. <a href="https://github.com/bioTIMEHub/BioTIMEr" class="external-link uri">https://github.com/bioTIMEHub/BioTIMEr</a></p>
 </div>
   </div>
 
@@ -1248,7 +1260,7 @@ BioTIMEr: tools to use and explore the BioTIME database. <a href="https://github
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
       </footer>
