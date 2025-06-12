@@ -527,6 +527,6 @@ This R package was developed by the BioTIME team. The functions and documentatio
 
 ### How to cite BioTIMEr
 
-```{r citation, cache=TRUE, echo=FALSE, message=FALSE, fig.width=10, fig.height=7,tidy=FALSE, include=FALSE,results='hold', figures='hold'}
+```{r citation, cache=FALSE, echo=TRUE, message=FALSE, include=TRUE}
 citation("BioTIMEr")
 ```
