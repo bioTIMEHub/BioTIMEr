@@ -59,14 +59,16 @@ Imports:
     ggplot2,
     vegan,
     dggridR (>= 3.1.0),
-    checkmate
+    checkmate,
+    lifecycle
 Suggests:
     maps,
     knitr,
     rmarkdown,
     formatR,
     testthat (>= 3.0.0),
-    vdiffr
+    vdiffr,
+    rlang
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 Config/testthat/start-first:
