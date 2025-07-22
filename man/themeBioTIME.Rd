@@ -23,10 +23,10 @@ themeBioTIME(
 \item{font.size}{Size of axes labels, legend text and title (+1), and
 title (+2).}
 
-\item{axis.colour}{Colour of the axes, ticks and axis labels.}
+\item{axis.colour}{Colour name for the axes, ticks and axis labels.}
 
-\item{strip.background}{Passed to \code{\link[ggplot2]{theme}} as \code{fill}
-colour for the \code{strip.background} element.}
+\item{strip.background}{Colour name. Passed to \code{\link[ggplot2]{theme}}
+as \code{fill} colour for the \code{strip.background} element.}
 
 \item{axis.color}{US spelling for \code{axis.colour}.}
 
@@ -42,8 +42,7 @@ colour for the \code{strip.background} element.}
 ggplot2 theme for BioTIME plots
 }
 \examples{
-\donttest{
 fig1 <- ggplot2::ggplot() +
-           themeBioTIME(legend.position = "none", font.size = 12, axis.colour = "black", strip.background = "grey90")
-}
+           themeBioTIME(legend.position = "none", font.size = 12,
+              axis.colour = "black", strip.background = "grey90")
 }

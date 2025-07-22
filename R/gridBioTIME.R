@@ -9,8 +9,8 @@
 #'   represent finer resolutions. Default: 12 (~96 sq km). Passed to
 #'   \code{\link[dggridR]{dgconstruct}}.
 #' @param resByData (\code{logical}) FALSE by default. If TRUE, the function
-#'   \code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt `res` to
-#'   the data extent.
+#'   \code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt \code{res}
+#'    to the data extent.
 #' @details
 #' Each BioTIME study contains distinct samples which were collected with a consistent
 #' methodology over time, and each with unique coordinates and date.

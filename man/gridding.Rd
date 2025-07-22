@@ -16,8 +16,8 @@ represent finer resolutions. Default: 12 (~96 sq km). Passed to
 \code{\link[dggridR]{dgconstruct}}.}
 
 \item{resByData}{(\code{logical}) FALSE by default. If TRUE, the function
-\code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt `res` to
-the data extent.}
+\code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt \code{res}
+ to the data extent.}
 }
 \value{
 Returns a \code{'data.frame'}, with selected columns from the
