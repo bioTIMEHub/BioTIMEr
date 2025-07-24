@@ -10,7 +10,7 @@
       result <- resampling(x = test_df, measure = "BIOMASS", resamps = 1L,
         conservative = FALSE)
     Condition
-      Warning in `resampling()`:
+      Warning:
       NA values found and removed.
       Only a subset of `x` is used.
 
@@ -20,7 +20,7 @@
       result <- resampling(x = test_df, measure = c("ABUNDANCE", "BIOMASS"), resamps = 1L,
       conservative = FALSE)
     Condition
-      Warning in `resampling()`:
+      Warning:
       NA values found and removed.
       Only a subset of `x` is used.
 
@@ -30,7 +30,7 @@
       result <- resampling(x = test_df, measure = c("ABUNDANCE", "BIOMASS"), resamps = 2L,
       conservative = TRUE)
     Condition
-      Warning in `resampling()`:
+      Warning:
       NA values found and whole samples removed since `conservative` is TRUE.
       Only a subset of `x` is used.
 

@@ -211,6 +211,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "data.table",
+      "name": "data.table",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=data.table"
     }
   ],
   "softwareRequirements": {
@@ -307,7 +319,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "6462.001KB",
+  "fileSize": "6660.373KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",

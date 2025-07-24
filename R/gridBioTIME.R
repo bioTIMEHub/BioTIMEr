@@ -11,6 +11,9 @@
 #' @param resByData (\code{logical}) FALSE by default. If TRUE, the function
 #'   \code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt \code{res}
 #'    to the data extent.
+#' @param verbose if TRUE, a warning will be shown when one-year-long time series
+#' are found in btf and excluded.
+#'
 #' @details
 #' Each BioTIME study contains distinct samples which were collected with a consistent
 #' methodology over time, and each with unique coordinates and date.
@@ -49,7 +52,11 @@
 #'   gridded_data <- gridding(BTsubset_meta, BTsubset_data)
 #'
 
-gridding <- function(meta, btf, res = 12, resByData = FALSE) {
+gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = FALSE) {
+  if (inherits(meta, "data.table")) {
+    warning("meta is converted to a data.frame")
+    meta <- as.data.frame(meta)
+  }
   checkmate::assert_names(
     x = colnames(meta),
     what = "colnames",
@@ -66,6 +73,10 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE) {
       "BIOMASS_TYPE"
     )
   )
+  if (inherits(data, "data.table")) {
+    warning("data is converted to a data.frame")
+    data <- as.data.frame(data)
+  }
   checkmate::assert_names(
     x = colnames(btf),
     what = "colnames",
@@ -93,6 +104,7 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE) {
     null.ok = FALSE,
     na.ok = FALSE
   )
+  checkmate::assert_logical(resByData, len = 1, any.missing = FALSE)
 
   bt <- dplyr::inner_join(meta, btf, by = "STUDY_ID") |>
     dplyr::rename(Species = "valid_name")
@@ -136,15 +148,22 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE) {
       )
     )
 
-  oneyear <- bt |>
-    dplyr::group_by(.data$STUDY_ID) |>
-    dplyr::filter(max(.data$YEAR) - min(.data$YEAR) == 0) |>
-    dplyr::summarise() |>
-    dplyr::collect() |>
-    dplyr::pull("STUDY_ID")
-
-  bt <- bt |>
-    dplyr::filter(!is.element(.data$STUDY_ID, oneyear))
+  if (
+    tapply(bt$YEAR, bt$STUDY_ID, function(y) length(unique(y)) == 1L) |>
+      any()
+  ) {
+    warning("Some 1-year-long studies were removed.")
+    bt <- dplyr::anti_join(
+      x = bt,
+      y = bt |>
+        dplyr::summarise(
+          count = dplyr::n_distinct(.data$YEAR),
+          .by = "STUDY_ID"
+        ) |>
+        dplyr::filter(.data$count == 1L),
+      by = dplyr::join_by("STUDY_ID")
+    )
+  }
 
   dgg <- dggridR::dgconstruct(res = res)
 
@@ -161,9 +180,10 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE) {
     as.integer()
 
   check <- bt |>
-    dplyr::group_by(.data$StudyMethod, .data$STUDY_ID) |>
-    dplyr::summarise(n_cell = dplyr::n_distinct(.data$cell)) |>
-    dplyr::ungroup()
+    dplyr::summarise(
+      n_cell = dplyr::n_distinct(.data$cell),
+      .by = c("StudyMethod", "STUDY_ID")
+    )
 
   if (
     sum(dplyr::filter(check, .data$StudyMethod == "SL") |> _$n_cell != 1) == 0

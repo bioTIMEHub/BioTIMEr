@@ -2119,7 +2119,7 @@
     Message
       OK: all SL studies have 1 grid cell
     Condition
-      Warning in `resampling()`:
+      Warning:
       NA values found and removed.
       Only a subset of `x` is used.
     Output

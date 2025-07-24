@@ -61,3 +61,14 @@ test_that("gridding respects resByData argument", {
   skip_on_ci()
   expect_snapshot(gridding(meta, btf, resByData = TRUE))
 })
+
+test_that("gridding correctly manages data.table objects", {
+  skip_on_ci()
+  metadt <- head(meta)
+  data.table::setDT(metadt)
+  btfdt <- head(btf)
+  data.table::setDT(btfdt)
+
+  expect_snapshot(gridding(metadt, btfdt, res = 12, resByData = FALSE))
+  expect_warning(gridding(metadt, btfdt, res = 12, resByData = FALSE))
+})

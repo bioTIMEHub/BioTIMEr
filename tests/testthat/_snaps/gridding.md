@@ -60028,3 +60028,21 @@
       4999         3      NA
        [ reached 'max' / getOption("max.print") -- omitted 76085 rows ]
 
+# gridding correctly manages data.table objects
+
+    Code
+      gridding(metadt, btfdt, res = 12, resByData = FALSE)
+    Condition
+      Warning in `gridding()`:
+      meta is converted to a data.frame
+      Warning in `gridding()`:
+      Some 1-year-long studies were removed.
+    Message
+      OK: all SL studies have 1 grid cell
+    Output
+       [1] CLIMATE        REALM          TAXA           StudyMethod    SAMPLE_DESC   
+       [6] ABUNDANCE_TYPE BIOMASS_TYPE   assemblageID   STUDY_ID       YEAR          
+      [11] cell           LATITUDE       LONGITUDE      Species        taxon         
+      [16] resolution     DAY            MONTH          ABUNDANCE      BIOMASS       
+      <0 rows> (or 0-length row.names)
+

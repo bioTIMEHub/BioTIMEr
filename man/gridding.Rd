@@ -4,7 +4,7 @@
 \alias{gridding}
 \title{gridding BioTIME data}
 \usage{
-gridding(meta, btf, res = 12, resByData = FALSE)
+gridding(meta, btf, res = 12, resByData = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{meta}{(\code{data.frame}) BioTIME metadata.}
@@ -18,6 +18,9 @@ represent finer resolutions. Default: 12 (~96 sq km). Passed to
 \item{resByData}{(\code{logical}) FALSE by default. If TRUE, the function
 \code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt \code{res}
  to the data extent.}
+
+\item{verbose}{if TRUE, a warning will be shown when one-year-long time series
+are found in btf and excluded.}
 }
 \value{
 Returns a \code{'data.frame'}, with selected columns from the
