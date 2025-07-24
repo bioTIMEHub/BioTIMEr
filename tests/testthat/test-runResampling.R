@@ -154,3 +154,34 @@ test_that("resampling runs correctly for Abundance and Biomass together
   expect_false(anyNA(result))
   expect_lte(sum(result$Biomass), sum(biomass_test_df$BIOMASS))
 })
+
+test_that("resampling correctly excludes 1 year long studies", {
+  test_df_1y <- rbind(
+    test_df,
+    test_df |>
+      dplyr::filter(SAMPLE_DESC == "1984_12_Control_0_Medium") |>
+      dplyr::mutate(SAMPLE_DESC = "TEST", STUDY_ID = "TEST", YEAR = 2005L)
+  )
+
+  expect_equal(
+    object = {
+      set.seed(42)
+      suppressWarnings(
+        resampling(test_df_1y, "ABUNDANCE")
+      )
+    },
+    expected = {
+      set.seed(42)
+      resampling(test_df, "ABUNDANCE")
+    }
+  )
+
+  expect_warning(resampling(test_df_1y, "ABUNDANCE"))
+})
+
+test_that("resampling correctly manages data.table objects", {
+  skip_on_ci()
+  data.table::setDT(test_df)
+  expect_snapshot(resampling(test_df, measure = "ABUNDANCE"))
+  expect_warning(resampling(test_df, measure = "ABUNDANCE"))
+})
