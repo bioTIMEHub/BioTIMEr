@@ -69,8 +69,10 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
       x <- subset(x, x$S != 1)
 
       y <- x |>
-        dplyr::group_by(.data$assemblageID) |>
-        dplyr::summarise(nsp = dplyr::n_distinct(.data$YEAR)) |>
+        dplyr::summarise(
+          nsp = dplyr::n_distinct(.data$YEAR),
+          .by = .data$assemblageID
+        ) |>
         dplyr::filter(.data$nsp < 3)
 
       x <- dplyr::anti_join(x, y, by = "assemblageID")
@@ -280,8 +282,10 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
       )
 
       y <- x |>
-        dplyr::group_by(.data$assemblageID) |>
-        dplyr::summarise(nsp = dplyr::n_distinct(.data$YEAR)) |>
+        dplyr::summarise(
+          nsp = dplyr::n_distinct(.data$YEAR),
+          .by = .data$assemblageID
+        ) |>
         dplyr::filter(.data$nsp < 3)
 
       x <- dplyr::anti_join(x, y, by = "assemblageID")
