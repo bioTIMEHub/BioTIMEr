@@ -97,16 +97,16 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
           dplyr::filter(.data$na_values == 0L),
         by = dplyr::join_by("SAMPLE_DESC")
       )
-      dplyr::if_else(
-        condition = nrow(x) != 0L,
-        true = warning(
+      ifelse(
+        test = nrow(x) != 0L,
+        yes = warning(
           paste0(
             "NA values found and whole samples removed since `conservative` is TRUE.\n",
             "Only a subset of `x` is used."
           ),
           call. = FALSE
         ),
-        false = stop(paste("Only NA values in column(s)", measure))
+        no = stop(paste("Only NA values in column(s)", measure))
       )
     } else {
       x <- x |>
@@ -117,26 +117,25 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
             FUN = anyNA
           )
         )
-      dplyr::if_else(
-        condition = nrow(x) != 0L,
-        true = warning(
+      ifelse(
+        test = nrow(x) != 0L,
+        yes = warning(
           paste0(
             "NA values found and removed.\n",
             "Only a subset of `x` is used."
           ),
           call. = FALSE
         ),
-        false = stop(paste("Only NA values in column(s)", measure))
+        no = stop(paste("Only NA values in column(s)", measure))
       )
     }
   }
 
   if (
-    tapply(x$YEAR, x$STUDY_ID, function(y) {
-      dplyr::n_distinct(y) == 1L
-    }) |>
+    tapply(x$YEAR, x$STUDY_ID, function(y) length(unique(y)) == 1L) |>
       any()
   ) {
+    warning("Some 1-year-long studies were removed.")
     x <- dplyr::anti_join(
       x = x,
       y = x |>
@@ -147,15 +146,14 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
         dplyr::filter(.data$count == 1L),
       by = dplyr::join_by("STUDY_ID")
     )
-    warning("Some 1-year-long studies were removed.")
   }
 
   rfIDs <- unique(x$assemblageID)
   TSrf <- sapply(
     X = rfIDs,
     FUN = function(i) {
-      x[x$assemblageID == i, ] |>
-        rarefysamples(measure = measure, resamps = resamps)
+      temp_data <- x[x$assemblageID == i, ]
+      rarefysamples(x = temp_data, measure = measure, resamps = resamps)
     },
     USE.NAMES = TRUE,
     simplify = FALSE
@@ -193,36 +191,36 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
 
 rarefysamples <- function(x, measure, resamps) {
   # Computing minimal effort per year in this assemblageID
-  minsample <- tapply(x$SAMPLE_DESC, x$YEAR, function(x) {
-    dplyr::n_distinct(x)
-  }) |>
-    min()
+  minsample <- min(tapply(x$SAMPLE_DESC, x$YEAR, function(x) length(unique(x))))
 
   rareftab_list <- lapply(
     # beginning loop on repetitions
     X = seq_len(resamps),
     FUN = function(i) {
-      selected_indices <- lapply(
+      selected_indices <- unlist(lapply(
         # beginning sub loop on years
         X = unique(x$YEAR),
         FUN = function(y) {
-          sam <- x$SAMPLE_DESC[x$YEAR == y] |>
-            unique() |>
-            sample(minsample, replace = FALSE)
+          samps <- unique(x$SAMPLE_DESC[x$YEAR == y])
+          sam <- sample(samps, minsample, replace = FALSE)
           return(which(x$SAMPLE_DESC %in% sam & x$YEAR == y))
         }
-      ) |>
-        unlist() # end of loop on years
+      )) # end of loop on years
 
-      return(stats::aggregate(
-        x = x[selected_indices, measure],
-        by = list(
-          YEAR = x$YEAR[selected_indices],
-          Species = x$Species[selected_indices]
-        ),
+      tYear <- x[selected_indices, "YEAR"]
+      tSpecies <- x[selected_indices, "Species"]
+      tcurrency <- x[selected_indices, measure, drop = FALSE]
+
+      raref <- stats::aggregate(
+        x = tcurrency,
+        by = list(YEAR = tYear, Species = tSpecies),
         FUN = sum
-      ))
+      )
+      raref$resamp <- i
+      return(raref)
     }
   ) # end of loop on repetitions
-  return(dplyr::bind_rows(rareftab_list, .id = "resamps"))
+
+  rareftab <- dplyr::bind_rows(rareftab_list)
+  return(rareftab)
 } # end of function
