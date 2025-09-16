@@ -26,7 +26,7 @@ are found in btf and excluded.}
 Returns a \code{'data.frame'}, with selected columns from the
 \code{btf} and \code{meta} data frames, an extra integer column called
 \code{'cell'} and two character columns called 'StudyMethod' and 'assemblageID'
-(concatenation of \code{study_ID} and \code{cell}).
+(concatenation of \code{STUDY_ID} and \code{cell}).
 }
 \description{
 grids BioTIME data into a discrete global grid based on the
@@ -41,7 +41,7 @@ georeferenced sites at any given time) or wide-ranging surveys, transects,
 tows, and so on (i.e. ML or 'multi-location' studies where measures are taken
 from multiple sampling locations over large extents that may or may not align
 from year to year,
-see \code{runResampling}. \code{gridding} is a function designed to deal with the issue
+see \code{\link{runResampling}}. \code{gridding} is a function designed to deal with the issue
 of varying spatial extent between studies by using a global grid of hexagonal cells
 derived from \code{\link[dggridR]{dgconstruct}} and assigning the individual
 samples to the cells across the grid based on its latitude and

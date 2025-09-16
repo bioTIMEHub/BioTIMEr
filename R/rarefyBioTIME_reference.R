@@ -57,7 +57,7 @@
 #' }
 #'
 
-resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
+resampling_ref <- function(x, measure, resamps = 1L, conservative = FALSE) {
   if (inherits(x, "data.table")) {
     warning("x was converted to a data.frame")
     x <- as.data.frame(x)
@@ -153,7 +153,7 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
     X = rfIDs,
     FUN = function(i) {
       temp_data <- x[x$assemblageID == i, ]
-      rarefysamples(x = temp_data, measure = measure, resamps = resamps)
+      rarefysamples_ref(x = temp_data, measure = measure, resamps = resamps)
     },
     USE.NAMES = TRUE,
     simplify = FALSE
@@ -189,7 +189,7 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
 #'    of interest (sum) for each species in each year.
 #' @keywords internal
 
-rarefysamples <- function(x, measure, resamps) {
+rarefysamples_ref <- function(x, measure, resamps) {
   # Computing minimal effort per year in this assemblageID
   minsample <- min(tapply(x$SAMPLE_DESC, x$YEAR, function(x) length(unique(x))))
 

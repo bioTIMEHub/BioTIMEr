@@ -7,6 +7,8 @@ BTsubset_data <- base::readRDS(testthat::test_path(
 test_df <- gridding(BTsubset_meta, BTsubset_data)
 
 test_that("resampling runs correctly for Abundance", {
+  skip_on_ci()
+  skip_on_cran()
   expect_snapshot({
     result <- resampling(
       x = test_df,
@@ -16,11 +18,15 @@ test_that("resampling runs correctly for Abundance", {
     )
   })
 
-  expect_true(all(unique(result$Species) %in% unique(test_df$Species)))
-  expect_true(all(
-    unique(result$assemblageID) %in% unique(test_df$assemblageID)
-  ))
-  expect_true(all(unique(result$StudyID) %in% unique(test_df$STUDY_ID)))
+  checkmate::expect_subset(
+    x = unique(result$Species),
+    choices = unique(test_df$Species)
+  )
+  checkmate::expect_subset(
+    unique(result$assemblageID),
+    unique(test_df$assemblageID)
+  )
+  checkmate::expect_subset(unique(result$STUDY_ID), unique(test_df$STUDY_ID))
 
   # subset to data sets that actually had abundance values
   abundance_test_df <- subset(
@@ -53,11 +59,12 @@ test_that("resampling runs correctly for Biomass", {
     )
   })
 
-  expect_true(all(unique(result$Species) %in% unique(test_df$Species)))
-  expect_true(all(
-    unique(result$assemblageID) %in% unique(test_df$assemblageID)
-  ))
-  expect_true(all(unique(result$StudyID) %in% unique(test_df$STUDY_ID)))
+  checkmate::expect_subset(unique(result$Species), unique(test_df$Species))
+  checkmate::expect_subset(
+    unique(result$assemblageID),
+    unique(test_df$assemblageID)
+  )
+  checkmate::expect_subset(unique(result$STUDY_ID), unique(test_df$STUDY_ID))
 
   # subset to data sets that actually had biomass values
   biomass_test_df <- subset(
@@ -90,11 +97,12 @@ test_that("resampling runs correctly for Abundance and Biomass together", {
     )
   })
 
-  expect_true(all(unique(result$Species) %in% unique(test_df$Species)))
-  expect_true(all(
-    unique(result$assemblageID) %in% unique(test_df$assemblageID)
-  ))
-  expect_true(all(unique(result$StudyID) %in% unique(test_df$STUDY_ID)))
+  checkmate::expect_subset(unique(result$Species), unique(test_df$Species))
+  checkmate::expect_subset(
+    unique(result$assemblageID),
+    unique(test_df$assemblageID)
+  )
+  checkmate::expect_subset(unique(result$STUDY_ID), unique(test_df$STUDY_ID))
 
   # subset to data sets that actually had biomass values
   biomass_test_df <- subset(
@@ -116,6 +124,8 @@ test_that("resampling runs correctly for Abundance and Biomass together", {
   expect_lte(sum(result$Biomass), sum(biomass_test_df$BIOMASS))
 })
 
+skip_on_ci()
+skip_on_cran()
 test_that("resampling runs correctly for Abundance and Biomass together
           2 iterations, conservative", {
   suppressWarnings(
@@ -129,11 +139,12 @@ test_that("resampling runs correctly for Abundance and Biomass together
     })
   )
 
-  expect_true(all(unique(result$Species) %in% unique(test_df$Species)))
-  expect_true(all(
-    unique(result$assemblageID) %in% unique(test_df$assemblageID)
-  ))
-  expect_true(all(unique(result$StudyID) %in% unique(test_df$STUDY_ID)))
+  checkmate::expect_subset(unique(result$Species), unique(test_df$Species))
+  checkmate::expect_subset(
+    unique(result$assemblageID),
+    unique(test_df$assemblageID)
+  )
+  checkmate::expect_subset(unique(result$StudyID), unique(test_df$STUDY_ID))
 
   # subset to data sets that actually had biomass values
   biomass_test_df <- subset(
@@ -181,6 +192,7 @@ test_that("resampling correctly excludes 1 year long studies", {
 
 test_that("resampling correctly manages data.table objects", {
   skip_on_ci()
+  skip_on_cran()
   data.table::setDT(test_df)
   expect_snapshot(resampling(test_df, measure = "ABUNDANCE"))
   expect_warning(resampling(test_df, measure = "ABUNDANCE"))

@@ -23,7 +23,7 @@
 #' tows, and so on (i.e. ML or 'multi-location' studies where measures are taken
 #' from multiple sampling locations over large extents that may or may not align
 #' from year to year,
-#' see \code{runResampling}. \code{gridding} is a function designed to deal with the issue
+#' see \code{\link{runResampling}}. \code{gridding} is a function designed to deal with the issue
 #' of varying spatial extent between studies by using a global grid of hexagonal cells
 #' derived from \code{\link[dggridR]{dgconstruct}} and assigning the individual
 #' samples to the cells across the grid based on its latitude and
@@ -45,7 +45,7 @@
 #' @returns Returns a \code{'data.frame'}, with selected columns from the
 #' \code{btf} and \code{meta} data frames, an extra integer column called
 #' \code{'cell'} and two character columns called 'StudyMethod' and 'assemblageID'
-#' (concatenation of \code{study_ID} and \code{cell}).
+#' (concatenation of \code{STUDY_ID} and \code{cell}).
 #'
 #' @examples
 #'   library(BioTIMEr)
@@ -104,7 +104,12 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = FALSE) {
     null.ok = FALSE,
     na.ok = FALSE
   )
-  checkmate::assert_logical(resByData, len = 1, any.missing = FALSE)
+  checkmate::assert_logical(
+    resByData,
+    len = 1L,
+    any.missing = FALSE,
+    null.ok = FALSE,
+  )
 
   bt <- dplyr::inner_join(meta, btf, by = "STUDY_ID") |>
     dplyr::rename(Species = "valid_name")
@@ -149,10 +154,9 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = FALSE) {
     )
 
   if (
-    tapply(bt$YEAR, bt$STUDY_ID, function(y) length(unique(y)) == 1L) |>
+    tapply(bt$YEAR, bt$STUDY_ID, function(y) dplyr::n_distinct(y) == 1L) |>
       any()
   ) {
-    warning("Some 1-year-long studies were removed.")
     bt <- dplyr::anti_join(
       x = bt,
       y = bt |>
@@ -163,6 +167,7 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = FALSE) {
         dplyr::filter(.data$count == 1L),
       by = dplyr::join_by("STUDY_ID")
     )
+    warning("Some 1-year-long studies were removed.")
   }
 
   dgg <- dggridR::dgconstruct(res = res)

@@ -190,4 +190,46 @@ if (FALSE) {
       dplyr::bind_rows(rareftab_list, .id = "resamp")
     }
   )
+  # Aggregate
+  x <- readRDS(file = "ignored/data/benchmarking/rarefysamples_aggregate.rds")
+  selected_indices <- readRDS(
+    file = "ignored/data/benchmarking/rarefysamples_aggregate_indices.rds"
+  )
+  # Formula is 10% slower but more readable. Does not work directly when length(measure) > 1
+  bench::mark(
+    relative = TRUE,
+    check = FALSE,
+    classic = stats::aggregate(
+      x = x[selected_indices, c("BIOMASS", "ABUNDANCE")],
+      by = list(
+        SAMPLE_DESC = x$SAMPLE_DESC[selected_indices],
+        YEAR = x$YEAR[selected_indices],
+        Species = x$Species[selected_indices]
+      ),
+      FUN = sum
+    ),
+    formula = stats::aggregate(
+      data = x[selected_indices, ],
+      x = BIOMASS + ABUNDANCE ~ SAMPLE_DESC + YEAR + Species,
+      FUN = sum
+    )
+  )
+
+  # changing how columns are dealt with in rarefy, adding the summarise argument
+  source(file = "R/rarefyBioTIME.R")
+  source(file = "R/rarefyBioTIME_reference.R")
+  x <- gridding(BTsubset_meta, BTsubset_data)
+
+  bench::mark(
+    relative = TRUE,
+    original = {
+      set.seed(42)
+      rarefysamples_ref(x, "BIOMASS", 2L)
+    },
+    new = {
+      set.seed(42)
+      rarefysamples(x, "BIOMASS", 2L, summarise = TRUE)
+    },
+    check = FALSE
+  )
 }

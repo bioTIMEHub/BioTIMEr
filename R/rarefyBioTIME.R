@@ -14,6 +14,8 @@
 #' whenever a \code{NA}
 #' is found in the measure field(s), the whole sample is removed instead of the
 #' missing observations only.
+#' summarise (\code{logical}). \code{TRUE} by default. If \code{FALSE},
+#' the function returns abundance and/or biomass summed at the
 #'
 #' @returns Returns a single long form \code{data.frame} containing the total currency
 #' or currencies of interest (sum) for each species in each year within each
@@ -22,7 +24,10 @@
 #'
 #' @details
 #' Sample-based rarefaction prevents temporal variation in sampling effort from
-#' affecting diversity estimates (see Gotelli N.J., Colwell R.K. 2001 Quantifying biodiversity: procedures and pitfalls in the measurement and comparison of species richness. Ecology Letters 4(4), 379-391) by selecting an equal number of samples across all years in a time series.
+#' affecting diversity estimates (see Gotelli N.J., Colwell R.K. 2001 Quantifying
+#' biodiversity: procedures and pitfalls in the measurement and comparison of species
+#' richness. Ecology Letters 4(4), 379-391) by selecting an equal number of samples
+#' across all years in a time series.
 #' \code{resampling} counts the number of unique samples taken in each year (sampling effort),
 #' identifies the minimum number of samples across all years, and then uses this minimum to
 #' randomly resample each year down to that number. Thus, standardising the
@@ -51,13 +56,21 @@
 #'   library(BioTIMEr)
 #'   set.seed(42)
 #'   x <- gridding(BTsubset_meta, BTsubset_data)
-#'   resampling(x, measure = "BIOMASS")
+#'   resampling(x, measure = "BIOMASS", summarise = TRUE)
 #'   resampling(x, measure = "ABUNDANCE")
 #'   resampling(x, measure = c("ABUNDANCE","BIOMASS"))
+#'   # Without summarising the species abundances are summed at the SAMPLE_DESC level
+#'   resampling(x, measure = "BIOMASS", summarise = FALSE, conservative = FALSE)
 #' }
 #'
 
-resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
+resampling <- function(
+  x,
+  measure,
+  resamps = 1L,
+  conservative = FALSE,
+  summarise = TRUE
+) {
   if (inherits(x, "data.table")) {
     warning("x was converted to a data.frame")
     x <- as.data.frame(x)
@@ -81,6 +94,12 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
     null.ok = FALSE,
     any.missing = FALSE
   )
+  checkmate::assert_logical(
+    x = summarise,
+    len = 1L,
+    null.ok = FALSE,
+    any.missing = FALSE
+  )
 
   if (anyNA(x[, measure])) {
     if (conservative) {
@@ -97,16 +116,16 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
           dplyr::filter(.data$na_values == 0L),
         by = dplyr::join_by("SAMPLE_DESC")
       )
-      dplyr::if_else(
-        condition = nrow(x) != 0L,
-        true = warning(
+      ifelse(
+        test = nrow(x) != 0L,
+        yes = warning(
           paste0(
             "NA values found and whole samples removed since `conservative` is TRUE.\n",
             "Only a subset of `x` is used."
           ),
           call. = FALSE
         ),
-        false = stop(paste("Only NA values in column(s)", measure))
+        no = stop(paste("Only NA values in column(s)", measure))
       )
     } else {
       x <- x |>
@@ -117,16 +136,16 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
             FUN = anyNA
           )
         )
-      dplyr::if_else(
-        condition = nrow(x) != 0L,
-        true = warning(
+      ifelse(
+        test = nrow(x) != 0L,
+        yes = warning(
           paste0(
             "NA values found and removed.\n",
             "Only a subset of `x` is used."
           ),
           call. = FALSE
         ),
-        false = stop(paste("Only NA values in column(s)", measure))
+        no = stop(paste("Only NA values in column(s)", measure))
       )
     }
   }
@@ -155,17 +174,20 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
     X = rfIDs,
     FUN = function(i) {
       x[x$assemblageID == i, ] |>
-        rarefysamples(measure = measure, resamps = resamps)
+        rarefysamples(
+          measure = measure,
+          resamps = resamps,
+          summarise = summarise
+        )
     },
     USE.NAMES = TRUE,
     simplify = FALSE
   )
 
   return({
-    dplyr::bind_rows(TSrf) |>
-      dplyr::mutate(rfID = rep(rfIDs, times = sapply(TSrf, nrow))) |>
+    dplyr::bind_rows(TSrf, .id = "rfID") |>
       tidyr::separate(
-        "rfID",
+        col = "rfID",
         into = c("STUDY_ID", "cell"),
         sep = "_",
         remove = FALSE
@@ -177,6 +199,7 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
         "STUDY_ID",
         "YEAR",
         "Species",
+        dplyr::any_of(c("SAMPLE_DESC", "minsamp")),
         dplyr::all_of(measure)
       )
   })
@@ -191,7 +214,7 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
 #'    of interest (sum) for each species in each year.
 #' @keywords internal
 
-rarefysamples <- function(x, measure, resamps) {
+rarefysamples <- function(x, measure, resamps, summarise) {
   # Computing minimal effort per year in this assemblageID
   minsample <- tapply(x$SAMPLE_DESC, x$YEAR, function(x) {
     dplyr::n_distinct(x)
@@ -214,15 +237,30 @@ rarefysamples <- function(x, measure, resamps) {
       ) |>
         unlist() # end of loop on years
 
-      return(stats::aggregate(
-        x = x[selected_indices, measure],
-        by = list(
-          YEAR = x$YEAR[selected_indices],
-          Species = x$Species[selected_indices]
-        ),
-        FUN = sum
-      ))
+      if (summarise) {
+        raref <- stats::aggregate(
+          x = x[selected_indices, measure, drop = FALSE],
+          by = list(
+            YEAR = x$YEAR[selected_indices],
+            Species = x$Species[selected_indices]
+          ),
+          FUN = sum
+        )
+      } else {
+        # Does it really make a difference?
+        raref <- stats::aggregate(
+          x = x[selected_indices, measure, drop = FALSE],
+          by = list(
+            SAMPLE_DESC = x$SAMPLE_DESC[selected_indices],
+            YEAR = x$YEAR[selected_indices],
+            Species = x$Species[selected_indices]
+          ),
+          FUN = sum
+        )
+        raref$minsamp = minsample
+      }
+      return(raref)
     }
   ) # end of loop on repetitions
-  return(dplyr::bind_rows(rareftab_list, .id = "resamps"))
+  return(dplyr::bind_rows(rareftab_list, .id = "resamp"))
 } # end of function
