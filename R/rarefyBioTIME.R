@@ -14,7 +14,7 @@
 #' whenever a \code{NA}
 #' is found in the measure field(s), the whole sample is removed instead of the
 #' missing observations only.
-#' summarise (\code{logical}). \code{TRUE} by default. If \code{FALSE},
+#' @param summarise (\code{logical}). \code{TRUE} by default. If \code{FALSE},
 #' the function returns abundance and/or biomass summed at the
 #'
 #' @returns Returns a single long form \code{data.frame} containing the total currency

@@ -1,4 +1,15 @@
-# BioTIMEr 0.2.5
+# BioTIMEr 0.2.5 - 01.10.2025
+
+## New Features
+
+- In the `resampling` function:
+
+  - new argument `summarise`, TRUE by default keeps previous behaviour. If TRUE,
+  the abundance and/or biomass is summed per rarefyID while if FALSE
+  the abundance and/or biomass will be summed per rarefyID/SAMPLE_DESC and gives
+  more columns.
+
+## Minor Improvements and Bug Fixes
 
 - In the `themeBioTIME` function:
 
@@ -8,7 +19,7 @@
   - argument `coly` is soft deprecated in favour of `strip.background`
   - the order of the arguments did not change.
 
-- Next news
+- `data.table` objects are converted to `data.frame`
 
 # BioTIMEr 0.2.4 - 06.06.2025
 

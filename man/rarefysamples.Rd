@@ -17,6 +17,9 @@ rarefaction. Can be either defined by a single column name or a vector of
 two or more column names.}
 
 \item{resamps}{(\code{integer}) number of repetitions. Default is 1.}
+
+\item{summarise}{(\code{logical}). \code{TRUE} by default. If \code{FALSE},
+the function returns abundance and/or biomass summed at the}
 }
 \value{
 Returns a single long form data frame containing the total currency
