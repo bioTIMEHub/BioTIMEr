@@ -54,7 +54,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Get Linear Regressions BioTIME</h1>
-    <small class="dont-index">Source: <a href="https://github.com/bioTIMEHub/BioTIMEr/blob/v0.2.4/R/slopesBioTIME.R" class="external-link"><code>R/slopesBioTIME.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/bioTIMEHub/BioTIMEr/blob/main/R/slopesBioTIME.R" class="external-link"><code>R/slopesBioTIME.R</code></a></small>
     <div class="hidden name"><code>getLinearRegressions.Rd</code></div>
     </div>
 
@@ -187,9 +187,9 @@ less than 3 time points and/or single species time series are removed.</p>
 <span class="r-in"><span>  <span class="va">betam</span> <span class="op">&lt;-</span> <span class="fu"><a href="getBetaMetrics.html">getBetaMetrics</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, <span class="st">"ABUNDANCE"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu">getLinearRegressions</span><span class="op">(</span>x <span class="op">=</span> <span class="va">betam</span>, divType <span class="op">=</span> <span class="st">"beta"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    assemblageID           metric         slope     pvalue significance</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1             A      JaccardDiss  1.360544e-03 0.97046305            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2             A MorisitaHornDiss  9.841470e-03 0.87190107            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3             A   BrayCurtisDiss  6.636539e-03 0.89905959            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1             A      JaccardDiss -1.224490e-02 0.68123635            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2             A MorisitaHornDiss  3.704730e-02 0.31906029            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3             A   BrayCurtisDiss  2.032636e-02 0.53082895            0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4             B      JaccardDiss  5.442177e-03 0.80472616            0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5             B MorisitaHornDiss  2.997411e-02 0.39077069            0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6             B   BrayCurtisDiss  2.104152e-02 0.39979325            0</span>
@@ -212,9 +212,9 @@ less than 3 time points and/or single species time series are removed.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 23            H MorisitaHornDiss -3.801627e-02 0.26896508            0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 24            H   BrayCurtisDiss -2.381045e-02 0.35833029            0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       intercept</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    -1.9206349</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   -19.1115868</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   -12.6197771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    25.4920635</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   -73.7869715</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   -40.1033543</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   -10.2539683</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   -59.7183533</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   -41.6873009</span>
