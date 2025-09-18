@@ -1,13 +1,24 @@
+# BioTIMEr 0.2.6
+
+## Major Improvement
+
+- methods: gridding and resampling functions now handle `data.frame`,
+  `data.table` and `tibble` objects with dedicated functions.
+- use of package dtplyr to call data.table in the background for better speed
+and memory usage
+- categorical variables are turned into factors
+
 # BioTIMEr 0.2.5 - 01.10.2025
 
 ## New Features
 
 - In the `resampling` function:
 
-  - new argument `summarise`, TRUE by default keeps previous behaviour. If TRUE,
-  the abundance and/or biomass is summed per rarefyID while if FALSE
-  the abundance and/or biomass will be summed per rarefyID/SAMPLE_DESC and gives
-  more columns.
+  - new argument `summarise`, TRUE by default keeps previous behaviour.
+
+    If TRUE, the abundance and/or biomass is summed per rarefyID while if FALSE
+    the abundance and/or biomass will be summed per rarefyID/SAMPLE_DESC and gives
+    more columns.
 
 ## Minor Improvements and Bug Fixes
 

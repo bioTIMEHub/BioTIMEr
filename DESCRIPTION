@@ -56,6 +56,8 @@ Depends:
 Imports:
     dplyr,
     tidyr,
+    dtplyr,
+    data.table,
     ggplot2,
     vegan,
     dggridR (>= 3.1.0),
@@ -67,8 +69,7 @@ Suggests:
     knitr,
     testthat (>= 3.0.0),
     vdiffr,
-    rlang,
-    data.table
+    rlang
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 Config/testthat/start-first:

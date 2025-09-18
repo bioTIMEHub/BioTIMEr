@@ -199,18 +199,6 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "data.table",
-      "name": "data.table",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=data.table"
     }
   ],
   "softwareRequirements": {
@@ -246,6 +234,30 @@
     },
     "4": {
       "@type": "SoftwareApplication",
+      "identifier": "dtplyr",
+      "name": "dtplyr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=dtplyr"
+    },
+    "5": {
+      "@type": "SoftwareApplication",
+      "identifier": "data.table",
+      "name": "data.table",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=data.table"
+    },
+    "6": {
+      "@type": "SoftwareApplication",
       "identifier": "ggplot2",
       "name": "ggplot2",
       "provider": {
@@ -256,7 +268,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=ggplot2"
     },
-    "5": {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "vegan",
       "name": "vegan",
@@ -268,7 +280,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=vegan"
     },
-    "6": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "dggridR",
       "name": "dggridR",
@@ -281,7 +293,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=dggridR"
     },
-    "7": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "checkmate",
       "name": "checkmate",
@@ -293,7 +305,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=checkmate"
     },
-    "8": {
+    "10": {
       "@type": "SoftwareApplication",
       "identifier": "lifecycle",
       "name": "lifecycle",
@@ -307,7 +319,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "8093.419KB",
+  "fileSize": "8171.142KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",

@@ -15,6 +15,9 @@ Meta/
 vignettes/*_files/
 vignettes/*_cache/
 
+# Benchmark data
+data/benchmarking
+
 # Created by https://www.toptal.com/developers/gitignore/api/windows,macos,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,linux
 

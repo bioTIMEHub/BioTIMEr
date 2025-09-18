@@ -4,7 +4,7 @@
 \alias{gridding}
 \title{gridding BioTIME data}
 \usage{
-gridding(meta, btf, res = 12, resByData = FALSE, verbose = FALSE)
+gridding(meta, btf, res = 12, resByData = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{meta}{(\code{data.frame}) BioTIME metadata.}
@@ -62,6 +62,6 @@ best \code{res} based on the average study extent.
 }
 \examples{
   library(BioTIMEr)
-  gridded_data <- gridding(BTsubset_meta, BTsubset_data)
+  gridded_data <- gridding(meta = BTsubset_meta, btf = BTsubset_data)
 
 }

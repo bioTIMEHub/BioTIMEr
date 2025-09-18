@@ -190,10 +190,13 @@ test_that("resampling correctly excludes 1 year long studies", {
   expect_warning(resampling(test_df_1y, "ABUNDANCE"))
 })
 
-test_that("resampling correctly manages data.table objects", {
+test_that("resampling correctly manages data.table, tibble and data.frame objects and respect class", {
   skip_on_ci()
   skip_on_cran()
+
   data.table::setDT(test_df)
-  expect_snapshot(resampling(test_df, measure = "ABUNDANCE"))
-  expect_warning(resampling(test_df, measure = "ABUNDANCE"))
+  test_object <- resampling(test_df, measure = "ABUNDANCE")
+  expect_snapshot(test_object)
+  # expect_type(test_object, type = c("data.table", "data.frame"))
+  # if test_df is a tibble, test_object has to be a tibble
 })

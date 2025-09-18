@@ -5,7 +5,7 @@
         conservative = FALSE)
     Condition
       Warning:
-      Expected 2 pieces. Missing pieces filled with `NA` in 37704 rows [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].
+      Expected 2 pieces. Missing pieces filled with `NA` in 37712 rows [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].
 
 # resampling runs correctly for Biomass
 
@@ -17,7 +17,7 @@
       NA values found and removed.
       Only a subset of `x` is used.
       Warning:
-      Expected 2 pieces. Missing pieces filled with `NA` in 2024 rows [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].
+      Expected 2 pieces. Missing pieces filled with `NA` in 1998 rows [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].
 
 # resampling runs correctly for Abundance and Biomass together
 
@@ -29,7 +29,7 @@
       NA values found and removed.
       Only a subset of `x` is used.
       Warning:
-      Expected 2 pieces. Missing pieces filled with `NA` in 1991 rows [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].
+      Expected 2 pieces. Missing pieces filled with `NA` in 1971 rows [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].
 
 # resampling runs correctly for Abundance and Biomass together          2 iterations, conservative
 
@@ -41,7 +41,7 @@
       NA values found and whole samples removed since `conservative` is TRUE.
       Only a subset of `x` is used.
       Warning:
-      Expected 2 pieces. Missing pieces filled with `NA` in 4062 rows [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].
+      Expected 2 pieces. Missing pieces filled with `NA` in 3958 rows [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...].
 
 # resampling correctly manages data.table, tibble and data.frame objects and respect class
 

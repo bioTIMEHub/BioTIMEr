@@ -184,7 +184,7 @@ resampling_ref <- function(x, measure, resamps = 1L, conservative = FALSE) {
 #' Rarefy BioTIME data
 #' Applies sample-based rarefaction to standardise the number of samples per year
 #'    within a cell-level time series.
-#' @inheritParams resampling
+#' @inheritParams resampling_ref
 #' @returns Returns a single long form data frame containing the total currency
 #'    of interest (sum) for each species in each year.
 #' @keywords internal

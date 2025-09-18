@@ -232,4 +232,18 @@ if (FALSE) {
     },
     check = FALSE
   )
+
+  # Benchmarking tapply vs data.table
+  bt <- readRDS("data/benchmarking/tapply_vs_data.table.rds")
+  bench::mark(
+    relative = TRUE,
+    tapply = {
+      tapply(bt$YEAR, bt$STUDY_ID, function(y) dplyr::n_distinct(y) == 1L) |>
+        any()
+    },
+    dt_chain = {
+      bt[j = data.table::uniqueN(YEAR) == 1L, keyby = STUDY_ID][j = any(V1)]
+    },
+  )
+  rm("bt")
 }
