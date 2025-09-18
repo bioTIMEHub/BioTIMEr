@@ -1,5 +1,6 @@
 test_that("Whole workflow works consistently", {
   skip_on_ci()
+  skip_on_cran()
 
   meta <- base::readRDS(testthat::test_path("testdata", "data-meta.rds"))
   btf <- base::readRDS(testthat::test_path("testdata", "data-query.rds"))
