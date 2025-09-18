@@ -2,10 +2,8 @@
 meta <- base::readRDS(testthat::test_path("testdata", "data-meta.rds"))
 btf <- base::readRDS(testthat::test_path("testdata", "data-query.rds"))
 
-result <- gridding(meta, btf)
-
 test_that("gridding returns a data frame", {
-  expect_s3_class(result, "data.frame")
+  expect_s3_class(gridding(meta, btf), "data.frame")
 })
 
 test_that("gridding returns the expected columns", {
@@ -32,7 +30,7 @@ test_that("gridding returns the expected columns", {
     "resolution"
   )
   checkmate::expect_names(
-    x = colnames(result),
+    x = colnames(gridding(meta, btf)),
     what = "colnames",
     permutation.of = expected_cols
   )
@@ -40,16 +38,22 @@ test_that("gridding returns the expected columns", {
 
 test_that("gridding returns correct number of rows", {
   expected_rows <- nrow(btf)
-  expect_equal(nrow(result), expected_rows)
+  expect_equal(nrow(gridding(meta, btf)), expected_rows)
 })
 
 test_that("gridding creates correct cell IDs", {
-  checkmate::expect_integer(result$cell, any.missing = FALSE, lower = 0L)
+  checkmate::expect_factor(
+    x = gridding(meta, btf)$cell,
+    any.missing = FALSE,
+    empty.levels.ok = FALSE,
+    unique = FALSE,
+    null.ok = FALSE
+  )
 })
 
 test_that("gridding produces consistent results", {
   skip_on_ci()
-  expect_snapshot(result)
+  expect_snapshot(gridding(meta, btf))
 })
 
 test_that("gridding respects provided res parameter", {
@@ -60,4 +64,13 @@ test_that("gridding respects provided res parameter", {
 test_that("gridding respects resByData argument", {
   skip_on_ci()
   expect_snapshot(gridding(meta, btf, resByData = TRUE))
+})
+
+test_that("gridding correctly manages data.table objects", {
+  skip_on_ci()
+  data.table::setDT(meta)
+  data.table::setDT(btf)
+
+  result <- gridding(meta, btf, res = 12, resByData = FALSE)
+  expect_snapshot(result)
 })

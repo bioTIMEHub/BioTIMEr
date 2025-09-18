@@ -2,21 +2,21 @@
 #'
 #' Fits linear regression models to \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} outputs
 #' @export
-#' @param x (`data.frame`) BioTIME data table in the format of the output of  \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}}
+#' @param x (\code{data.frame}) BioTIME data table in the format of the output of  \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}}
 #'  functions
-#' @param divType (`character`) string specifying the nature of the metrics in
-#' the data; either `divType = "alpha"` or `divType = "beta"` are supported
-#' @param pThreshold (`numeric`) P-value threshold for statistical significance
+#' @param divType (\code{character}) string specifying the nature of the metrics in
+#' the data; either \code{divType = "alpha"} or \code{divType = "beta"} are supported
+#' @param pThreshold (\code{numeric}) P-value threshold for statistical significance
 #'
-#' @returns Returns a single long `data.frame` with results of linear regressions
-#' (slope, p-value, significance, intercept) for each `assemblageID`.
+#' @returns Returns a single long \code{data.frame} with results of linear regressions
+#' (slope, p-value, significance, intercept) for each \code{assemblageID}.
 #'
 #' @details
-#' The function `getLinearRegressions` fits simple linear regression models
+#' The function \code{getLinearRegression} fits simple linear regression models
 #' (see \code{\link[stats]{lm}} for details) for a given output ('data') of
 #' either \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} function.
-#' `divType` needs to be specified in agreement with x.
-#' The typical model has the form `metric ~ year`. Note that assemblages with
+#' \code{divType} needs to be specified in agreement with \code{x}.
+#' The typical model has the form \code{metric ~ year}. Note that assemblages with
 #' less than 3 time points and/or single species time series are removed.
 #'
 #' @examples

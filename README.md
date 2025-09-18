@@ -25,7 +25,7 @@ install.packages("BioTIMEr") # CRAN version
 ```
 
 ```r
-remotes::github_install("bioTIMEHub//BioTIMEr") # dev version
+remotes::github_install("bioTIMEHub/BioTIMEr") # dev version
 ```
 
 ## Getting Started
@@ -47,7 +47,7 @@ gridding(BTsubset_meta, BTsubset_data) |>
 
 ## Citation
 
-Under the terms of the BioTIME data user agreement, users who download data agree to cite a DOI.
+Under the terms of the BioTIME data user agreement, users who download data agree to cite all underlying DOIs.
 
 Please also cite **BioTIMEr** by running `citation(package = "BioTIMEr")`.
 

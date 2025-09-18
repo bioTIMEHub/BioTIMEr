@@ -3,7 +3,8 @@
 ^doc$
 ^ignored
 ^Meta$
-^vignettes/vignette1_cache
+^vignettes/.*_cache
+^vignettes/.*_files
 ^\.gitattributes$
 ^\.gitignore$
 ^.*\.Rproj$
@@ -12,3 +13,4 @@
 ^codemeta\.json$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
+^R/benchmarks.R$

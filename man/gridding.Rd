@@ -4,7 +4,7 @@
 \alias{gridding}
 \title{gridding BioTIME data}
 \usage{
-gridding(meta, btf, res = 12, resByData = FALSE)
+gridding(meta, btf, res = 12, resByData = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{meta}{(\code{data.frame}) BioTIME metadata.}
@@ -16,14 +16,17 @@ represent finer resolutions. Default: 12 (~96 sq km). Passed to
 \code{\link[dggridR]{dgconstruct}}.}
 
 \item{resByData}{(\code{logical}) FALSE by default. If TRUE, the function
-\code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt `res` to
-the data extent.}
+\code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt \code{res}
+ to the data extent.}
+
+\item{verbose}{if TRUE, a warning will be shown when one-year-long time series
+are found in btf and excluded.}
 }
 \value{
 Returns a \code{'data.frame'}, with selected columns from the
 \code{btf} and \code{meta} data frames, an extra integer column called
 \code{'cell'} and two character columns called 'StudyMethod' and 'assemblageID'
-(concatenation of \code{study_ID} and \code{cell}).
+(concatenation of \code{STUDY_ID} and \code{cell}).
 }
 \description{
 grids BioTIME data into a discrete global grid based on the
@@ -59,6 +62,6 @@ best \code{res} based on the average study extent.
 }
 \examples{
   library(BioTIMEr)
-  gridded_data <- gridding(BTsubset_meta, BTsubset_data)
+  gridded_data <- gridding(meta = BTsubset_meta, btf = BTsubset_data)
 
 }
