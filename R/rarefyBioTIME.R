@@ -58,6 +58,10 @@
 #'
 
 resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
+  if (inherits(x, "data.table")) {
+    warning("x was converted to a data.frame")
+    x <- as.data.frame(x)
+  }
   checkmate::assert_names(
     x = colnames(x),
     what = "colnames",
@@ -85,7 +89,7 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
         y = stats::aggregate(
           x = x[, measure, drop = FALSE],
           by = list(SAMPLE_DESC = x$SAMPLE_DESC),
-          function(j) anyNA(j)
+          FUN = function(j) anyNA(j)
         ) |>
           dplyr::mutate(
             na_values = rowSums(dplyr::pick(dplyr::all_of(measure)))
@@ -93,25 +97,55 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
           dplyr::filter(.data$na_values == 0L),
         by = dplyr::join_by("SAMPLE_DESC")
       )
-
-      warning(paste0(
-        "NA values found and whole samples removed since `conservative` is TRUE.\n",
-        "Only a subset of `x` is used."
-      ))
-    } else {
-      x <- dplyr::filter(
-        x,
-        !apply(
-          X = dplyr::select(x, dplyr::all_of(measure)),
-          MARGIN = 1,
-          FUN = anyNA
-        )
+      ifelse(
+        test = nrow(x) != 0L,
+        yes = warning(
+          paste0(
+            "NA values found and whole samples removed since `conservative` is TRUE.\n",
+            "Only a subset of `x` is used."
+          ),
+          call. = FALSE
+        ),
+        no = stop(paste("Only NA values in column(s)", measure))
       )
-      warning(paste0(
-        "NA values found and removed.\n",
-        "Only a subset of `x` is used."
-      ))
+    } else {
+      x <- x |>
+        dplyr::filter(
+          !apply(
+            X = dplyr::select(x, dplyr::all_of(measure)),
+            MARGIN = 1,
+            FUN = anyNA
+          )
+        )
+      ifelse(
+        test = nrow(x) != 0L,
+        yes = warning(
+          paste0(
+            "NA values found and removed.\n",
+            "Only a subset of `x` is used."
+          ),
+          call. = FALSE
+        ),
+        no = stop(paste("Only NA values in column(s)", measure))
+      )
     }
+  }
+
+  if (
+    tapply(x$YEAR, x$STUDY_ID, function(y) length(unique(y)) == 1L) |>
+      any()
+  ) {
+    warning("Some 1-year-long studies were removed.")
+    x <- dplyr::anti_join(
+      x = x,
+      y = x |>
+        dplyr::summarise(
+          count = dplyr::n_distinct(.data$YEAR),
+          .by = "STUDY_ID"
+        ) |>
+        dplyr::filter(.data$count == 1L),
+      by = dplyr::join_by("STUDY_ID")
+    )
   }
 
   rfIDs <- unique(x$assemblageID)

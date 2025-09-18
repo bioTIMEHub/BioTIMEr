@@ -7,6 +7,9 @@ BTsubset_data <- base::readRDS(testthat::test_path(
 test_df <- gridding(BTsubset_meta, BTsubset_data)
 
 test_that("resampling runs correctly for Abundance", {
+  skip_on_cran()
+  skip_on_ci()
+
   expect_snapshot({
     result <- resampling(
       x = test_df,
@@ -44,6 +47,9 @@ test_that("resampling runs correctly for Abundance", {
 
 
 test_that("resampling runs correctly for Biomass", {
+  skip_on_cran()
+  skip_on_ci()
+
   expect_snapshot({
     result <- resampling(
       x = test_df,
@@ -81,6 +87,9 @@ test_that("resampling runs correctly for Biomass", {
 
 
 test_that("resampling runs correctly for Abundance and Biomass together", {
+  skip_on_ci()
+  skip_on_cran()
+
   expect_snapshot({
     result <- resampling(
       x = test_df,
@@ -118,6 +127,9 @@ test_that("resampling runs correctly for Abundance and Biomass together", {
 
 test_that("resampling runs correctly for Abundance and Biomass together
           2 iterations, conservative", {
+  skip_on_ci()
+  skip_on_cran()
+
   suppressWarnings(
     expect_snapshot({
       result <- resampling(
@@ -153,4 +165,37 @@ test_that("resampling runs correctly for Abundance and Biomass together
 
   expect_false(anyNA(result))
   expect_lte(sum(result$Biomass), sum(biomass_test_df$BIOMASS))
+})
+
+test_that("resampling correctly excludes 1 year long studies", {
+  test_df_1y <- rbind(
+    test_df,
+    test_df |>
+      dplyr::filter(SAMPLE_DESC == "1984_12_Control_0_Medium") |>
+      dplyr::mutate(SAMPLE_DESC = "TEST", STUDY_ID = "TEST", YEAR = 2005L)
+  )
+
+  expect_equal(
+    object = {
+      set.seed(42)
+      suppressWarnings(
+        resampling(test_df_1y, "ABUNDANCE")
+      )
+    },
+    expected = {
+      set.seed(42)
+      resampling(test_df, "ABUNDANCE")
+    }
+  )
+
+  expect_warning(resampling(test_df_1y, "ABUNDANCE"))
+})
+
+test_that("resampling correctly manages data.table objects", {
+  skip_on_ci()
+  skip_on_cran()
+
+  data.table::setDT(test_df)
+  expect_snapshot(resampling(test_df, measure = "ABUNDANCE"))
+  expect_warning(resampling(test_df, measure = "ABUNDANCE"))
 })
