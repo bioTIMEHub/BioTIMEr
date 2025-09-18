@@ -1,7 +1,7 @@
 Package: BioTIMEr
 Type: Package
 Title: Tools to Use and Explore the 'BioTIME' Database
-Version: 0.2.5
+Version: 0.2.6
 Authors@R: c(
   person("Alban", "Sagouis", role = c("aut","cre"),
         email = "alban.sagouis@idiv.de",
@@ -54,10 +54,8 @@ Description: The BioTIME database was first published in
 Depends:
     R (>= 4.3.0)
 Imports:
-    dplyr,
     tidyr,
     dtplyr,
-    data.table,
     ggplot2,
     vegan,
     dggridR (>= 3.1.0),

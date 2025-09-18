@@ -239,7 +239,7 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = TRUE) {
     tapply(
       X = bt$cell[bt$StudyMethod == "SL"],
       INDEX = bt$STUDY_ID[bt$StudyMethod == "SL"],
-      FUN = function(x) data.table::uniqueN(x) == 1L
+      FUN = \(x) data.table::uniqueN(x) == 1L
     ) |>
       all()
   ) {
