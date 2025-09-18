@@ -2,7 +2,8 @@
 
 0 errors | 0 warnings | 0 note
 
-Since last release, we updated the data to match structure of BioTIME v2 that was recently published, we increased test coverage and and we improved documentation clarity.
+Since last release, No code change, only some tests were updated not to run on
+CRAN and CI to allow for an update of package vegan.
 
 Thank you for taking the time to review our package,
 

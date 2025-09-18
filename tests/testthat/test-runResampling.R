@@ -7,15 +7,12 @@ BTsubset_data <- base::readRDS(testthat::test_path(
 test_df <- gridding(BTsubset_meta, BTsubset_data)
 
 test_that("resampling runs correctly for Abundance", {
-  expect_snapshot({
-    result <- resampling(
-      x = test_df,
-      measure = "ABUNDANCE",
-      resamps = 1L,
-      conservative = FALSE
-    )
-  })
-
+  result <- resampling(
+    x = test_df,
+    measure = "ABUNDANCE",
+    resamps = 1L,
+    conservative = FALSE
+  )
   expect_true(all(unique(result$Species) %in% unique(test_df$Species)))
   expect_true(all(
     unique(result$assemblageID) %in% unique(test_df$assemblageID)
@@ -40,19 +37,21 @@ test_that("resampling runs correctly for Abundance", {
 
   expect_false(anyNA(result))
   expect_lte(sum(result$Abundance), sum(abundance_test_df$ABUNDANCE))
+
+  skip_on_ci()
+  skip_on_cran()
+
+  expect_snapshot(result)
 })
 
 
 test_that("resampling runs correctly for Biomass", {
-  expect_snapshot({
-    result <- resampling(
-      x = test_df,
-      measure = "BIOMASS",
-      resamps = 1L,
-      conservative = FALSE
-    )
-  })
-
+  result <- resampling(
+    x = test_df,
+    measure = "BIOMASS",
+    resamps = 1L,
+    conservative = FALSE
+  )
   expect_true(all(unique(result$Species) %in% unique(test_df$Species)))
   expect_true(all(
     unique(result$assemblageID) %in% unique(test_df$assemblageID)
@@ -77,19 +76,21 @@ test_that("resampling runs correctly for Biomass", {
 
   expect_false(anyNA(result))
   expect_lte(sum(result$Biomass), sum(biomass_test_df$BIOMASS))
+
+  skip_on_ci()
+  skip_on_cran()
+
+  expect_snapshot(result)
 })
 
 
 test_that("resampling runs correctly for Abundance and Biomass together", {
-  expect_snapshot({
-    result <- resampling(
-      x = test_df,
-      measure = c("ABUNDANCE", "BIOMASS"),
-      resamps = 1L,
-      conservative = FALSE
-    )
-  })
-
+  result <- resampling(
+    x = test_df,
+    measure = c("ABUNDANCE", "BIOMASS"),
+    resamps = 1L,
+    conservative = FALSE
+  )
   expect_true(all(unique(result$Species) %in% unique(test_df$Species)))
   expect_true(all(
     unique(result$assemblageID) %in% unique(test_df$assemblageID)
@@ -114,21 +115,20 @@ test_that("resampling runs correctly for Abundance and Biomass together", {
 
   expect_false(anyNA(result))
   expect_lte(sum(result$Biomass), sum(biomass_test_df$BIOMASS))
+  skip_on_ci()
+  skip_on_cran()
+
+  expect_snapshot(result)
 })
 
 test_that("resampling runs correctly for Abundance and Biomass together
           2 iterations, conservative", {
-  suppressWarnings(
-    expect_snapshot({
-      result <- resampling(
-        x = test_df,
-        measure = c("ABUNDANCE", "BIOMASS"),
-        resamps = 2L,
-        conservative = TRUE
-      )
-    })
+  result <- resampling(
+    x = test_df,
+    measure = c("ABUNDANCE", "BIOMASS"),
+    resamps = 2L,
+    conservative = TRUE
   )
-
   expect_true(all(unique(result$Species) %in% unique(test_df$Species)))
   expect_true(all(
     unique(result$assemblageID) %in% unique(test_df$assemblageID)
@@ -153,4 +153,10 @@ test_that("resampling runs correctly for Abundance and Biomass together
 
   expect_false(anyNA(result))
   expect_lte(sum(result$Biomass), sum(biomass_test_df$BIOMASS))
+  skip_on_ci()
+  skip_on_cran()
+
+  suppressWarnings(
+    expect_snapshot(result)
+  )
 })

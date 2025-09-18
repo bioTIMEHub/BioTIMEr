@@ -1,7 +1,7 @@
 Package: BioTIMEr
 Type: Package
 Title: Tools to Use and Explore the 'BioTIME' Database
-Version: 0.2.4
+Version: 0.2.4001
 Authors@R: c(
   person("Alban", "Sagouis", role = c("aut","cre"),
         email = "alban.sagouis@idiv.de",
@@ -72,5 +72,5 @@ Config/testthat/parallel: true
 Language: en-GB
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 VignetteBuilder: knitr

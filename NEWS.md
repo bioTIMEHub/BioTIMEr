@@ -1,3 +1,7 @@
+# BioTIMEr 0.2.4001
+
+* Patch. all testthat snapshot tests are now skipped on CRAN and CI.
+
 # BioTIMEr 0.2.4
 
 * Data update matching structure from BioTIME v2.0.

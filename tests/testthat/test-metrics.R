@@ -57,6 +57,8 @@ test_that("getAlpha computes accurate biodiversity metrics", {
 
 test_that("getAlpha works consistently", {
   skip_on_ci()
+  skip_on_cran()
+
   expect_snapshot(x = getAlpha(x = data, id = "TestID"))
 })
 
@@ -75,17 +77,25 @@ dataMetrics <- data.frame(
 
 test_that("getAlphaMetrics works correctly for Abundance", {
   skip_on_ci()
+  skip_on_cran()
+
   expect_snapshot(x = getAlphaMetrics(x = dataMetrics, measure = "ABUNDANCE"))
 })
 test_that("getAlphaMetrics works correctly for Biomass", {
   skip_on_ci()
+  skip_on_cran()
+
   expect_snapshot(x = getAlphaMetrics(x = dataMetrics, measure = "BIOMASS"))
 })
 test_that("getBetaMetrics works correctly for Abundance", {
   skip_on_ci()
+  skip_on_cran()
+
   expect_snapshot(x = getBetaMetrics(x = dataMetrics, measure = "ABUNDANCE"))
 })
 test_that("getBetaMetrics works correctly for Biomass", {
   skip_on_ci()
+  skip_on_cran()
+
   expect_snapshot(x = getBetaMetrics(x = dataMetrics, measure = "BIOMASS"))
 })

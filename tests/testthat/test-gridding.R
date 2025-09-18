@@ -49,15 +49,18 @@ test_that("gridding creates correct cell IDs", {
 
 test_that("gridding produces consistent results", {
   skip_on_ci()
+  skip_on_cran()
   expect_snapshot(result)
 })
 
 test_that("gridding respects provided res parameter", {
   skip_on_ci()
+  skip_on_cran()
   expect_snapshot(gridding(meta, btf, res = 18))
 })
 
 test_that("gridding respects resByData argument", {
   skip_on_ci()
+  skip_on_cran()
   expect_snapshot(gridding(meta, btf, resByData = TRUE))
 })

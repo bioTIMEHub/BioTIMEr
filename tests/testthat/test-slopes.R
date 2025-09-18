@@ -1,5 +1,7 @@
 test_that("slopes works consistently", {
   skip_on_ci()
+  skip_on_cran()
+
   # Alpha diversity metrics
   set.seed(42)
   xa <- data.frame(
