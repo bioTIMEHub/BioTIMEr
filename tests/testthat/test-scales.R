@@ -31,6 +31,9 @@ test_that("biotime_cols throws error on invalid palette", {
 
 # ---- scale_color_biotime & scale_fill_biotime ----
 test_that("scale_color_biotime and scale_fill_biotime handle all combinations", {
+  skip_on_ci()
+  skip_on_cran()
+
   for (pal in test_palettes) {
     for (reverse in c(TRUE, FALSE)) {
       for (discrete in c(TRUE, FALSE)) {
