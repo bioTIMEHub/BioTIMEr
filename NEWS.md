@@ -1,4 +1,4 @@
-# BioTIMEr 0.2.4001
+# BioTIMEr 0.2.5
 
 * Patch. all testthat snapshot tests are now skipped on CRAN and CI.
 
