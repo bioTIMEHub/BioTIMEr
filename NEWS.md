@@ -1,4 +1,4 @@
-# BioTIMEr 0.2.5
+# BioTIMEr 0.2.6
 
 - In the `themeBioTIME` function:
 
@@ -9,6 +9,11 @@
   - the order of the arguments did not change.
 
 - Next news
+
+# BioTIMEr 0.2.5 - 19.09.2025
+
+Patch: No code change, only some tests were updated not to run on CRAN and CI to
+allow for an update of package vegan.
 
 # BioTIMEr 0.2.4 - 06.06.2025
 
