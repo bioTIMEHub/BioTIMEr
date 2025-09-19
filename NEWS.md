@@ -1,4 +1,4 @@
-# BioTIMEr 0.2.6
+# BioTIMEr 0.2.7
 
 ## Major Improvement
 
