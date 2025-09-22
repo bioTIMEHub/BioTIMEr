@@ -73,9 +73,9 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = FALSE) {
       "BIOMASS_TYPE"
     )
   )
-  if (inherits(data, "data.table")) {
-    warning("data is converted to a data.frame")
-    data <- as.data.frame(data)
+  if (inherits(btf, "data.table")) {
+    warning("btf is converted to a data.frame")
+    btf <- as.data.frame(btf)
   }
   checkmate::assert_names(
     x = colnames(btf),
