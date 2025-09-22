@@ -89,7 +89,7 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
         y = stats::aggregate(
           x = x[, measure, drop = FALSE],
           by = list(SAMPLE_DESC = x$SAMPLE_DESC),
-          FUN = function(j) anyNA(j)
+          FUN = anyNA
         ) |>
           dplyr::mutate(
             na_values = rowSums(dplyr::pick(dplyr::all_of(measure)))
