@@ -4,7 +4,14 @@
 \alias{resampling}
 \title{Rarefy BioTIME data to an equal number of samples per year}
 \usage{
-resampling(x, measure, resamps = 1L, conservative = FALSE, summarise = TRUE)
+resampling(
+  x,
+  measure,
+  resamps = 1L,
+  conservative = FALSE,
+  summarise = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{x}{(\code{data.frame}) BioTIME gridded data to be resampled (in the format of
@@ -23,6 +30,9 @@ missing observations only.}
 
 \item{summarise}{(\code{logical}). \code{TRUE} by default. If \code{FALSE},
 the function returns abundance and/or biomass summed at the}
+
+\item{verbose}{if TRUE, a warning will be shown when one-year-long time series
+are found in btf and excluded.}
 }
 \value{
 Returns a single long form \code{data.frame} containing the total currency

@@ -201,11 +201,11 @@ dgg_12 <- dggridR::dgconstruct(res = 12)
 # To simplify, we only map the grid cell boundaries for cells which
 # have observations.
 # NOTE: if you are working with the full BioTIME database, this step may take some time.
-grid_12 <- dggridR::dgcellstogrid(dgg_12, grid_samples$cell)
+grid_12 <- dggridR::dgcellstogrid(dgg_12, as.integer(grid_samples$cell))
 
 # Now let's follow the same steps and build a ~10.7 km2 global grid:
 dgg_14 <- dggridR::dgconstruct(res = 14)
-grid_14 <- dggridR::dgcellstogrid(dgg_14, grid_samples_14$cell)
+grid_14 <- dggridR::dgcellstogrid(dgg_14, as.integer(grid_samples_14$cell))
 
 # And we get some polygons for each country of the world, to create a background:
 countries <- ggplot2::map_data("world")

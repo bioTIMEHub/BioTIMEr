@@ -3,7 +3,7 @@
 #' Takes the output of \code{\link{gridding}} and applies sample-based rarefaction to
 #' standardise the number of samples per year within each cell-level time series
 #' (i.e. assemblageID).
-#' @export
+#' @inheritParams gridding
 #' @param x (\code{data.frame}) BioTIME gridded data to be resampled (in the format of
 #' the output of the \code{\link{gridding}} function).
 #' @param measure (\code{character}) currency to be retained during the sample-based
@@ -50,6 +50,7 @@
 #' the returned data frame is the result of individual data frames concatenated
 #' together, one from each iteration identified by a numerical
 #' unique identifier 1:resamps.
+#' @export
 #'
 #' @examples
 #' \donttest{
@@ -69,18 +70,18 @@ resampling <- function(
   measure,
   resamps = 1L,
   conservative = FALSE,
-  summarise = TRUE
+  summarise = TRUE,
+  verbose = TRUE
 ) {
-  if (inherits(x, "data.table")) {
-    warning("x was converted to a data.frame")
-    x <- as.data.frame(x)
-  }
+  data.table::setDT(x)
   checkmate::assert_names(
     x = colnames(x),
     what = "colnames",
     must.include = c("YEAR", "SAMPLE_DESC", "Species", measure)
   )
-  base::stopifnot("measure must be > 0" = all(x[, measure] > 0, na.rm = TRUE))
+  base::stopifnot(
+    "measure must be > 0" = all(x[, measure, with = FALSE] > 0, na.rm = TRUE)
+  )
   checkmate::assert_number(
     x = resamps,
     lower = 1L,
@@ -101,76 +102,83 @@ resampling <- function(
     any.missing = FALSE
   )
 
-  if (anyNA(x[, measure])) {
+  if (anyNA(x[, measure, with = FALSE])) {
     if (conservative) {
-      x = dplyr::semi_join(
-        x = x,
-        y = stats::aggregate(
-          x = x[, measure, drop = FALSE],
-          by = list(SAMPLE_DESC = x$SAMPLE_DESC),
-          FUN = function(j) anyNA(j)
+      x <- dtplyr::lazy_dt(x = x, immutable = FALSE, key_by = "SAMPLE_DESC") |>
+        dplyr::semi_join(
+          y = x |>
+            dplyr::summarise(
+              dplyr::across(dplyr::all_of(measure), .fns = anyNA),
+              .by = "SAMPLE_DESC"
+            ) |>
+            dplyr::filter(rowSums(dplyr::pick(dplyr::all_of(measure))) == 0L),
+          by = "SAMPLE_DESC"
         ) |>
-          dplyr::mutate(
-            na_values = rowSums(dplyr::pick(dplyr::all_of(measure)))
-          ) |>
-          dplyr::filter(.data$na_values == 0L),
-        by = dplyr::join_by("SAMPLE_DESC")
-      )
-      ifelse(
-        test = nrow(x) != 0L,
-        yes = warning(
+        data.table::as.data.table()
+
+      if (nrow(x) == 0L) {
+        stop(paste("Only NA values in column(s)", measure))
+      } else {
+        warning(
           paste0(
             "NA values found and whole samples removed since `conservative` is TRUE.\n",
             "Only a subset of `x` is used."
           ),
           call. = FALSE
-        ),
-        no = stop(paste("Only NA values in column(s)", measure))
-      )
-    } else {
-      x <- x |>
-        dplyr::filter(
-          !apply(
-            X = dplyr::select(x, dplyr::all_of(measure)),
-            MARGIN = 1,
-            FUN = anyNA
-          )
         )
-      ifelse(
-        test = nrow(x) != 0L,
-        yes = warning(
+      }
+    } else {
+      # x <- x |>
+      #   dplyr::filter(
+      #     !apply(
+      #       X = dplyr::select(x, dplyr::all_of(measure)),
+      #       MARGIN = 1,
+      #       FUN = anyNA
+      #     )
+      #   )
+      x <- stats::na.omit(x, cols = measure)
+
+      if (nrow(x) == 0L) {
+        stop(paste("Only NA values in column(s)", measure))
+      } else {
+        warning(
           paste0(
             "NA values found and removed.\n",
             "Only a subset of `x` is used."
           ),
           call. = FALSE
-        ),
-        no = stop(paste("Only NA values in column(s)", measure))
-      )
+        )
+      }
     }
   }
 
   if (
-    tapply(x$YEAR, x$STUDY_ID, function(y) {
-      dplyr::n_distinct(y) == 1L
-    }) |>
+    tapply(x$YEAR, x$STUDY_ID, function(y) dplyr::n_distinct(y) == 1L) |>
       any()
+    # x[j = .(V1 = data.table::uniqueN(x$YEAR) == 1L), keyby = "STUDY_ID"][
+    #   j = any(V1)
+    # ]
   ) {
-    x <- dplyr::anti_join(
-      x = x,
-      y = x |>
-        dplyr::summarise(
-          count = dplyr::n_distinct(.data$YEAR),
-          .by = "STUDY_ID"
-        ) |>
-        dplyr::filter(.data$count == 1L),
-      by = dplyr::join_by("STUDY_ID")
-    )
-    warning("Some 1-year-long studies were removed.")
+    x <- dtplyr::lazy_dt(x = x, immutable = FALSE, key_by = "STUDY_ID") |>
+      dplyr::anti_join(
+        y = x |>
+          dplyr::summarise(
+            count = dplyr::n_distinct(.data$YEAR),
+            .by = "STUDY_ID"
+          ) |>
+          dplyr::filter(.data$count == 1L),
+        by = "STUDY_ID"
+      ) |>
+      data.table::as.data.table()
+
+    if (isTRUE(verbose)) {
+      warning("Some 1-year-long studies were removed.")
+    }
   }
 
   rfIDs <- unique(x$assemblageID)
-  TSrf <- sapply(
+  # rfIDs <- x[j = unique(assemblageID)]
+  TSrf <- lapply(
     X = rfIDs,
     FUN = function(i) {
       x[x$assemblageID == i, ] |>
@@ -179,13 +187,14 @@ resampling <- function(
           resamps = resamps,
           summarise = summarise
         )
-    },
-    USE.NAMES = TRUE,
-    simplify = FALSE
+    }
   )
+  names(TSrf) <- rfIDs
 
   return({
-    dplyr::bind_rows(TSrf, .id = "rfID") |>
+    # dplyr::bind_rows(TSrf, .id = "rfID") |>
+    data.table::rbindlist(TSrf, idcol = "rfID") |>
+      dtplyr::lazy_dt(immutable = FALSE) |>
       tidyr::separate(
         col = "rfID",
         into = c("STUDY_ID", "cell"),
@@ -194,14 +203,15 @@ resampling <- function(
       ) |>
       dplyr::mutate(STUDY_ID = as.integer(.data$STUDY_ID)) |>
       dplyr::select(
-        "resamp",
         assemblageID = "rfID",
+        "resamp",
         "STUDY_ID",
         "YEAR",
         "Species",
         dplyr::any_of(c("SAMPLE_DESC", "minsamp")),
         dplyr::all_of(measure)
-      )
+      ) |>
+      dplyr::as_tibble()
   })
 }
 
@@ -216,10 +226,12 @@ resampling <- function(
 
 rarefysamples <- function(x, measure, resamps, summarise) {
   # Computing minimal effort per year in this assemblageID
-  minsample <- tapply(x$SAMPLE_DESC, x$YEAR, function(x) {
-    dplyr::n_distinct(x)
-  }) |>
-    min()
+  # minsample <- tapply(x$SAMPLE_DESC, x$YEAR, function(x) {
+  #   dplyr::n_distinct(x)
+  # }) |>
+  #   min()
+  # minsample <- x[j = data.table::uniqueN(SAMPLE_DESC), keyby = "YEAR"][j = min(V1)]
+  minsample <- x[j = data.table::uniqueN(SAMPLE_DESC), keyby = "YEAR"] |> min()
 
   rareftab_list <- lapply(
     # beginning loop on repetitions
@@ -238,29 +250,51 @@ rarefysamples <- function(x, measure, resamps, summarise) {
         unlist() # end of loop on years
 
       if (summarise) {
-        raref <- stats::aggregate(
-          x = x[selected_indices, measure, drop = FALSE],
-          by = list(
-            YEAR = x$YEAR[selected_indices],
-            Species = x$Species[selected_indices]
-          ),
-          FUN = sum
-        )
+        # raref <- stats::aggregate(
+        #   x = x[selected_indices, measure, drop = FALSE],
+        #   by = list(
+        #     YEAR = x$YEAR[selected_indices],
+        #     Species = x$Species[selected_indices]
+        #   ),
+        #   FUN = sum
+        # )
+        raref <- x |>
+          dtplyr::lazy_dt() |>
+          dplyr::slice(selected_indices) |>
+          dplyr::summarise(
+            dplyr::across(.cols = measure, .fns = sum),
+            .by = c("YEAR", "Species")
+          ) |>
+          data.table::as.data.table()
       } else {
         # Does it really make a difference?
-        raref <- stats::aggregate(
-          x = x[selected_indices, measure, drop = FALSE],
-          by = list(
-            SAMPLE_DESC = x$SAMPLE_DESC[selected_indices],
-            YEAR = x$YEAR[selected_indices],
-            Species = x$Species[selected_indices]
-          ),
-          FUN = sum
-        )
-        raref$minsamp = minsample
+        # raref <- stats::aggregate(
+        #   x = x[selected_indices, measure, drop = FALSE],
+        #   by = list(
+        #     SAMPLE_DESC = x$SAMPLE_DESC[selected_indices],
+        #     YEAR = x$YEAR[selected_indices],
+        #     Species = x$Species[selected_indices]
+        #   ),
+        #   FUN = sum
+        # )
+        # raref$minsamp = minsample
+        raref <- x |>
+          dtplyr::lazy_dt(immutable = FALSE) |>
+          dplyr::slice(selected_indices) |>
+          dplyr::summarise(
+            dplyr::across(.cols = measure, .fns = sum),
+            .by = c("SAMPLE_DESC", "YEAR", "Species")
+          ) |>
+          dplyr::mutate(minsamp = minsample) |>
+          data.table::as.data.table()
+        # raref <- x[
+        #   i = selected_indices,
+        #   j = sum(..measure),
+        #   by = .("SAMPLE_DESC", "YEAR", "Species")
+        # ][j = minsamp = minsample]
       }
       return(raref)
     }
   ) # end of loop on repetitions
-  return(dplyr::bind_rows(rareftab_list, .id = "resamp"))
+  return(data.table::rbindlist(rareftab_list, idcol = "resamp"))
 } # end of function

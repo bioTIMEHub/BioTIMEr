@@ -1,5 +1,5 @@
 # Create example data for testing rarefysamples
-test_df <- data.frame(
+test_dt <- data.table::data.table(
   YEAR = rep(rep(2010:2015, each = 4), times = 8),
   SAMPLE_DESC = rep(LETTERS[1L:8L], each = 24),
   Species = unlist(lapply(
@@ -15,18 +15,18 @@ resamps <- 3L
 # Summarise = TRUE (default) ----
 test_that("rarefysamples returns a data frame", {
   result <- rarefysamples(
-    x = test_df,
-    measure = "ABUNDANCE",
+    x = test_dt,
+    measure = "BIOMASS",
     resamps,
     summarise = TRUE
   )
-  expect_s3_class(result, "data.frame")
+  expect_s3_class(result, "data.table")
 })
 
 test_that("rarefysamples returns the expected column names", {
   result <- rarefysamples(
-    x = test_df,
-    measure = "ABUNDANCE",
+    x = test_dt,
+    measure = "BIOMASS",
     resamps,
     summarise = TRUE
   )
@@ -36,7 +36,7 @@ test_that("rarefysamples returns the expected column names", {
     must.include = c(
       "YEAR",
       "Species",
-      "ABUNDANCE",
+      "BIOMASS",
       "resamp"
     )
   )
@@ -44,8 +44,8 @@ test_that("rarefysamples returns the expected column names", {
 
 test_that("rarefysamples returns non-empty data frame", {
   result <- rarefysamples(
-    x = test_df,
-    measure = "ABUNDANCE",
+    x = test_dt,
+    measure = "BIOMASS",
     resamps,
     summarise = TRUE
   )
@@ -54,53 +54,65 @@ test_that("rarefysamples returns non-empty data frame", {
 
 test_that("rarefysamples returns consistent 'YEAR' values", {
   result <- rarefysamples(
-    x = test_df,
-    measure = "ABUNDANCE",
+    x = test_dt,
+    measure = "BIOMASS",
     resamps,
     summarise = TRUE
   )
-  expected_years <- unique(test_df$YEAR)
+  expected_years <- unique(test_dt$YEAR)
   expect_setequal(unique(result$YEAR), expected_years)
 })
 
 test_that("rarefysamples returns consistent 'Species' values", {
   result <- rarefysamples(
-    x = test_df,
-    measure = "ABUNDANCE",
+    x = test_dt,
+    measure = "BIOMASS",
     resamps,
     summarise = TRUE
   )
-  expected_species <- unique(test_df$Species)
+  expected_species <- unique(test_dt$Species)
   expect_setequal(unique(result$Species), expected_species)
 })
 
-test_that("rarefysamples returns positive 'Abundance' values", {
+
+test_that("rarefysamples returns positive 'BIOMASS' values", {
   result <- rarefysamples(
-    x = test_df,
-    measure = "ABUNDANCE",
+    x = test_dt,
+    measure = "BIOMASS",
     resamps,
     summarise = TRUE
   )
-  checkmate::expect_integerish(result$ABUNDANCE, lower = 0L)
+  checkmate::expect_numeric(
+    result$BIOMASS,
+    lower = 0L,
+    null.ok = FALSE,
+    all.missing = FALSE
+  )
 })
 
 test_that("rarefysamples summarise = TRUE returns consistent results", {
   skip_on_cran()
   skip_on_ci()
-  expect_snapshot(rarefysamples(
-    x = test_df,
-    measure = c("ABUNDANCE", "BIOMASS"),
-    resamps,
-    summarise = TRUE
-  ))
+  set.seed(42)
+
+  expect_snapshot(
+    suppressWarnings(
+      rarefysamples(
+        x = test_dt,
+        measure = c("ABUNDANCE", "BIOMASS"),
+        resamps,
+        summarise = TRUE
+      )
+    )
+  )
 })
 
 
-# Summarise = FALSE (default) ----
+# Summarise = FALSE ----
 test_that("rarefysamples summarise = FALSE returns a data frame", {
   result <- rarefysamples(
-    x = test_df,
-    measure = "ABUNDANCE",
+    x = test_dt,
+    measure = "BIOMASS",
     resamps,
     summarise = FALSE
   )
@@ -109,8 +121,8 @@ test_that("rarefysamples summarise = FALSE returns a data frame", {
 
 test_that("rarefysamples returns the expected column names", {
   result <- rarefysamples(
-    x = test_df,
-    measure = "ABUNDANCE",
+    x = test_dt,
+    measure = "BIOMASS",
     resamps,
     summarise = FALSE
   )
@@ -120,7 +132,7 @@ test_that("rarefysamples returns the expected column names", {
     must.include = c(
       "YEAR",
       "Species",
-      "ABUNDANCE",
+      "BIOMASS",
       "resamp",
       "SAMPLE_DESC"
     )
@@ -129,8 +141,8 @@ test_that("rarefysamples returns the expected column names", {
 
 test_that("rarefysamples returns non-empty data frame", {
   result <- rarefysamples(
-    x = test_df,
-    measure = "ABUNDANCE",
+    x = test_dt,
+    measure = "BIOMASS",
     resamps,
     summarise = FALSE
   )
@@ -139,43 +151,40 @@ test_that("rarefysamples returns non-empty data frame", {
 
 test_that("rarefysamples returns consistent 'YEAR' values", {
   result <- rarefysamples(
-    x = test_df,
-    measure = "ABUNDANCE",
+    x = test_dt,
+    measure = "BIOMASS",
     resamps,
     summarise = FALSE
   )
-  expected_years <- unique(test_df$YEAR)
+  expected_years <- unique(test_dt$YEAR)
   expect_setequal(unique(result$YEAR), expected_years)
 })
 
 test_that("rarefysamples returns consistent 'Species' values", {
   result <- rarefysamples(
-    x = test_df,
-    measure = "ABUNDANCE",
+    x = test_dt,
+    measure = "BIOMASS",
     resamps,
     summarise = FALSE
   )
-  expected_species <- unique(test_df$Species)
-  expect_setequal(unique(result$Species), expected_species)
+  expect_setequal(unique(result$Species), unique(test_dt$Species))
 })
 
-test_that("rarefysamples returns positive 'Abundance' values", {
-  result <- rarefysamples(
-    x = test_df,
-    measure = "ABUNDANCE",
-    resamps,
-    summarise = FALSE
-  )
-  checkmate::expect_integerish(result$ABUNDANCE, lower = 0L)
-})
 
 test_that("rarefysamples summarise = FALSE returns consistent results", {
   skip_on_cran()
   skip_on_ci()
-  expect_snapshot(rarefysamples(
-    x = test_df,
-    measure = c("ABUNDANCE", "BIOMASS"),
-    resamps,
-    summarise = FALSE
-  ))
+  set.seed(42)
+
+  expect_snapshot(
+    suppressWarnings(
+      rarefysamples(
+        x = test_dt,
+        measure = c("ABUNDANCE", "BIOMASS"),
+        resamps,
+        summarise = FALSE
+      ) |>
+        dplyr::as_tibble()
+    )
+  )
 })

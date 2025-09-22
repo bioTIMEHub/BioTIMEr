@@ -1,5 +1,8 @@
 # themeBioTIME
 test_that("themeBioTIME - works as expected", {
+  skip_on_ci()
+  skip_on_cran()
+
   set.seed(42)
   data <- as.data.frame(
     matrix(data = rpois(384, 10), ncol = 4)

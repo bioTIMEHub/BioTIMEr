@@ -7,7 +7,7 @@
   "codeRepository": "https://github.com/bioTIMEHub/BioTIMEr",
   "issueTracker": "https://github.com/bioTIMEHub/BioTIMEr/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.2.5",
+  "version": "0.2.7",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -210,18 +210,6 @@
     },
     "2": {
       "@type": "SoftwareApplication",
-      "identifier": "dplyr",
-      "name": "dplyr",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=dplyr"
-    },
-    "3": {
-      "@type": "SoftwareApplication",
       "identifier": "tidyr",
       "name": "tidyr",
       "provider": {
@@ -232,19 +220,19 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tidyr"
     },
-    "4": {
+    "3": {
       "@type": "SoftwareApplication",
-      "identifier": "dtplyr",
-      "name": "dtplyr",
+      "identifier": "dplyr",
+      "name": "dplyr",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=dtplyr"
+      "sameAs": "https://CRAN.R-project.org/package=dplyr"
     },
-    "5": {
+    "4": {
       "@type": "SoftwareApplication",
       "identifier": "data.table",
       "name": "data.table",
@@ -255,6 +243,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=data.table"
+    },
+    "5": {
+      "@type": "SoftwareApplication",
+      "identifier": "dtplyr",
+      "name": "dtplyr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=dtplyr"
     },
     "6": {
       "@type": "SoftwareApplication",
@@ -319,7 +319,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "8171.142KB",
+  "fileSize": "4260.85KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",

@@ -153,9 +153,11 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = TRUE) {
     data.table::as.data.table(bt)
 
   if (
-    # tapply(bt$YEAR, bt$STUDY_ID, function(y) dplyr::n_distinct(y) == 1L) |>
-    #   any()
-    bt[j = data.table::uniqueN(YEAR) == 1L, keyby = "STUDY_ID"][j = any(V1)]
+    tapply(bt$YEAR, bt$STUDY_ID, function(y) dplyr::n_distinct(y) == 1L) |>
+      any()
+    # bt[j = .(V1 = data.table::uniqueN(bt$YEAR) == 1L), keyby = "STUDY_ID"][
+    #   j = any(V1)
+    # ]
     # bt |>
     #   dplyr::summarise(
     #     dplyr::n_distinct(.data$YEAR) == 1L,
@@ -191,6 +193,16 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = TRUE) {
 
   bt <- bt |>
     dtplyr::lazy_dt(immutable = FALSE, key_by = "STUDY_ID") |>
+    # dplyr::mutate(
+    #   cell = function(lat = .data$lat_to_grid, lon = .data$lon_to_grid) {
+    #     dggridR::dgGEO_to_SEQNUM(
+    #       dggs = dgg,
+    #       in_lon_deg = lon,
+    #       in_lat_deg = lat
+    #     )$seqnum |>
+    #       as.integer()
+    #   }
+    # ) |>
     dplyr::mutate(
       cell = dggridR::dgGEO_to_SEQNUM(
         dggs = dgg,
@@ -207,7 +219,18 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = TRUE) {
       remove = FALSE
     ) |>
     dplyr::mutate(dplyr::across(
-      .cols = c("cell", "assemblageID"),
+      .cols = c(
+        "SAMPLE_DESC",
+        "cell",
+        "assemblageID",
+        "CLIMATE",
+        "REALM",
+        "TAXA",
+        "StudyMethod",
+        "ABUNDANCE_TYPE",
+        "BIOMASS_TYPE",
+        "Species"
+      ),
       .fns = as.factor
     )) |>
     dplyr::select(
