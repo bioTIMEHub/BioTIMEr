@@ -267,7 +267,6 @@ rarefysamples <- function(x, measure, resamps, summarise) {
           ) |>
           data.table::as.data.table()
       } else {
-        # Does it really make a difference?
         # raref <- stats::aggregate(
         #   x = x[selected_indices, measure, drop = FALSE],
         #   by = list(

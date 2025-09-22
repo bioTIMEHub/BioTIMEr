@@ -246,4 +246,54 @@ if (FALSE) {
     },
   )
   rm("bt")
+
+  # Benchmarking BioTIMEr vs dtplyr BioTIMEr
+  library(BioTIMEr)
+  microbenchmark::microbenchmark(
+    dplyr = {
+      set.seed(42)
+      gridding_reference(BTsubset_meta, BTsubset_data, 12, verbose = FALSE)
+    },
+    dtplyr = {
+      set.seed(42)
+      gridding(BTsubset_meta, BTsubset_data, 12, verbose = FALSE)
+    }
+  )
+
+  bench::mark(
+    check = FALSE,
+    dplyr = {
+      set.seed(42)
+      gridding_reference(BTsubset_meta, BTsubset_data, 12, verbose = FALSE)
+    },
+    dtplyr = {
+      set.seed(42)
+      gridding(BTsubset_meta, BTsubset_data, 12, verbose = FALSE)
+    }
+  )
+
+  library(BioTIMEr)
+  microbenchmark::microbenchmark(
+    times = 20,
+    dplyr = {
+      set.seed(42)
+      resampling_ref(x, measure = "BIOMASS")
+    },
+    dtplyr = {
+      set.seed(42)
+      resampling(y, measure = "BIOMASS")
+    }
+  )
+
+  bench::mark(
+    check = FALSE,
+    dplyr = {
+      set.seed(42)
+      resampling_ref(x, measure = "BIOMASS")
+    },
+    dtplyr = {
+      set.seed(42)
+      resampling(y, measure = "BIOMASS", summarise = TRUE)
+    }
+  )
 }

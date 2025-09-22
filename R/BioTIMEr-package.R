@@ -10,6 +10,6 @@
 .datatable.aware <- TRUE
 
 ## usethis namespace: start
-utils::globalVariables(c(".", ".data"))
+utils::globalVariables(c(".data", "SAMPLE_DESC"))
 ## usethis namespace: end
 NULL
