@@ -6,8 +6,7 @@ BTsubset_data <- base::readRDS(testthat::test_path(
 ))
 test_df <- gridding(BTsubset_meta, BTsubset_data)
 
-test_that("resampling runs correctly for Abundance and Biomass together
-          2 iterations, conservative", {
+test_that("resampling runs correctly for Abundance and Biomass together 2 iterations, conservative", {
   skip_on_ci()
   skip_on_cran()
   set.seed(42)

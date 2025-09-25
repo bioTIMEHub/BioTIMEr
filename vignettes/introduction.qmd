@@ -275,7 +275,7 @@ grid_rare <- resampling(
 ```{r}
 #| label: tests1
 #| include: false
-#let's apply it then:
+# Let's apply it then:
 
 #g rid_samples_temp <- subset(grid_samples, !grid_samples$BIOMASS==0) #to be deleted after Faye reviews the data and makes all 0=NAs
 # grid_rare <- resampling( x= grid_samples_test, measure ="BIOMASS", resamps = 1, conservative = FALSE)
@@ -324,7 +324,7 @@ One option to deal with this issue is to repeat this random sampling process mul
 
 ```{r}
 #| label: tbl-resampling_ex4
-#| # Let's implement the sample-based rarefaction by resampling the dataset 10 times.
+# Let's implement the sample-based rarefaction by resampling the dataset 10 times.
 grid_rare_n10 <- resampling(
   x = grid_samples,
   measure = "ABUNDANCE",
@@ -405,7 +405,7 @@ Finally, when looking to measure biodiversity change using temporal data, it is 
 
 ```{r}
 #| label: tbl-trends1
-#| # Let's apply it then:
+# Let's apply it then:
 alpha_slopes <- getLinearRegressions(
   x = alpha_metrics,
   divType = "alpha",
@@ -417,7 +417,7 @@ alpha_slopes |> head(6) |> kable()
 ```
 ```{r}
 #| label: tbl-trends2
-#| # Let's apply it then:
+# Let's apply it then:
 beta_slopes <- getLinearRegressions(
   x = beta_metrics,
   divType = "beta",
@@ -532,7 +532,7 @@ stats_beta <- beta_slopes_simp |>
     .by = metric
   ) #margin of error
 
-#Let's put it all together
+# Let's put it all together
 ggplot(data = beta_slopes_simp) +
   geom_histogram(aes(x = slope, fill = metric), bins = 25) +
   #geom_density(alpha=0.5)+ #in case you want a density plot instead

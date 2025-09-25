@@ -1,5 +1,6 @@
 # Benchmarking.
 if (FALSE) {
+  # counting one year studies
   bench::mark(
     tapply = tapply(x$YEAR, x$STUDY_ID, function(y) length(unique(y)) == 1L) |>
       any(),
@@ -306,10 +307,9 @@ if (FALSE) {
       no = NA_character_
     )
   )
-  # expression                                     min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time result memory     time       gc
-  #   <bch:expr>                                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl> <int> <dbl>   <bch:tm> <list> <list>     <list>     <list>
-  # 1 "meta <- dplyr::mutate(meta, StudyMethod… 409.38µs 453.89µs     2015.    8.81KB     8.33   968     4    480.3ms <NULL> <Rprofmem> <bench_tm> <tibble>
-  # 2 "meta$StudyMethod <- data.table::fifelse…   3.53µs   3.94µs   243238.      544B     0    10000     0     41.1ms <NULL> <Rprofmem> <bench_tm> <tibble>
+  # expression                  min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time
+  # 1 "meta <- dplyr::mu   409.38µs 453.89µs     2015.    8.81KB     8.33   968     4    480.3ms
+  # 2 "meta$StudyMethod      3.53µs   3.94µs   243238.      544B     0    10000     0     41.1ms
 
   meta <- readRDS(file = "ignored/data/benchmarking/sum_mean_sd.rds")
   bench::mark(
@@ -335,10 +335,9 @@ if (FALSE) {
     }
   )
   # # A tibble: 2 × 13
-  #   expression                                       min median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time result memory     time       gc
-  #   <bch:expr>                                   <bch:t> <bch:>     <dbl> <bch:byt>    <dbl> <int> <dbl>   <bch:tm> <list> <list>     <list>     <list>
-  # 1 "SL_extent <- dplyr::pull(dplyr::summarise(… 982.9µs  1.1ms      844.    10.6KB     6.27   404     3      479ms <NULL> <Rprofmem> <bench_tm> <tibble>
-  # 2 "{ AREA_SQ_KM <- meta[meta$StudyMethod == \…  11.2µs 12.1µs    78842.      272B     7.88  9999     1      127ms <NULL> <Rprofmem> <bench_tm> <tibble>
+  #   expression                                       min median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time
+  # 1 "SL_extent <- dplyr::pull(dplyr::summarise(… 982.9µs  1.1ms      844.    10.6KB     6.27   404     3      479ms
+  # 2 "{ AREA_SQ_KM <- meta[meta$StudyMethod == \…  11.2µs 12.1µs    78842.      272B     7.88  9999     1      127ms
 
   # Row filtering ----
   # Win for dplyr. comparable speed, less ram
@@ -352,10 +351,9 @@ if (FALSE) {
       !is.element(bt$STUDY_ID, names(one_year_study)[one_year_study]),
     ]
   )
-  #    expression                  min median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time result memory     time       gc
-  #   <bch:expr>               <bch:> <bch:>     <dbl> <bch:byt>    <dbl> <int> <dbl>   <bch:tm> <list> <list>     <list>     <list>
-  # 1 bt <- dplyr::filter(bt,…  7.55ms 8.19ms      113.    17.8MB     44.3    23     9      203ms <df>   <Rprofmem> <bench_tm> <tibble>
-  # 2 bt <- bt[!is.element(bt… 5.57ms 6.84ms      147.    29.2MB    133.     21    19      143ms <df>   <Rprofmem> <bench_tm> <tibble>
+  #    expression                  min median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time
+  # 1 bt <- dplyr::filter(bt,…  7.55ms 8.19ms      113.    17.8MB     44.3    23     9      203ms
+  # 2 bt <- bt[!is.element(bt… 5.57ms 6.84ms      147.    29.2MB    133.     21    19      143ms
 
   # tidyr::separate vs data.table::tstrsplit (by reference)
   TSrf <- readRDS("ignored/data/benchmarking/rarefy_separate_tstrsplit.rds")
@@ -373,10 +371,10 @@ if (FALSE) {
       x[j = c("STUDY_ID", "cell") := data.table::tstrsplit(rfID, split = "_")]
     }
   )
-  #   expression                  min median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time result memory     time       gc
-  #   <bch:expr>               <bch:> <bch:>     <dbl> <bch:byt>    <dbl> <int> <dbl>   <bch:tm> <list> <list>     <list>     <list>
-  # 1 "x <- tidyr::separate(d… 7.47ms 7.91ms      126.    16.2MB    89.9     21    15      167ms <NULL> <Rprofmem> <bench_tm> <tibble>
-  # 2 "{ x <- data.table::rbi…  1.2ms 1.23ms      795.   222.9KB     4.12   386     2      486ms <NULL> <Rprofmem> <bench_tm> <tibble>
+  #   expression                  min median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time
+  # 1 "x <- tidyr::separate(d… 7.47ms 7.91ms      126.    16.2MB    89.9     21    15      167ms
+  # 2 "{ x <- data.table::rbi…  1.2ms 1.23ms      795.   222.9KB     4.12   386     2      486ms
+
   # semi_join versus data.table antijoin
   x = readRDS("ignored/data/benchmarking/rarefy_semi_join_datatable.rds")
   measure = c("BIOMASS", "ABUNDANCE")
@@ -398,11 +396,9 @@ if (FALSE) {
       on = "SAMPLE_DESC"
     ]
   )
-
-  #   expression                 min  median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time result memory     time       gc
-  #   <bch:expr>             <bch:t> <bch:t>     <dbl> <bch:byt>    <dbl> <int> <dbl>   <bch:tm> <list> <list>     <list>     <list>
-  # 1 "dplyr::semi_join(x, …  25.5ms  26.3ms     24.2     19.1MB     7.45    13     4      537ms <NULL> <Rprofmem> <bench_tm> <tibble>
-  # 2 "x[i = x[j = anyNA(.S… 128.1ms 128.8ms      7.57   128.1MB    18.9      4    10      528ms <NULL> <Rprofmem> <bench_tm> <tibble>
+  #   expression                 min  median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time
+  # 1 "dplyr::semi_join(x, …  25.5ms  26.3ms     24.2     19.1MB     7.45    13     4      537ms
+  # 2 "x[i = x[j = anyNA(.S… 128.1ms 128.8ms      7.57   128.1MB    18.9      4    10      528ms
 
   # lapply vs data.table keyby ----
   ## resampling ----
@@ -433,9 +429,9 @@ if (FALSE) {
       ]
     }
   )
-  #  expression  min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time result memory     time       gc
-  # 1 lapply     3.58s  3.58s     0.280     731MB     6.71     1    24      3.58s <NULL> <Rprofmem> <bench_tm> <tibble>
-  # 2 data.table 3.16s  3.16s     0.317     178MB     5.70     1    18      3.16s <NULL> <Rprofmem> <bench_tm> <tibble>
+  #  expression  min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time
+  # 1 lapply     3.58s  3.58s     0.280     731MB     6.71     1    24      3.58s
+  # 2 data.table 3.16s  3.16s     0.317     178MB     5.70     1    18      3.16s
 
   ## rarefysamples 1 ----
   x <- readRDS("ignored/data/benchmarking/rarefysamples_lapply_datatable_1.rds")
@@ -467,9 +463,10 @@ if (FALSE) {
       ]$sel
     }
   )
-  #     expression    min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time result memory     time            gc
-  # 1 lapply      121.9ms  126.1ms      5.22  223.47MB    13.9      3     8      575ms <NULL> <Rprofmem> <bench_tm [3]>  <tibble>
-  # 2 data.table   20.6ms   21.2ms     43.0     8.96MB     7.82    22     4      511ms <NULL> <Rprofmem> <bench_tm [22]> <tibble>
+  #     expression    min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time
+  # 1 lapply      121.9ms  126.1ms      5.22  223.47MB    13.9      3     8      575ms
+  # 2 data.table   20.6ms   21.2ms     43.0     8.96MB     7.82    22     4      511ms
+
   ## rarefysamples 2 ----
   bench::mark(
     check = FALSE,
@@ -486,7 +483,7 @@ if (FALSE) {
       by = c("YEAR", "Species")
     ]
   )
-  #     expression    min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time result memory              time       gc
-  # 1 dplyr       21.46ms  22.34ms      45.1      12MB     7.51    18     3      399ms <NULL> <Rprofmem>          <bench_tm> <tibble>
-  # 2 data.table   4.15ms   4.94ms     197.      4.1MB    11.6     85     5      431ms <NULL> <Rprofmem [50 × 3]> <bench_tm> <tibble>
+  #     expression    min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time
+  # 1 dplyr       21.46ms  22.34ms      45.1      12MB     7.51    18     3      399ms
+  # 2 data.table   4.15ms   4.94ms     197.      4.1MB    11.6     85     5      431ms
 }

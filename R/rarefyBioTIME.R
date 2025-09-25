@@ -15,7 +15,8 @@
 #' is found in the measure field(s), the whole sample is removed instead of the
 #' missing observations only.
 #' @param summarise (\code{logical}). \code{TRUE} by default. If \code{FALSE},
-#' the function returns abundance and/or biomass summed at the
+#' the function returns abundance and/or biomass summed at the SAMPLE_DESC level
+#' (i.e., per sample), rather than per species per year.
 #'
 #' @returns Returns a single long form \code{data.frame} containing the total currency
 #' or currencies of interest (sum) for each species in each year within each

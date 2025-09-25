@@ -169,6 +169,7 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = TRUE) {
     no = bt$LATITUDE
   )
 
+  # See benchmarks.R # counting one year studies
   one_year_studies <- tapply(bt$YEAR, bt$STUDY_ID, function(y) {
     data.table::uniqueN(y) == 1L
   })
