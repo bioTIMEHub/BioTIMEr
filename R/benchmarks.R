@@ -250,24 +250,21 @@ if (FALSE) {
   # Benchmarking BioTIMEr vs dtplyr BioTIMEr
   library(BioTIMEr)
   microbenchmark::microbenchmark(
-    dplyr = {
-      set.seed(42)
+    times = 10,
+    ref = {
       gridding_reference(BTsubset_meta, BTsubset_data, 12, verbose = FALSE)
     },
-    dtplyr = {
-      set.seed(42)
+    new = {
       gridding(BTsubset_meta, BTsubset_data, 12, verbose = FALSE)
     }
   )
 
   bench::mark(
     check = FALSE,
-    dplyr = {
-      set.seed(42)
+    ref = {
       gridding_reference(BTsubset_meta, BTsubset_data, 12, verbose = FALSE)
     },
-    dtplyr = {
-      set.seed(42)
+    new = {
       gridding(BTsubset_meta, BTsubset_data, 12, verbose = FALSE)
     }
   )
@@ -275,25 +272,88 @@ if (FALSE) {
   library(BioTIMEr)
   microbenchmark::microbenchmark(
     times = 20,
-    dplyr = {
-      set.seed(42)
+    ref = {
       resampling_ref(x, measure = "BIOMASS")
     },
-    dtplyr = {
-      set.seed(42)
+    new = {
       resampling(y, measure = "BIOMASS")
     }
   )
 
   bench::mark(
     check = FALSE,
-    dplyr = {
+    ref = {
       set.seed(42)
       resampling_ref(x, measure = "BIOMASS")
     },
-    dtplyr = {
+    new = {
       set.seed(42)
       resampling(y, measure = "BIOMASS", summarise = TRUE)
     }
   )
+
+  # massive wins of base R versus dplyr
+  meta <- BTsubset_meta
+  bench::mark(
+    check = FALSE,
+    meta <- meta |>
+      dplyr::mutate(
+        StudyMethod = dplyr::if_else(.data$NUMBER_LAT_LONG == 1, "SL", NA)
+      ),
+    meta$StudyMethod <- data.table::fifelse(
+      test = meta$NUMBER_LAT_LONG == 1L,
+      yes = "SL",
+      no = NA_character_
+    )
+  )
+  # expression                                     min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time result memory     time       gc
+  #   <bch:expr>                                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl> <int> <dbl>   <bch:tm> <list> <list>     <list>     <list>
+  # 1 "meta <- dplyr::mutate(meta, StudyMethod… 409.38µs 453.89µs     2015.    8.81KB     8.33   968     4    480.3ms <NULL> <Rprofmem> <bench_tm> <tibble>
+  # 2 "meta$StudyMethod <- data.table::fifelse…   3.53µs   3.94µs   243238.      544B     0    10000     0     41.1ms <NULL> <Rprofmem> <bench_tm> <tibble>
+
+  meta <- readRDS(file = "ignored/data/benchmarking/sum_mean_sd.rds")
+  bench::mark(
+    check = FALSE,
+    SL_extent <- meta |>
+      dplyr::filter(.data$StudyMethod == "SL" & .data$AREA_SQ_KM <= 500) |>
+      dplyr::summarise(
+        sum(
+          mean(.data$AREA_SQ_KM, na.rm = TRUE),
+          stats::sd(.data$AREA_SQ_KM, na.rm = TRUE)
+        )
+      ) |>
+      dplyr::pull(),
+    {
+      AREA_SQ_KM <- meta[
+        meta$StudyMethod == "SL" & meta$AREA_SQ_KM <= 500,
+        "AREA_SQ_KM"
+      ]
+      SL_extent <- sum(
+        mean(AREA_SQ_KM, na.rm = TRUE),
+        stats::sd(AREA_SQ_KM, na.rm = TRUE)
+      )
+    }
+  )
+  # # A tibble: 2 × 13
+  #   expression                                       min median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time result memory     time       gc
+  #   <bch:expr>                                   <bch:t> <bch:>     <dbl> <bch:byt>    <dbl> <int> <dbl>   <bch:tm> <list> <list>     <list>     <list>
+  # 1 "SL_extent <- dplyr::pull(dplyr::summarise(… 982.9µs  1.1ms      844.    10.6KB     6.27   404     3      479ms <NULL> <Rprofmem> <bench_tm> <tibble>
+  # 2 "{ AREA_SQ_KM <- meta[meta$StudyMethod == \…  11.2µs 12.1µs    78842.      272B     7.88  9999     1      127ms <NULL> <Rprofmem> <bench_tm> <tibble>
+
+  # Row filtering ----
+  # Win for dplyr. comparable speed, less ram
+  bench::mark(
+    check = FALSE,
+    bt <- bt |>
+      dplyr::filter(
+        !is.element(STUDY_ID, names(one_year_study)[which(one_year_study)])
+      ),
+    bt <- bt[
+      !is.element(bt$STUDY_ID, names(one_year_study)[one_year_study]),
+    ]
+  )
+  #    expression                  min median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time result memory     time       gc
+  #   <bch:expr>               <bch:> <bch:>     <dbl> <bch:byt>    <dbl> <int> <dbl>   <bch:tm> <list> <list>     <list>     <list>
+  # 1 bt <- dplyr::filter(bt,…  7.55ms 8.19ms      113.    17.8MB     44.3    23     9      203ms <df>   <Rprofmem> <bench_tm> <tibble>
+  # 2 bt <- bt[!is.element(bt… 5.57ms 6.84ms      147.    29.2MB    133.     21    19      143ms <df>   <Rprofmem> <bench_tm> <tibble>
 }

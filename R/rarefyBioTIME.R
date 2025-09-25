@@ -195,6 +195,8 @@ resampling <- function(
     # dplyr::bind_rows(TSrf, .id = "rfID") |>
     data.table::rbindlist(TSrf, idcol = "rfID") |>
       dtplyr::lazy_dt(immutable = FALSE) |>
+      # translated by dtplyr, separate calls data.table::tstrsplit which takes
+      # < 200ms instead of <2s for the dplyr version.
       tidyr::separate(
         col = "rfID",
         into = c("STUDY_ID", "cell"),
@@ -225,6 +227,81 @@ resampling <- function(
 #' @keywords internal
 
 rarefysamples <- function(x, measure, resamps, summarise) {
+  # Computing minimal effort per year in this assemblageID
+  # minsample <- tapply(x$SAMPLE_DESC, x$YEAR, function(x) {
+  #   dplyr::n_distinct(x)
+  # }) |>
+  #   min()
+  # minsample <- x[j = data.table::uniqueN(SAMPLE_DESC), keyby = "YEAR"][j = min(V1)]
+  minsample <- x[j = data.table::uniqueN(SAMPLE_DESC), keyby = "YEAR"] |> min()
+
+  rareftab_list <- lapply(
+    # beginning loop on repetitions
+    X = seq_len(resamps),
+    FUN = function(i) {
+      selected_indices <- lapply(
+        # beginning sub loop on years
+        X = unique(x$YEAR),
+        FUN = function(y) {
+          sam <- x$SAMPLE_DESC[x$YEAR == y] |>
+            unique() |>
+            sample(minsample, replace = FALSE)
+          return(which(x$SAMPLE_DESC %in% sam & x$YEAR == y))
+        }
+      ) |>
+        unlist() # end of loop on years
+
+      if (summarise) {
+        # raref <- stats::aggregate(
+        #   x = x[selected_indices, measure, drop = FALSE],
+        #   by = list(
+        #     YEAR = x$YEAR[selected_indices],
+        #     Species = x$Species[selected_indices]
+        #   ),
+        #   FUN = sum
+        # )
+        raref <- x |>
+          dtplyr::lazy_dt() |>
+          dplyr::slice(selected_indices) |>
+          dplyr::summarise(
+            dplyr::across(.cols = measure, .fns = sum),
+            .by = c("YEAR", "Species")
+          ) |>
+          data.table::as.data.table()
+      } else {
+        # raref <- stats::aggregate(
+        #   x = x[selected_indices, measure, drop = FALSE],
+        #   by = list(
+        #     SAMPLE_DESC = x$SAMPLE_DESC[selected_indices],
+        #     YEAR = x$YEAR[selected_indices],
+        #     Species = x$Species[selected_indices]
+        #   ),
+        #   FUN = sum
+        # )
+        # raref$minsamp = minsample
+        raref <- x |>
+          dtplyr::lazy_dt(immutable = FALSE) |>
+          dplyr::slice(selected_indices) |>
+          dplyr::summarise(
+            dplyr::across(.cols = measure, .fns = sum),
+            .by = c("SAMPLE_DESC", "YEAR", "Species")
+          ) |>
+          dplyr::mutate(minsamp = minsample) |>
+          data.table::as.data.table()
+        # raref <- x[
+        #   i = selected_indices,
+        #   j = sum(..measure),
+        #   by = .("SAMPLE_DESC", "YEAR", "Species")
+        # ][j = minsamp = minsample]
+      }
+      return(raref)
+    }
+  ) # end of loop on repetitions
+  return(data.table::rbindlist(rareftab_list, idcol = "resamp"))
+} # end of function
+
+
+rarefysamples_vectorised <- function(x, measure, resamps, summarise) {
   # Computing minimal effort per year in this assemblageID
   # minsample <- tapply(x$SAMPLE_DESC, x$YEAR, function(x) {
   #   dplyr::n_distinct(x)

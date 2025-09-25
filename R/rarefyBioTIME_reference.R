@@ -162,6 +162,7 @@ resampling_ref <- function(x, measure, resamps = 1L, conservative = FALSE) {
   return({
     dplyr::bind_rows(TSrf) |>
       dplyr::mutate(rfID = rep(rfIDs, times = sapply(TSrf, nrow))) |>
+      # This separate takes a lot of time. Using a more efficient function could improve things but keeping these columns from previous steps instead of rebuilding them would probably make even more sense.
       tidyr::separate(
         "rfID",
         into = c("STUDY_ID", "cell"),

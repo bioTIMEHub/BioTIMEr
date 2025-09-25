@@ -103,160 +103,100 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = TRUE) {
     any.missing = FALSE,
     null.ok = FALSE,
   )
+  checkmate::assert_logical(
+    verbose,
+    len = 1L,
+    any.missing = FALSE,
+    null.ok = FALSE,
+  )
 
-  data.table::setDT(btf)
-  data.table::setDT(meta)
+  AREA_SQ_KM <- meta[
+    meta$NUMBER_LAT_LONG == 1L & meta$AREA_SQ_KM <= 500,
+    "AREA_SQ_KM"
+  ]
+  SL_extent <- sum(
+    base::mean(AREA_SQ_KM, na.rm = TRUE),
+    stats::sd(AREA_SQ_KM, na.rm = TRUE)
+  )
 
-  meta <- meta |>
-    dtplyr::lazy_dt(immutable = FALSE) |>
-    dplyr::mutate(
-      StudyMethod = dplyr::if_else(.data$NUMBER_LAT_LONG == 1, "SL", NA)
-    ) |>
-    data.table::as.data.table()
+  meta$StudyMethod <- data.table::fifelse(
+    test = meta$NUMBER_LAT_LONG == 1L | meta$AREA_SQ_KM < SL_extent,
+    yes = "SL",
+    no = "ML"
+  )
 
-  # In this block, the computation of the lazy command above might be done twice
-  # and the filtration is done twice for no good reason
-  SL_extent_mean <- meta |>
-    dplyr::filter(.data$StudyMethod == "SL" & .data$AREA_SQ_KM <= 500) |>
-    dplyr::summarise(extent_mean = mean(.data$AREA_SQ_KM, na.rm = TRUE)) |>
-    dplyr::pull("extent_mean")
-  SL_extent_sd <- meta |>
-    dplyr::filter(.data$StudyMethod == "SL" & .data$AREA_SQ_KM <= 500) |>
-    dplyr::summarise(extent_sd = stats::sd(.data$AREA_SQ_KM, na.rm = TRUE)) |>
-    dplyr::pull("extent_sd")
-
-  bt <- dplyr::inner_join(meta, btf, by = "STUDY_ID") |>
-    dplyr::rename(Species = "valid_name") |>
-    dtplyr::lazy_dt(immutable = FALSE) |>
-    dplyr::mutate(
-      StudyMethod = dplyr::if_else(.data$NUMBER_LAT_LONG == 1, "SL", "ML")
-    ) |>
-    dplyr::mutate(
-      StudyMethod = dplyr::if_else(
-        condition = .data$AREA_SQ_KM < (SL_extent_mean + SL_extent_sd),
-        true = "SL",
-        false = .data$StudyMethod
-      )
-    ) |>
-    dplyr::mutate(
-      lon_to_grid = dplyr::if_else(
-        condition = .data$StudyMethod == "SL",
-        true = .data$CENT_LONG,
-        false = .data$LONGITUDE
+  bt <- dplyr::inner_join(
+    x = meta |>
+      dplyr::select(
+        "STUDY_ID",
+        "CLIMATE",
+        "REALM",
+        "TAXA",
+        "StudyMethod",
+        "CENT_LAT",
+        "CENT_LONG",
+        "ABUNDANCE_TYPE",
+        "BIOMASS_TYPE"
       ),
-      lat_to_grid = dplyr::if_else(
-        condition = .data$StudyMethod == "SL",
-        true = .data$CENT_LAT,
-        false = .data$LATITUDE
-      )
-    ) |>
-    data.table::as.data.table(bt)
+    y = btf |>
+      dplyr::select(
+        "STUDY_ID",
+        "SAMPLE_DESC",
+        "taxon",
+        "LATITUDE",
+        "LONGITUDE",
+        "YEAR",
+        "MONTH",
+        "DAY",
+        Species = "valid_name",
+        "resolution",
+        "ABUNDANCE",
+        "BIOMASS"
+      ),
+    by = dplyr::join_by("STUDY_ID")
+  )
 
-  if (
-    tapply(bt$YEAR, bt$STUDY_ID, function(y) dplyr::n_distinct(y) == 1L) |>
-      any()
-    # bt[j = .(V1 = data.table::uniqueN(bt$YEAR) == 1L), keyby = "STUDY_ID"][
-    #   j = any(V1)
-    # ]
-    # bt |>
-    #   dplyr::summarise(
-    #     dplyr::n_distinct(.data$YEAR) == 1L,
-    #     .by = "STUDY_ID"
-    #   ) |>
-    #   dplyr::select(-"STUDY_ID") |>
-    #   dplyr::pull() |>
-    #   any()
-  ) {
-    # anti_join does not seem to be translated into dtplyr data.table so a new
-    # column followed by filter would make sense
-    bt <- dtplyr::lazy_dt(bt, immutable = FALSE, key_by = "STUDY_ID") |>
-      dplyr::anti_join(
-        x = bt,
-        y = bt |>
-          dplyr::summarise(
-            count = dplyr::n_distinct(.data$YEAR),
-            .by = "STUDY_ID"
-          ) |>
-          dplyr::filter(.data$count == 1L),
-        by = "STUDY_ID"
-      ) |>
-      data.table::as.data.table()
-    if (isTRUE(verbose)) warning("Some 1-year-long studies were removed.")
+  data.table::setorder(bt, "StudyMethod")
+
+  bt$lon_to_grid <- data.table::fifelse(
+    test = bt$StudyMethod == "SL",
+    yes = bt$CENT_LONG,
+    no = bt$LONGITUDE
+  )
+  bt$lat_to_grid <- data.table::fifelse(
+    test = bt$StudyMethod == "SL",
+    yes = bt$CENT_LAT,
+    no = bt$LATITUDE
+  )
+
+  one_year_study <- tapply(bt$YEAR, bt$STUDY_ID, function(y) {
+    data.table::uniqueN(y) == 1L
+  })
+
+  if (any(one_year_study)) {
+    bt <- bt |>
+      dplyr::filter(
+        !is.element(STUDY_ID, names(one_year_study)[which(one_year_study)])
+      )
+    if (verbose) warning("Some 1-year-long studies were removed.")
   }
 
   dgg <- dggridR::dgconstruct(res = res)
 
   if (resByData) {
-    res <- dggridR::dg_closest_res_to_area(dgg, SL_extent_mean + SL_extent_sd)
+    res <- dggridR::dg_closest_res_to_area(dgg, SL_extent)
     dgg <- dggridR::dgsetres(dgg, res)
   }
 
+  bt$cell <- dggridR::dgGEO_to_SEQNUM(
+    dggs = dgg,
+    in_lon_deg = bt$lon_to_grid,
+    in_lat_deg = bt$lat_to_grid
+  )$seqnum
+
+  bt$assemblageID <- base::paste(bt$STUDY_ID, bt$cell, sep = "_")
   bt <- bt |>
-    dtplyr::lazy_dt(immutable = FALSE, key_by = "STUDY_ID") |>
-    # dplyr::mutate(
-    #   cell = function(lat = .data$lat_to_grid, lon = .data$lon_to_grid) {
-    #     dggridR::dgGEO_to_SEQNUM(
-    #       dggs = dgg,
-    #       in_lon_deg = lon,
-    #       in_lat_deg = lat
-    #     )$seqnum |>
-    #       as.integer()
-    #   }
-    # ) |>
-    dplyr::mutate(
-      cell = dggridR::dgGEO_to_SEQNUM(
-        dggs = dgg,
-        in_lon_deg = lon_to_grid,
-        in_lat_deg = lat_to_grid
-      )$seqnum |>
-        as.integer()
-    ) |>
-    tidyr::unite(
-      "STUDY_ID",
-      "cell",
-      col = "assemblageID",
-      sep = "_",
-      remove = FALSE
-    ) |>
-    dplyr::mutate(dplyr::across(
-      .cols = c(
-        "SAMPLE_DESC",
-        "cell",
-        "assemblageID",
-        "CLIMATE",
-        "REALM",
-        "TAXA",
-        "StudyMethod",
-        "ABUNDANCE_TYPE",
-        "BIOMASS_TYPE",
-        "Species"
-      ),
-      .fns = as.factor
-    )) |>
-    dplyr::select(
-      "STUDY_ID",
-      "SAMPLE_DESC",
-      "cell",
-      "resolution",
-      "assemblageID",
-      "CLIMATE",
-      "REALM",
-      "TAXA",
-      "StudyMethod",
-      "ABUNDANCE_TYPE",
-      "BIOMASS_TYPE",
-      "YEAR",
-      "LATITUDE",
-      "LONGITUDE",
-      "Species",
-      "taxon",
-      "DAY",
-      "MONTH",
-      "ABUNDANCE",
-      "BIOMASS"
-    ) |>
-    # data.table::as.data.table()
-    dplyr::as_tibble()
+    dplyr::select(-c("CENT_LAT", "CENT_LONG", "lat_to_grid", "lon_to_grid"))
 
   if (
     tapply(
@@ -266,7 +206,9 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = TRUE) {
     ) |>
       all()
   ) {
-    base::message("OK: all SL studies have 1 grid cell")
+    if (verbose) {
+      base::message("OK: all SL studies have 1 grid cell")
+    }
   } else {
     base::stop("ERROR: some SL studies have > 1 grid cell")
   }

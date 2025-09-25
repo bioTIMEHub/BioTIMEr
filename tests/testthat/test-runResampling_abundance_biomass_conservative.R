@@ -26,7 +26,7 @@ test_that("resampling runs correctly for Abundance and Biomass together
   checkmate::expect_subset(unique(result$Species), unique(test_df$Species))
   checkmate::expect_subset(
     unique(result$assemblageID),
-    levels(test_df$assemblageID)
+    unique(test_df$assemblageID)
   )
   checkmate::expect_subset(unique(result$StudyID), unique(test_df$STUDY_ID))
 
