@@ -30,7 +30,7 @@ missing observations only.}
 
 \item{summarise}{(\code{logical}). \code{TRUE} by default. If \code{FALSE},
 the function returns abundance and/or biomass summed at the SAMPLE_DESC level
-(i.e., per sample), rather than per species per year.}
+git pull(i.e., per sample), rather than per species per year.}
 
 \item{verbose}{if TRUE, a warning will be shown when one-year-long time series
 are found in btf and excluded.}

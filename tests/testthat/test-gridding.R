@@ -2,8 +2,28 @@
 meta <- base::readRDS(testthat::test_path("testdata", "data-meta.rds"))
 btf <- base::readRDS(testthat::test_path("testdata", "data-query.rds"))
 
-test_that("gridding returns a data frame", {
-  expect_s3_class(gridding(meta, btf), "data.frame")
+test_that("gridding returns an object of same class as meta", {
+  expect_no_error(resdf <- gridding(meta, btf))
+  expect_s3_class(resdf, "data.frame")
+
+  expect_no_error(
+    restbl <- gridding(meta |> dplyr::as_tibble(), btf |> dplyr::as_tibble())
+  )
+  expect_s3_class(
+    restbl,
+    c("tbl_df", "tbl", "data.frame")
+  )
+
+  expect_no_error(
+    resdt <- gridding(
+      meta |> data.table::as.data.table(),
+      btf |> data.table::as.data.table()
+    )
+  )
+  expect_s3_class(
+    resdt,
+    c("data.table", "data.frame")
+  )
 })
 
 test_that("gridding returns the expected columns", {

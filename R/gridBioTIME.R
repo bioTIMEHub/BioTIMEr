@@ -50,9 +50,81 @@
 #' @examples
 #'   library(BioTIMEr)
 #'   gridded_data <- gridding(meta = BTsubset_meta, btf = BTsubset_data)
+#'   gridded_data <- gridding(meta = BTsubset_meta |> dplyr::as_tibble(),
+#'                            btf = BTsubset_data |> dplyr::as_tibble())
+#' gridded_data <- gridding(meta = BTsubset_meta |> data.table::as.data.table(),
+#'                            btf = BTsubset_data |> data.table::as.data.table())
 #'
-
+#'
 gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = TRUE) {
+  UseMethod("gridding")
+}
+
+#' @export
+gridding.default <- function(
+  meta,
+  btf,
+  res = 12,
+  resByData = FALSE,
+  verbose = TRUE
+) {
+  res <- gridding_internal(
+    meta = meta,
+    btf = btf,
+    res = res,
+    resByData = resByData,
+    verbose = verbose
+  )
+  return(res)
+}
+
+#' @export
+gridding.data.table <- function(
+  meta,
+  btf,
+  res = 12,
+  resByData = FALSE,
+  verbose = TRUE
+) {
+  res <- gridding_internal(
+    meta = meta,
+    btf = btf,
+    res = res,
+    resByData = resByData,
+    verbose = verbose
+  )
+  data.table::setDT(res)
+  return(res)
+}
+
+# #' @export
+# gridding.tbl_df <- function(
+#   meta,
+#   btf,
+#   res = 12,
+#   resByData = FALSE,
+#   verbose = TRUE
+# ) {
+#   print("I am tibble")
+#   return(
+#     res <- gridding_internal(
+#       meta = meta,
+#       btf = btf,
+#       res = res,
+#       resByData = resByData,
+#       verbose = verbose
+#     ) |>
+#       dplyr::as_tibble()
+#   )
+# }
+
+# #' @export
+# gridding.matrix
+
+#' gridding BioTIME data
+#' @noRd
+#' @keywords internal
+gridding_internal <- function(meta, btf, res, resByData, verbose) {
   checkmate::assert_names(
     x = colnames(meta),
     what = "colnames",
@@ -113,7 +185,9 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = TRUE) {
   AREA_SQ_KM <- meta[
     meta$NUMBER_LAT_LONG == 1L & meta$AREA_SQ_KM <= 500,
     "AREA_SQ_KM"
-  ]
+  ] |>
+    unlist()
+
   SL_extent <- sum(
     base::mean(AREA_SQ_KM, na.rm = TRUE),
     stats::sd(AREA_SQ_KM, na.rm = TRUE)

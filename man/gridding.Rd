@@ -63,5 +63,10 @@ best \code{res} based on the average study extent.
 \examples{
   library(BioTIMEr)
   gridded_data <- gridding(meta = BTsubset_meta, btf = BTsubset_data)
+  gridded_data <- gridding(meta = BTsubset_meta |> dplyr::as_tibble(),
+                           btf = BTsubset_data |> dplyr::as_tibble())
+gridded_data <- gridding(meta = BTsubset_meta |> data.table::as.data.table(),
+                           btf = BTsubset_data |> data.table::as.data.table())
+
 
 }

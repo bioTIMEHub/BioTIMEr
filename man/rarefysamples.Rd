@@ -18,7 +18,7 @@ two or more column names.}
 
 \item{summarise}{(\code{logical}). \code{TRUE} by default. If \code{FALSE},
 the function returns abundance and/or biomass summed at the SAMPLE_DESC level
-(i.e., per sample), rather than per species per year.}
+git pull(i.e., per sample), rather than per species per year.}
 }
 \value{
 Returns a single long form data frame containing the total currency
