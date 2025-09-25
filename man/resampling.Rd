@@ -80,7 +80,7 @@ unique identifier 1:resamps.
   set.seed(42)
   x <- gridding(BTsubset_meta, BTsubset_data)
   resampling(x, measure = "BIOMASS", summarise = TRUE)
-  resampling(x, measure = "ABUNDANCE")
+  resampling(x, measure = "ABUNDANCE", verbose = FALSE)
   resampling(x, measure = c("ABUNDANCE","BIOMASS"))
   # Without summarising the species abundances are summed at the SAMPLE_DESC level
   resampling(x, measure = "BIOMASS", summarise = FALSE, conservative = FALSE)

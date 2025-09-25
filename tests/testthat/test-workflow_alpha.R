@@ -7,22 +7,18 @@ test_that("Whole workflow works consistently", {
 
   # Alpha diversity metrics
   expect_snapshot({
-    suppressWarnings({
-      set.seed(42)
-      gridding(meta, btf) |>
-        resampling(measure = "ABUNDANCE", resamps = 1L) |>
-        getAlphaMetrics(measure = "ABUNDANCE") |>
-        getLinearRegressions(divType = "alpha")
-    })
+    set.seed(42)
+    gridding(meta, btf) |>
+      resampling(measure = "ABUNDANCE", resamps = 1L) |>
+      getAlphaMetrics(measure = "ABUNDANCE") |>
+      getLinearRegressions(divType = "alpha")
   })
 
   expect_snapshot({
-    suppressWarnings({
-      set.seed(42)
-      gridding(meta, btf) |>
-        resampling(measure = "BIOMASS", resamps = 1L) |>
-        getAlphaMetrics(measure = "BIOMASS") |>
-        getLinearRegressions(divType = "alpha")
-    })
+    set.seed(42)
+    gridding(meta, btf) |>
+      resampling(measure = "BIOMASS", resamps = 1L) |>
+      getAlphaMetrics(measure = "BIOMASS") |>
+      getLinearRegressions(divType = "alpha")
   })
 })

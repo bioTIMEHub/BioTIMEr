@@ -169,14 +169,15 @@ gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = TRUE) {
     no = bt$LATITUDE
   )
 
-  one_year_study <- tapply(bt$YEAR, bt$STUDY_ID, function(y) {
+  one_year_studies <- tapply(bt$YEAR, bt$STUDY_ID, function(y) {
     data.table::uniqueN(y) == 1L
   })
 
-  if (any(one_year_study)) {
+  if (any(one_year_studies)) {
+    # See benchmarks.R  # Row filtering ----
     bt <- bt |>
       dplyr::filter(
-        !is.element(STUDY_ID, names(one_year_study)[which(one_year_study)])
+        !is.element(STUDY_ID, names(one_year_studies)[which(one_year_studies)])
       )
     if (verbose) warning("Some 1-year-long studies were removed.")
   }

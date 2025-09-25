@@ -262,10 +262,10 @@ if (FALSE) {
   bench::mark(
     check = FALSE,
     ref = {
-      gridding_reference(BTsubset_meta, BTsubset_data, 12, verbose = FALSE)
+      x = gridding_reference(BTsubset_meta, BTsubset_data, 12, verbose = FALSE)
     },
     new = {
-      gridding(BTsubset_meta, BTsubset_data, 12, verbose = FALSE)
+      y = gridding(BTsubset_meta, BTsubset_data, 12, verbose = FALSE)
     }
   )
 
@@ -356,4 +356,137 @@ if (FALSE) {
   #   <bch:expr>               <bch:> <bch:>     <dbl> <bch:byt>    <dbl> <int> <dbl>   <bch:tm> <list> <list>     <list>     <list>
   # 1 bt <- dplyr::filter(bt,…  7.55ms 8.19ms      113.    17.8MB     44.3    23     9      203ms <df>   <Rprofmem> <bench_tm> <tibble>
   # 2 bt <- bt[!is.element(bt… 5.57ms 6.84ms      147.    29.2MB    133.     21    19      143ms <df>   <Rprofmem> <bench_tm> <tibble>
+
+  # tidyr::separate vs data.table::tstrsplit (by reference)
+  TSrf <- readRDS("ignored/data/benchmarking/rarefy_separate_tstrsplit.rds")
+  bench::mark(
+    check = FALSE,
+    x <- data.table::rbindlist(TSrf, idcol = "rfID") |>
+      tidyr::separate(
+        col = "rfID",
+        into = c("STUDY_ID", "cell"),
+        sep = "_",
+        remove = FALSE
+      ),
+    {
+      x <- data.table::rbindlist(TSrf, idcol = "rfID")
+      x[j = c("STUDY_ID", "cell") := data.table::tstrsplit(rfID, split = "_")]
+    }
+  )
+  #   expression                  min median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time result memory     time       gc
+  #   <bch:expr>               <bch:> <bch:>     <dbl> <bch:byt>    <dbl> <int> <dbl>   <bch:tm> <list> <list>     <list>     <list>
+  # 1 "x <- tidyr::separate(d… 7.47ms 7.91ms      126.    16.2MB    89.9     21    15      167ms <NULL> <Rprofmem> <bench_tm> <tibble>
+  # 2 "{ x <- data.table::rbi…  1.2ms 1.23ms      795.   222.9KB     4.12   386     2      486ms <NULL> <Rprofmem> <bench_tm> <tibble>
+  # semi_join versus data.table antijoin
+  x = readRDS("ignored/data/benchmarking/rarefy_semi_join_datatable.rds")
+  measure = c("BIOMASS", "ABUNDANCE")
+  bench::mark(
+    check = FALSE,
+    x |>
+      dplyr::semi_join(
+        y = x |>
+          dplyr::summarise(
+            dplyr::across(dplyr::all_of(measure), .fns = anyNA),
+            .by = "SAMPLE_DESC"
+          ) |>
+          dplyr::filter(rowSums(dplyr::pick(dplyr::all_of(measure))) == 0L),
+        by = "SAMPLE_DESC"
+      ),
+
+    x[
+      i = x[j = anyNA(.SD), .SDcols = measure, by = "SAMPLE_DESC"][!(V1)],
+      on = "SAMPLE_DESC"
+    ]
+  )
+
+  #   expression                 min  median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time result memory     time       gc
+  #   <bch:expr>             <bch:t> <bch:t>     <dbl> <bch:byt>    <dbl> <int> <dbl>   <bch:tm> <list> <list>     <list>     <list>
+  # 1 "dplyr::semi_join(x, …  25.5ms  26.3ms     24.2     19.1MB     7.45    13     4      537ms <NULL> <Rprofmem> <bench_tm> <tibble>
+  # 2 "x[i = x[j = anyNA(.S… 128.1ms 128.8ms      7.57   128.1MB    18.9      4    10      528ms <NULL> <Rprofmem> <bench_tm> <tibble>
+
+  # lapply vs data.table keyby ----
+  ## resampling ----
+  x = readRDS("ignored/data/benchmarking/rarefy_lapply_datatable.rds")
+  bench::mark(
+    check = FALSE,
+    lapply = {
+      rfIDs <- unique(x$assemblageID)
+      TSrf <- lapply(
+        X = rfIDs,
+        FUN = function(i) {
+          x[x$assemblageID == i, ] |>
+            rarefysamples(
+              measure = measure,
+              resamps = resamps,
+              summarise = summarise
+            )
+        }
+      )
+      names(TSrf) <- rfIDs
+      TSrf <- data.table::rbindlist(TSrf, idcol = "rfID")
+    },
+    data.table = {
+      TSrf <- x[
+        j = rarefysamples(.SD, measure, resamps, summarise),
+        .SDcols = c("SAMPLE_DESC", "Species", "YEAR", measure),
+        keyby = "assemblageID"
+      ]
+    }
+  )
+  #  expression  min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time result memory     time       gc
+  # 1 lapply     3.58s  3.58s     0.280     731MB     6.71     1    24      3.58s <NULL> <Rprofmem> <bench_tm> <tibble>
+  # 2 data.table 3.16s  3.16s     0.317     178MB     5.70     1    18      3.16s <NULL> <Rprofmem> <bench_tm> <tibble>
+
+  ## rarefysamples 1 ----
+  x <- readRDS("ignored/data/benchmarking/rarefysamples_lapply_datatable_1.rds")
+  bench::mark(
+    check = FALSE,
+    lapply = {
+      selected_indices <- lapply(
+        # beginning sub loop on years
+        X = unique(x$YEAR),
+        FUN = function(y) {
+          sam <- x$SAMPLE_DESC[x$YEAR == y] |>
+            unique() |>
+            sample(minsample, replace = FALSE)
+          return(which(x$SAMPLE_DESC %in% sam & x$YEAR == y))
+        }
+      ) |>
+        unlist()
+    }, # end of loop on years
+    data.table = {
+      selected_indices <- x[
+        j = .(
+          sel = sample(
+            x = unique(SAMPLE_DESC),
+            size = unique(minsample),
+            replace = FALSE
+          )
+        ),
+        keyby = c("assemblageID", "YEAR")
+      ]$sel
+    }
+  )
+  #     expression    min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time result memory     time            gc
+  # 1 lapply      121.9ms  126.1ms      5.22  223.47MB    13.9      3     8      575ms <NULL> <Rprofmem> <bench_tm [3]>  <tibble>
+  # 2 data.table   20.6ms   21.2ms     43.0     8.96MB     7.82    22     4      511ms <NULL> <Rprofmem> <bench_tm [22]> <tibble>
+  ## rarefysamples 2 ----
+  bench::mark(
+    check = FALSE,
+    dplyr = x |>
+      dplyr::filter(SAMPLE_DESC %in% selected_indices) |>
+      dplyr::summarise(
+        dplyr::across(.cols = dplyr::all_of(measure), .fns = sum),
+        .by = c("YEAR", "Species")
+      ),
+    data.table = x[
+      i = is.element(SAMPLE_DESC, selected_indices),
+      j = lapply(X = .SD, FUN = sum),
+      .SDcols = measure,
+      by = c("YEAR", "Species")
+    ]
+  )
+  #     expression    min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time result memory              time       gc
+  # 1 dplyr       21.46ms  22.34ms      45.1      12MB     7.51    18     3      399ms <NULL> <Rprofmem>          <bench_tm> <tibble>
+  # 2 data.table   4.15ms   4.94ms     197.      4.1MB    11.6     85     5      431ms <NULL> <Rprofmem [50 × 3]> <bench_tm> <tibble>
 }
