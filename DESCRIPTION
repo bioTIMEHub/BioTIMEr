@@ -33,7 +33,12 @@ Authors@R: c(
   person("European Research Council grant AdG MetaCHANGE 101098020",
         role = "fnd"),
   person("The Leverhulme Centre for Anthropocene Biodiversity grant RC-2018-021",
-        role = "fnd")
+        role = "fnd"),
+  person("German Centre for Integrative Biodiversity Research (iDiv) Halle-Jena-Leipzig",
+        role = "fnd", comment = c(ROR = "01jty7g66")),
+  person("Martin Luther University Halle-Wittenberg",
+        role = "fnd", comment = c(ROR = "05gqaka33")),
+  person("University of St Andrews", role = "fnd", comment = c(ROR = "02wn5qz54"))
 	)
 Maintainer: Alban Sagouis <alban.sagouis@idiv.de>
 License: MIT + file LICENSE
@@ -58,6 +63,7 @@ Imports:
     dplyr,
     data.table,
     ggplot2,
+    broom,
     vegan,
     dggridR (>= 3.1.0),
     checkmate,

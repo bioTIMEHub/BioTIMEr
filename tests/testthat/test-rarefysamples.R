@@ -1,4 +1,5 @@
 # Create example data for testing rarefysamples
+set.seed(42)
 test_dt <- data.table::data.table(
   assemblageID = rep(1:4, each = 192),
   minsamp = 2L,

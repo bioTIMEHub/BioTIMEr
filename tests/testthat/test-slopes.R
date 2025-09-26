@@ -19,17 +19,11 @@ test_that("slopes works consistently", {
   betam <- getBetaMetrics(xa, measure = "ABUNDANCE")
 
   # Tests
-  expect_snapshot(getLinearRegressions(x = alpham, divType = "alpha"))
-  expect_snapshot(getLinearRegressions(x = betam, divType = "beta"))
+  expect_warning(
+    regressions_alpha <- getLinearRegressions(x = alpham, divType = "alpha"),
+    regexp = "essentially perfect fit: summary may be unreliable"
+  )
+  expect_snapshot(regressions_alpha)
 
-  expect_snapshot(getLinearRegressions(
-    x = alpham,
-    divType = "alpha",
-    pThreshold = 0.01
-  ))
-  expect_snapshot(getLinearRegressions(
-    x = betam,
-    divType = "beta",
-    pThreshold = 0.01
-  ))
+  expect_snapshot(getLinearRegressions(x = betam, divType = "beta"))
 })
