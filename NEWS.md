@@ -1,14 +1,11 @@
-# BioTIMEr 0.2.7
+# BioTIMEr 0.3.0 - 01.10.2025
 
 ## Major Improvement
 
+- The package now uses `data.table` in the background for major speed
+  and memory usage improvements.
 - methods: gridding and resampling functions now handle `data.frame`,
   `data.table` and `tibble` objects with dedicated functions.
-- use of package dtplyr to call data.table in the background for better speed
-and memory usage
-- categorical variables are turned into factors
-
-# BioTIMEr 0.2.5 - 01.10.2025
 
 ## New Features
 
@@ -30,7 +27,8 @@ and memory usage
   - argument `coly` is soft deprecated in favour of `strip.background`
   - the order of the arguments did not change.
 
-- `data.table` objects are converted to `data.frame`
+# BioTIMEr 0.2.5 - 19.09.2025
+- Patch. all testthat snapshot tests are now skipped on CRAN and CI.
 
 # BioTIMEr 0.2.4 - 06.06.2025
 
