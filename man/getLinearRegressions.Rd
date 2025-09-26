@@ -7,8 +7,8 @@
 getLinearRegressions(x, divType, pThreshold = 0.05)
 }
 \arguments{
-\item{x}{(\code{data.frame}) BioTIME data table in the format of the output of  \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}}
-functions}
+\item{x}{(\code{data.frame}) BioTIME data table in the format of the output
+of  \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} functions}
 
 \item{divType}{(\code{character}) string specifying the nature of the metrics in
 the data; either \code{divType = "alpha"} or \code{divType = "beta"} are supported}

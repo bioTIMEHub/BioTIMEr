@@ -115,6 +115,18 @@
     {
       "@type": "Organization",
       "name": "The Leverhulme Centre for Anthropocene Biodiversity grant RC-2018-021"
+    },
+    {
+      "@type": "Organization",
+      "name": "German Centre for Integrative Biodiversity Research (iDiv) Halle-Jena-Leipzig"
+    },
+    {
+      "@type": "Organization",
+      "name": "Martin Luther University Halle-Wittenberg"
+    },
+    {
+      "@type": "Organization",
+      "name": "University of St Andrews"
     }
   ],
   "maintainer": [
@@ -258,6 +270,18 @@
     },
     "6": {
       "@type": "SoftwareApplication",
+      "identifier": "broom",
+      "name": "broom",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=broom"
+    },
+    "7": {
+      "@type": "SoftwareApplication",
       "identifier": "vegan",
       "name": "vegan",
       "provider": {
@@ -268,7 +292,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=vegan"
     },
-    "7": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "dggridR",
       "name": "dggridR",
@@ -281,7 +305,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=dggridR"
     },
-    "8": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "checkmate",
       "name": "checkmate",
@@ -293,7 +317,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=checkmate"
     },
-    "9": {
+    "10": {
       "@type": "SoftwareApplication",
       "identifier": "lifecycle",
       "name": "lifecycle",
@@ -307,7 +331,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "6673.666KB",
+  "fileSize": "6653.595KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
