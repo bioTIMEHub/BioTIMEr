@@ -1,4 +1,4 @@
-# Create example data for testing rarefysamples
+# Create example data for testing resampling_core
 test_dt <- data.table::data.table(
   assemblageID = rep(1:4, each = 192),
   minsamp = 2L,
@@ -15,8 +15,8 @@ test_dt <- data.table::data.table(
 resamps <- 3L
 
 # Summarise = TRUE (default) ----
-test_that("rarefysamples returns a data frame", {
-  result <- rarefysamples(
+test_that("resampling_core returns a data frame", {
+  result <- resampling_core(
     x = test_dt,
     measure = "BIOMASS",
     summarise = TRUE
@@ -24,8 +24,8 @@ test_that("rarefysamples returns a data frame", {
   expect_s3_class(result, "data.table")
 })
 
-test_that("rarefysamples returns the expected column names - summarise = TRUE", {
-  result <- rarefysamples(
+test_that("resampling_core returns the expected column names - summarise = TRUE", {
+  result <- resampling_core(
     x = test_dt,
     measure = "BIOMASS",
     summarise = TRUE
@@ -42,8 +42,8 @@ test_that("rarefysamples returns the expected column names - summarise = TRUE", 
   )
 })
 
-test_that("rarefysamples returns non-empty data frame", {
-  result <- rarefysamples(
+test_that("resampling_core returns non-empty data frame", {
+  result <- resampling_core(
     x = test_dt,
     measure = "BIOMASS",
     summarise = TRUE
@@ -51,8 +51,8 @@ test_that("rarefysamples returns non-empty data frame", {
   expect_false(anyNA(result))
 })
 
-test_that("rarefysamples returns consistent 'YEAR' values", {
-  result <- rarefysamples(
+test_that("resampling_core returns consistent 'YEAR' values", {
+  result <- resampling_core(
     x = test_dt,
     measure = "BIOMASS",
     summarise = TRUE
@@ -61,8 +61,8 @@ test_that("rarefysamples returns consistent 'YEAR' values", {
   expect_setequal(unique(result$YEAR), expected_years)
 })
 
-test_that("rarefysamples returns consistent 'Species' values", {
-  result <- rarefysamples(
+test_that("resampling_core returns consistent 'Species' values", {
+  result <- resampling_core(
     x = test_dt,
     measure = "BIOMASS",
     summarise = TRUE
@@ -72,8 +72,8 @@ test_that("rarefysamples returns consistent 'Species' values", {
 })
 
 
-test_that("rarefysamples returns positive 'BIOMASS' values", {
-  result <- rarefysamples(
+test_that("resampling_core returns positive 'BIOMASS' values", {
+  result <- resampling_core(
     x = test_dt,
     measure = "BIOMASS",
     summarise = TRUE
@@ -86,13 +86,13 @@ test_that("rarefysamples returns positive 'BIOMASS' values", {
   )
 })
 
-test_that("rarefysamples summarise = TRUE returns consistent results", {
+test_that("resampling_core summarise = TRUE returns consistent results", {
   skip_on_cran()
   skip_on_ci()
 
   expect_snapshot({
     set.seed(42)
-    rarefysamples(
+    resampling_core(
       x = test_dt,
       measure = c("ABUNDANCE", "BIOMASS"),
       summarise = TRUE
@@ -102,8 +102,8 @@ test_that("rarefysamples summarise = TRUE returns consistent results", {
 
 
 # Summarise = FALSE ----
-test_that("rarefysamples summarise = FALSE returns a data frame", {
-  result <- rarefysamples(
+test_that("resampling_core summarise = FALSE returns a data frame", {
+  result <- resampling_core(
     x = test_dt,
     measure = "BIOMASS",
     summarise = FALSE
@@ -111,8 +111,8 @@ test_that("rarefysamples summarise = FALSE returns a data frame", {
   expect_s3_class(result, "data.frame")
 })
 
-test_that("rarefysamples returns the expected column names - summarise FALSE", {
-  result <- rarefysamples(
+test_that("resampling_core returns the expected column names - summarise FALSE", {
+  result <- resampling_core(
     x = test_dt,
     measure = "BIOMASS",
     summarise = FALSE
@@ -130,8 +130,8 @@ test_that("rarefysamples returns the expected column names - summarise FALSE", {
   )
 })
 
-test_that("rarefysamples returns non-empty data frame", {
-  result <- rarefysamples(
+test_that("resampling_core returns non-empty data frame", {
+  result <- resampling_core(
     x = test_dt,
     measure = "BIOMASS",
     summarise = FALSE
@@ -139,8 +139,8 @@ test_that("rarefysamples returns non-empty data frame", {
   expect_false(anyNA(result))
 })
 
-test_that("rarefysamples returns consistent 'YEAR' values", {
-  result <- rarefysamples(
+test_that("resampling_core returns consistent 'YEAR' values", {
+  result <- resampling_core(
     x = test_dt,
     measure = "BIOMASS",
     summarise = FALSE
@@ -149,8 +149,8 @@ test_that("rarefysamples returns consistent 'YEAR' values", {
   expect_setequal(unique(result$YEAR), expected_years)
 })
 
-test_that("rarefysamples returns consistent 'Species' values", {
-  result <- rarefysamples(
+test_that("resampling_core returns consistent 'Species' values", {
+  result <- resampling_core(
     x = test_dt,
     measure = "BIOMASS",
     summarise = FALSE
@@ -159,13 +159,13 @@ test_that("rarefysamples returns consistent 'Species' values", {
 })
 
 
-test_that("rarefysamples summarise = FALSE returns consistent results", {
+test_that("resampling_core summarise = FALSE returns consistent results", {
   skip_on_cran()
   skip_on_ci()
 
   expect_snapshot({
     set.seed(42)
-    rarefysamples(
+    resampling_core(
       x = test_dt,
       measure = c("ABUNDANCE", "BIOMASS"),
       summarise = FALSE

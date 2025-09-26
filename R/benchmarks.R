@@ -33,7 +33,7 @@ if (FALSE) {
       any()
   )
 
-  # rarefysamples 1 ----
+  # resampling_core 1 ----
   bench::mark(
     lapply = {
       set.seed(42)
@@ -92,7 +92,7 @@ if (FALSE) {
     relative = TRUE
   )
 
-  # rarefysamples 2 ----
+  # resampling_core 2 ----
   microbenchmark::microbenchmark(
     # bench::mark(
     # relative = TRUE,
@@ -126,7 +126,7 @@ if (FALSE) {
         .by = c(.data$YEAR, .data$Species)
       )
   )
-  # rarefysamples 3
+  # resampling_core 3
   microbenchmark::microbenchmark(
     original = {
       set.seed(42)
@@ -192,9 +192,9 @@ if (FALSE) {
     }
   )
   # Aggregate
-  x <- readRDS(file = "ignored/data/benchmarking/rarefysamples_aggregate.rds")
+  x <- readRDS(file = "ignored/data/benchmarking/resampling_core_aggregate.rds")
   selected_indices <- readRDS(
-    file = "ignored/data/benchmarking/rarefysamples_aggregate_indices.rds"
+    file = "ignored/data/benchmarking/resampling_core_aggregate_indices.rds"
   )
   # Formula is 10% slower but more readable. Does not work directly when length(measure) > 1
   bench::mark(
@@ -225,11 +225,11 @@ if (FALSE) {
     relative = TRUE,
     original = {
       set.seed(42)
-      rarefysamples_ref(x, "BIOMASS", 2L)
+      resampling_core_ref(x, "BIOMASS", 2L)
     },
     new = {
       set.seed(42)
-      rarefysamples(x, "BIOMASS", 2L, summarise = TRUE)
+      resampling_core(x, "BIOMASS", 2L, summarise = TRUE)
     },
     check = FALSE
   )
@@ -411,7 +411,7 @@ if (FALSE) {
         X = rfIDs,
         FUN = function(i) {
           x[x$assemblageID == i, ] |>
-            rarefysamples(
+            resampling_core(
               measure = measure,
               resamps = resamps,
               summarise = summarise
@@ -423,7 +423,7 @@ if (FALSE) {
     },
     data.table = {
       TSrf <- x[
-        j = rarefysamples(.SD, measure, resamps, summarise),
+        j = resampling_core(.SD, measure, resamps, summarise),
         .SDcols = c("SAMPLE_DESC", "Species", "YEAR", measure),
         keyby = "assemblageID"
       ]
@@ -433,8 +433,10 @@ if (FALSE) {
   # 1 lapply     3.58s  3.58s     0.280     731MB     6.71     1    24      3.58s
   # 2 data.table 3.16s  3.16s     0.317     178MB     5.70     1    18      3.16s
 
-  ## rarefysamples 1 ----
-  x <- readRDS("ignored/data/benchmarking/rarefysamples_lapply_datatable_1.rds")
+  ## resampling_core 1 ----
+  x <- readRDS(
+    "ignored/data/benchmarking/resampling_core_lapply_datatable_1.rds"
+  )
   bench::mark(
     check = FALSE,
     lapply = {
@@ -467,7 +469,7 @@ if (FALSE) {
   # 1 lapply      121.9ms  126.1ms      5.22  223.47MB    13.9      3     8      575ms
   # 2 data.table   20.6ms   21.2ms     43.0     8.96MB     7.82    22     4      511ms
 
-  ## rarefysamples 2 ----
+  ## resampling_core 2 ----
   bench::mark(
     check = FALSE,
     dplyr = x |>

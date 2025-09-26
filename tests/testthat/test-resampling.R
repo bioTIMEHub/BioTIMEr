@@ -6,6 +6,29 @@ BTsubset_data <- base::readRDS(testthat::test_path(
 ))
 test_df <- gridding(BTsubset_meta, BTsubset_data)
 
+test_that("resampling returns an object of same class as meta", {
+  expect_no_error(resdf <- resampling(test_df, measure = "BIOMASS"))
+  expect_s3_class(resdf, "data.frame")
+
+  expect_no_error(
+    restbl <- resampling(test_df |> dplyr::as_tibble(), measure = "BIOMASS")
+  )
+  expect_s3_class(
+    restbl,
+    c("tbl_df", "tbl", "data.frame")
+  )
+
+  expect_no_error(
+    resdt <- resampling(
+      test_df |> data.table::as.data.table(),
+      measure = "BIOMASS"
+    )
+  )
+  expect_s3_class(
+    resdt,
+    c("data.table", "data.frame")
+  )
+})
 
 test_that("resampling correctly excludes 1 year long studies", {
   test_df_1y <- rbind(
@@ -29,13 +52,11 @@ test_that("resampling correctly excludes 1 year long studies", {
   expect_equal(
     object = {
       set.seed(42)
-      suppressWarnings(
-        resampling(test_df_1y, "BIOMASS")
-      )
+      resampling(test_df_1y, "BIOMASS", verbose = FALSE)
     },
     expected = {
       set.seed(42)
-      resampling(test_df, "BIOMASS")
+      resampling(test_df, "BIOMASS", verbose = FALSE)
     }
   )
 })

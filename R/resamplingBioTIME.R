@@ -65,7 +65,6 @@
 #'   resampling(x, measure = "BIOMASS", summarise = FALSE, conservative = FALSE)
 #' }
 #'
-
 resampling <- function(
   x,
   measure,
@@ -74,7 +73,83 @@ resampling <- function(
   summarise = TRUE,
   verbose = TRUE
 ) {
+  UseMethod("resampling")
+}
+
+#' @export
+resampling.default <- function(
+  x,
+  measure,
+  resamps = 1L,
+  conservative = FALSE,
+  summarise = TRUE,
+  verbose = TRUE
+) {
   data.table::setDT(x)
+
+  resampling_internal(
+    x = x,
+    measure = measure,
+    resamps = resamps,
+    conservative = conservative,
+    summarise = summarise,
+    verbose = verbose
+  ) |>
+    as.data.frame()
+}
+
+#' @export
+resampling.data.table <- function(
+  x,
+  measure,
+  resamps = 1L,
+  conservative = FALSE,
+  summarise = TRUE,
+  verbose = TRUE
+) {
+  resampling_internal(
+    x = x,
+    measure = measure,
+    resamps = resamps,
+    conservative = conservative,
+    summarise = summarise,
+    verbose = verbose
+  )
+}
+
+#' @export
+resampling.tbl_df <- function(
+  x,
+  measure,
+  resamps = 1L,
+  conservative = FALSE,
+  summarise = TRUE,
+  verbose = TRUE
+) {
+  data.table::setDT(x)
+
+  resampling_internal(
+    x = x,
+    measure = measure,
+    resamps = resamps,
+    conservative = conservative,
+    summarise = summarise,
+    verbose = verbose
+  ) |>
+    dplyr::as_tibble()
+}
+
+
+#' @inheritParams resampling
+#' @keywords internal
+resampling_internal <- function(
+  x,
+  measure,
+  resamps,
+  conservative,
+  summarise,
+  verbose
+) {
   checkmate::assert_names(
     x = colnames(x),
     what = "colnames",
@@ -149,11 +224,9 @@ resampling <- function(
       }
     }
   }
-
   one_year_studies <- tapply(x$YEAR, x$STUDY_ID, function(y) {
     data.table::uniqueN(y) == 1L
   })
-
   if (any(one_year_studies)) {
     # See benchmarks.R  # Row filtering ----
     x <- x |>
@@ -164,14 +237,15 @@ resampling <- function(
   }
 
   # Computing minimal effort per year per assemblageID
+  x <- data.table::setDT(x)
   x[
     j = minsamp := data.table::uniqueN(SAMPLE_DESC),
     keyby = c("assemblageID", "YEAR")
   ][j = minsamp := min(minsamp), keyby = "assemblageID"]
 
   # Loop on resamps
-  x <- lapply(X = 1L:resamps, FUN = function(X) {
-    rarefysamples(
+  x <- lapply(X = 1L:resamps, FUN = function(resamp) {
+    resampling_core(
       x |>
         dplyr::select(
           "assemblageID",
@@ -206,8 +280,7 @@ resampling <- function(
         "Species",
         dplyr::any_of(c("SAMPLE_DESC", "minsamp")),
         dplyr::all_of(measure)
-      ) |>
-      as.data.frame()
+      )
   })
 }
 
@@ -220,8 +293,8 @@ resampling <- function(
 #'    of interest (sum) for each species in each year.
 #' @keywords internal
 
-rarefysamples <- function(x, measure, summarise) {
-  # See benchmarks.R   # lapply vs data.table keyby ## rarefysamples 1
+resampling_core <- function(x, measure, summarise) {
+  # See benchmarks.R   # lapply vs data.table keyby ## resampling_core 1
   selected_indices <- x[
     j = .(
       sel = sample(
@@ -234,7 +307,7 @@ rarefysamples <- function(x, measure, summarise) {
   ]$sel
 
   if (summarise) {
-    # See benchmarks.R   # lapply vs data.table keyby ## rarefysamples 2
+    # See benchmarks.R   # lapply vs data.table keyby ## resampling_core 2
     raref <- x[
       i = is.element(SAMPLE_DESC, selected_indices),
       j = lapply(X = .SD, FUN = sum),

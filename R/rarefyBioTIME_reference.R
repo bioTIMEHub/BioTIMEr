@@ -153,7 +153,7 @@ resampling_ref <- function(x, measure, resamps = 1L, conservative = FALSE) {
     X = rfIDs,
     FUN = function(i) {
       temp_data <- x[x$assemblageID == i, ]
-      rarefysamples_ref(x = temp_data, measure = measure, resamps = resamps)
+      resampling_core_ref(x = temp_data, measure = measure, resamps = resamps)
     },
     USE.NAMES = TRUE,
     simplify = FALSE
@@ -190,7 +190,7 @@ resampling_ref <- function(x, measure, resamps = 1L, conservative = FALSE) {
 #'    of interest (sum) for each species in each year.
 #' @keywords internal
 
-rarefysamples_ref <- function(x, measure, resamps) {
+resampling_core_ref <- function(x, measure, resamps) {
   # Computing minimal effort per year in this assemblageID
   minsample <- min(tapply(x$SAMPLE_DESC, x$YEAR, function(x) length(unique(x))))
 

@@ -41,7 +41,7 @@ test_that("resampling runs correctly for Abundance and Biomass together", {
     result,
     sub_test_df,
     dplyr::join_by(assemblageID, YEAR)
-  ) # STUDY_ID
+  )
 
   expect_false(anyNA(result))
   expect_lte(sum(result$Biomass), sum(biomass_test_df$BIOMASS))

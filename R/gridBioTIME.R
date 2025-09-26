@@ -52,7 +52,7 @@
 #'   gridded_data <- gridding(meta = BTsubset_meta, btf = BTsubset_data)
 #'   gridded_data <- gridding(meta = BTsubset_meta |> dplyr::as_tibble(),
 #'                            btf = BTsubset_data |> dplyr::as_tibble())
-#' gridded_data <- gridding(meta = BTsubset_meta |> data.table::as.data.table(),
+#'   gridded_data <- gridding(meta = BTsubset_meta |> data.table::as.data.table(),
 #'                            btf = BTsubset_data |> data.table::as.data.table())
 #'
 #'
@@ -122,7 +122,7 @@ gridding.data.table <- function(
 # gridding.matrix
 
 #' gridding BioTIME data
-#' @noRd
+#' @inheritParams gridding
 #' @keywords internal
 gridding_internal <- function(meta, btf, res, resByData, verbose) {
   checkmate::assert_names(
