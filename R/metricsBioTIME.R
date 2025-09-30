@@ -1,8 +1,8 @@
 #' Alpha diversity metrics
 #'
 #' Calculates a set of standard alpha diversity metrics
-#' @param x (\code{data.frame}) BioTIME data table in the format of the output of the
-#' \code{\link{gridding}} function and/or \code{\link{resampling}} function.
+#' @param x (\code{data.frame}) BioTIME data in the format of the output of the
+#'    \code{\link{resampling}} function.
 #' @param measure (\code{character}) chosen currency defined by a single column name.
 #'
 #' @details
@@ -12,42 +12,45 @@
 #' row of the data frame with data, \code{getAlphaMetrics} calculates
 #' the following metrics:
 #'
-#' - Species richness (\code{S}) as the total number of species in each year with currency > 0.
+#' - Species richness (\code{S}) as the total number of species in each year with
+#' currency > 0.
 #'
 #' - Numerical abundance (\code{N}) as the total currency (sum) in each year
 #' (either total abundance or total biomass).
 #'
-#' - Maximum Numerical abundance (maxN) as the highest currency value reported in each year.
+#' - Maximum Numerical abundance (maxN) as the highest currency value reported
+#' in each year.
 #'
-#' - Shannon or Shannon–Weaver index is calculated as \eqn{\sum_{i}p_{i}log_{b}p_{i}}, where \eqn{p_{i}} is the proportional abundance of species i and b is the base of the logarithm (natural logarithms), while exponential Shannon is given by \code{exp(Shannon)}.
+#' - Shannon or Shannon–Weaver index is calculated as \eqn{\sum_{i}p_{i}log_{b}p_{i}},
+#' where \eqn{p_{i}} is the proportional abundance of species i and b is the base
+#' of the logarithm (natural logarithms), while exponential Shannon is given by
+#' \code{exp(Shannon)}.
 #'
-#' - Simpson's index is calculated as \eqn{1-sum(p_{i}^{2})}, while Inverse Simpson as \eqn{1/sum(p_{i}^{2})}.
+#' - Simpson's index is calculated as \eqn{1-sum(p_{i}^{2})}, while Inverse
+#' Simpson as \eqn{1/sum(p_{i}^{2})}.
 #'
-#' - McNaughton's Dominance is calculated as the sum of the pi of the two most abundant species.
+#' - McNaughton's Dominance is calculated as the sum of the pi of the two most
+#' abundant species.
 #'
-#' - Probability of intraspecific encounter or PIE is calculated as \eqn{\left(\frac{N}{N-1}\right)\left(1-\sum_{i=1}^{S}\pi_{i}^{2}\right)}.
+#' - Probability of intraspecific encounter or PIE is calculated as
+#' \eqn{\left(\frac{N}{N-1}\right)\left(1-\sum_{i=1}^{S}\pi_{i}^{2}\right)}.
 #'
-#' Note that the input data frame needs to be in the format of the output of the
+#'  Note that the input data frame needs to be in the format of the output of the
 #'  \code{\link{gridding}} function and/or \code{\link{resampling}} functions,
 #'  which includes keeping the default BioTIME data column names. If such columns
 #'  are not found an error is issued and the computations are halted.
 #'
-#' @returns Returns a data frame with results for species richness (\code{S}), numerical
+#' @returns Returns a \code{data.frame} with results for species richness (\code{S}), numerical
 #'  abundance (\code{N}), maximum numerical abundance (\code{maxN}), Shannon Index (\code{Shannon}),
 #'  Exponential Shannon (\code{expShannon}), Simpson's Index (Simpson), Inverse Simpson
 #'  (\code{InvSimpson}), Probability of intraspecific encounter (\code{PIE}) and McNaughton's
 #'  Dominance (\code{DomMc}) for each year and \code{assemblageID}.
-
 #' @export
+#'
 #' @examples
-#'   x <- data.frame(
-#'     resamp = 1L,
-#'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
-#'     Species = c(replicate(n = 8L, sample(letters, 24L, replace = FALSE))),
-#'     ABUNDANCE = rpois(24 * 8, 10),
-#'     assemblageID = rep(LETTERS[1L:8L], each = 24)
-#'   )
-#'   res <- getAlphaMetrics(x, measure = "ABUNDANCE")
+#'   gridding(BTsubset_meta, BTsubset_data) |>
+#'     resampling(measure = "ABUNDANCE") |>
+#'     getAlphaMetrics(measure = "ABUNDANCE")
 
 getAlphaMetrics <- function(x, measure) {
   checkmate::assert_names(
@@ -79,13 +82,13 @@ getAlphaMetrics <- function(x, measure) {
 
 #' Alpha
 #' @param x (\code{data.frame}) First column has to be year and following columns
-#' contain species abundances.
+#'    contain species abundances.
 #' @param id (\code{character}) One assemblageID
 #' @keywords internal
 #' @returns A data frame with results for S (species richness), N (numerical abundance),
-#' maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
-#' Inverse Simpson, PIE (probability of intraspecific encounter) and
-#' McNaughton's Dominance.
+#'    maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
+#'    Inverse Simpson, PIE (probability of intraspecific encounter) and
+#'    McNaughton's Dominance.
 
 getAlpha <- function(x, id) {
   yr <- unique(x[, 1L])
@@ -133,17 +136,29 @@ getAlpha <- function(x, id) {
 #' Calculates a set of standard beta diversity metrics
 #' @export
 #' @param x (\code{data.frame}) BioTIME data table in the format of the output of the
-#'  \code{\link{gridding}} function and/or \code{\link{resampling}} functions.
+#'    \code{\link{resampling}} functions.
 #' @param measure (\code{character}) chosen currency defined by a single column name.
 #'
 #' @details
-#' The function getBetaMetrics computes three beta diversity metrics for a given community data frame, where \code{measure} is a character input specifying the abundance or biomass field used for the calculations. \code{getBetaMetrics} calls the \code{\link[vegan]{vegdist}} function which calculates for each row the following metrics: Jaccard dissimilarity (\code{method = "jaccard"}), Morisita-Horn dissimilarity (\code{method = "horn"}) and Bray-Curtis dissimilarity (\code{method = "bray"}). Here, the dissimilarity metrics are calculated against the baseline year of each assemblage time series i.e.
+#' The function getBetaMetrics computes three beta diversity metrics for a given
+#' community data frame, where \code{measure} is a character input specifying the
+#' abundance or biomass field used for the calculations. \code{getBetaMetrics}
+#' calls the \code{\link[vegan]{vegdist}} function which calculates for each row
+#' the following metrics: Jaccard dissimilarity (\code{method = "jaccard"}),
+#' Morisita-Horn dissimilarity (\code{method = "horn"}) and Bray-Curtis dissimilarity
+#' (\code{method = "bray"}). Here, the dissimilarity metrics are calculated against
+#' the baseline year of each assemblage time series i.e.
 #' the first year of each time series.
 #' Note that the input data frame needs to be in the format of the output of the
-#'  \code{\link{gridding}} and/or \code{\link{resampling}} functions, which includes keeping the default BioTIME data column names. If such columns are not found an error is
+#'  \code{\link{gridding}} and/or \code{\link{resampling}} functions, which
+#' includes keeping the default BioTIME data column names. If such columns are
+#' not found an error is
 #'  issued and the computations are halted.
 #'
-#' @returns Returns a \code{data.frame} with results for Jaccard dissimilarity (\code{JaccardDiss}), Morisita-Horn dissimilarity (\code{MorisitaHornDiss}), and Bray-Curtis dissimilarity (\code{BrayCurtsDiss}) for each year and \code{assemblageID}.
+#' @returns Returns a \code{data.frame} with results for Jaccard dissimilarity
+#' (\code{JaccardDiss}), Morisita-Horn dissimilarity (\code{MorisitaHornDiss}),
+#' and Bray-Curtis dissimilarity (\code{BrayCurtsDiss}) for each year and
+#' \code{assemblageID}.
 #' @examples
 #' x <- data.frame(
 #'   resamp = 1L,
