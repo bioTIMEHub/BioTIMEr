@@ -95,8 +95,10 @@ resampling.default <- function(
     conservative = conservative,
     summarise = summarise,
     verbose = verbose
-  ) |>
-    as.data.frame()
+  )
+
+  data.table::setDF(res)
+
   return(res)
 }
 
