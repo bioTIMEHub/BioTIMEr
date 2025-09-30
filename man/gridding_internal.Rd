@@ -17,7 +17,8 @@ represent finer resolutions. Default: 12 (~96 sq km). Passed to
 
 \item{resByData}{(\code{logical}) FALSE by default. If TRUE, the function
 \code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt \code{res}
- to the data extent.}
+ to the data extent. The new \code{res} value is used even if a value is
+ provided byt the user.}
 
 \item{verbose}{if TRUE, a warning will be shown when one-year-long time series
 are found in btf and excluded.}
