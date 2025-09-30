@@ -1,13 +1,7 @@
 # Whole workflow works consistently
 
     Code
-      suppressWarnings({
-        set.seed(42)
-        getLinearRegressions(getBetaMetrics(resampling(gridding(meta, btf), measure = "ABUNDANCE",
-        resamps = 1L), measure = "ABUNDANCE"), divType = "beta")
-      })
-    Message
-      OK: all SL studies have 1 grid cell
+      regressions_abundance
     Output
            assemblageID           metric         slope       pvalue significance
       1       10_359170      JaccardDiss  1.071370e-02 0.1523004704            0
@@ -2121,13 +2115,7 @@
 ---
 
     Code
-      suppressWarnings({
-        set.seed(42)
-        getLinearRegressions(getBetaMetrics(resampling(gridding(meta, btf), measure = "BIOMASS",
-        resamps = 1L), measure = "BIOMASS"), divType = "beta")
-      })
-    Message
-      OK: all SL studies have 1 grid cell
+      regressions_biomass
     Output
          assemblageID           metric         slope      pvalue significance
       1    211_516855      JaccardDiss -0.0063674474 0.742348337            0

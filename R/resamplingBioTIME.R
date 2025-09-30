@@ -85,10 +85,11 @@ resampling.default <- function(
   summarise = TRUE,
   verbose = TRUE
 ) {
-  data.table::setDT(x)
+  gridded <- data.table::copy(x)
+  data.table::setDT(gridded)
 
-  resampling_internal(
-    x = x,
+  res <- resampling_internal(
+    x = gridded,
     measure = measure,
     resamps = resamps,
     conservative = conservative,
@@ -96,6 +97,31 @@ resampling.default <- function(
     verbose = verbose
   ) |>
     as.data.frame()
+  return(res)
+}
+
+#' @export
+resampling.tbl_df <- function(
+  x,
+  measure,
+  resamps = 1L,
+  conservative = FALSE,
+  summarise = TRUE,
+  verbose = TRUE
+) {
+  gridded <- data.table::copy(x)
+  data.table::setDT(gridded)
+
+  res <- resampling_internal(
+    x = gridded,
+    measure = measure,
+    resamps = resamps,
+    conservative = conservative,
+    summarise = summarise,
+    verbose = verbose
+  ) |>
+    dplyr::as_tibble()
+  return(res)
 }
 
 #' @export
@@ -115,28 +141,6 @@ resampling.data.table <- function(
     summarise = summarise,
     verbose = verbose
   )
-}
-
-#' @export
-resampling.tbl_df <- function(
-  x,
-  measure,
-  resamps = 1L,
-  conservative = FALSE,
-  summarise = TRUE,
-  verbose = TRUE
-) {
-  data.table::setDT(x)
-
-  resampling_internal(
-    x = x,
-    measure = measure,
-    resamps = resamps,
-    conservative = conservative,
-    summarise = summarise,
-    verbose = verbose
-  ) |>
-    dplyr::as_tibble()
 }
 
 

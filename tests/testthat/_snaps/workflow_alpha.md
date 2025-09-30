@@ -1,7 +1,7 @@
 # Whole workflow works consistently
 
     Code
-      regressions_alpha
+      regressions_abundance
     Output
            assemblageID     metric         slope       pvalue significance
       1       10_359170          S -1.071429e-01 5.456289e-01            0
@@ -5121,7 +5121,7 @@
 ---
 
     Code
-      regressions_beta
+      regressions_biomass
     Output
           assemblageID     metric         slope     pvalue significance     intercept
       1     211_516855          S  1.500000e+00 0.12666624            0 -2.965500e+03

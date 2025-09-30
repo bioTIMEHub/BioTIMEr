@@ -3,7 +3,7 @@
 ## Major Improvement
 
 - The package now uses `data.table` in the background for major speed
-  and memory usage improvements.
+  and memory usage improvements. Resampling the whole BioTIME database used to take > 1 hour and now takes < 1 minute.
 - methods: gridding and resampling functions now handle `data.frame`,
   `data.table` and `tibble` objects with dedicated functions.
 
