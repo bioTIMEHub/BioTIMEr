@@ -8,18 +8,19 @@ test_that("Whole workflow works consistently", {
   # Alpha diversity metrics
   set.seed(42)
 
-  regressions_alpha <- gridding(meta, btf) |>
+  regressions_abundance <- gridding(meta, btf) |>
     resampling(measure = "ABUNDANCE", resamps = 1L) |>
     getAlphaMetrics(measure = "ABUNDANCE") |>
     getLinearRegressions(divType = "alpha")
 
-  expect_snapshot(regressions_alpha)
+  expect_snapshot(regressions_abundance)
 
   set.seed(42)
-  regressions_beta <- gridding(meta, btf) |>
+
+  regressions_biomass <- gridding(meta, btf) |>
     resampling(measure = "BIOMASS", resamps = 1L) |>
     getAlphaMetrics(measure = "BIOMASS") |>
     getLinearRegressions(divType = "alpha")
 
-  expect_snapshot(regressions_beta)
+  expect_snapshot(regressions_biomass)
 })

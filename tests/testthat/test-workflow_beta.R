@@ -6,23 +6,21 @@ test_that("Whole workflow works consistently", {
   btf <- base::readRDS(testthat::test_path("testdata", "data-query.rds"))
 
   # Beta diversity metrics
-  expect_snapshot({
-    suppressWarnings({
-      set.seed(42)
-      gridding(meta, btf) |>
-        resampling(measure = "ABUNDANCE", resamps = 1L) |>
-        getBetaMetrics(measure = "ABUNDANCE") |>
-        getLinearRegressions(divType = "beta")
-    })
-  })
+  set.seed(42)
 
-  expect_snapshot({
-    suppressWarnings({
-      set.seed(42)
-      gridding(meta, btf) |>
-        resampling(measure = "BIOMASS", resamps = 1L) |>
-        getBetaMetrics(measure = "BIOMASS") |>
-        getLinearRegressions(divType = "beta")
-    })
-  })
+  regressions_abundance <- gridding(meta, btf) |>
+    resampling(measure = "ABUNDANCE", resamps = 1L) |>
+    getBetaMetrics(measure = "ABUNDANCE") |>
+    getLinearRegressions(divType = "beta")
+
+  expect_snapshot(regressions_abundance)
+
+  set.seed(42)
+
+  regressions_biomass <- gridding(meta, btf) |>
+    resampling(measure = "BIOMASS", resamps = 1L) |>
+    getBetaMetrics(measure = "BIOMASS") |>
+    getLinearRegressions(divType = "beta")
+
+  expect_snapshot(regressions_biomass)
 })
