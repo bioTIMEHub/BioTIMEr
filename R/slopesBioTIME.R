@@ -4,8 +4,6 @@
 #' @export
 #' @param x (\code{data.frame}) BioTIME data table in the format of the output
 #' of  \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} functions
-#' @param divType (\code{character}) string specifying the nature of the metrics in
-#' the data; either \code{divType = "alpha"} or \code{divType = "beta"} are supported
 #' @param pThreshold (\code{numeric}) P-value threshold for statistical significance
 #'
 #' @returns Returns a single long \code{data.frame} with results of linear regressions
@@ -15,7 +13,6 @@
 #' The function \code{getLinearRegression} fits simple linear regression models
 #' (see \code{\link[stats]{lm}} for details) for a given output ('data') of
 #' either \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} function.
-#' \code{divType} needs to be specified in agreement with \code{x}.
 #' The typical model has the form \code{metric ~ year}. Note that assemblages with
 #' less than 3 time points and/or single species time series are removed.
 #' @importFrom stats lm
@@ -34,13 +31,16 @@
 #'     assemblageID = rep(LETTERS[1L:8L], each = 24)
 #'   )
 #'   alpham <- getAlphaMetrics(x, "ABUNDANCE")
-#'   getLinearRegressions(x = alpham, divType = "alpha", pThreshold = 0.01)
+#'   getLinearRegressions(x = alpham, pThreshold = 0.01)
 #'   betam <- getBetaMetrics(x = x, "ABUNDANCE")
-#'   getLinearRegressions(x = betam, divType = "beta")
+#'   getLinearRegressions(x = betam)
 #'
+getLinearRegressions <- function(x, pThreshold = 0.05) {
+  UseMethod("getLinearRegressions")
+}
 
-getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
-  assert_choice(divType, choices = c("alpha", "beta"))
+#' @export
+getLinearRegressions.alpha <- function(x, pThreshold = 0.05) {
   assert_number(
     pThreshold,
     na.ok = FALSE,
@@ -50,53 +50,50 @@ getLinearRegressions <- function(x, divType, pThreshold = 0.05) {
     upper = 1
   )
 
-  base::switch(
-    divType,
-    alpha = {
-      assert_names(
-        x = colnames(x),
-        what = "colnames",
-        must.include = c(
-          "assemblageID",
-          "YEAR",
-          "S",
-          "N",
-          "maxN",
-          "Shannon",
-          "expShannon",
-          "Simpson",
-          "invSimpson",
-          "PIE",
-          "DomMc"
-        )
-      )
-
-      x <- base::subset(x, x$S != 1)
-      dftx <- slopes_core(x, pThreshold)
-    },
-
-    ###############################################
-    beta = {
-      assert_names(
-        x = colnames(x),
-        what = "colnames",
-        must.include = c(
-          "assemblageID",
-          "YEAR",
-          "JaccardDiss",
-          "MorisitaHornDiss",
-          "BrayCurtisDiss"
-        )
-      )
-
-      x <- na.omit(
-        x,
-        cols = c("JaccardDiss", "MorisitaHornDiss", "BrayCurtisDiss")
-      )
-
-      dftx <- slopes_core(x, pThreshold)
-    }
+  assert_names(
+    x = colnames(x),
+    what = "colnames",
+    must.include = c(
+      "assemblageID",
+      "YEAR",
+      "S",
+      "N",
+      "maxN",
+      "Shannon",
+      "expShannon",
+      "Simpson",
+      "invSimpson",
+      "PIE",
+      "DomMc"
+    )
   )
+  class(x) <- setdiff(class(x), "alpha")
+  x <- base::subset(x, x$S != 1)
+  dftx <- slopes_core(x, pThreshold)
+  return(dftx |> as.data.frame())
+}
+
+#' @export
+getLinearRegressions.beta <- function(x, pThreshold = 0.05) {
+  assert_names(
+    x = colnames(x),
+    what = "colnames",
+    must.include = c(
+      "assemblageID",
+      "YEAR",
+      "JaccardDiss",
+      "MorisitaHornDiss",
+      "BrayCurtisDiss"
+    )
+  )
+  class(x) <- setdiff(class(x), "beta")
+  x <- na.omit(
+    x,
+    cols = c("JaccardDiss", "MorisitaHornDiss", "BrayCurtisDiss")
+  )
+
+  dftx <- slopes_core(x, pThreshold)
+
   return(dftx |> as.data.frame())
 }
 

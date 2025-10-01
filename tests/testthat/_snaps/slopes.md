@@ -80,7 +80,7 @@
 ---
 
     Code
-      getLinearRegressions(x = betam, divType = "beta")
+      getLinearRegressions(x = betam)
     Output
          assemblageID           metric        slope     pvalue significance
       1             A      JaccardDiss  0.016326531 0.57339225            0

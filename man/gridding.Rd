@@ -7,9 +7,9 @@
 gridding(meta, btf, res = 12, resByData = FALSE, verbose = TRUE)
 }
 \arguments{
-\item{meta}{(\code{data.frame}) BioTIME metadata.}
+\item{meta}{(\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME metadata.}
 
-\item{btf}{(\code{data.frame}) BioTIME data.}
+\item{btf}{(\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME data.}
 
 \item{res}{(\code{integer}) cell resolution. Must be in the range [0,30]. Larger values
 represent finer resolutions. Default: 12 (~96 sq km). Passed to

@@ -17,6 +17,13 @@
     the abundance and/or biomass will be summed per rarefyID/SAMPLE_DESC and gives
     more columns.
 
+- In the getLinearRegression:
+
+  - removed the `divType` argument.
+
+    The function now reads the class of the object produced by `getAlphaMetrics`
+    and `getBetaMetrics`
+
 ## Minor Improvements and Bug Fixes
 
 - In the `themeBioTIME` function:

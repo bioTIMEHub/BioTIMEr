@@ -30,6 +30,41 @@ test_that("resampling returns an object of same class as meta", {
   )
 })
 
+test_that("gridded object passed to resampling is not changed by reference", {
+  expect_no_error({
+    gdf <- gridding(BTsubset_meta, BTsubset_data)
+    resampling(gdf, measure = "BIOMASS")
+  })
+  expect_s3_class(gdf, "data.frame", exact = TRUE)
+
+  expect_no_error({
+    gtbl <- gridding(
+      BTsubset_meta |> dplyr::as_tibble(),
+      BTsubset_data |> dplyr::as_tibble()
+    )
+    resampling(gtbl, measure = "BIOMASS")
+  })
+  expect_s3_class(
+    gtbl,
+    c("tbl_df", "tbl", "data.frame"),
+    exact = TRUE
+  )
+
+  expect_no_error({
+    gdt <- gridding(
+      BTsubset_meta |> data.table::as.data.table(),
+      BTsubset_data |> data.table::as.data.table()
+    )
+
+    resampling(gdt, measure = "BIOMASS")
+  })
+  expect_s3_class(
+    gdt,
+    c("data.table", "data.frame"),
+    exact = TRUE
+  )
+})
+
 test_that("resampling correctly excludes 1 year long studies", {
   test_df_1y <- rbind(
     test_df,

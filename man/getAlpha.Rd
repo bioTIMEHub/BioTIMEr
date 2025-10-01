@@ -14,9 +14,9 @@ contain species abundances.}
 }
 \value{
 A data frame with results for S (species richness), N (numerical abundance),
-maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
-Inverse Simpson, PIE (probability of intraspecific encounter) and
-McNaughton's Dominance.
+   maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
+   Inverse Simpson, PIE (probability of intraspecific encounter) and
+   McNaughton's Dominance.
 }
 \description{
 Alpha
