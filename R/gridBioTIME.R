@@ -3,8 +3,8 @@
 #' @description grids BioTIME data into a discrete global grid based on the
 #'    location of the samples (latitude/longitude).
 #' @export
-#' @param meta (\code{data.frame}) BioTIME metadata.
-#' @param btf (\code{data.frame}) BioTIME data.
+#' @param meta (\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME metadata.
+#' @param btf (\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME data.
 #' @param res (\code{integer}) cell resolution. Must be in the range [0,30]. Larger values
 #'   represent finer resolutions. Default: 12 (~96 sq km). Passed to
 #'   \code{\link[dggridR]{dgconstruct}}.
@@ -99,27 +99,12 @@ gridding.data.table <- function(
 
 # #' @export
 # gridding.tbl_df <- function(
-#   meta,
-#   btf,
-#   res = 12,
-#   resByData = FALSE,
-#   verbose = TRUE
-# ) {
-#   print("I am tibble")
-#   return(
-#     res <- gridding_internal(
-#       meta = meta,
-#       btf = btf,
-#       res = res,
-#       resByData = resByData,
-#       verbose = verbose
-#     ) |>
-#       dplyr::as_tibble()
-#   )
-# }
 
 # #' @export
 # gridding.matrix
+
+# #' @export
+# gridding.sf
 
 #' gridding BioTIME data
 #' @inheritParams gridding

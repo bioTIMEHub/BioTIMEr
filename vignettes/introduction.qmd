@@ -409,7 +409,6 @@ Finally, when looking to measure biodiversity change using temporal data, it is 
 # Let's apply it then:
 alpha_slopes <- getLinearRegressions(
   x = alpha_metrics,
-  divType = "alpha",
   pThreshold = 0.05
 ) #for alpha metrics
 
@@ -421,7 +420,6 @@ alpha_slopes |> head(6) |> kable()
 # Let's apply it then:
 beta_slopes <- getLinearRegressions(
   x = beta_metrics,
-  divType = "beta",
   pThreshold = 0.05
 ) #for beta metrics
 

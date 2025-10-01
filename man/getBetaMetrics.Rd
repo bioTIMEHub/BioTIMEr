@@ -38,15 +38,7 @@ not found an error is
  issued and the computations are halted.
 }
 \examples{
-x <- data.frame(
-  resamp = 1L,
-  YEAR = rep(rep(2010:2015, each = 4), times = 4),
-  Species = c(replicate(
-   n = 8L,
-   sample(letters, 24L, replace = FALSE))),
-  ABUNDANCE = rpois(24 * 8, 10),
-  assemblageID = rep(LETTERS[1L:8L], each = 24)
-  )
-
-res <- getBetaMetrics(x, measure = "ABUNDANCE")
+gridding(BTsubset_meta, BTsubsetData) |>
+  resampling(measure = "BIOMASS", verbose = FALSE, resamps = 5) |>
+  getBetaMetrics(measure = "BIOMASS")
 }

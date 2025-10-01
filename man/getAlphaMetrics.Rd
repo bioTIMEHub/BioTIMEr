@@ -59,6 +59,24 @@ abundant species.
 }
 \examples{
   gridding(BTsubset_meta, BTsubset_data) |>
-    resampling(measure = "ABUNDANCE") |>
+    resampling(measure = "ABUNDANCE", resamps = 1) |>
     getAlphaMetrics(measure = "ABUNDANCE")
+
+  # Metric values for several resamplings
+  gridding(BTsubset_meta, BTsubset_data) |>
+    resampling(measure = "ABUNDANCE", resamps = 5) |>
+    dplyr::reframe(getAlphaMetrics(
+                       x = pick(assemblageID, YEAR, Species, ABUNDANCE),
+                       measure = "ABUNDANCE"),
+                     .by = resamp)
+  # Mean and sd values of the metrics for several resamplings
+  gridding(BTsubset_meta, BTsubset_data) |>
+    resampling(measure = "ABUNDANCE", resamps = 5) |>
+    dplyr::reframe(getAlphaMetrics(
+                       x = pick(assemblageID, YEAR, Species, ABUNDANCE),
+                       measure = "ABUNDANCE"),
+                     .by = resamp) |>
+    dplyr::summarise(dplyr::across(.cols = dplyr::everything(),
+                               .fns = c(mean = mean, sd = sd)),
+                               .by = c(assemblageID, YEAR))
 }

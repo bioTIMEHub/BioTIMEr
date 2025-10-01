@@ -2,7 +2,6 @@ test_that("slopes works consistently", {
   skip_on_ci()
   skip_on_cran()
 
-  # Alpha diversity metrics
   set.seed(42)
   xa <- data.frame(
     YEAR = base::rep(base::rep(2010:2015, each = 4), times = 4),
@@ -12,7 +11,15 @@ test_that("slopes works consistently", {
     )),
     ABUNDANCE = stats::rpois(24 * 8, 10),
     assemblageID = base::rep(LETTERS[1L:8L], each = 24)
-  )
+  ) |>
+    rbind(data.frame(
+      YEAR = 2010:2011,
+      Species = rep(sample(letters[1L:10L], 4L, replace = FALSE), each = 2),
+      ABUNDANCE = stats::rpois(8, 10),
+      assemblageID = "Z"
+    )) # 1 year only to trigger the filter inside the function
+
+  # Alpha diversity metrics
   alpham <- getAlphaMetrics(xa, measure = "ABUNDANCE")
 
   # Beta  diversity metrics
@@ -20,10 +27,10 @@ test_that("slopes works consistently", {
 
   # Tests
   expect_warning(
-    regressions_alpha <- getLinearRegressions(x = alpham, divType = "alpha"),
+    regressions_alpha <- getLinearRegressions(x = alpham),
     regexp = "essentially perfect fit: summary may be unreliable"
   )
   expect_snapshot(regressions_alpha)
 
-  expect_snapshot(getLinearRegressions(x = betam, divType = "beta"))
+  expect_snapshot(getLinearRegressions(x = betam))
 })

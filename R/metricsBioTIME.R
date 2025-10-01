@@ -49,8 +49,26 @@
 #'
 #' @examples
 #'   gridding(BTsubset_meta, BTsubset_data) |>
-#'     resampling(measure = "ABUNDANCE") |>
+#'     resampling(measure = "ABUNDANCE", resamps = 1) |>
 #'     getAlphaMetrics(measure = "ABUNDANCE")
+#'
+#'   # Metric values for several resamplings
+#'   gridding(BTsubset_meta, BTsubset_data) |>
+#'     resampling(measure = "ABUNDANCE", resamps = 5) |>
+#'     dplyr::reframe(getAlphaMetrics(
+#'                        x = pick(assemblageID, YEAR, Species, ABUNDANCE),
+#'                        measure = "ABUNDANCE"),
+#'                      .by = resamp)
+#'   # Mean and sd values of the metrics for several resamplings
+#'   gridding(BTsubset_meta, BTsubset_data) |>
+#'     resampling(measure = "ABUNDANCE", resamps = 5) |>
+#'     dplyr::reframe(getAlphaMetrics(
+#'                        x = pick(assemblageID, YEAR, Species, ABUNDANCE),
+#'                        measure = "ABUNDANCE"),
+#'                      .by = resamp) |>
+#'     dplyr::summarise(dplyr::across(.cols = dplyr::everything(),
+#'                                .fns = c(mean = mean, sd = sd)),
+#'                                .by = c(assemblageID, YEAR))
 
 getAlphaMetrics <- function(x, measure) {
   checkmate::assert_names(
@@ -61,7 +79,8 @@ getAlphaMetrics <- function(x, measure) {
 
   xd <- data.frame()
 
-  x <- x[!is.na(x[, measure]), ]
+  x <- na.omit(x, cols = measure)
+
   for (id in unique(x$assemblageID)) {
     df <- x[x$assemblageID == id, ]
     if (dplyr::n_distinct(df$YEAR) > 1L && dplyr::n_distinct(df$Species) > 1L) {
@@ -75,6 +94,8 @@ getAlphaMetrics <- function(x, measure) {
       xd <- rbind(xd, getAlpha(x = y, id = id))
     } # end if
   } # end for
+
+  class(xd) <- c("alpha", class(xd))
 
   return(xd)
 }
@@ -160,17 +181,9 @@ getAlpha <- function(x, id) {
 #' and Bray-Curtis dissimilarity (\code{BrayCurtsDiss}) for each year and
 #' \code{assemblageID}.
 #' @examples
-#' x <- data.frame(
-#'   resamp = 1L,
-#'   YEAR = rep(rep(2010:2015, each = 4), times = 4),
-#'   Species = c(replicate(
-#'    n = 8L,
-#'    sample(letters, 24L, replace = FALSE))),
-#'   ABUNDANCE = rpois(24 * 8, 10),
-#'   assemblageID = rep(LETTERS[1L:8L], each = 24)
-#'   )
-#'
-#' res <- getBetaMetrics(x, measure = "ABUNDANCE")
+#' gridding(BTsubset_meta, BTsubsetData) |>
+#'   resampling(measure = "BIOMASS", verbose = FALSE, resamps = 5) |>
+#'   getBetaMetrics(measure = "BIOMASS")
 
 getBetaMetrics <- function(x, measure) {
   checkmate::assert_names(
@@ -181,7 +194,7 @@ getBetaMetrics <- function(x, measure) {
 
   xd <- data.frame()
 
-  x <- x[!is.na(x[, measure]), ]
+  x <- na.omit(x, cols = measure)
   nyear <- tapply(x$YEAR, x$assemblageID, dplyr::n_distinct)
   nsp <- tapply(x$Species, x$assemblageID, dplyr::n_distinct)
 
@@ -211,6 +224,7 @@ getBetaMetrics <- function(x, measure) {
     } # end if
   } # end for
 
+  class(xd) <- c("beta", class(xd))
   return(xd)
 }
 
