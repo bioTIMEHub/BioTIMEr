@@ -59,24 +59,52 @@ abundant species.
 }
 \examples{
   gridding(BTsubset_meta, BTsubset_data) |>
-    resampling(measure = "ABUNDANCE", resamps = 1) |>
-    getAlphaMetrics(measure = "ABUNDANCE")
+    resampling(measure = "BIOMASS", resamps = 1) |>
+    getAlphaMetrics(measure = "BIOMASS") |>
+    head(10)
 
   # Metric values for several resamplings
   gridding(BTsubset_meta, BTsubset_data) |>
-    resampling(measure = "ABUNDANCE", resamps = 5) |>
-    dplyr::reframe(getAlphaMetrics(
-                       x = pick(assemblageID, YEAR, Species, ABUNDANCE),
-                       measure = "ABUNDANCE"),
-                     .by = resamp)
+    resampling(measure = "BIOMASS", resamps = 2) |>
+    getAlphaMetrics(measure = "BIOMASS") |>
+    head(10)
+
   # Mean and sd values of the metrics for several resamplings
   gridding(BTsubset_meta, BTsubset_data) |>
-    resampling(measure = "ABUNDANCE", resamps = 5) |>
-    dplyr::reframe(getAlphaMetrics(
-                       x = pick(assemblageID, YEAR, Species, ABUNDANCE),
-                       measure = "ABUNDANCE"),
-                     .by = resamp) |>
-    dplyr::summarise(dplyr::across(.cols = dplyr::everything(),
-                               .fns = c(mean = mean, sd = sd)),
-                               .by = c(assemblageID, YEAR))
+    resampling(measure = "BIOMASS", resamps = 2) |>
+    dplyr::reframe(
+       getAlphaMetrics_reference(
+          x = pick(assemblageID, YEAR, Species, BIOMASS),
+          measure = "BIOMASS"),
+       .by = resamp) |>
+    dplyr::summarise(
+       dplyr::across(
+          .cols = !resamp,
+          .fns = c(mean = mean, sd = sd)),
+       .by = c(assemblageID, YEAR)) |>
+    tidyr::pivot_longer(
+       col = dplyr::contains("_"),
+       names_to = c("metric", "stat"),
+       names_sep = "_",
+       names_transform = as.factor) |>
+    tidyr::pivot_wider(names_from = stat) |>
+    head(10)
+
+  # Mean and sd values of the metrics for several resamplings
+  gridding(BTsubset_meta, BTsubset_data) |>
+    resampling(measure = "BIOMASS", resamps = 2) |>
+    getAlphaMetrics(measure = "BIOMASS") |>
+    dplyr::summarise(
+       dplyr::across(
+          .cols = !resamp,
+          .fns = c(mean = mean, sd = sd)),
+       .by = c(assemblageID, YEAR)) |>
+    tidyr::pivot_longer(
+       col = dplyr::contains("_"),
+       names_to = c("metric", "stat"),
+       names_sep = "_",
+       names_transform = as.factor) |>
+    tidyr::pivot_wider(names_from = stat) |>
+    head(10)
+
 }

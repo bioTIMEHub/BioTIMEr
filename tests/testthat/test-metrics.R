@@ -13,14 +13,13 @@ data <- data.frame(
 )
 
 test_that("getAlpha returns a data frame", {
-  result <- getAlpha(x = data, id = 10)
+  result <- getAlpha(x = data)
   expect_s3_class(result, "data.frame")
 })
 
 test_that("getAlpha returns the expected columns", {
-  result <- getAlpha(x = data, id = "TestID")
+  result <- getAlpha(x = data)
   expected_cols <- c(
-    "assemblageID",
     "YEAR",
     "S",
     "N",
@@ -36,12 +35,12 @@ test_that("getAlpha returns the expected columns", {
 })
 
 test_that("getAlpha returns correct number of rows", {
-  result <- getAlpha(x = data, id = "TestID")
+  result <- getAlpha(x = data)
   expect_equal(object = nrow(result), expected = nrow(data))
 })
 
 test_that("getAlpha computes accurate biodiversity metrics", {
-  result <- getAlpha(x = data, id = "TestID")
+  result <- getAlpha(x = data)
 
   # Perform calculations using external libraries
   shannon_expected <- vegan::diversity(data[, -1L], "shannon")
@@ -59,19 +58,20 @@ test_that("getAlpha works consistently", {
   skip_on_ci()
   skip_on_cran()
 
-  expect_snapshot(x = getAlpha(x = data, id = "TestID"))
+  expect_snapshot(x = getAlpha(x = data))
 })
 
 set.seed(42)
 dataMetrics <- data.frame(
+  resamp = 1L,
+  assemblageID = rep(LETTERS[1L:8L], each = 24),
   YEAR = rep(rep(2010:2015, each = 4), times = 4),
   Species = c(replicate(
     n = 8L,
     sample(letters, 24L, replace = FALSE)
   )),
   ABUNDANCE = rpois(24 * 8, 10),
-  BIOMASS = rpois(24 * 8, 1000),
-  assemblageID = rep(LETTERS[1L:8L], each = 24)
+  BIOMASS = rpois(24 * 8, 1000)
 )
 
 
@@ -79,23 +79,47 @@ test_that("getAlphaMetrics works correctly for Abundance", {
   skip_on_ci()
   skip_on_cran()
 
-  expect_snapshot(x = getAlphaMetrics(x = dataMetrics, measure = "ABUNDANCE"))
+  abundance_alpha_metrics <- getAlphaMetrics(
+    x = dataMetrics,
+    measure = "ABUNDANCE"
+  ) |>
+    as.data.frame()
+
+  expect_snapshot(x = abundance_alpha_metrics)
 })
 test_that("getAlphaMetrics works correctly for Biomass", {
   skip_on_ci()
   skip_on_cran()
 
-  expect_snapshot(x = getAlphaMetrics(x = dataMetrics, measure = "BIOMASS"))
+  biomass_alpha_metrics <- getAlphaMetrics(
+    x = dataMetrics,
+    measure = "BIOMASS"
+  ) |>
+    as.data.frame()
+  expect_snapshot(x = biomass_alpha_metrics)
 })
 test_that("getBetaMetrics works correctly for Abundance", {
   skip_on_ci()
   skip_on_cran()
 
-  expect_snapshot(x = getBetaMetrics(x = dataMetrics, measure = "ABUNDANCE"))
+  abundance_beta_metrics <- getBetaMetrics(
+    x = dataMetrics,
+    measure = "ABUNDANCE"
+  ) |>
+    as.data.frame()
+
+  expect_snapshot(x = abundance_beta_metrics)
 })
+
 test_that("getBetaMetrics works correctly for Biomass", {
   skip_on_ci()
   skip_on_cran()
 
-  expect_snapshot(x = getBetaMetrics(x = dataMetrics, measure = "BIOMASS"))
+  biomass_beta_metrics <- getBetaMetrics(
+    x = dataMetrics,
+    measure = "BIOMASS"
+  ) |>
+    as.data.frame()
+
+  expect_snapshot(x = biomass_beta_metrics)
 })

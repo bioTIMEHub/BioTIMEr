@@ -1,9 +1,10 @@
-# BioTIMEr 0.3.0 - 01.10.2025
+# BioTIMEr 0.3.0 - 15.10.2025
 
 ## Major Improvement
 
 - The package now uses `data.table` in the background for major speed
-  and memory usage improvements. Resampling the whole BioTIME database used to take > 1 hour and now takes < 1 minute.
+  and memory usage improvements. Resampling the whole BioTIME database used to
+  take > 1 hour and now takes < 1 minute.
 - methods: gridding and resampling functions now handle `data.frame`,
   `data.table` and `tibble` objects with dedicated functions.
 
@@ -17,12 +18,19 @@
     the abundance and/or biomass will be summed per rarefyID/SAMPLE_DESC and gives
     more columns.
 
-- In the getLinearRegression:
+- In the getAlphaMetrics function:
+
+ - `data.frames` containing several resamplings are accepted
+
+   If the provided data contain several resamplings, metrics will be computed
+   per resampling, per assemblageID, per year.
+
+- In the getLinearRegressions function:
 
   - removed the `divType` argument.
 
-    The function now reads the class of the object produced by `getAlphaMetrics`
-    and `getBetaMetrics`
+    The function now reads the class of the objects produced by `getAlphaMetrics`
+    and `getBetaMetrics` and computes the expected metrics.
 
 ## Minor Improvements and Bug Fixes
 

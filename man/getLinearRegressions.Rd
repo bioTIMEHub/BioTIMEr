@@ -38,6 +38,6 @@ less than 3 time points and/or single species time series are removed.
   alpham <- getAlphaMetrics(x, "ABUNDANCE")
   getLinearRegressions(x = alpham, pThreshold = 0.01)
   betam <- getBetaMetrics(x = x, "ABUNDANCE")
-  getLinearRegressions(x = betam,)
+  getLinearRegressions(x = betam)
 
 }

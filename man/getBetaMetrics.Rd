@@ -38,7 +38,7 @@ not found an error is
  issued and the computations are halted.
 }
 \examples{
-gridding(BTsubset_meta, BTsubsetData) |>
-  resampling(measure = "BIOMASS", verbose = FALSE, resamps = 5) |>
+gridding(BTsubset_meta, BTsubset_data) |>
+  resampling(measure = "BIOMASS", verbose = FALSE, resamps = 1) |>
   getBetaMetrics(measure = "BIOMASS")
 }

@@ -11,6 +11,7 @@ test_that("Whole workflow works consistently", {
   regressions_abundance <- g |>
     resampling(measure = "ABUNDANCE", resamps = 1L) |>
     getAlphaMetrics(measure = "ABUNDANCE") |>
+    dplyr::select(-resamp) |>
     getLinearRegressions()
 
   expect_snapshot(regressions_abundance)
@@ -19,6 +20,7 @@ test_that("Whole workflow works consistently", {
   regressions_biomass <- g |>
     resampling(measure = "BIOMASS", resamps = 1L) |>
     getAlphaMetrics(measure = "BIOMASS") |>
+    dplyr::select(-resamp) |>
     getLinearRegressions()
 
   expect_snapshot(regressions_biomass)

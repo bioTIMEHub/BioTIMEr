@@ -49,28 +49,87 @@
 #'
 #' @examples
 #'   gridding(BTsubset_meta, BTsubset_data) |>
-#'     resampling(measure = "ABUNDANCE", resamps = 1) |>
-#'     getAlphaMetrics(measure = "ABUNDANCE")
+#'     resampling(measure = "BIOMASS", resamps = 1) |>
+#'     getAlphaMetrics(measure = "BIOMASS") |>
+#'     head(10)
 #'
 #'   # Metric values for several resamplings
 #'   gridding(BTsubset_meta, BTsubset_data) |>
-#'     resampling(measure = "ABUNDANCE", resamps = 5) |>
-#'     dplyr::reframe(getAlphaMetrics(
-#'                        x = pick(assemblageID, YEAR, Species, ABUNDANCE),
-#'                        measure = "ABUNDANCE"),
-#'                      .by = resamp)
+#'     resampling(measure = "BIOMASS", resamps = 2) |>
+#'     getAlphaMetrics(measure = "BIOMASS") |>
+#'     head(10)
+#'
 #'   # Mean and sd values of the metrics for several resamplings
 #'   gridding(BTsubset_meta, BTsubset_data) |>
-#'     resampling(measure = "ABUNDANCE", resamps = 5) |>
-#'     dplyr::reframe(getAlphaMetrics(
-#'                        x = pick(assemblageID, YEAR, Species, ABUNDANCE),
-#'                        measure = "ABUNDANCE"),
-#'                      .by = resamp) |>
-#'     dplyr::summarise(dplyr::across(.cols = dplyr::everything(),
-#'                                .fns = c(mean = mean, sd = sd)),
-#'                                .by = c(assemblageID, YEAR))
-
+#'     resampling(measure = "BIOMASS", resamps = 2) |>
+#'     dplyr::reframe(
+#'        getAlphaMetrics_reference(
+#'           x = pick(assemblageID, YEAR, Species, BIOMASS),
+#'           measure = "BIOMASS"),
+#'        .by = resamp) |>
+#'     dplyr::summarise(
+#'        dplyr::across(
+#'           .cols = !resamp,
+#'           .fns = c(mean = mean, sd = sd)),
+#'        .by = c(assemblageID, YEAR)) |>
+#'     tidyr::pivot_longer(
+#'        col = dplyr::contains("_"),
+#'        names_to = c("metric", "stat"),
+#'        names_sep = "_",
+#'        names_transform = as.factor) |>
+#'     tidyr::pivot_wider(names_from = stat) |>
+#'     head(10)
+#'
+#'   # Mean and sd values of the metrics for several resamplings
+#'   gridding(BTsubset_meta, BTsubset_data) |>
+#'     resampling(measure = "BIOMASS", resamps = 2) |>
+#'     getAlphaMetrics(measure = "BIOMASS") |>
+#'     dplyr::summarise(
+#'        dplyr::across(
+#'           .cols = !resamp,
+#'           .fns = c(mean = mean, sd = sd)),
+#'        .by = c(assemblageID, YEAR)) |>
+#'     tidyr::pivot_longer(
+#'        col = dplyr::contains("_"),
+#'        names_to = c("metric", "stat"),
+#'        names_sep = "_",
+#'        names_transform = as.factor) |>
+#'     tidyr::pivot_wider(names_from = stat) |>
+#'     head(10)
+#'
 getAlphaMetrics <- function(x, measure) {
+  checkmate::assert_names(
+    x = colnames(x),
+    what = "colnames",
+    must.include = c(measure, "resamp", "YEAR", "Species", "assemblageID")
+  )
+
+  x <- na.omit(x, cols = measure)
+
+  xd <- x |>
+    dplyr::group_by(resamp, assemblageID) |>
+    dplyr::filter(
+      dplyr::n_distinct(YEAR) > 1L && dplyr::n_distinct(Species) > 1L
+    ) |>
+    dplyr::reframe(
+      dplyr::pick("YEAR", "Species", dplyr::all_of(measure)) |>
+        tidyr::pivot_wider(
+          names_from = "Species",
+          values_from = dplyr::all_of(measure),
+          values_fill = 0
+        ) |>
+        getAlpha()
+    )
+
+  class(xd) <- c("alpha", class(xd))
+
+  return(xd)
+}
+
+#' @inheritParams getAlphaMetrics
+#' @inheritSection getAlphaMetrics examples
+#' @export
+getAlphaMetrics_reference <- function(x, measure) {
   checkmate::assert_names(
     x = colnames(x),
     what = "colnames",
@@ -91,7 +150,7 @@ getAlphaMetrics <- function(x, measure) {
           values_from = dplyr::all_of(measure),
           values_fill = 0
         )
-      xd <- rbind(xd, getAlpha(x = y, id = id))
+      xd <- rbind(xd, getAlpha_reference(x = y, id = id))
     } # end if
   } # end for
 
@@ -104,14 +163,54 @@ getAlphaMetrics <- function(x, measure) {
 #' Alpha
 #' @param x (\code{data.frame}) First column has to be year and following columns
 #'    contain species abundances.
-#' @param id (\code{character}) One assemblageID
 #' @keywords internal
 #' @returns A data frame with results for S (species richness), N (numerical abundance),
 #'    maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
 #'    Inverse Simpson, PIE (probability of intraspecific encounter) and
 #'    McNaughton's Dominance.
 
-getAlpha <- function(x, id) {
+getAlpha <- function(x) {
+  yr <- unique(x$YEAR)
+  x$YEAR <- NULL
+
+  S <- rowSums(x > 0)
+  N <- rowSums(x)
+  maxN <- apply(x, 1, max)
+
+  DomMc <- apply(x, 1, function(s) {
+    y <- sort(s, decreasing = TRUE)
+    (y[[1L]] + y[[2L]]) / sum(y)
+  })
+
+  PIE = apply(x, 1, function(s) {
+    n <- sum(s)
+    (n / (n - 1)) * (1 - sum((s / n)^2))
+  })
+
+  x <- base::sweep(x, 1, N, "/")
+  Shannon <- rowSums(-x * log(x), na.rm = TRUE)
+  H <- rowSums(x * x, na.rm = TRUE) # Could be faster and correct if FALSE?
+
+  return(
+    data.frame(
+      YEAR = yr,
+
+      S,
+      N,
+      maxN,
+
+      Shannon,
+      Simpson = 1 - H,
+      invSimpson = 1 / H,
+      PIE,
+      DomMc,
+      expShannon = exp(Shannon)
+    )
+  )
+}
+
+
+getAlpha_reference <- function(x, id) {
   yr <- unique(x[, 1L])
   x <- x[, -1L]
 
@@ -181,11 +280,41 @@ getAlpha <- function(x, id) {
 #' and Bray-Curtis dissimilarity (\code{BrayCurtsDiss}) for each year and
 #' \code{assemblageID}.
 #' @examples
-#' gridding(BTsubset_meta, BTsubsetData) |>
-#'   resampling(measure = "BIOMASS", verbose = FALSE, resamps = 5) |>
+#' gridding(BTsubset_meta, BTsubset_data) |>
+#'   resampling(measure = "BIOMASS", verbose = FALSE, resamps = 1) |>
 #'   getBetaMetrics(measure = "BIOMASS")
 
 getBetaMetrics <- function(x, measure) {
+  checkmate::assert_names(
+    x = colnames(x),
+    what = "colnames",
+    must.include = c(measure, "YEAR", "Species", "assemblageID")
+  )
+
+  x <- na.omit(x, cols = measure)
+
+  xd <- x |>
+    dplyr::group_by(resamp, assemblageID) |>
+    dplyr::filter(
+      dplyr::n_distinct(YEAR) > 1L && dplyr::n_distinct(Species) > 1L
+    ) |>
+    dplyr::reframe(
+      dplyr::pick("YEAR", "Species", dplyr::all_of(measure)) |>
+        tidyr::pivot_wider(
+          names_from = "Species",
+          values_from = dplyr::all_of(measure),
+          values_fill = 0
+        ) |>
+        getBeta()
+    )
+
+  class(xd) <- c("beta", class(xd))
+  return(xd)
+}
+
+#' @inheritParams getBetaMetrics
+#' @export
+getBetaMetrics_reference <- function(x, measure) {
   checkmate::assert_names(
     x = colnames(x),
     what = "colnames",
@@ -232,13 +361,36 @@ getBetaMetrics <- function(x, measure) {
 #' Beta
 #' @param x (\code{data.frame}) First column has to be year and following columns
 #' contain species abundances.
-#' @param id (\code{character}) One assemblageID
 #' @returns getBeta returns a data.frame with three beta diversity dissimilarity
 #' metrics
 #' @importFrom vegan vegdist
 #' @keywords internal
 
-getBeta <- function(x, id) {
+getBeta <- function(x) {
+  yr <- unique(x[, 1L])
+  x <- x[, -1L]
+  xb <- x
+  xb[xb > 1] <- 1
+  getj <- vegan::vegdist(xb, "jaccard") #10
+  getmh <- vegan::vegdist(x, "horn") #8
+  getbc <- vegan::vegdist(x, "bray") #4
+
+  jacc <- c(1, getj[1L:nrow(x)])[-1]
+  mh <- c(1, getmh[1L:nrow(x)])[-1]
+  bc <- c(1, getbc[1L:nrow(x)])[-1]
+
+  xf <- data.frame(
+    YEAR = yr,
+    JaccardDiss = jacc,
+    MorisitaHornDiss = mh,
+    BrayCurtisDiss = bc
+  )
+  return(xf)
+}
+#' @inheritParams getBeta
+#' @importFrom vegan vegdist
+#' @keywords internal
+getBeta_reference <- function(x, id) {
   yr <- unique(x[, 1L])
   x <- x[, -1L]
   xb <- x
