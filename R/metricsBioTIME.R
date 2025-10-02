@@ -348,7 +348,7 @@ getBetaMetrics_reference <- function(x, measure) {
           values_from = dplyr::all_of(measure),
           values_fill = 0
         ) |>
-        getBeta(id = id)
+        getBeta_reference(id = id)
       xd <- rbind(xd, rbeta)
     } # end if
   } # end for
