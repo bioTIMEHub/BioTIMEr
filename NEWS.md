@@ -7,6 +7,7 @@
   take > 1 hour and now takes < 1 minute.
 - methods: gridding and resampling functions now handle `data.frame`,
   `data.table` and `tibble` objects with dedicated functions.
+- getAlphaMetrics and getBetaMetrics are faster and use 100x less memory.
 
 ## New Features
 
@@ -18,7 +19,7 @@
     the abundance and/or biomass will be summed per rarefyID/SAMPLE_DESC and gives
     more columns.
 
-- In the getAlphaMetrics function:
+- In the getAlphaMetrics and ggetBetaMetrics functions:
 
  - `data.frames` containing several resamplings are accepted
 

@@ -62,27 +62,6 @@
 #'   # Mean and sd values of the metrics for several resamplings
 #'   gridding(BTsubset_meta, BTsubset_data) |>
 #'     resampling(measure = "BIOMASS", resamps = 2) |>
-#'     dplyr::reframe(
-#'        getAlphaMetrics_reference(
-#'           x = pick(assemblageID, YEAR, Species, BIOMASS),
-#'           measure = "BIOMASS"),
-#'        .by = resamp) |>
-#'     dplyr::summarise(
-#'        dplyr::across(
-#'           .cols = !resamp,
-#'           .fns = c(mean = mean, sd = sd)),
-#'        .by = c(assemblageID, YEAR)) |>
-#'     tidyr::pivot_longer(
-#'        col = dplyr::contains("_"),
-#'        names_to = c("metric", "stat"),
-#'        names_sep = "_",
-#'        names_transform = as.factor) |>
-#'     tidyr::pivot_wider(names_from = stat) |>
-#'     head(10)
-#'
-#'   # Mean and sd values of the metrics for several resamplings
-#'   gridding(BTsubset_meta, BTsubset_data) |>
-#'     resampling(measure = "BIOMASS", resamps = 2) |>
 #'     getAlphaMetrics(measure = "BIOMASS") |>
 #'     dplyr::summarise(
 #'        dplyr::across(
@@ -126,8 +105,31 @@ getAlphaMetrics <- function(x, measure) {
   return(xd)
 }
 
+#' Alpha diversity metrics
+#'
+#' Calculates a set of standard alpha diversity metrics
 #' @inheritParams getAlphaMetrics
-#' @inheritSection getAlphaMetrics examples
+#' @examples
+#'   # Mean and sd values of the metrics for several resamplings
+#'   gridding(BTsubset_meta, BTsubset_data) |>
+#'     resampling(measure = "BIOMASS", resamps = 2) |>
+#'     dplyr::reframe(
+#'        getAlphaMetrics_reference(
+#'           x = pick(assemblageID, YEAR, Species, BIOMASS),
+#'           measure = "BIOMASS"),
+#'        .by = resamp) |>
+#'     dplyr::summarise(
+#'        dplyr::across(
+#'           .cols = !resamp,
+#'           .fns = c(mean = mean, sd = sd)),
+#'        .by = c(assemblageID, YEAR)) |>
+#'     tidyr::pivot_longer(
+#'        col = dplyr::contains("_"),
+#'        names_to = c("metric", "stat"),
+#'        names_sep = "_",
+#'        names_transform = as.factor) |>
+#'     tidyr::pivot_wider(names_from = stat) |>
+#'     head(10)
 #' @export
 getAlphaMetrics_reference <- function(x, measure) {
   checkmate::assert_names(
@@ -282,7 +284,12 @@ getAlpha_reference <- function(x, id) {
 #' @examples
 #' gridding(BTsubset_meta, BTsubset_data) |>
 #'   resampling(measure = "BIOMASS", verbose = FALSE, resamps = 1) |>
-#'   getBetaMetrics(measure = "BIOMASS")
+#'   getBetaMetrics(measure = "BIOMASS") |>
+#'   head()
+#' gridding(BTsubset_meta, BTsubset_data) |>
+#'   resampling(measure = "BIOMASS", verbose = FALSE, resamps = 2) |>
+#'   getBetaMetrics(measure = "BIOMASS") |>
+#'   head()
 
 getBetaMetrics <- function(x, measure) {
   checkmate::assert_names(
@@ -312,7 +319,19 @@ getBetaMetrics <- function(x, measure) {
   return(xd)
 }
 
+#' Beta diversity metrics
+#'
+#' Calculates a set of standard beta diversity metrics
 #' @inheritParams getBetaMetrics
+#' @examples
+#' gridding(BTsubset_meta, BTsubset_data) |>
+#'   resampling(measure = "BIOMASS", verbose = FALSE, resamps = 2) |>
+#'   dplyr::reframe(
+#'        getBetaMetrics_reference(
+#'           x = pick(assemblageID, YEAR, Species, BIOMASS),
+#'           measure = "BIOMASS"),
+#'        .by = resamp)
+#'
 #' @export
 getBetaMetrics_reference <- function(x, measure) {
   checkmate::assert_names(

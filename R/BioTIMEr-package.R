@@ -19,7 +19,10 @@ utils::globalVariables(c(
   "assemblageID",
   "SAMPLE_DESC",
   "STUDY_ID",
-  "minsamp"
+  "YEAR",
+  "Species",
+  "minsamp",
+  "resamp"
 ))
 ## usethis namespace: end
 NULL

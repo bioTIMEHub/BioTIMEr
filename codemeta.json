@@ -331,7 +331,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "6664.048KB",
+  "fileSize": "6666.334KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
@@ -401,8 +401,6 @@
     }
   ],
   "releaseNotes": "https://github.com/bioTIMEHub/BioTIMEr/blob/master/NEWS.md",
-  "readme": "https://github.com/bioTIMEHub/BioTIMEr/blob/main/README.md",
   "contIntegration": ["https://github.com/bioTIMEHub/BioTIMEr/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/github/bioTIMEHub/BioTIMEr?branch=main"],
-  "developmentStatus": "https://lifecycle.r-lib.org/articles/stages.html#stable",
-  "keywords": ["ecology", "geospatial", "r", "r-package", "rstats"]
+  "developmentStatus": "https://lifecycle.r-lib.org/articles/stages.html#stable"
 }

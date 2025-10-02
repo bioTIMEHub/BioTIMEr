@@ -72,27 +72,6 @@ abundant species.
   # Mean and sd values of the metrics for several resamplings
   gridding(BTsubset_meta, BTsubset_data) |>
     resampling(measure = "BIOMASS", resamps = 2) |>
-    dplyr::reframe(
-       getAlphaMetrics_reference(
-          x = pick(assemblageID, YEAR, Species, BIOMASS),
-          measure = "BIOMASS"),
-       .by = resamp) |>
-    dplyr::summarise(
-       dplyr::across(
-          .cols = !resamp,
-          .fns = c(mean = mean, sd = sd)),
-       .by = c(assemblageID, YEAR)) |>
-    tidyr::pivot_longer(
-       col = dplyr::contains("_"),
-       names_to = c("metric", "stat"),
-       names_sep = "_",
-       names_transform = as.factor) |>
-    tidyr::pivot_wider(names_from = stat) |>
-    head(10)
-
-  # Mean and sd values of the metrics for several resamplings
-  gridding(BTsubset_meta, BTsubset_data) |>
-    resampling(measure = "BIOMASS", resamps = 2) |>
     getAlphaMetrics(measure = "BIOMASS") |>
     dplyr::summarise(
        dplyr::across(
