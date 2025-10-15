@@ -7,7 +7,7 @@
   "codeRepository": "https://github.com/bioTIMEHub/BioTIMEr",
   "issueTracker": "https://github.com/bioTIMEHub/BioTIMEr/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -283,7 +283,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "8713.965KB",
+  "fileSize": "8714.038KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",

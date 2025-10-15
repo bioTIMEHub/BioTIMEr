@@ -1,3 +1,7 @@
+# BioTIMEr 0.2.6
+
+* Patch. test modification to adapt to vegan update 2.7-2
+
 # BioTIMEr 0.2.5
 
 * Patch. all testthat snapshot tests are now skipped on CRAN and CI.
