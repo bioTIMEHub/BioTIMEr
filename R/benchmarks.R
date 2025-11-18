@@ -488,4 +488,87 @@ if (FALSE) {
   #     expression    min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time
   # 1 dplyr       21.46ms  22.34ms      45.1      12MB     7.51    18     3      399ms
   # 2 data.table   4.15ms   4.94ms     197.      4.1MB    11.6     85     5      431ms
+
+  # dommc
+  x <- data.frame(
+    YEAR = rep(rep(2010:2015, times = 10), times = 100),
+    matrix(data = rpois(1000, 10), ncol = 4)
+  )
+  lx <- tidyr::pivot_longer(x, cols = -YEAR)
+
+  x$YEAR <- NULL
+  y <- as.data.frame(t(x))
+
+  bench::mark(
+    check = FALSE,
+    ref = apply(x, 1, function(s) {
+      y <- sort(s, decreasing = TRUE)
+      (y[[1L]] + y[[2L]]) / sum(y)
+    }),
+
+    head = apply(x, 1, function(s) {
+      y <- sort(s, decreasing = TRUE)
+      sum(head(y, 2)) / sum(y)
+    }),
+    vec = apply(x, 1, function(s) {
+      y <- sort(s, decreasing = TRUE)
+      sum(y[c(1L, 2L)]) / sum(y)
+    }),
+    liner = apply(x, 1, function(s) {
+      sum(sort(s, decreasing = TRUE)[1L:2L]) / sum(s)
+    }),
+    transposed = sapply(
+      y,
+      function(s) sum(sort(s, decreasing = TRUE)[1L:2L]),
+      USE.NAMES = FALSE,
+      simplify = TRUE
+    ) /
+      colSums(y),
+    sep = {
+      sums <- rowSums(x)
+      maxs <- apply(x, 1, function(s) {
+        y <- sort(s, decreasing = TRUE)
+        y[[1L]] + y[[2L]]
+      })
+      maxs / sums
+    },
+    sep2 = apply(x, 1, function(s) {
+      y <- sort(s, decreasing = TRUE)
+      y[[1L]] + y[[2L]]
+    }) /
+      rowSums(x),
+    longBase = tapply(lx$value, lx$YEAR, function(s) {
+      y <- sort(s, decreasing = TRUE)
+      (y[[1L]] + y[[2L]]) / sum(y)
+    }),
+    longSep = {
+      rowsum(lx$value, lx$YEAR)
+    }
+  )
+
+  # getAlphaMetrics on site by species matrices (with a pivot_wider on each
+  # community) vs. keeping the long format
+  y = gridding(BTsubset_meta, BTsubset_data) |>
+    resampling(measure = "BIOMASS", resamps = 2)
+
+  bench::mark(
+    check = FALSE,
+    ref = {
+      y |>
+        dplyr::reframe(
+          getAlphaMetrics_reference(
+            x = pick(assemblageID, YEAR, Species, BIOMASS),
+            measure = "BIOMASS"
+          ),
+          .by = resamp
+        )
+    },
+    wide = y |> getAlphaMetrics(measure = "BIOMASS"),
+    long = y |> getAlphaMetrics_long(measure = "BIOMASS")
+  )
+
+  #   expression      min   median `itr/sec` mem_alloc `gc/sec` n_itr  n_gc total_time
+  # 1 ref         324.9ms  410.1ms      2.44    9.38MB     6.10     2     5      820ms
+  # 2 wide        293.8ms  296.2ms      3.38    8.32MB     8.44     2     5      592ms
+  # 3 long         51.3ms   52.9ms     18.6     1.91MB     7.43    10     4      538ms
 }

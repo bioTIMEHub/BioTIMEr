@@ -85,7 +85,7 @@ getAlphaMetrics <- function(x, measure) {
 
   x <- na.omit(x, cols = measure)
 
-  xd <- x |>
+  res <- x |>
     dplyr::group_by(resamp, assemblageID) |>
     dplyr::filter(
       dplyr::n_distinct(YEAR) > 1L && dplyr::n_distinct(Species) > 1L
@@ -100,9 +100,51 @@ getAlphaMetrics <- function(x, measure) {
         getAlpha()
     )
 
-  class(xd) <- c("alpha", class(xd))
+  class(res) <- c("alpha", class(res))
 
-  return(xd)
+  return(res)
+}
+
+#' @examples
+#'   gridding(BTsubset_meta, BTsubset_data) |>
+#'     resampling(measure = "BIOMASS", resamps = 1) |>
+#'     getAlphaMetrics_long(measure = "BIOMASS") |>
+#'     head(10)
+getAlphaMetrics_long <- function(x, measure) {
+  checkmate::assert_names(
+    x = colnames(x),
+    what = "colnames",
+    must.include = c(measure, "resamp", "YEAR", "Species", "assemblageID")
+  )
+
+  x <- na.omit(x, cols = measure)
+
+  res <- x |>
+    dplyr::filter(
+      dplyr::n_distinct(YEAR) > 1L && dplyr::n_distinct(Species) > 1L,
+      .by = c(resamp, assemblageID)
+    ) |>
+    dplyr::summarise(
+      dplyr::across(
+        .cols = dplyr::all_of(measure),
+        .fns = ~ getAlpha_long(sort(.x, decreasing = TRUE))
+      ),
+      .by = c(resamp, assemblageID, YEAR)
+    ) |>
+    tidyr::unnest_wider(
+      col = -c(resamp, assemblageID, YEAR),
+      names_sep = "_"
+    )
+  # tidyr::pivot_longer(
+  #   cols = -c(resamp, assemblageID, YEAR),
+  #   names_to = c("measure", "metric"),
+  #   names_sep = "_",
+  #   names_transform = as.factor
+  # )
+
+  class(res) <- c("alpha", class(res))
+
+  return(res)
 }
 
 #' Alpha diversity metrics
@@ -172,31 +214,64 @@ getAlphaMetrics_reference <- function(x, measure) {
 #'    McNaughton's Dominance.
 
 getAlpha <- function(x) {
-  yr <- unique(x$YEAR)
+  yr <- unique(x$YEAR) # what for unique()?
   x$YEAR <- NULL
 
   S <- rowSums(x > 0)
   N <- rowSums(x)
-  maxN <- apply(x, 1, max)
+  maxN <- do.call(base::pmax, x)
 
   DomMc <- apply(x, 1, function(s) {
     y <- sort(s, decreasing = TRUE)
     (y[[1L]] + y[[2L]]) / sum(y)
   })
 
-  PIE = apply(x, 1, function(s) {
+  PIE <- apply(x, 1, function(s) {
     n <- sum(s)
     (n / (n - 1)) * (1 - sum((s / n)^2))
   })
 
   x <- base::sweep(x, 1, N, "/")
   Shannon <- rowSums(-x * log(x), na.rm = TRUE)
-  H <- rowSums(x * x, na.rm = TRUE) # Could be faster and correct if FALSE?
+  H <- rowSums(x * x, na.rm = TRUE) # Could be faster and still correct if FALSE?
 
   return(
     data.frame(
       YEAR = yr,
 
+      S,
+      N,
+      maxN,
+
+      Shannon,
+      Simpson = 1 - H,
+      invSimpson = 1 / H,
+      PIE,
+      DomMc,
+      expShannon = exp(Shannon)
+    )
+  )
+}
+
+#' @examples
+#' # 1 site, 1 year in long format, ordered by ABUNDANCE or BIOMASS
+#' x <- data.frame(species = letters[1:6], x = 6:1)
+#' getAlphaLong(x$x)
+getAlpha_long <- function(x) {
+  S <- sum(x > 0)
+  N <- sum(x)
+  maxN <- max(x)
+
+  DomMc <- if (length(x) != 1L) (x[[1L]] + x[[2L]]) / N else 1
+
+  PIE <- (N / (N - 1)) * (1 - sum((x / N)^2))
+
+  x <- x / N
+  Shannon <- sum(-x * log(x), na.rm = TRUE)
+  H <- sum(x * x, na.rm = TRUE) # Could be faster and correct if FALSE?
+
+  return(
+    data.frame(
       S,
       N,
       maxN,
