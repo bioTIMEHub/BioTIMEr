@@ -81,9 +81,9 @@
                         <h4 data-toc-skip class="author">Inês S.
 Martins</h4>
             
-            <h4 data-toc-skip class="date">2025-10-15</h4>
+            <h4 data-toc-skip class="date">2025-11-18</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/bioTIMEHub/BioTIMEr/blob/v0.2.6-CRAN/vignettes/vignette1.Rmd" class="external-link"><code>vignettes/vignette1.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/bioTIMEHub/BioTIMEr/blob/main/vignettes/vignette1.Rmd" class="external-link"><code>vignettes/vignette1.Rmd</code></a></small>
       <div class="hidden name"><code>vignette1.Rmd</code></div>
 
     </div>
@@ -290,7 +290,7 @@ series are there in this subset:</p>
 <span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"StudyID"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Number of assemblages in a study"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="vignette1_files/figure-html/gridding_ex_plot-1.png" width="672">
+<p><img src="vignette1_files/figure-html/gridding_ex_plot-1.png" class="r-plt" width="672">
 You can see that several studies are not partitioned, and that’s because
 all their observations were already contained within a single cell.</p>
 <div class="section level4">
@@ -332,7 +332,7 @@ over these alternative options with a few examples:</p>
 <span>  <span class="fu">scale_fill_discrete</span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#155f49"</span>,<span class="st">"#66c1d1"</span>,<span class="st">"#d9d956"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"StudyID"</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Number of assemblages in a study"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="vignette1_files/figure-html/gridding_ex3-1.png" width="672">
+<p><img src="vignette1_files/figure-html/gridding_ex3-1.png" class="r-plt" width="672">
 The number of cells in each study varies depending on the resolution
 chosen.</p>
 <p>You can also map what happens when gridding the data:</p>
@@ -380,7 +380,7 @@ chosen.</p>
 <span><span class="co"># The resulting distribution of different size cells appears as follows:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">zoom_in_map</span>, vp <span class="op">=</span> <span class="va">main</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">map_uk_locations</span>, vp <span class="op">=</span> <span class="va">inset</span><span class="op">)</span></span></code></pre></div>
-<p><img src="vignette1_files/figure-html/gridding_map-1.png" width="672">
+<p><img src="vignette1_files/figure-html/gridding_map-1.png" class="r-plt" width="672">
 We can see that the higher the resolution set the higher the number of
 cells into which samples get assigned. There is thus the risk of the
 resulting assemblages time series becoming too small to have any
@@ -561,7 +561,7 @@ each year:</p>
 <pre><code><span><span class="co">## Warning in geom_segment(aes(x = 1926, y = min(n_samples) + 3, xend = 1927, : All aesthetics have length 1, but the data has 29 rows.</span></span>
 <span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please consider using `annotate()` or provide this layer with data containing</span></span>
 <span><span class="co">##   a single row.</span></span></code></pre>
-<p><img src="vignette1_files/figure-html/resampling_ex3-1.png" width="672"></p>
+<p><img src="vignette1_files/figure-html/resampling_ex3-1.png" class="r-plt" width="672"></p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># In this case,the year 1927 had the lowest sampling effort, with 3 samples (arrow).</span></span></code></pre></div>
 <p>In this particular case, what <code><a href="../reference/resampling.html">resampling()</a></code>will do is to
@@ -1121,9 +1121,9 @@ change:</p>
 <span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Alpha diversity change"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span>,plot.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="vignette1_files/figure-html/trends3-1.png" width="691.2"></p>
+<p><img src="vignette1_files/figure-html/trends3-1.png" class="r-plt" width="691.2"></p>
 <p>Now the same for beta diversity change:
-<img src="vignette1_files/figure-html/trends4-1.png" width="691.2"></p>
+<img src="vignette1_files/figure-html/trends4-1.png" class="r-plt" width="691.2"></p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Hint: If you wish to plot all metrics together, simply merge you alpha_slopes and</span></span>
 <span><span class="co"># beta_slopes dataframes beforehand.</span></span></code></pre></div>
@@ -1181,7 +1181,7 @@ dataset.</p>
 <span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"Shannon-Weiner Species Diversity Index"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme</span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="vignette1_files/figure-html/trends6-1.png" width="691.2"></p>
+<p><img src="vignette1_files/figure-html/trends6-1.png" class="r-plt" width="691.2"></p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Now we see the full distribution of slopes of change for the Shannon index for the birds</span></span>
 <span><span class="co"># and fish time series in our subset: all slopes are shown in grey, while in color we show</span></span>
@@ -1220,7 +1220,7 @@ series, allowing us to visualise the data and the trend line:</p>
 <span>    <span class="fu"><a href="../reference/BioTIME-palette.html">scale_fill_biotime</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu">ggtitle</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Assemblage"</span>, <span class="va">name_assemblage</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Diversity"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme</span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span>, hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="vignette1_files/figure-html/trends8-1.png" width="691.2"></p>
+<p><img src="vignette1_files/figure-html/trends8-1.png" class="r-plt" width="691.2"></p>
 <p>We can see that results vary depending on the dataset and the metric
 of change used. It is important to remember that biodiversity metrics
 are just a tool used to measure changes, and each have diverse abilities
@@ -1260,7 +1260,7 @@ sporadically.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>
