@@ -123,7 +123,7 @@ slopes_core <- function(x, pThreshold) {
         )
       )
   }
-  metric <- intercept <- pvalue <- NULL # to avoid CRAN NOTE
+
   sapply(
     unique(x$assemblageID),
     function(id) {

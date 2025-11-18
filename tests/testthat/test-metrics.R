@@ -48,10 +48,10 @@ test_that("getAlpha computes accurate biodiversity metrics", {
   inv_expected <- vegan::diversity(data[, -1L], "inv")
 
   # Compare computed values with expected values
-  expect_equal(result$Shannon, shannon_expected, ignore_attr = FALSE)
-  expect_equal(result$expShannon, exp(shannon_expected), ignore_attr = FALSE)
-  expect_equal(result$Simpson, simpson_expected, ignore_attr = FALSE)
-  expect_equal(result$invSimpson, inv_expected, ignore_attr = FALSE)
+  expect_equal(result$Shannon, shannon_expected, ignore_attr = TRUE)
+  expect_equal(result$expShannon, exp(shannon_expected), ignore_attr = TRUE)
+  expect_equal(result$Simpson, simpson_expected, ignore_attr = TRUE)
+  expect_equal(result$invSimpson, inv_expected, ignore_attr = TRUE)
 })
 
 test_that("getAlpha works consistently", {

@@ -19,7 +19,7 @@
     the abundance and/or biomass will be summed per rarefyID/SAMPLE_DESC and gives
     more columns.
 
-- In the getAlphaMetrics and ggetBetaMetrics functions:
+- In the getAlphaMetrics and getBetaMetrics functions:
 
  - `data.frames` containing several resamplings are accepted
 

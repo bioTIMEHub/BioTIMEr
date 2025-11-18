@@ -22,7 +22,10 @@ utils::globalVariables(c(
   "YEAR",
   "Species",
   "minsamp",
-  "resamp"
+  "resamp",
+  "metric",
+  "intercept",
+  "pvalue"
 ))
 ## usethis namespace: end
 NULL
