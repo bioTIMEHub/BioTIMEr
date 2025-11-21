@@ -548,6 +548,7 @@ if (FALSE) {
 
   # getAlphaMetrics on site by species matrices (with a pivot_wider on each
   # community) vs. keeping the long format
+  # SHA f11f35ae054b212ac3188e5d86ef99e5a521e3a4
   y = gridding(BTsubset_meta, BTsubset_data) |>
     resampling(measure = "BIOMASS", resamps = 2)
 

@@ -7,20 +7,16 @@
 
 # Create example data for testing
 set.seed(42)
-data <- data.frame(
-  YEAR = rep(rep(2010:2015, each = 4), times = 4),
-  matrix(data = rpois(384, 10), ncol = 4)
-)
+data <- data.frame(rpois(1000, 10))
 
-test_that("getAlpha returns a data frame", {
-  result <- getAlpha(x = data)
+test_that("getAlpha_long returns a data frame", {
+  result <- getAlpha_long(x = data)
   expect_s3_class(result, "data.frame")
 })
 
-test_that("getAlpha returns the expected columns", {
-  result <- getAlpha(x = data)
+test_that("getAlpha_long returns the expected columns", {
+  result <- getAlpha_long(x = data)
   expected_cols <- c(
-    "YEAR",
     "S",
     "N",
     "maxN",
@@ -34,18 +30,18 @@ test_that("getAlpha returns the expected columns", {
   expect_equal(colnames(result), expected_cols)
 })
 
-test_that("getAlpha returns correct number of rows", {
-  result <- getAlpha(x = data)
-  expect_equal(object = nrow(result), expected = nrow(data))
+test_that("getAlpha_long returns correct number of rows", {
+  result <- getAlpha_long(x = data)
+  expect_equal(object = nrow(result), expected = 1L)
 })
 
-test_that("getAlpha computes accurate biodiversity metrics", {
-  result <- getAlpha(x = data)
+test_that("getAlpha_long computes accurate biodiversity metrics", {
+  result <- getAlpha_long(x = data)
 
   # Perform calculations using external libraries
-  shannon_expected <- vegan::diversity(data[, -1L], "shannon")
-  simpson_expected <- vegan::diversity(data[, -1L], "simpson")
-  inv_expected <- vegan::diversity(data[, -1L], "inv")
+  shannon_expected <- vegan::diversity(data, "shannon")
+  simpson_expected <- vegan::diversity(data, "simpson")
+  inv_expected <- vegan::diversity(data, "inv")
 
   # Compare computed values with expected values
   expect_equal(result$Shannon, shannon_expected, ignore_attr = TRUE)
@@ -54,11 +50,11 @@ test_that("getAlpha computes accurate biodiversity metrics", {
   expect_equal(result$invSimpson, inv_expected, ignore_attr = TRUE)
 })
 
-test_that("getAlpha works consistently", {
+test_that("getAlpha_long works consistently", {
   skip_on_ci()
   skip_on_cran()
 
-  expect_snapshot(x = getAlpha(x = data))
+  expect_snapshot(x = getAlpha_long(x = data))
 })
 
 set.seed(42)
@@ -75,11 +71,11 @@ dataMetrics <- data.frame(
 )
 
 
-test_that("getAlphaMetrics works correctly for Abundance", {
+test_that("getAlphaMetrics_long works correctly for Abundance", {
   skip_on_ci()
   skip_on_cran()
 
-  abundance_alpha_metrics <- getAlphaMetrics(
+  abundance_alpha_metrics <- getAlphaMetrics_long(
     x = dataMetrics,
     measure = "ABUNDANCE"
   ) |>
@@ -87,17 +83,19 @@ test_that("getAlphaMetrics works correctly for Abundance", {
 
   expect_snapshot(x = abundance_alpha_metrics)
 })
-test_that("getAlphaMetrics works correctly for Biomass", {
+
+test_that("getAlphaMetrics_long works correctly for Biomass", {
   skip_on_ci()
   skip_on_cran()
 
-  biomass_alpha_metrics <- getAlphaMetrics(
+  biomass_alpha_metrics <- getAlphaMetrics_long(
     x = dataMetrics,
     measure = "BIOMASS"
   ) |>
     as.data.frame()
   expect_snapshot(x = biomass_alpha_metrics)
 })
+
 test_that("getBetaMetrics works correctly for Abundance", {
   skip_on_ci()
   skip_on_cran()
