@@ -41,9 +41,6 @@
 #'  which includes keeping the default BioTIME data column names. If such columns
 #'  are not found an error is issued and the computations are halted.
 #'
-#'  When measure = c("ABUNDANCE","BIOMASS"), only sites and years where there
-#'  are values for both biomass and abundance are kept.
-#'
 #' @returns Returns a \code{data.frame} with results for species richness (\code{S}), numerical
 #'  abundance (\code{N}), maximum numerical abundance (\code{maxN}), Shannon Index (\code{Shannon}),
 #'  Exponential Shannon (\code{expShannon}), Simpson's Index (Simpson), Inverse Simpson
@@ -81,6 +78,11 @@
 #'     head(10)
 #'
 getAlphaMetrics <- function(x, measure) {
+  base::stopifnot(
+    "'measure' must be either ABUNDANCE or BIOMASS" = length(measure) == 1L &&
+      is.element(measure, c("BIOMASS", "ABUNDANCE"))
+  )
+
   checkmate::assert_names(
     x = colnames(x),
     what = "colnames",
@@ -88,41 +90,8 @@ getAlphaMetrics <- function(x, measure) {
   )
 
   x <- na.omit(x, cols = measure)
-
-  res <- x |>
-    dplyr::group_by(resamp, assemblageID) |>
-    dplyr::filter(
-      dplyr::n_distinct(YEAR) > 1L && dplyr::n_distinct(Species) > 1L
-    ) |>
-    dplyr::reframe(
-      dplyr::pick("YEAR", "Species", dplyr::all_of(measure)) |>
-        tidyr::pivot_wider(
-          names_from = "Species",
-          values_from = dplyr::all_of(measure),
-          values_fill = 0
-        ) |>
-        getAlpha()
-    )
-
-  class(res) <- c("alpha", class(res))
-
-  return(res)
-}
-
-#' @examples
-#'   gridding(BTsubset_meta, BTsubset_data) |>
-#'     resampling(measure = "BIOMASS", resamps = 1) |>
-#'     getAlphaMetrics_long(measure = "BIOMASS") |>
-#'     head(10)
-
-getAlphaMetrics_long <- function(x, measure) {
-  checkmate::assert_names(
-    x = colnames(x),
-    what = "colnames",
-    must.include = c(measure, "resamp", "YEAR", "Species", "assemblageID")
-  )
-
-  x <- na.omit(x, cols = measure)
+  # When measure = c("ABUNDANCE","BIOMASS"), only sites and years where there
+  # are values for both biomass and abundance are kept.
 
   res <- x |>
     dplyr::filter(
@@ -132,14 +101,15 @@ getAlphaMetrics_long <- function(x, measure) {
     dplyr::summarise(
       dplyr::across(
         .cols = dplyr::all_of(measure),
-        .fns = ~ getAlpha_long(sort(.x, decreasing = TRUE))
+        .fns = ~ getAlpha(sort(.x, decreasing = TRUE))
       ),
       .by = c(resamp, assemblageID, YEAR)
     ) |>
     tidyr::unnest_wider(
       col = -c(resamp, assemblageID, YEAR),
       names_sep = "_"
-    )
+    ) |>
+    dplyr::rename_with(.fn = ~ sub("^.*_", "", .x, FALSE, TRUE))
   # tidyr::pivot_longer(
   #   cols = -c(resamp, assemblageID, YEAR),
   #   names_to = c("measure", "metric"),
@@ -217,52 +187,12 @@ getAlphaMetrics_reference <- function(x, measure) {
 #'    maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
 #'    Inverse Simpson, PIE (probability of intraspecific encounter) and
 #'    McNaughton's Dominance.
-
-getAlpha <- function(x) {
-  yr <- unique(x$YEAR) # what for unique()?
-  x$YEAR <- NULL
-
-  S <- rowSums(x > 0)
-  N <- rowSums(x)
-  maxN <- do.call(base::pmax, x)
-
-  DomMc <- apply(x, 1, function(s) {
-    y <- sort(s, decreasing = TRUE)
-    (y[[1L]] + y[[2L]]) / sum(y)
-  })
-
-  PIE <- apply(x, 1, function(s) {
-    n <- sum(s)
-    (n / (n - 1)) * (1 - sum((s / n)^2))
-  })
-
-  x <- base::sweep(x, 1, N, "/")
-  Shannon <- rowSums(-x * log(x), na.rm = TRUE)
-  H <- rowSums(x * x, na.rm = TRUE) # Could be faster and still correct if FALSE?
-
-  return(
-    data.frame(
-      YEAR = yr,
-
-      S,
-      N,
-      maxN,
-
-      Shannon,
-      Simpson = 1 - H,
-      invSimpson = 1 / H,
-      PIE,
-      DomMc,
-      expShannon = exp(Shannon)
-    )
-  )
-}
-
-#' @examples
+#' @examples \dontrun{
 #' # 1 site, 1 year in long format, ordered by ABUNDANCE or BIOMASS
 #' x <- data.frame(species = letters[1:6], x = 6:1)
-#' getAlphaLong(x$x)
-getAlpha_long <- function(x) {
+#' getAlpha(x$x)
+#' }
+getAlpha <- function(x) {
   S <- sum(x > 0)
   N <- sum(x)
   maxN <- max(x)
@@ -291,7 +221,7 @@ getAlpha_long <- function(x) {
   )
 }
 
-
+#' @keywords internal
 getAlpha_reference <- function(x, id) {
   yr <- unique(x[, 1L])
   x <- x[, -1L]
@@ -372,6 +302,11 @@ getAlpha_reference <- function(x, id) {
 #'   head()
 
 getBetaMetrics <- function(x, measure) {
+  base::stopifnot(
+    "'measure' must be either ABUNDANCE or BIOMASS" = length(measure) == 1L &&
+      is.element(measure, c("BIOMASS", "ABUNDANCE"))
+  )
+
   checkmate::assert_names(
     x = colnames(x),
     what = "colnames",

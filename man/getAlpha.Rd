@@ -19,4 +19,11 @@ A data frame with results for S (species richness), N (numerical abundance),
 \description{
 Alpha
 }
+\examples{
+\dontrun{
+# 1 site, 1 year in long format, ordered by ABUNDANCE or BIOMASS
+x <- data.frame(species = letters[1:6], x = 6:1)
+getAlpha(x$x)
+}
+}
 \keyword{internal}
