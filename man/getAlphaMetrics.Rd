@@ -10,7 +10,8 @@ getAlphaMetrics(x, measure)
 \item{x}{(\code{data.frame}) BioTIME data in the format of the output of the
 \code{\link{resampling}} function.}
 
-\item{measure}{(\code{character}) chosen currency defined by a single column name.}
+\item{measure}{(\code{character}) chosen currency defined by a single
+column name.}
 }
 \value{
 Returns a \code{data.frame} with results for species richness (\code{S}), numerical
@@ -56,6 +57,9 @@ abundant species.
  \code{\link{gridding}} function and/or \code{\link{resampling}} functions,
  which includes keeping the default BioTIME data column names. If such columns
  are not found an error is issued and the computations are halted.
+
+ When measure = c("ABUNDANCE","BIOMASS"), only sites and years where there
+ are values for both biomass and abundance are kept.
 }
 \examples{
   gridding(BTsubset_meta, BTsubset_data) |>

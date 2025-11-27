@@ -10,7 +10,8 @@ getAlphaMetrics_reference(x, measure)
 \item{x}{(\code{data.frame}) BioTIME data in the format of the output of the
 \code{\link{resampling}} function.}
 
-\item{measure}{(\code{character}) chosen currency defined by a single column name.}
+\item{measure}{(\code{character}) chosen currency defined by a single
+column name.}
 }
 \description{
 Calculates a set of standard alpha diversity metrics

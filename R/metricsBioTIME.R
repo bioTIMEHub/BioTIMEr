@@ -3,7 +3,8 @@
 #' Calculates a set of standard alpha diversity metrics
 #' @param x (\code{data.frame}) BioTIME data in the format of the output of the
 #'    \code{\link{resampling}} function.
-#' @param measure (\code{character}) chosen currency defined by a single column name.
+#' @param measure (\code{character}) chosen currency defined by a single
+#'    column name.
 #'
 #' @details
 #' The function \code{getAlphaMetrics} computes nine alpha diversity metrics for
@@ -39,6 +40,9 @@
 #'  \code{\link{gridding}} function and/or \code{\link{resampling}} functions,
 #'  which includes keeping the default BioTIME data column names. If such columns
 #'  are not found an error is issued and the computations are halted.
+#'
+#'  When measure = c("ABUNDANCE","BIOMASS"), only sites and years where there
+#'  are values for both biomass and abundance are kept.
 #'
 #' @returns Returns a \code{data.frame} with results for species richness (\code{S}), numerical
 #'  abundance (\code{N}), maximum numerical abundance (\code{maxN}), Shannon Index (\code{Shannon}),
@@ -110,6 +114,7 @@ getAlphaMetrics <- function(x, measure) {
 #'     resampling(measure = "BIOMASS", resamps = 1) |>
 #'     getAlphaMetrics_long(measure = "BIOMASS") |>
 #'     head(10)
+
 getAlphaMetrics_long <- function(x, measure) {
   checkmate::assert_names(
     x = colnames(x),
