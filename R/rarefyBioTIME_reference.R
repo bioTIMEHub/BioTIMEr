@@ -57,7 +57,7 @@
 #' }
 #'
 
-resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
+resampling_ref <- function(x, measure, resamps = 1L, conservative = FALSE) {
   if (inherits(x, "data.table")) {
     warning("x was converted to a data.frame")
     x <- as.data.frame(x)
@@ -153,7 +153,7 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
     X = rfIDs,
     FUN = function(i) {
       temp_data <- x[x$assemblageID == i, ]
-      rarefysamples(x = temp_data, measure = measure, resamps = resamps)
+      resampling_core_ref(x = temp_data, measure = measure, resamps = resamps)
     },
     USE.NAMES = TRUE,
     simplify = FALSE
@@ -162,6 +162,7 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
   return({
     dplyr::bind_rows(TSrf) |>
       dplyr::mutate(rfID = rep(rfIDs, times = sapply(TSrf, nrow))) |>
+      # This separate takes a lot of time. Using a more efficient function could improve things but keeping these columns from previous steps instead of rebuilding them would probably make even more sense.
       tidyr::separate(
         "rfID",
         into = c("STUDY_ID", "cell"),
@@ -184,12 +185,12 @@ resampling <- function(x, measure, resamps = 1L, conservative = FALSE) {
 #' Rarefy BioTIME data
 #' Applies sample-based rarefaction to standardise the number of samples per year
 #'    within a cell-level time series.
-#' @inheritParams resampling
+#' @inheritParams resampling_ref
 #' @returns Returns a single long form data frame containing the total currency
 #'    of interest (sum) for each species in each year.
 #' @keywords internal
 
-rarefysamples <- function(x, measure, resamps) {
+resampling_core_ref <- function(x, measure, resamps) {
   # Computing minimal effort per year in this assemblageID
   minsample <- min(tapply(x$SAMPLE_DESC, x$YEAR, function(x) length(unique(x))))
 

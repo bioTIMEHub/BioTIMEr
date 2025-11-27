@@ -1,7 +1,7 @@
 Package: BioTIMEr
 Type: Package
 Title: Tools to Use and Explore the 'BioTIME' Database
-Version: 0.2.6
+Version: 0.3.0
 Authors@R: c(
   person("Alban", "Sagouis", role = c("aut","cre"),
         email = "alban.sagouis@idiv.de",
@@ -33,7 +33,12 @@ Authors@R: c(
   person("European Research Council grant AdG MetaCHANGE 101098020",
         role = "fnd"),
   person("The Leverhulme Centre for Anthropocene Biodiversity grant RC-2018-021",
-        role = "fnd")
+        role = "fnd"),
+  person("German Centre for Integrative Biodiversity Research (iDiv) Halle-Jena-Leipzig",
+        role = "fnd", comment = c(ROR = "01jty7g66")),
+  person("Martin Luther University Halle-Wittenberg",
+        role = "fnd", comment = c(ROR = "05gqaka33")),
+  person("University of St Andrews", role = "fnd", comment = c(ROR = "02wn5qz54"))
 	)
 Maintainer: Alban Sagouis <alban.sagouis@idiv.de>
 License: MIT + file LICENSE
@@ -54,9 +59,11 @@ Description: The BioTIME database was first published in
 Depends:
     R (>= 4.3.0)
 Imports:
-    dplyr,
     tidyr,
+    dplyr,
+    data.table,
     ggplot2,
+    broom,
     vegan,
     dggridR (>= 3.1.0),
     checkmate,
@@ -67,8 +74,7 @@ Suggests:
     knitr,
     testthat (>= 3.0.0),
     vdiffr,
-    rlang,
-    data.table
+    rlang
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 Config/testthat/start-first:

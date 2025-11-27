@@ -4,14 +4,11 @@
 \alias{getLinearRegressions}
 \title{Get Linear Regressions BioTIME}
 \usage{
-getLinearRegressions(x, divType, pThreshold = 0.05)
+getLinearRegressions(x, pThreshold = 0.05)
 }
 \arguments{
-\item{x}{(\code{data.frame}) BioTIME data table in the format of the output of  \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}}
-functions}
-
-\item{divType}{(\code{character}) string specifying the nature of the metrics in
-the data; either \code{divType = "alpha"} or \code{divType = "beta"} are supported}
+\item{x}{(\code{data.frame}) BioTIME data table in the format of the output
+of  \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} functions}
 
 \item{pThreshold}{(\code{numeric}) P-value threshold for statistical significance}
 }
@@ -26,7 +23,6 @@ Fits linear regression models to \code{\link{getAlphaMetrics}} or \code{\link{ge
 The function \code{getLinearRegression} fits simple linear regression models
 (see \code{\link[stats]{lm}} for details) for a given output ('data') of
 either \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} function.
-\code{divType} needs to be specified in agreement with \code{x}.
 The typical model has the form \code{metric ~ year}. Note that assemblages with
 less than 3 time points and/or single species time series are removed.
 }
@@ -40,8 +36,8 @@ less than 3 time points and/or single species time series are removed.
     assemblageID = rep(LETTERS[1L:8L], each = 24)
   )
   alpham <- getAlphaMetrics(x, "ABUNDANCE")
-  getLinearRegressions(x = alpham, divType = "alpha", pThreshold = 0.01)
+  getLinearRegressions(x = alpham, pThreshold = 0.01)
   betam <- getBetaMetrics(x = x, "ABUNDANCE")
-  getLinearRegressions(x = betam, divType = "beta")
+  getLinearRegressions(x = betam)
 
 }

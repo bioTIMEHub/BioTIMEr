@@ -43,6 +43,9 @@ Other contributors:
   \item European Research Council grant PoC BioCHANGE 727440 [funder]
   \item European Research Council grant AdG MetaCHANGE 101098020 [funder]
   \item The Leverhulme Centre for Anthropocene Biodiversity grant RC-2018-021 [funder]
+  \item German Centre for Integrative Biodiversity Research (iDiv) Halle-Jena-Leipzig (\href{https://ror.org/01jty7g66}{ROR}) [funder]
+  \item Martin Luther University Halle-Wittenberg (\href{https://ror.org/05gqaka33}{ROR}) [funder]
+  \item University of St Andrews (\href{https://ror.org/02wn5qz54}{ROR}) [funder]
 }
 
 }

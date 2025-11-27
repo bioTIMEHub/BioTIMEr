@@ -27,7 +27,7 @@
 </defs>
 <g clip-path='url(#cpMzAuODN8NjcyLjk4fDIyLjc4fDU0NS4xMQ==)'>
 <rect x='30.83' y='22.78' width='642.15' height='522.33' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<circle cx='542.54' cy='197.31' r='1.95' style='stroke-width: 0.71; stroke: #0C6B73; fill: #0C6B73;' />
+<circle cx='542.54' cy='197.31' r='1.95' style='stroke-width: 0.71; stroke: #0C6B74; fill: #0C6B74;' />
 <circle cx='328.52' cy='213.01' r='1.95' style='stroke-width: 0.71; stroke: #81D89E; fill: #81D89E;' />
 <circle cx='431.11' cy='418.75' r='1.95' style='stroke-width: 0.71; stroke: #B1EB7F; fill: #B1EB7F;' />
 <circle cx='460.93' cy='132.26' r='1.95' style='stroke-width: 0.71; stroke: #E6F96C; fill: #E6F96C;' />
@@ -156,7 +156,7 @@
 <text transform='translate(13.05,283.95) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='5.50px' lengthAdjust='spacingAndGlyphs'>y</text>
 <rect x='683.94' y='233.08' width='30.58' height='101.73' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <text x='683.94' y='241.79' style='font-size: 11.00px; font-family: sans;' textLength='5.50px' lengthAdjust='spacingAndGlyphs'>z</text>
-<image width='17.28' height='86.40' x='683.94' y='248.41' preserveAspectRatio='none' xlink:href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAEsCAYAAAACUNnVAAAA4klEQVQ4jaVTWxLDIBBCL9v7XwD6YbOy62Pa6Y8TFwQkCaSXOgV04VkAoFPNZ0JDV+aNJXgMHgaQzjLPhkcVDctqFB5KWzcKjzw7xtWJzMxDjmEJCmVsH2C2IUUldt/mJ3hSWTK3i8rSxqoCrOl5VbFA8VnsVArP5JUryU+zU277ixOx6F+V2R9zPnu/iv7Kv5BV7Mex2UGldmBZhA5peZpbDL0DKurzUirKrAJcUGXKRJd8G6Ov0XSZ7c2ZY+x4JDowAQbK8CiUZ2YUFHkGRU5x0Z89TOWQVKGyeHAjcPfw2RvbAvzqyXjUowAAAABJRU5ErkJggg=='/>
+<image width='17.28' height='86.40' x='683.94' y='248.41' preserveAspectRatio='none' xlink:href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAEsCAYAAAACUNnVAAAA4UlEQVQ4jaVTWxLDIBBCL9v7XwD6YbMu62Pa6Y8TFwQkCaSXOgV04VkAoFMtz4SGLueNJXgMHgZgZ+mz4VFFw7IahYdsm43Cw2fHuDqR6Tx4jJSgUMb2AWYbUlSS7tvyCZ5UlsztorK0saoAa3peVVKg+Cx2KoWX5OWV+NPslNv+4kQs+ldl9kfPl96vor/yL7hK+nHS7KBSO0hZhA5peZpbDL0DKurzUipKVwEuqJwy0SXfxuhr1C6zvTk9xo5HogMTYKAMj0J5ZomCIs91iyL6s0cYHZMqVBYPbgTuHnn2BtsM/OoZ9Op8AAAAAElFTkSuQmCC'/>
 <polyline points='697.76,322.99 701.22,322.99 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
 <polyline points='697.76,306.30 701.22,306.30 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
 <polyline points='697.76,289.61 701.22,289.61 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />

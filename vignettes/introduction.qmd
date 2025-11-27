@@ -202,11 +202,11 @@ dgg_12 <- dggridR::dgconstruct(res = 12)
 # To simplify, we only map the grid cell boundaries for cells which
 # have observations.
 # NOTE: if you are working with the full BioTIME database, this step may take some time.
-grid_12 <- dggridR::dgcellstogrid(dgg_12, grid_samples$cell)
+grid_12 <- dggridR::dgcellstogrid(dgg_12, as.integer(grid_samples$cell))
 
 # Now let's follow the same steps and build a ~10.7 km2 global grid:
 dgg_14 <- dggridR::dgconstruct(res = 14)
-grid_14 <- dggridR::dgcellstogrid(dgg_14, grid_samples_14$cell)
+grid_14 <- dggridR::dgcellstogrid(dgg_14, as.integer(grid_samples_14$cell))
 
 # And we get some polygons for each country of the world, to create a background:
 countries <- ggplot2::map_data("world")
@@ -276,7 +276,7 @@ grid_rare <- resampling(
 ```{r}
 #| label: tests1
 #| include: false
-#let's apply it then:
+# Let's apply it then:
 
 #g rid_samples_temp <- subset(grid_samples, !grid_samples$BIOMASS==0) #to be deleted after Faye reviews the data and makes all 0=NAs
 # grid_rare <- resampling( x= grid_samples_test, measure ="BIOMASS", resamps = 1, conservative = FALSE)
@@ -325,7 +325,7 @@ One option to deal with this issue is to repeat this random sampling process mul
 
 ```{r}
 #| label: tbl-resampling_ex4
-#| # Let's implement the sample-based rarefaction by resampling the dataset 10 times.
+# Let's implement the sample-based rarefaction by resampling the dataset 10 times.
 grid_rare_n10 <- resampling(
   x = grid_samples,
   measure = "ABUNDANCE",
@@ -406,10 +406,9 @@ Finally, when looking to measure biodiversity change using temporal data, it is 
 
 ```{r}
 #| label: tbl-trends1
-#| # Let's apply it then:
+# Let's apply it then:
 alpha_slopes <- getLinearRegressions(
   x = alpha_metrics,
-  divType = "alpha",
   pThreshold = 0.05
 ) #for alpha metrics
 
@@ -418,10 +417,9 @@ alpha_slopes |> head(6) |> kable()
 ```
 ```{r}
 #| label: tbl-trends2
-#| # Let's apply it then:
+# Let's apply it then:
 beta_slopes <- getLinearRegressions(
   x = beta_metrics,
-  divType = "beta",
   pThreshold = 0.05
 ) #for beta metrics
 
@@ -533,7 +531,7 @@ stats_beta <- beta_slopes_simp |>
     .by = metric
   ) #margin of error
 
-#Let's put it all together
+# Let's put it all together
 ggplot(data = beta_slopes_simp) +
   geom_histogram(aes(x = slope, fill = metric), bins = 25) +
   #geom_density(alpha=0.5)+ #in case you want a density plot instead

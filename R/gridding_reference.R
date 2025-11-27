@@ -1,17 +1,16 @@
-#' gridding BioTIME data
+#' gridding reference BioTIME data
 #'
 #' @description grids BioTIME data into a discrete global grid based on the
 #'    location of the samples (latitude/longitude).
 #' @export
-#' @param meta (\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME metadata.
-#' @param btf (\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME data.
+#' @param meta (\code{data.frame}) BioTIME metadata.
+#' @param btf (\code{data.frame}) BioTIME data.
 #' @param res (\code{integer}) cell resolution. Must be in the range [0,30]. Larger values
 #'   represent finer resolutions. Default: 12 (~96 sq km). Passed to
 #'   \code{\link[dggridR]{dgconstruct}}.
 #' @param resByData (\code{logical}) FALSE by default. If TRUE, the function
 #'   \code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt \code{res}
-#'    to the data extent. The new \code{res} value is used even if a value is
-#'    provided byt the user.
+#'    to the data extent.
 #' @param verbose if TRUE, a warning will be shown when one-year-long time series
 #' are found in btf and excluded.
 #'
@@ -50,67 +49,20 @@
 #'
 #' @examples
 #'   library(BioTIMEr)
-#'   gridded_data <- gridding(meta = BTsubset_meta, btf = BTsubset_data)
-#'   gridded_data <- gridding(meta = BTsubset_meta |> dplyr::as_tibble(),
-#'                            btf = BTsubset_data |> dplyr::as_tibble())
-#'   gridded_data <- gridding(meta = BTsubset_meta |> data.table::as.data.table(),
-#'                            btf = BTsubset_data |> data.table::as.data.table())
+#'   gridded_data <- gridding_reference(BTsubset_meta, BTsubset_data)
 #'
-#'
-gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = TRUE) {
-  UseMethod("gridding")
-}
 
-#' @export
-gridding.default <- function(
+gridding_reference <- function(
   meta,
   btf,
   res = 12,
   resByData = FALSE,
-  verbose = TRUE
+  verbose = FALSE
 ) {
-  res <- gridding_internal(
-    meta = meta,
-    btf = btf,
-    res = res,
-    resByData = resByData,
-    verbose = verbose
-  )
-  return(res)
-}
-
-#' @export
-gridding.data.table <- function(
-  meta,
-  btf,
-  res = 12,
-  resByData = FALSE,
-  verbose = TRUE
-) {
-  res <- gridding_internal(
-    meta = meta,
-    btf = btf,
-    res = res,
-    resByData = resByData,
-    verbose = verbose
-  )
-  data.table::setDT(res)
-  return(res)
-}
-
-# #' @export
-# gridding.tbl_df <- function(
-
-# #' @export
-# gridding.matrix
-
-# #' @export
-# gridding.sf
-
-#' gridding BioTIME data
-#' @inheritParams gridding
-#' @keywords internal
-gridding_internal <- function(meta, btf, res, resByData, verbose) {
+  if (inherits(meta, "data.table")) {
+    warning("meta is converted to a data.frame")
+    meta <- as.data.frame(meta)
+  }
   checkmate::assert_names(
     x = colnames(meta),
     what = "colnames",
@@ -127,6 +79,10 @@ gridding_internal <- function(meta, btf, res, resByData, verbose) {
       "BIOMASS_TYPE"
     )
   )
+  if (inherits(data, "data.table")) {
+    warning("data is converted to a data.frame")
+    data <- as.data.frame(data)
+  }
   checkmate::assert_names(
     x = colnames(btf),
     what = "colnames",
@@ -160,92 +116,70 @@ gridding_internal <- function(meta, btf, res, resByData, verbose) {
     any.missing = FALSE,
     null.ok = FALSE,
   )
-  checkmate::assert_logical(
-    verbose,
-    len = 1L,
-    any.missing = FALSE,
-    null.ok = FALSE,
-  )
 
-  AREA_SQ_KM <- meta[
-    meta$NUMBER_LAT_LONG == 1L & meta$AREA_SQ_KM <= 500,
-    "AREA_SQ_KM"
-  ] |>
-    unlist()
+  bt <- dplyr::inner_join(meta, btf, by = "STUDY_ID") |>
+    dplyr::rename(Species = "valid_name")
 
-  SL_extent <- sum(
-    base::mean(AREA_SQ_KM, na.rm = TRUE),
-    stats::sd(AREA_SQ_KM, na.rm = TRUE)
-  )
+  meta <- meta |>
+    dplyr::mutate(
+      StudyMethod = dplyr::if_else(.data$NUMBER_LAT_LONG == 1, "SL", NA)
+    )
+  bt <- bt |>
+    dplyr::mutate(
+      StudyMethod = dplyr::if_else(.data$NUMBER_LAT_LONG == 1, "SL", "ML")
+    )
 
-  meta$StudyMethod <- data.table::fifelse(
-    test = meta$NUMBER_LAT_LONG == 1L | meta$AREA_SQ_KM < SL_extent,
-    yes = "SL",
-    no = "ML"
-  )
+  SL_extent_mean <- meta |>
+    dplyr::filter(.data$StudyMethod == "SL" & .data$AREA_SQ_KM <= 500) |>
+    dplyr::summarise(extent_mean = mean(.data$AREA_SQ_KM, na.rm = TRUE)) |>
+    dplyr::pull("extent_mean")
+  SL_extent_sd <- meta |>
+    dplyr::filter(.data$StudyMethod == "SL" & .data$AREA_SQ_KM <= 500) |>
+    dplyr::summarise(extent_sd = stats::sd(.data$AREA_SQ_KM, na.rm = TRUE)) |>
+    dplyr::pull("extent_sd")
 
-  bt <- dplyr::inner_join(
-    x = meta |>
-      dplyr::select(
-        "STUDY_ID",
-        "CLIMATE",
-        "REALM",
-        "TAXA",
-        "StudyMethod",
-        "CENT_LAT",
-        "CENT_LONG",
-        "ABUNDANCE_TYPE",
-        "BIOMASS_TYPE"
-      ),
-    y = btf |>
-      dplyr::select(
-        "STUDY_ID",
-        "SAMPLE_DESC",
-        "taxon",
-        "LATITUDE",
-        "LONGITUDE",
-        "YEAR",
-        "MONTH",
-        "DAY",
-        Species = "valid_name",
-        "resolution",
-        "ABUNDANCE",
-        "BIOMASS"
-      ),
-    by = dplyr::join_by("STUDY_ID")
-  )
-
-  data.table::setorder(bt, "StudyMethod")
-
-  bt$lon_to_grid <- data.table::fifelse(
-    test = bt$StudyMethod == "SL",
-    yes = bt$CENT_LONG,
-    no = bt$LONGITUDE
-  )
-  bt$lat_to_grid <- data.table::fifelse(
-    test = bt$StudyMethod == "SL",
-    yes = bt$CENT_LAT,
-    no = bt$LATITUDE
-  )
-
-  # See benchmarks.R # counting one year studies
-  one_year_studies <- tapply(bt$YEAR, bt$STUDY_ID, function(y) {
-    data.table::uniqueN(y) == 1L
-  })
-
-  if (any(one_year_studies)) {
-    # See benchmarks.R  # Row filtering ----
-    bt <- bt |>
-      dplyr::filter(
-        !is.element(STUDY_ID, names(one_year_studies)[which(one_year_studies)])
+  bt <- bt |>
+    dplyr::mutate(
+      StudyMethod = dplyr::if_else(
+        condition = .data$AREA_SQ_KM < (SL_extent_mean + SL_extent_sd),
+        true = "SL",
+        false = .data$StudyMethod
       )
-    if (verbose) warning("Some 1-year-long studies were removed.")
+    ) |>
+    dplyr::mutate(
+      lon_to_grid = dplyr::if_else(
+        condition = .data$StudyMethod == "SL",
+        true = .data$CENT_LONG,
+        false = .data$LONGITUDE
+      ),
+      lat_to_grid = dplyr::if_else(
+        condition = .data$StudyMethod == "SL",
+        true = .data$CENT_LAT,
+        false = .data$LATITUDE
+      )
+    )
+
+  if (
+    tapply(bt$YEAR, bt$STUDY_ID, function(y) dplyr::n_distinct(y) == 1L) |>
+      any()
+  ) {
+    bt <- dplyr::anti_join(
+      x = bt,
+      y = bt |>
+        dplyr::summarise(
+          count = dplyr::n_distinct(.data$YEAR),
+          .by = "STUDY_ID"
+        ) |>
+        dplyr::filter(.data$count == 1L),
+      by = dplyr::join_by("STUDY_ID")
+    )
+    warning("Some 1-year-long studies were removed.")
   }
 
   dgg <- dggridR::dgconstruct(res = res)
 
   if (resByData) {
-    res <- dggridR::dg_closest_res_to_area(dgg, SL_extent)
+    res <- dggridR::dg_closest_res_to_area(dgg, SL_extent_mean + SL_extent_sd)
     dgg <- dggridR::dgsetres(dgg, res)
   }
 
@@ -253,26 +187,52 @@ gridding_internal <- function(meta, btf, res, resByData, verbose) {
     dggs = dgg,
     in_lon_deg = bt$lon_to_grid,
     in_lat_deg = bt$lat_to_grid
-  )$seqnum
+  )$seqnum |>
+    as.integer()
 
-  bt$assemblageID <- base::paste(bt$STUDY_ID, bt$cell, sep = "_")
-  bt <- bt |>
-    dplyr::select(-c("CENT_LAT", "CENT_LONG", "lat_to_grid", "lon_to_grid"))
+  check <- bt |>
+    dplyr::summarise(
+      n_cell = dplyr::n_distinct(.data$cell),
+      .by = c("StudyMethod", "STUDY_ID")
+    )
 
   if (
-    tapply(
-      X = bt$cell[bt$StudyMethod == "SL"],
-      INDEX = bt$STUDY_ID[bt$StudyMethod == "SL"],
-      FUN = \(x) data.table::uniqueN(x) == 1L
-    ) |>
-      all()
+    sum(dplyr::filter(check, .data$StudyMethod == "SL") |> _$n_cell != 1) == 0
   ) {
-    if (verbose) {
-      base::message("OK: all SL studies have 1 grid cell")
-    }
+    base::message("OK: all SL studies have 1 grid cell")
   } else {
     base::stop("ERROR: some SL studies have > 1 grid cell")
   }
 
-  return(bt)
+  bt_grid <- bt |>
+    dplyr::select(
+      "CLIMATE",
+      "REALM",
+      "TAXA",
+      "StudyMethod",
+      "SAMPLE_DESC",
+      "ABUNDANCE_TYPE",
+      "BIOMASS_TYPE",
+      "STUDY_ID",
+      "YEAR",
+      "cell",
+      "LATITUDE",
+      "LONGITUDE",
+      "Species",
+      "taxon",
+      "resolution",
+      "DAY",
+      "MONTH",
+      "ABUNDANCE",
+      "BIOMASS"
+    ) |>
+    tidyr::unite(
+      col = "assemblageID",
+      "STUDY_ID",
+      "cell",
+      sep = "_",
+      remove = FALSE
+    )
+
+  return(bt_grid)
 }

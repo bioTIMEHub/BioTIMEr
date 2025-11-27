@@ -7,8 +7,25 @@
 #' quantify and visualise temporal biodiversity change for a given BioTIME dataset.
 #'
 "_PACKAGE"
+.datatable.aware <- TRUE
 
 ## usethis namespace: start
-utils::globalVariables(c(".", ".data"))
+utils::globalVariables(c(
+  ".",
+  ".data",
+  "..measure",
+  ".SD",
+  ":=",
+  "assemblageID",
+  "SAMPLE_DESC",
+  "STUDY_ID",
+  "YEAR",
+  "Species",
+  "minsamp",
+  "resamp",
+  "metric",
+  "intercept",
+  "pvalue"
+))
 ## usethis namespace: end
 NULL
