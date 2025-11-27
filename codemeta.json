@@ -2,12 +2,12 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "BioTIMEr",
-  "description": "The 'BioTIME' database was first published in 2018 and inspired ideas, questions, project and research article. To make it even more accessible, an R package was created. The 'BioTIMEr' package provides tools designed to interact with the 'BioTIME' database. The functions provided include the 'BioTIME' recommended methods for preparing (gridding and rarefaction) time series data, a selection of standard biodiversity metrics (including species richness, numerical abundance and exponential Shannon) alongside examples on how to display change over time. It also includes a sample subset of both the query and meta data, the full versions of which are freely available on the 'BioTIME' website <https://biotime.st-andrews.ac.uk/home.php>.",
+  "description": "The BioTIME database was first published in 2018 and inspired ideas, questions, project and research article. To make it even more accessible, an R package was created. The BioTIMEr package provides tools designed to interact with the BioTIME database. The functions provided include the BioTIME recommended methods for preparing (gridding and rarefaction) time series data, a selection of standard biodiversity metrics (including species richness, numerical abundance and exponential Shannon) alongside examples on how to display change over time. It also includes a sample subset of both the query and meta data, the full versions of which are freely available on the BioTIME website <https://biotime.st-andrews.ac.uk/home.php>.",
   "name": "BioTIMEr: Tools to Use and Explore the 'BioTIME' Database",
   "codeRepository": "https://github.com/bioTIMEHub/BioTIMEr",
   "issueTracker": "https://github.com/bioTIMEHub/BioTIMEr/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -115,6 +115,18 @@
     {
       "@type": "Organization",
       "name": "The Leverhulme Centre for Anthropocene Biodiversity grant RC-2018-021"
+    },
+    {
+      "@type": "Organization",
+      "name": "German Centre for Integrative Biodiversity Research (iDiv) Halle-Jena-Leipzig"
+    },
+    {
+      "@type": "Organization",
+      "name": "Martin Luther University Halle-Wittenberg"
+    },
+    {
+      "@type": "Organization",
+      "name": "University of St Andrews"
     }
   ],
   "maintainer": [
@@ -141,6 +153,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "quarto",
+      "name": "quarto",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=quarto"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "knitr",
       "name": "knitr",
       "provider": {
@@ -150,30 +174,6 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=knitr"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "rmarkdown",
-      "name": "rmarkdown",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=rmarkdown"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "formatR",
-      "name": "formatR",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=formatR"
     },
     {
       "@type": "SoftwareApplication",
@@ -199,6 +199,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=vdiffr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rlang",
+      "name": "rlang",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rlang"
     }
   ],
   "softwareRequirements": {
@@ -210,18 +222,6 @@
     },
     "2": {
       "@type": "SoftwareApplication",
-      "identifier": "dplyr",
-      "name": "dplyr",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=dplyr"
-    },
-    "3": {
-      "@type": "SoftwareApplication",
       "identifier": "tidyr",
       "name": "tidyr",
       "provider": {
@@ -232,7 +232,31 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tidyr"
     },
+    "3": {
+      "@type": "SoftwareApplication",
+      "identifier": "dplyr",
+      "name": "dplyr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=dplyr"
+    },
     "4": {
+      "@type": "SoftwareApplication",
+      "identifier": "data.table",
+      "name": "data.table",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=data.table"
+    },
+    "5": {
       "@type": "SoftwareApplication",
       "identifier": "ggplot2",
       "name": "ggplot2",
@@ -244,7 +268,19 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=ggplot2"
     },
-    "5": {
+    "6": {
+      "@type": "SoftwareApplication",
+      "identifier": "broom",
+      "name": "broom",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=broom"
+    },
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "vegan",
       "name": "vegan",
@@ -256,7 +292,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=vegan"
     },
-    "6": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "dggridR",
       "name": "dggridR",
@@ -269,7 +305,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=dggridR"
     },
-    "7": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "checkmate",
       "name": "checkmate",
@@ -281,9 +317,21 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=checkmate"
     },
+    "10": {
+      "@type": "SoftwareApplication",
+      "identifier": "lifecycle",
+      "name": "lifecycle",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=lifecycle"
+    },
     "SystemRequirements": null
   },
-  "fileSize": "8714.038KB",
+  "fileSize": "6666.334KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
@@ -353,8 +401,6 @@
     }
   ],
   "releaseNotes": "https://github.com/bioTIMEHub/BioTIMEr/blob/master/NEWS.md",
-  "readme": "https://github.com/bioTIMEHub/BioTIMEr/blob/main/README.md",
   "contIntegration": ["https://github.com/bioTIMEHub/BioTIMEr/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/github/bioTIMEHub/BioTIMEr?branch=main"],
-  "developmentStatus": "https://lifecycle.r-lib.org/articles/stages.html#stable",
-  "keywords": ["ecology", "geospatial", "r", "r-package", "rstats"]
+  "developmentStatus": "https://lifecycle.r-lib.org/articles/stages.html#stable"
 }

@@ -76,7 +76,7 @@
 <circle cx='301.24' cy='366.29' r='1.95' style='stroke-width: 0.71; stroke: #509DA1; fill: #509DA1;' />
 <circle cx='550.63' cy='361.48' r='1.95' style='stroke-width: 0.71; stroke: #3F8C88; fill: #3F8C88;' />
 <circle cx='343.25' cy='247.96' r='1.95' style='stroke-width: 0.71; stroke: #4B989A; fill: #4B989A;' />
-<circle cx='463.45' cy='424.09' r='1.95' style='stroke-width: 0.71; stroke: #307C71; fill: #307C71;' />
+<circle cx='463.45' cy='424.09' r='1.95' style='stroke-width: 0.71; stroke: #307C72; fill: #307C72;' />
 <circle cx='426.55' cy='322.05' r='1.95' style='stroke-width: 0.71; stroke: #2E796F; fill: #2E796F;' />
 <circle cx='304.29' cy='473.84' r='1.95' style='stroke-width: 0.71; stroke: #408D8A; fill: #408D8A;' />
 <circle cx='565.18' cy='200.71' r='1.95' style='stroke-width: 0.71; stroke: #2C786C; fill: #2C786C;' />
@@ -156,7 +156,7 @@
 <text transform='translate(13.05,283.95) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='5.50px' lengthAdjust='spacingAndGlyphs'>y</text>
 <rect x='683.94' y='233.08' width='30.58' height='101.73' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <text x='683.94' y='241.79' style='font-size: 11.00px; font-family: sans;' textLength='5.50px' lengthAdjust='spacingAndGlyphs'>z</text>
-<image width='17.28' height='86.40' x='683.94' y='248.41' preserveAspectRatio='none' xlink:href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAEsCAYAAAACUNnVAAAAkklEQVQ4jbXTURKDMAhF0Ttstjt0Bd3X64eVKINUrPkzzolCeOG1vGWSMADDnwQYCENgokPcPUrCz0dB2wfUJqvbLYXJ8W2S9OZlhJO8Tqp5NMnxmI69fd+FZYucHNMdMiNIYfq+4zwgv8mkIA1SzeMCQaOZ5JKEKfxFyttYkolBSgKyq6pDsvYfDFJKynlkBOADQSYoIgQ5wNgAAAAASUVORK5CYII='/>
+<image width='17.28' height='86.40' x='683.94' y='248.41' preserveAspectRatio='none' xlink:href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAEsCAYAAAACUNnVAAAAkElEQVQ4jbXTXRJEQAxG0VvZrB3OCuzr82AmSEVM0G9anSa/TJ9ZJgkDMPxJgIEwBCY6xN2rJPx8C+j3AbXJ6nZHYXJ8myS5eRihkv+Tqh9NcizTMbfvu3BskZMy3SEjBil032+cD8g1GTRIG6n6cUWSrQ1LErrwiJTbWJKBg5QMyC6qDsnSf3GQUlL2IyMACzwrKCIFB3ouAAAAAElFTkSuQmCC'/>
 <polyline points='697.76,322.99 701.22,322.99 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
 <polyline points='697.76,306.30 701.22,306.30 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />
 <polyline points='697.76,289.61 701.22,289.61 ' style='stroke-width: 0.38; stroke: #FFFFFF; stroke-linecap: butt;' />

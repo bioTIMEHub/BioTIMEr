@@ -8,33 +8,42 @@ getBetaMetrics(x, measure)
 }
 \arguments{
 \item{x}{(\code{data.frame}) BioTIME data table in the format of the output of the
-\code{\link{gridding}} function and/or \code{\link{resampling}} functions.}
+\code{\link{resampling}} functions.}
 
 \item{measure}{(\code{character}) chosen currency defined by a single column name.}
 }
 \value{
-Returns a \code{data.frame} with results for Jaccard dissimilarity (\code{JaccardDiss}), Morisita-Horn dissimilarity (\code{MorisitaHornDiss}), and Bray-Curtis dissimilarity (\code{BrayCurtsDiss}) for each year and \code{assemblageID}.
+Returns a \code{data.frame} with results for Jaccard dissimilarity
+(\code{JaccardDiss}), Morisita-Horn dissimilarity (\code{MorisitaHornDiss}),
+and Bray-Curtis dissimilarity (\code{BrayCurtsDiss}) for each year and
+\code{assemblageID}.
 }
 \description{
 Calculates a set of standard beta diversity metrics
 }
 \details{
-The function getBetaMetrics computes three beta diversity metrics for a given community data frame, where \code{measure} is a character input specifying the abundance or biomass field used for the calculations. \code{getBetaMetrics} calls the \code{\link[vegan]{vegdist}} function which calculates for each row the following metrics: Jaccard dissimilarity (\code{method = "jaccard"}), Morisita-Horn dissimilarity (\code{method = "horn"}) and Bray-Curtis dissimilarity (\code{method = "bray"}). Here, the dissimilarity metrics are calculated against the baseline year of each assemblage time series i.e.
+The function getBetaMetrics computes three beta diversity metrics for a given
+community data frame, where \code{measure} is a character input specifying the
+abundance or biomass field used for the calculations. \code{getBetaMetrics}
+calls the \code{\link[vegan]{vegdist}} function which calculates for each row
+the following metrics: Jaccard dissimilarity (\code{method = "jaccard"}),
+Morisita-Horn dissimilarity (\code{method = "horn"}) and Bray-Curtis dissimilarity
+(\code{method = "bray"}). Here, the dissimilarity metrics are calculated against
+the baseline year of each assemblage time series i.e.
 the first year of each time series.
 Note that the input data frame needs to be in the format of the output of the
- \code{\link{gridding}} and/or \code{\link{resampling}} functions, which includes keeping the default BioTIME data column names. If such columns are not found an error is
+ \code{\link{gridding}} and/or \code{\link{resampling}} functions, which
+includes keeping the default BioTIME data column names. If such columns are
+not found an error is
  issued and the computations are halted.
 }
 \examples{
-x <- data.frame(
-  resamp = 1L,
-  YEAR = rep(rep(2010:2015, each = 4), times = 4),
-  Species = c(replicate(
-   n = 8L,
-   sample(letters, 24L, replace = FALSE))),
-  ABUNDANCE = rpois(24 * 8, 10),
-  assemblageID = rep(LETTERS[1L:8L], each = 24)
-  )
-
-res <- getBetaMetrics(x, measure = "ABUNDANCE")
+gridding(BTsubset_meta, BTsubset_data) |>
+  resampling(measure = "BIOMASS", verbose = FALSE, resamps = 1) |>
+  getBetaMetrics(measure = "BIOMASS") |>
+  head()
+gridding(BTsubset_meta, BTsubset_data) |>
+  resampling(measure = "BIOMASS", verbose = FALSE, resamps = 2) |>
+  getBetaMetrics(measure = "BIOMASS") |>
+  head()
 }

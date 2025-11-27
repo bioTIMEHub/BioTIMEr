@@ -4,30 +4,26 @@
 \alias{getLinearRegressions}
 \title{Get Linear Regressions BioTIME}
 \usage{
-getLinearRegressions(x, divType, pThreshold = 0.05)
+getLinearRegressions(x, pThreshold = 0.05)
 }
 \arguments{
-\item{x}{(`data.frame`) BioTIME data table in the format of the output of  \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}}
-functions}
+\item{x}{(\code{data.frame}) BioTIME data table in the format of the output
+of  \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} functions}
 
-\item{divType}{(`character`) string specifying the nature of the metrics in
-the data; either `divType = "alpha"` or `divType = "beta"` are supported}
-
-\item{pThreshold}{(`numeric`) P-value threshold for statistical significance}
+\item{pThreshold}{(\code{numeric}) P-value threshold for statistical significance}
 }
 \value{
-Returns a single long `data.frame` with results of linear regressions
-(slope, p-value, significance, intercept) for each `assemblageID`.
+Returns a single long \code{data.frame} with results of linear regressions
+(slope, p-value, significance, intercept) for each \code{assemblageID}.
 }
 \description{
 Fits linear regression models to \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} outputs
 }
 \details{
-The function `getLinearRegressions` fits simple linear regression models
+The function \code{getLinearRegression} fits simple linear regression models
 (see \code{\link[stats]{lm}} for details) for a given output ('data') of
 either \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} function.
-`divType` needs to be specified in agreement with x.
-The typical model has the form `metric ~ year`. Note that assemblages with
+The typical model has the form \code{metric ~ year}. Note that assemblages with
 less than 3 time points and/or single species time series are removed.
 }
 \examples{
@@ -40,8 +36,8 @@ less than 3 time points and/or single species time series are removed.
     assemblageID = rep(LETTERS[1L:8L], each = 24)
   )
   alpham <- getAlphaMetrics(x, "ABUNDANCE")
-  getLinearRegressions(x = alpham, divType = "alpha", pThreshold = 0.01)
+  getLinearRegressions(x = alpham, pThreshold = 0.01)
   betam <- getBetaMetrics(x = x, "ABUNDANCE")
-  getLinearRegressions(x = betam, divType = "beta")
+  getLinearRegressions(x = betam)
 
 }

@@ -7,13 +7,14 @@
 getAlphaMetrics(x, measure)
 }
 \arguments{
-\item{x}{(\code{data.frame}) BioTIME data table in the format of the output of the
-\code{\link{gridding}} function and/or \code{\link{resampling}} function.}
+\item{x}{(\code{data.frame}) BioTIME data in the format of the output of the
+\code{\link{resampling}} function.}
 
-\item{measure}{(\code{character}) chosen currency defined by a single column name.}
+\item{measure}{(\code{character}) chosen currency defined by a single
+column name.}
 }
 \value{
-Returns a data frame with results for species richness (\code{S}), numerical
+Returns a \code{data.frame} with results for species richness (\code{S}), numerical
  abundance (\code{N}), maximum numerical abundance (\code{maxN}), Shannon Index (\code{Shannon}),
  Exponential Shannon (\code{expShannon}), Simpson's Index (Simpson), Inverse Simpson
  (\code{InvSimpson}), Probability of intraspecific encounter (\code{PIE}) and McNaughton's
@@ -29,33 +30,61 @@ specifying the abundance or biomass field used for the calculations. For each
 row of the data frame with data, \code{getAlphaMetrics} calculates
 the following metrics:
 
-- Species richness (\code{S}) as the total number of species in each year with currency > 0.
+- Species richness (\code{S}) as the total number of species in each year with
+currency > 0.
 
 - Numerical abundance (\code{N}) as the total currency (sum) in each year
 (either total abundance or total biomass).
 
-- Maximum Numerical abundance (maxN) as the highest currency value reported in each year.
+- Maximum Numerical abundance (maxN) as the highest currency value reported
+in each year.
 
-- Shannon or Shannon–Weaver index is calculated as \eqn{\sum_{i}p_{i}log_{b}p_{i}}, where \eqn{p_{i}} is the proportional abundance of species i and b is the base of the logarithm (natural logarithms), while exponential Shannon is given by \code{exp(Shannon)}.
+- Shannon or Shannon–Weaver index is calculated as \eqn{\sum_{i}p_{i}log_{b}p_{i}},
+where \eqn{p_{i}} is the proportional abundance of species i and b is the base
+of the logarithm (natural logarithms), while exponential Shannon is given by
+\code{exp(Shannon)}.
 
-- Simpson's index is calculated as \eqn{1-sum(p_{i}^{2})}, while Inverse Simpson as \eqn{1/sum(p_{i}^{2})}.
+- Simpson's index is calculated as \eqn{1-sum(p_{i}^{2})}, while Inverse
+Simpson as \eqn{1/sum(p_{i}^{2})}.
 
-- McNaughton's Dominance is calculated as the sum of the pi of the two most abundant species.
+- McNaughton's Dominance is calculated as the sum of the pi of the two most
+abundant species.
 
-- Probability of intraspecific encounter or PIE is calculated as \eqn{\left(\frac{N}{N-1}\right)\left(1-\sum_{i=1}^{S}\pi_{i}^{2}\right)}.
+- Probability of intraspecific encounter or PIE is calculated as
+\eqn{\left(\frac{N}{N-1}\right)\left(1-\sum_{i=1}^{S}\pi_{i}^{2}\right)}.
 
-Note that the input data frame needs to be in the format of the output of the
+ Note that the input data frame needs to be in the format of the output of the
  \code{\link{gridding}} function and/or \code{\link{resampling}} functions,
  which includes keeping the default BioTIME data column names. If such columns
  are not found an error is issued and the computations are halted.
 }
 \examples{
-  x <- data.frame(
-    resamp = 1L,
-    YEAR = rep(rep(2010:2015, each = 4), times = 4),
-    Species = c(replicate(n = 8L, sample(letters, 24L, replace = FALSE))),
-    ABUNDANCE = rpois(24 * 8, 10),
-    assemblageID = rep(LETTERS[1L:8L], each = 24)
-  )
-  res <- getAlphaMetrics(x, measure = "ABUNDANCE")
+  gridding(BTsubset_meta, BTsubset_data) |>
+    resampling(measure = "BIOMASS", resamps = 1) |>
+    getAlphaMetrics(measure = "BIOMASS") |>
+    head(10)
+
+  # Metric values for several resamplings
+  gridding(BTsubset_meta, BTsubset_data) |>
+    resampling(measure = "BIOMASS", resamps = 2) |>
+    getAlphaMetrics(measure = "BIOMASS") |>
+    head(10)
+
+  # Mean and sd values of the metrics for several resamplings
+  gridding(BTsubset_meta, BTsubset_data) |>
+    resampling(measure = "BIOMASS", resamps = 2) |>
+    getAlphaMetrics(measure = "BIOMASS") |>
+    dplyr::summarise(
+       dplyr::across(
+          .cols = !resamp,
+          .fns = c(mean = mean, sd = sd)),
+       .by = c(assemblageID, YEAR)) |>
+    tidyr::pivot_longer(
+       col = dplyr::contains("_"),
+       names_to = c("metric", "stat"),
+       names_sep = "_",
+       names_transform = as.factor) |>
+    tidyr::pivot_wider(names_from = stat) |>
+    head(10)
+
 }
