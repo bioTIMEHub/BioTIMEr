@@ -51,10 +51,10 @@
 #' @examples
 #'   library(BioTIMEr)
 #'   gridded_data <- gridding(meta = BTsubset_meta, btf = BTsubset_data)
-#'   gridded_data <- gridding(meta = BTsubset_meta |> dplyr::as_tibble(),
-#'                            btf = BTsubset_data |> dplyr::as_tibble())
-#'   gridded_data <- gridding(meta = BTsubset_meta |> data.table::as.data.table(),
-#'                            btf = BTsubset_data |> data.table::as.data.table())
+#'   gridded_data <- gridding(meta = dplyr::as_tibble(BTsubset_meta),
+#'                            btf = dplyr::as_tibble(BTsubset_data))
+#'   gridded_data <- gridding(meta = data.table::as.data.table(BTsubset_meta),
+#'                            btf = data.table::as.data.table(BTsubset_data))
 #'
 #'
 gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = TRUE) {
@@ -263,13 +263,11 @@ gridding_internal <- function(meta, btf, res, resByData, verbose) {
     tapply(
       X = bt$cell[bt$StudyMethod == "SL"],
       INDEX = bt$STUDY_ID[bt$StudyMethod == "SL"],
-      FUN = \(x) data.table::uniqueN(x) == 1L
+      FUN = function(x) data.table::uniqueN(x) == 1L
     ) |>
       all()
   ) {
-    if (verbose) {
-      base::message("OK: all SL studies have 1 grid cell")
-    }
+    if (verbose) base::message("OK: all SL studies have 1 grid cell")
   } else {
     base::stop("ERROR: some SL studies have > 1 grid cell")
   }

@@ -13,7 +13,7 @@
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.5.0 (2025-04-11)",
+  "runtimePlatform": "R version 4.5.2 (2025-10-31)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -331,7 +331,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "6666.334KB",
+  "fileSize": "6629.332KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
@@ -401,6 +401,8 @@
     }
   ],
   "releaseNotes": "https://github.com/bioTIMEHub/BioTIMEr/blob/master/NEWS.md",
+  "readme": "https://github.com/bioTIMEHub/BioTIMEr/blob/main/README.md",
   "contIntegration": ["https://github.com/bioTIMEHub/BioTIMEr/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/github/bioTIMEHub/BioTIMEr?branch=main"],
-  "developmentStatus": "https://lifecycle.r-lib.org/articles/stages.html#stable"
+  "developmentStatus": "https://lifecycle.r-lib.org/articles/stages.html#stable",
+  "keywords": ["ecology", "geospatial", "r", "r-package", "rstats"]
 }
