@@ -22,7 +22,6 @@
 #' @importFrom checkmate assert_names
 #'
 #' @examples
-#'   library(BioTIMEr)
 #'   x <- data.frame(
 #'     resamp = 1L,
 #'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
@@ -31,9 +30,10 @@
 #'     assemblageID = rep(LETTERS[1L:8L], each = 24)
 #'   )
 #'   alpham <- getAlphaMetrics(x, "ABUNDANCE")
-#'   getLinearRegressions(x = alpham, pThreshold = 0.01)
+#'   getLinearRegressions(x = alpham, pThreshold = 0.01) |> head(10)
+#'
 #'   betam <- getBetaMetrics(x = x, "ABUNDANCE")
-#'   getLinearRegressions(x = betam)
+#'   getLinearRegressions(x = betam) |> head(10)
 #'
 getLinearRegressions <- function(x, pThreshold = 0.05) {
   UseMethod("getLinearRegressions")

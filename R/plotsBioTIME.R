@@ -207,10 +207,12 @@ plotSlopes <- function(
 #' @importFrom lifecycle deprecated
 #' @importFrom lifecycle is_present
 #' @importFrom lifecycle deprecate_warn
-#' @examples
-#' fig1 <- ggplot2::ggplot() +
-#'            themeBioTIME(legend.position = "none", font.size = 12,
-#'               axis.colour = "black", strip.background = "grey90")
+#'
+#' @examples \dontrun{
+#'   fig1 <- ggplot2::ggplot() +
+#'          themeBioTIME(legend.position = "none", font.size = 12,
+#'            axis.colour = "black", strip.background = "grey90")
+#' }
 
 themeBioTIME <- function(
   legend.position,

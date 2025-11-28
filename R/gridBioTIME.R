@@ -48,14 +48,13 @@
 #' \code{'cell'} and two character columns called 'StudyMethod' and 'assemblageID'
 #' (concatenation of \code{STUDY_ID} and \code{cell}).
 #'
-#' @examples
-#'   library(BioTIMEr)
+#' @examples \dontrun{
 #'   gridded_data <- gridding(meta = BTsubset_meta, btf = BTsubset_data)
 #'   gridded_data <- gridding(meta = dplyr::as_tibble(BTsubset_meta),
 #'                            btf = dplyr::as_tibble(BTsubset_data))
 #'   gridded_data <- gridding(meta = data.table::as.data.table(BTsubset_meta),
 #'                            btf = data.table::as.data.table(BTsubset_data))
-#'
+#' }
 #'
 gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = TRUE) {
   UseMethod("gridding")

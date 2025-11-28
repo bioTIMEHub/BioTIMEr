@@ -39,10 +39,6 @@ not found an error is
 }
 \examples{
 gridding(BTsubset_meta, BTsubset_data) |>
-  resampling(measure = "BIOMASS", verbose = FALSE, resamps = 1) |>
-  getBetaMetrics(measure = "BIOMASS") |>
-  head()
-gridding(BTsubset_meta, BTsubset_data) |>
   resampling(measure = "BIOMASS", verbose = FALSE, resamps = 2) |>
   getBetaMetrics(measure = "BIOMASS") |>
   head()

@@ -49,17 +49,6 @@
 #' @export
 #'
 #' @examples
-#'   gridding(BTsubset_meta, BTsubset_data) |>
-#'     resampling(measure = "BIOMASS", resamps = 1) |>
-#'     getAlphaMetrics(measure = "BIOMASS") |>
-#'     head(10)
-#'
-#'   # Metric values for several resamplings
-#'   gridding(BTsubset_meta, BTsubset_data) |>
-#'     resampling(measure = "BIOMASS", resamps = 2) |>
-#'     getAlphaMetrics(measure = "BIOMASS") |>
-#'     head(10)
-#'
 #'   # Mean and sd values of the metrics for several resamplings
 #'   gridding(BTsubset_meta, BTsubset_data) |>
 #'     resampling(measure = "BIOMASS", resamps = 2) |>
@@ -193,10 +182,6 @@ getAlpha <- function(x) {
 #' and Bray-Curtis dissimilarity (\code{BrayCurtsDiss}) for each year and
 #' \code{assemblageID}.
 #' @examples
-#' gridding(BTsubset_meta, BTsubset_data) |>
-#'   resampling(measure = "BIOMASS", verbose = FALSE, resamps = 1) |>
-#'   getBetaMetrics(measure = "BIOMASS") |>
-#'   head()
 #' gridding(BTsubset_meta, BTsubset_data) |>
 #'   resampling(measure = "BIOMASS", verbose = FALSE, resamps = 2) |>
 #'   getBetaMetrics(measure = "BIOMASS") |>
