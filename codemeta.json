@@ -331,7 +331,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "6628.246KB",
+  "fileSize": "6628.591KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
@@ -400,6 +400,7 @@
       "sameAs": "https://doi.org/10.32614/CRAN.package.BioTIMEr"
     }
   ],
+  "relatedLink": "https://biotimehub.github.io/BioTIMEr/",
   "releaseNotes": "https://github.com/bioTIMEHub/BioTIMEr/blob/master/NEWS.md",
   "readme": "https://github.com/bioTIMEHub/BioTIMEr/blob/main/README.md",
   "contIntegration": ["https://github.com/bioTIMEHub/BioTIMEr/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/github/bioTIMEHub/BioTIMEr?branch=main"],

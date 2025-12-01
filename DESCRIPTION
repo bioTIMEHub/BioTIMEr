@@ -42,7 +42,7 @@ Authors@R: c(
 	)
 Maintainer: Alban Sagouis <alban.sagouis@idiv.de>
 License: MIT + file LICENSE
-URL: https://github.com/bioTIMEHub/BioTIMEr
+URL: https://biotimehub.github.io/BioTIMEr/
 BugReports: https://github.com/bioTIMEHub/BioTIMEr/issues
 Description: The 'BioTIME' database was first published in
     2018 and inspired ideas, questions, project and research
