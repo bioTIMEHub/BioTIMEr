@@ -13,7 +13,6 @@ vignette: >
   %\VignetteIndexEntry{Introduction to BioTIMEr}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
----
 execute:
   include: true
   eval: true
