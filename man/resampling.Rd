@@ -76,8 +76,7 @@ together, one from each iteration identified by a numerical
 unique identifier 1:resamps.
 }
 \examples{
-\donttest{
-  library(BioTIMEr)
+\dontrun{
   set.seed(42)
   x <- gridding(BTsubset_meta, BTsubset_data)
   resampling(x, measure = "BIOMASS", summarise = TRUE)

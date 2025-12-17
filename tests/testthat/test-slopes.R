@@ -25,7 +25,7 @@ test_that("slopes works consistently", {
   alpham <- getAlphaMetrics(xa, measure = "ABUNDANCE") |>
     dplyr::select(-resamp)
 
-  # Beta  diversity metrics
+  # Beta diversity metrics
   betam <- getBetaMetrics(xa, measure = "ABUNDANCE") |>
     dplyr::select(-resamp)
 
@@ -34,7 +34,10 @@ test_that("slopes works consistently", {
     regressions_alpha <- getLinearRegressions(x = alpham),
     regexp = "essentially perfect fit: summary may be unreliable"
   )
+
+  regressions_beta <- getLinearRegressions(x = betam)
+
   expect_snapshot(regressions_alpha)
 
-  expect_snapshot(getLinearRegressions(x = betam))
+  expect_snapshot(regressions_beta)
 })

@@ -42,7 +42,9 @@ as \code{fill} colour for the \code{strip.background} element.}
 ggplot2 theme for BioTIME plots
 }
 \examples{
-fig1 <- ggplot2::ggplot() +
-           themeBioTIME(legend.position = "none", font.size = 12,
-              axis.colour = "black", strip.background = "grey90")
+\dontrun{
+  fig1 <- ggplot2::ggplot() +
+         themeBioTIME(legend.position = "none", font.size = 12,
+           axis.colour = "black", strip.background = "grey90")
+}
 }

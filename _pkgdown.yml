@@ -1,0 +1,21 @@
+url: https://biotimehub.github.io/BioTIMEr/
+
+template:
+  bootstrap: 5
+
+development:
+  mode: auto
+
+authors:
+  Alban Sagouis:
+    href: https://albansagouis.com
+  Faye Moyes:
+  Inês Martins:
+  Shane A. Blowes:
+  Viviana Brambilla:
+  Cher F. Y. Chow:
+  Ada Fontrodona-Eslava:
+  Laura Antão:
+  Jonathan M. Chase:
+  Maria Dornelas:
+  Anne E. Magurran:

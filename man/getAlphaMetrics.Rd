@@ -59,17 +59,6 @@ abundant species.
  are not found an error is issued and the computations are halted.
 }
 \examples{
-  gridding(BTsubset_meta, BTsubset_data) |>
-    resampling(measure = "BIOMASS", resamps = 1) |>
-    getAlphaMetrics(measure = "BIOMASS") |>
-    head(10)
-
-  # Metric values for several resamplings
-  gridding(BTsubset_meta, BTsubset_data) |>
-    resampling(measure = "BIOMASS", resamps = 2) |>
-    getAlphaMetrics(measure = "BIOMASS") |>
-    head(10)
-
   # Mean and sd values of the metrics for several resamplings
   gridding(BTsubset_meta, BTsubset_data) |>
     resampling(measure = "BIOMASS", resamps = 2) |>

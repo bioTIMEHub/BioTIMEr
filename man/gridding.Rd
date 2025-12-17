@@ -62,12 +62,12 @@ to ~96 km2 cell area), but the user can define their own grid resolution
 best \code{res} based on the average study extent.
 }
 \examples{
-  library(BioTIMEr)
+\dontrun{
   gridded_data <- gridding(meta = BTsubset_meta, btf = BTsubset_data)
-  gridded_data <- gridding(meta = BTsubset_meta |> dplyr::as_tibble(),
-                           btf = BTsubset_data |> dplyr::as_tibble())
-  gridded_data <- gridding(meta = BTsubset_meta |> data.table::as.data.table(),
-                           btf = BTsubset_data |> data.table::as.data.table())
-
+  gridded_data <- gridding(meta = dplyr::as_tibble(BTsubset_meta),
+                           btf = dplyr::as_tibble(BTsubset_data))
+  gridded_data <- gridding(meta = data.table::as.data.table(BTsubset_meta),
+                           btf = data.table::as.data.table(BTsubset_data))
+}
 
 }

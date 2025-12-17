@@ -48,10 +48,16 @@ test_that("getAlpha computes accurate biodiversity metrics", {
   expect_equal(result$expShannon, exp(shannon_expected), ignore_attr = TRUE)
   expect_equal(result$Simpson, simpson_expected, ignore_attr = TRUE)
   expect_equal(result$invSimpson, inv_expected, ignore_attr = TRUE)
+  expect_equal(result$Shannon, shannon_expected, ignore_attr = TRUE)
+  expect_equal(result$expShannon, exp(shannon_expected), ignore_attr = TRUE)
+  expect_equal(result$Simpson, simpson_expected, ignore_attr = TRUE)
+  expect_equal(result$invSimpson, inv_expected, ignore_attr = TRUE)
 })
 
 test_that("getAlpha works consistently", {
   skip_on_ci()
+  skip_on_cran()
+
   skip_on_cran()
 
   expect_snapshot(x = getAlpha(x = data))

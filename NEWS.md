@@ -1,4 +1,4 @@
-# BioTIMEr 0.3.0 - 15.10.2025
+# BioTIMEr 0.3.0 - 29.11.2025
 
 ## Major Improvement
 
@@ -42,6 +42,10 @@
   - argument `colx` is soft deprecated in favour of `axis.colour`
   - argument `coly` is soft deprecated in favour of `strip.background`
   - the order of the arguments did not change.
+
+# BioTIMEr 0.2.6
+
+* Patch. test modification to adapt to vegan update 2.7-2
 
 # BioTIMEr 0.2.5 - 19.09.2025
 - Patch. all testthat snapshot tests are now skipped on CRAN and CI.

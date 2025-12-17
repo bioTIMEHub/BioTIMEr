@@ -53,9 +53,7 @@
 #' unique identifier 1:resamps.
 #' @export
 #'
-#' @examples
-#' \donttest{
-#'   library(BioTIMEr)
+#' @examples \dontrun{
 #'   set.seed(42)
 #'   x <- gridding(BTsubset_meta, BTsubset_data)
 #'   resampling(x, measure = "BIOMASS", summarise = TRUE)

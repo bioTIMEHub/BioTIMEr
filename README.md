@@ -25,7 +25,7 @@ install.packages("BioTIMEr") # CRAN version
 ```
 
 ```r
-remotes::github_install("bioTIMEHub/BioTIMEr") # dev version
+remotes::github_install("bioTIMEHub/BioTIMEr", branch = "dev") # dev version
 ```
 
 ## Getting Started
