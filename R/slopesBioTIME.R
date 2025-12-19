@@ -69,7 +69,9 @@ getLinearRegressions.alpha <- function(x, pThreshold = 0.05) {
   )
   class(x) <- setdiff(class(x), "alpha")
   x <- base::subset(x, x$S != 1)
+
   dftx <- slopes_core(x, pThreshold)
+
   return(dftx |> as.data.frame())
 }
 

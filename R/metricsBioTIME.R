@@ -55,7 +55,7 @@
 #'     getAlphaMetrics(measure = "BIOMASS") |>
 #'     dplyr::summarise(
 #'        dplyr::across(
-#'           .cols = !resamp,
+#'           .cols = !resamp, # FIXME
 #'           .fns = c(mean = mean, sd = sd)),
 #'        .by = c(assemblageID, YEAR)) |>
 #'     tidyr::pivot_longer(

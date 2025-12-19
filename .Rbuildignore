@@ -3,6 +3,7 @@
 ^doc$
 ^ignored
 ^Meta$
+^_pkgdown.yml$
 ^vignettes/.*_cache
 ^vignettes/.*_files
 ^\.gitattributes$

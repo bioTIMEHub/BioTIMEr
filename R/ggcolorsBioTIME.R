@@ -102,21 +102,27 @@ intPalette <- function(colors, ...) {
     checkmate::assert_integerish(n, lower = 1L)
     if (n > length(colors)) {
       x <- ramp(seq.int(0, 1, length.out = n))
-      if (ncol(x) == 4L)
+      if (ncol(x) == 4L) {
         grDevices::rgb(
           x[, 1L],
           x[, 2L],
           x[, 3L],
           x[, 4L],
           maxColorValue = 255
-        ) else grDevices::rgb(x[, 1L], x[, 2L], x[, 3L], maxColorValue = 255)
-    } else
-      colors[sort(sample(x = c(1:length(colors)), size = n, replace = FALSE))]
+        )
+      } else {
+        grDevices::rgb(x[, 1L], x[, 2L], x[, 3L], maxColorValue = 255)
+      }
+    } else {
+      colors[sort(sample(x = c(seq_along(colors)), size = n, replace = FALSE))]
+    }
   }
 }
 
 biotime_cols <- function(palette = "gradient", reverse = FALSE, ...) {
   pal <- biotime_palettes[[palette]]
-  if (reverse) pal <- rev(pal)
+  if (reverse) {
+    pal <- rev(pal)
+  }
   intPalette(pal, ...) # interpolates palette colours
 }
