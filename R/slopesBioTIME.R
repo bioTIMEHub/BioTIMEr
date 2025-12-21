@@ -22,13 +22,9 @@
 #' @importFrom checkmate assert_names
 #'
 #' @examples
-#'   x <- data.frame(
-#'     resamp = 1L,
-#'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
-#'     Species = c(replicate(n = 8L * 6L, sample(letters[1L:10L], 4L, replace = FALSE))),
-#'     ABUNDANCE = rpois(24 * 8, 10),
-#'     assemblageID = rep(LETTERS[1L:8L], each = 24)
-#'   )
+#' x <- gridding(BTsubset_meta, BTsubset_data) |>
+#'   resampling(measure = "BIOMASS", verbose = FALSE, resamps = 2)
+#'
 #'   alpham <- getAlphaMetrics(x, "ABUNDANCE")
 #'   getLinearRegressions(x = alpham, pThreshold = 0.01) |> head(10)
 #'
