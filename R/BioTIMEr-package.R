@@ -26,7 +26,8 @@ utils::globalVariables(c(
   "resamp",
   "metric",
   "intercept",
-  "pvalue"
+  "pvalue",
+  "temporary_column"
 ))
 ## usethis namespace: end
 NULL

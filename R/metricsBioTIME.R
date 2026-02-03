@@ -3,7 +3,7 @@
 #' Calculates a set of standard alpha diversity metrics
 #'
 #' @param x (\code{data.frame}) BioTIME data in the format of the output of the
-#'    \code{\link{resampling}} function.
+#'    \code{\link{resampling}} function. The \code{resamp} column is optional.
 #'
 #' @param measure (\code{character}) chosen currency defined by a single column
 #'    name.
@@ -41,7 +41,8 @@
 #'  the \code{\link{gridding}} function and/or \code{\link{resampling}}
 #'  functions, which includes keeping the default BioTIME data column names. If
 #'  such columns are not found an error is issued and the computations are
-#'  halted.
+#'  halted. There is an exception for the \code{resamp} column: the function
+#'  runs even without it.
 #'
 #' @returns Returns a \code{data.frame} with results for species richness
 #'  (\code{S}), numerical abundance (\code{N}), maximum numerical abundance
@@ -79,7 +80,7 @@ getAlphaMetrics <- function(x, measure) {
   checkmate::assert_names(
     x = colnames(x),
     what = "colnames",
-    must.include = c(measure, "resamp", "YEAR", "Species", "assemblageID")
+    must.include = c(measure, "YEAR", "Species", "assemblageID")
   )
 
   x <- na.omit(x, cols = measure)
@@ -89,17 +90,17 @@ getAlphaMetrics <- function(x, measure) {
   res <- x |>
     dplyr::filter(
       dplyr::n_distinct(YEAR) > 1L && dplyr::n_distinct(Species) > 1L,
-      .by = c(resamp, assemblageID)
+      .by = dplyr::any_of(c("resamp", "assemblageID"))
     ) |>
     dplyr::summarise(
       dplyr::across(
         .cols = dplyr::all_of(measure),
         .fns = ~ getAlpha(sort(.x, decreasing = TRUE))
       ),
-      .by = c(resamp, assemblageID, YEAR)
+      .by = dplyr::any_of(c("resamp", "assemblageID", "YEAR"))
     ) |>
     tidyr::unnest_wider(
-      col = -c(resamp, assemblageID, YEAR),
+      col = -dplyr::any_of(c("resamp", "assemblageID", "YEAR")),
       names_sep = "_"
     ) |>
     dplyr::rename_with(.fn = ~ sub("^.*_", "", .x, FALSE, TRUE))
@@ -165,9 +166,10 @@ getAlpha <- function(x) {
 #' Calculates a set of standard beta diversity metrics
 #' @export
 #' @param x (\code{data.frame}) BioTIME data table in the format of the output
-#'    of the \code{\link{resampling}} functions.
+#'   of the \code{\link{resampling}} functions. The \code{resamp} column is
+#'   optional.
 #' @param measure (\code{character}) chosen currency defined by a single column
-#' name.
+#'   name.
 #'
 #' @details The function getBetaMetrics computes three beta diversity metrics
 #' for a given community data frame, where \code{measure} is a character input
@@ -180,8 +182,9 @@ getAlpha <- function(x) {
 #' assemblage time series i.e. the first year of each time series. Note that the
 #' input data frame needs to be in the format of the output of the
 #' \code{\link{gridding}} and/or \code{\link{resampling}} functions, which
-#'  includes keeping the default BioTIME data column names. If such columns are
-#' not found an error is issued and the computations are halted.
+#' includes keeping the default BioTIME data column names. If such columns are
+#' not found an error is issued and the computations are halted. There is an
+#' exception for the \code{resamp} column: the function runs even without it.
 #'
 #' @returns Returns a \code{data.frame} with results for Jaccard dissimilarity
 #' (\code{JaccardDiss}), Morisita-Horn dissimilarity (\code{MorisitaHornDiss}),
@@ -209,9 +212,9 @@ getBetaMetrics <- function(x, measure) {
   x <- na.omit(x, cols = measure)
 
   xd <- x |>
-    dplyr::group_by(resamp, assemblageID) |>
     dplyr::filter(
-      dplyr::n_distinct(YEAR) > 1L && dplyr::n_distinct(Species) > 1L
+      dplyr::n_distinct(YEAR) > 1L && dplyr::n_distinct(Species) > 1L,
+      .by = dplyr::any_of(c("resamp", "assemblageID"))
     ) |>
     dplyr::reframe(
       dplyr::pick("YEAR", "Species", dplyr::all_of(measure)) |>
@@ -220,7 +223,8 @@ getBetaMetrics <- function(x, measure) {
           values_from = dplyr::all_of(measure),
           values_fill = 0
         ) |>
-        getBeta()
+        getBeta(),
+      .by = dplyr::any_of(c("resamp", "assemblageID"))
     )
 
   class(xd) <- c("beta", class(xd))

@@ -8,7 +8,8 @@ getBetaMetrics(x, measure)
 }
 \arguments{
 \item{x}{(\code{data.frame}) BioTIME data table in the format of the output
-of the \code{\link{resampling}} functions.}
+of the \code{\link{resampling}} functions. The \code{resamp} column is
+optional.}
 
 \item{measure}{(\code{character}) chosen currency defined by a single column
 name.}
@@ -34,8 +35,9 @@ dissimilarity metrics are calculated against the baseline year of each
 assemblage time series i.e. the first year of each time series. Note that the
 input data frame needs to be in the format of the output of the
 \code{\link{gridding}} and/or \code{\link{resampling}} functions, which
- includes keeping the default BioTIME data column names. If such columns are
-not found an error is issued and the computations are halted.
+includes keeping the default BioTIME data column names. If such columns are
+not found an error is issued and the computations are halted. There is an
+exception for the \code{resamp} column: the function runs even without it.
 }
 \examples{
   gridding(BTsubset_meta, BTsubset_data) |>

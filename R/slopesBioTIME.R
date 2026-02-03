@@ -22,8 +22,8 @@
 #' @importFrom stats lm
 #' @importFrom stats na.omit
 #' @importFrom checkmate assert_choice
-#' @importFrom checkmate assert_number
 #' @importFrom checkmate assert_names
+#' @importFrom checkmate assert_number
 #'
 #' @examples
 #'
@@ -102,24 +102,31 @@ getLinearRegressions.beta <- function(x, pThreshold = 0.05) {
   return(dftx |> as.data.frame())
 }
 
+
 #' @keywords internal
 #' @importFrom broom tidy
-#' @importFrom dplyr filter
+#' @importFrom data.table fifelse
+#' @importFrom data.table uniqueN
+#' @importFrom dplyr any_of
 #' @importFrom dplyr bind_rows
-#' @importFrom dplyr mutate
-#' @importFrom dplyr select
-#' @importFrom dplyr rename
+#' @importFrom dplyr filter
 #' @importFrom dplyr lag
+#' @importFrom dplyr mutate
+#' @importFrom dplyr rename
+#' @importFrom dplyr select
+#' @importFrom stats lm
 #' @importFrom tidyr pivot_wider
+#' @importFrom tidyr nest
+#' @importFrom tidyr unnest
 
 slopes_core <- function(x, pThreshold) {
   # See benchmarks.R # counting one year studies
   three_year_assemblages <- tapply(x$YEAR, x$assemblageID, function(y) {
-    data.table::uniqueN(y) < 3L
+    uniqueN(y) < 3L
   })
 
   if (any(three_year_assemblages)) {
-    # See benchmarks.R  # Row filtering ----
+    # See benchmarks.R  # Row filtering
     x <- x |>
       filter(
         is.element(
@@ -129,24 +136,21 @@ slopes_core <- function(x, pThreshold) {
       )
   }
 
-  sapply(
-    unique(x$assemblageID),
-    function(id) {
-      string_formula <- sprintf(
-        "cbind(%s) ~ YEAR",
-        toString(setdiff(names(x), c("assemblageID", "YEAR")))
-      )
+  string_formula <- sprintf(
+    "cbind(%s) ~ YEAR",
+    toString(setdiff(names(x), c("assemblageID", "resamp", "YEAR")))
+  )
 
-      lm(
-        string_formula,
-        data = subset(x, x$assemblageID == id)
-      ) |>
-        tidy()
-    },
-    simplify = FALSE,
-    USE.NAMES = TRUE
-  ) |>
-    bind_rows(.id = "assemblageID") |>
+  x |>
+    nest(.by = any_of(c("assemblageID", "resamp"))) |>
+    rename("temporary_column" = "data") |>
+    mutate(
+      models = lapply(temporary_column, function(df) {
+        lm(string_formula, data = df) |> tidy()
+      })
+    ) |>
+    select(-"temporary_column") |>
+    unnest(cols = "models") |>
     pivot_wider(names_from = "term", values_from = "estimate") |>
     rename(
       metric = "response",
@@ -155,7 +159,7 @@ slopes_core <- function(x, pThreshold) {
       slope = "YEAR"
     ) |>
     mutate(
-      "significance" = data.table::fifelse(
+      "significance" = fifelse(
         test = pvalue < pThreshold,
         yes = 1L,
         no = 0L
@@ -164,12 +168,13 @@ slopes_core <- function(x, pThreshold) {
       intercept = lag(intercept)
     ) |>
     filter(!is.na(intercept)) |>
-    select(
+    select(any_of(c(
       "assemblageID",
+      "resamp",
       "metric",
       "slope",
       "pvalue",
       "significance",
       "intercept"
-    )
+    )))
 }

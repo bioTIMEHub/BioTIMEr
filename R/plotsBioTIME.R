@@ -199,15 +199,15 @@ plotSlopes <- function(
 #' @param fontSize Deprecated in Favour of font.size
 #' @param colx Deprecated in favour of \code{axis.colour}.
 #' @param coly Deprecated in favour of \code{strip.background}.
-#' @importFrom ggplot2 theme_bw
-#' @importFrom ggplot2 theme
-#' @importFrom ggplot2 element_text
 #' @importFrom ggplot2 element_blank
 #' @importFrom ggplot2 element_line
 #' @importFrom ggplot2 element_rect
+#' @importFrom ggplot2 element_text
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 theme_bw
+#' @importFrom lifecycle deprecate_warn
 #' @importFrom lifecycle deprecated
 #' @importFrom lifecycle is_present
-#' @importFrom lifecycle deprecate_warn
 #'
 #' @examples \dontrun{
 #'   fig1 <- ggplot2::ggplot() +

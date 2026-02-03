@@ -8,7 +8,7 @@ getAlphaMetrics(x, measure)
 }
 \arguments{
 \item{x}{(\code{data.frame}) BioTIME data in the format of the output of the
-\code{\link{resampling}} function.}
+\code{\link{resampling}} function. The \code{resamp} column is optional.}
 
 \item{measure}{(\code{character}) chosen currency defined by a single column
 name.}
@@ -58,7 +58,8 @@ abundant species.
  the \code{\link{gridding}} function and/or \code{\link{resampling}}
  functions, which includes keeping the default BioTIME data column names. If
  such columns are not found an error is issued and the computations are
- halted.
+ halted. There is an exception for the \code{resamp} column: the function
+ runs even without it.
 }
 \examples{
   # Mean and sd values of the metrics for several resamplings
