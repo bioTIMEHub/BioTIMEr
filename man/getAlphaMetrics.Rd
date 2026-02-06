@@ -8,30 +8,31 @@ getAlphaMetrics(x, measure)
 }
 \arguments{
 \item{x}{(\code{data.frame}) BioTIME data in the format of the output of the
-\code{\link{resampling}} function.}
+\code{\link{resampling}} function. The \code{resamp} column is optional.}
 
-\item{measure}{(\code{character}) chosen currency defined by a single
-column name.}
+\item{measure}{(\code{character}) chosen currency defined by a single column
+name.}
 }
 \value{
-Returns a \code{data.frame} with results for species richness (\code{S}), numerical
- abundance (\code{N}), maximum numerical abundance (\code{maxN}), Shannon Index (\code{Shannon}),
- Exponential Shannon (\code{expShannon}), Simpson's Index (Simpson), Inverse Simpson
- (\code{InvSimpson}), Probability of intraspecific encounter (\code{PIE}) and McNaughton's
- Dominance (\code{DomMc}) for each year and \code{assemblageID}.
+Returns a \code{data.frame} with results for species richness
+ (\code{S}), numerical abundance (\code{N}), maximum numerical abundance
+ (\code{maxN}), Shannon Index (\code{Shannon}), Exponential Shannon
+ (\code{expShannon}), Simpson's Index (Simpson), Inverse Simpson
+ (\code{InvSimpson}), Probability of intraspecific encounter (\code{PIE}) and
+ McNaughton's Dominance (\code{DomMc}) for each year and \code{assemblageID}.
 }
 \description{
 Calculates a set of standard alpha diversity metrics
 }
 \details{
-The function \code{getAlphaMetrics} computes nine alpha diversity metrics for
-a given community data frame, where \code{measure} is a character input
-specifying the abundance or biomass field used for the calculations. For each
-row of the data frame with data, \code{getAlphaMetrics} calculates
+The function \code{getAlphaMetrics} computes nine alpha diversity
+metrics for a given community data frame, where \code{measure} is a character
+input specifying the abundance or biomass field used for the calculations.
+For each row of the data frame with data, \code{getAlphaMetrics} calculates
 the following metrics:
 
-- Species richness (\code{S}) as the total number of species in each year with
-currency > 0.
+- Species richness (\code{S}) as the total number of species in each year
+with currency > 0.
 
 - Numerical abundance (\code{N}) as the total currency (sum) in each year
 (either total abundance or total biomass).
@@ -39,10 +40,10 @@ currency > 0.
 - Maximum Numerical abundance (maxN) as the highest currency value reported
 in each year.
 
-- Shannon or Shannon–Weaver index is calculated as \eqn{\sum_{i}p_{i}log_{b}p_{i}},
-where \eqn{p_{i}} is the proportional abundance of species i and b is the base
-of the logarithm (natural logarithms), while exponential Shannon is given by
-\code{exp(Shannon)}.
+- Shannon or Shannon–Weaver index is calculated as
+\eqn{\sum_{i}p_{i}log_{b}p_{i}}, where \eqn{p_{i}} is the proportional
+abundance of species i and b is the base of the logarithm (natural
+logarithms), while exponential Shannon is given by \code{exp(Shannon)}.
 
 - Simpson's index is calculated as \eqn{1-sum(p_{i}^{2})}, while Inverse
 Simpson as \eqn{1/sum(p_{i}^{2})}.
@@ -53,10 +54,12 @@ abundant species.
 - Probability of intraspecific encounter or PIE is calculated as
 \eqn{\left(\frac{N}{N-1}\right)\left(1-\sum_{i=1}^{S}\pi_{i}^{2}\right)}.
 
- Note that the input data frame needs to be in the format of the output of the
- \code{\link{gridding}} function and/or \code{\link{resampling}} functions,
- which includes keeping the default BioTIME data column names. If such columns
- are not found an error is issued and the computations are halted.
+ Note that the input data frame needs to be in the format of the output of
+ the \code{\link{gridding}} function and/or \code{\link{resampling}}
+ functions, which includes keeping the default BioTIME data column names. If
+ such columns are not found an error is issued and the computations are
+ halted. There is an exception for the \code{resamp} column: the function
+ runs even without it.
 }
 \examples{
   # Mean and sd values of the metrics for several resamplings
@@ -65,7 +68,7 @@ abundant species.
     getAlphaMetrics(measure = "BIOMASS") |>
     dplyr::summarise(
        dplyr::across(
-          .cols = !resamp,
+          .cols = !resamp, # FIXME
           .fns = c(mean = mean, sd = sd)),
        .by = c(assemblageID, YEAR)) |>
     tidyr::pivot_longer(

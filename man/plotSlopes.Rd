@@ -24,7 +24,8 @@ plotSlopes(
 If \code{divtype} is beta, \code{metric} must be one of "JaccardDiss",
 "MorisitaHornDiss" or "BrayCurtisDiss".}
 
-\item{cols}{Name of the column in x from which colouring groups will be based on.}
+\item{cols}{Name of the column in x from which colouring groups will be based
+on.}
 
 \item{taxa}{Necessary if method = "taxa", one of: "Amphibians & reptiles",
 "Birds", "Chromista", "Fish", "Fungi", "Mammals", "Plants"}

@@ -58,8 +58,6 @@ test_that("getAlpha works consistently", {
   skip_on_ci()
   skip_on_cran()
 
-  skip_on_cran()
-
   expect_snapshot(x = getAlpha(x = data))
 })
 
@@ -102,6 +100,19 @@ test_that("getAlphaMetrics works correctly for Biomass", {
   expect_snapshot(x = biomass_alpha_metrics)
 })
 
+test_that("getAlphaMetrics works correctly without resamp", {
+  skip_on_ci()
+  skip_on_cran()
+
+  abundance_alpha_metrics_no_resamp <- getAlphaMetrics(
+    x = dataMetrics |> dplyr::select(-resamp),
+    measure = "ABUNDANCE"
+  ) |>
+    as.data.frame()
+
+  expect_snapshot(x = abundance_alpha_metrics_no_resamp)
+})
+
 test_that("getBetaMetrics works correctly for Abundance", {
   skip_on_ci()
   skip_on_cran()
@@ -126,4 +137,17 @@ test_that("getBetaMetrics works correctly for Biomass", {
     as.data.frame()
 
   expect_snapshot(x = biomass_beta_metrics)
+})
+
+test_that("getBetaMetrics works correctly without resamp", {
+  skip_on_ci()
+  skip_on_cran()
+
+  abundance_Beta_metrics_no_resamp <- getBetaMetrics(
+    x = dataMetrics |> dplyr::select(-resamp),
+    measure = "ABUNDANCE"
+  ) |>
+    as.data.frame()
+
+  expect_snapshot(x = abundance_Beta_metrics_no_resamp)
 })

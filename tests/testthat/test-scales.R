@@ -79,11 +79,21 @@ test_that("scale_color_biotime and scale_fill_biotime handle all combinations", 
           p2
         )
         vdiffr::expect_doppelganger(
-          sprintf("color-continuous-%s-%s", pal, reverse),
+          sprintf(
+            "color-continuous-%s-%s-%s",
+            pal,
+            reverse,
+            as.integer(discrete)
+          ),
           p3
         )
         vdiffr::expect_doppelganger(
-          sprintf("fill-continuous-%s-%s", pal, reverse),
+          sprintf(
+            "fill-continuous-%s-%s-%s",
+            pal,
+            reverse,
+            as.integer(discrete)
+          ),
           p4
         )
       }

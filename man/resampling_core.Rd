@@ -2,19 +2,18 @@
 % Please edit documentation in R/resamplingBioTIME.R
 \name{resampling_core}
 \alias{resampling_core}
-\title{Rarefy BioTIME data
-Applies sample-based rarefaction to standardise the number of samples per year
-   within a cell-level time series.}
+\title{Rarefy BioTIME data Applies sample-based rarefaction to standardise the
+number of samples per year within a cell-level time series.}
 \usage{
 resampling_core(x, measure, summarise)
 }
 \arguments{
-\item{x}{(\code{data.frame}) BioTIME gridded data to be resampled (in the format of
-the output of the \code{\link{gridding}} function).}
+\item{x}{(\code{data.frame}) BioTIME gridded data to be resampled (in the
+format of the output of the \code{\link{gridding}} function).}
 
-\item{measure}{(\code{character}) currency to be retained during the sample-based
-rarefaction. Can be either defined by a single column name or a vector of
-two or more column names.}
+\item{measure}{(\code{character}) currency to be retained during the
+sample-based rarefaction. Can be either defined by a single column name or a
+vector of two or more column names.}
 
 \item{summarise}{(\code{logical}). \code{TRUE} by default. If \code{FALSE},
 the function returns abundance and/or biomass summed at the SAMPLE_DESC level
@@ -25,8 +24,7 @@ Returns a single long form data frame containing the total currency
    of interest (sum) for each species in each year.
 }
 \description{
-Rarefy BioTIME data
-Applies sample-based rarefaction to standardise the number of samples per year
-   within a cell-level time series.
+Rarefy BioTIME data Applies sample-based rarefaction to standardise the
+number of samples per year within a cell-level time series.
 }
 \keyword{internal}

@@ -1,20 +1,21 @@
 #' Alpha diversity metrics
 #'
 #' Calculates a set of standard alpha diversity metrics
-#' @param x (\code{data.frame}) BioTIME data in the format of the output of the
-#'    \code{\link{resampling}} function.
-#' @param measure (\code{character}) chosen currency defined by a single
-#'    column name.
 #'
-#' @details
-#' The function \code{getAlphaMetrics} computes nine alpha diversity metrics for
-#' a given community data frame, where \code{measure} is a character input
-#' specifying the abundance or biomass field used for the calculations. For each
-#' row of the data frame with data, \code{getAlphaMetrics} calculates
+#' @param x (\code{data.frame}) BioTIME data in the format of the output of the
+#'    \code{\link{resampling}} function. The \code{resamp} column is optional.
+#'
+#' @param measure (\code{character}) chosen currency defined by a single column
+#'    name.
+#'
+#' @details The function \code{getAlphaMetrics} computes nine alpha diversity
+#' metrics for a given community data frame, where \code{measure} is a character
+#' input specifying the abundance or biomass field used for the calculations.
+#' For each row of the data frame with data, \code{getAlphaMetrics} calculates
 #' the following metrics:
 #'
-#' - Species richness (\code{S}) as the total number of species in each year with
-#' currency > 0.
+#' - Species richness (\code{S}) as the total number of species in each year
+#' with currency > 0.
 #'
 #' - Numerical abundance (\code{N}) as the total currency (sum) in each year
 #' (either total abundance or total biomass).
@@ -22,10 +23,10 @@
 #' - Maximum Numerical abundance (maxN) as the highest currency value reported
 #' in each year.
 #'
-#' - Shannon or Shannon–Weaver index is calculated as \eqn{\sum_{i}p_{i}log_{b}p_{i}},
-#' where \eqn{p_{i}} is the proportional abundance of species i and b is the base
-#' of the logarithm (natural logarithms), while exponential Shannon is given by
-#' \code{exp(Shannon)}.
+#' - Shannon or Shannon–Weaver index is calculated as
+#' \eqn{\sum_{i}p_{i}log_{b}p_{i}}, where \eqn{p_{i}} is the proportional
+#' abundance of species i and b is the base of the logarithm (natural
+#' logarithms), while exponential Shannon is given by \code{exp(Shannon)}.
 #'
 #' - Simpson's index is calculated as \eqn{1-sum(p_{i}^{2})}, while Inverse
 #' Simpson as \eqn{1/sum(p_{i}^{2})}.
@@ -36,16 +37,20 @@
 #' - Probability of intraspecific encounter or PIE is calculated as
 #' \eqn{\left(\frac{N}{N-1}\right)\left(1-\sum_{i=1}^{S}\pi_{i}^{2}\right)}.
 #'
-#'  Note that the input data frame needs to be in the format of the output of the
-#'  \code{\link{gridding}} function and/or \code{\link{resampling}} functions,
-#'  which includes keeping the default BioTIME data column names. If such columns
-#'  are not found an error is issued and the computations are halted.
+#'  Note that the input data frame needs to be in the format of the output of
+#'  the \code{\link{gridding}} function and/or \code{\link{resampling}}
+#'  functions, which includes keeping the default BioTIME data column names. If
+#'  such columns are not found an error is issued and the computations are
+#'  halted. There is an exception for the \code{resamp} column: the function
+#'  runs even without it.
 #'
-#' @returns Returns a \code{data.frame} with results for species richness (\code{S}), numerical
-#'  abundance (\code{N}), maximum numerical abundance (\code{maxN}), Shannon Index (\code{Shannon}),
-#'  Exponential Shannon (\code{expShannon}), Simpson's Index (Simpson), Inverse Simpson
-#'  (\code{InvSimpson}), Probability of intraspecific encounter (\code{PIE}) and McNaughton's
-#'  Dominance (\code{DomMc}) for each year and \code{assemblageID}.
+#' @returns Returns a \code{data.frame} with results for species richness
+#'  (\code{S}), numerical abundance (\code{N}), maximum numerical abundance
+#'  (\code{maxN}), Shannon Index (\code{Shannon}), Exponential Shannon
+#'  (\code{expShannon}), Simpson's Index (Simpson), Inverse Simpson
+#'  (\code{InvSimpson}), Probability of intraspecific encounter (\code{PIE}) and
+#'  McNaughton's Dominance (\code{DomMc}) for each year and \code{assemblageID}.
+#'
 #' @export
 #'
 #' @examples
@@ -55,7 +60,7 @@
 #'     getAlphaMetrics(measure = "BIOMASS") |>
 #'     dplyr::summarise(
 #'        dplyr::across(
-#'           .cols = !resamp,
+#'           .cols = !resamp, # FIXME
 #'           .fns = c(mean = mean, sd = sd)),
 #'        .by = c(assemblageID, YEAR)) |>
 #'     tidyr::pivot_longer(
@@ -75,7 +80,7 @@ getAlphaMetrics <- function(x, measure) {
   checkmate::assert_names(
     x = colnames(x),
     what = "colnames",
-    must.include = c(measure, "resamp", "YEAR", "Species", "assemblageID")
+    must.include = c(measure, "YEAR", "Species", "assemblageID")
   )
 
   x <- na.omit(x, cols = measure)
@@ -85,17 +90,17 @@ getAlphaMetrics <- function(x, measure) {
   res <- x |>
     dplyr::filter(
       dplyr::n_distinct(YEAR) > 1L && dplyr::n_distinct(Species) > 1L,
-      .by = c(resamp, assemblageID)
+      .by = dplyr::any_of(c("resamp", "assemblageID"))
     ) |>
     dplyr::summarise(
       dplyr::across(
         .cols = dplyr::all_of(measure),
         .fns = ~ getAlpha(sort(.x, decreasing = TRUE))
       ),
-      .by = c(resamp, assemblageID, YEAR)
+      .by = dplyr::any_of(c("resamp", "assemblageID", "YEAR"))
     ) |>
     tidyr::unnest_wider(
-      col = -c(resamp, assemblageID, YEAR),
+      col = -dplyr::any_of(c("resamp", "assemblageID", "YEAR")),
       names_sep = "_"
     ) |>
     dplyr::rename_with(.fn = ~ sub("^.*_", "", .x, FALSE, TRUE))
@@ -112,17 +117,20 @@ getAlphaMetrics <- function(x, measure) {
 }
 
 #' Alpha
-#' @param x (\code{data.frame}) First column has to be year and following columns
-#'    contain species abundances.
+#' @param x (\code{data.frame}) First column has to be year and following
+#' columns contain species abundances.
 #' @keywords internal
-#' @returns A data frame with results for S (species richness), N (numerical abundance),
-#'    maximum N per year per assemblage, Shannon, Exponential Shannon, Simpson,
-#'    Inverse Simpson, PIE (probability of intraspecific encounter) and
-#'    McNaughton's Dominance.
-#' @examples \dontrun{
-#' # 1 site, 1 year in long format, ordered by ABUNDANCE or BIOMASS
-#' x <- data.frame(species = letters[1:6], x = 6:1)
-#' getAlpha(x$x)
+#'
+#' @returns A data frame with results for S (species richness), N (numerical
+#'    abundance), maximum N per year per assemblage, Shannon, Exponential
+#'    Shannon, Simpson, Inverse Simpson, PIE (probability of intraspecific
+#'    encounter) and McNaughton's Dominance.
+#'
+#' @examples
+#' \dontrun{
+#'   # 1 site, 1 year in long format, ordered by ABUNDANCE or BIOMASS
+#'   x <- data.frame(species = letters[1:6], x = 6:1)
+#'   getAlpha(x$x)
 #' }
 getAlpha <- function(x) {
   S <- sum(x > 0)
@@ -157,35 +165,37 @@ getAlpha <- function(x) {
 #'
 #' Calculates a set of standard beta diversity metrics
 #' @export
-#' @param x (\code{data.frame}) BioTIME data table in the format of the output of the
-#'    \code{\link{resampling}} functions.
-#' @param measure (\code{character}) chosen currency defined by a single column name.
+#' @param x (\code{data.frame}) BioTIME data table in the format of the output
+#'   of the \code{\link{resampling}} functions. The \code{resamp} column is
+#'   optional.
+#' @param measure (\code{character}) chosen currency defined by a single column
+#'   name.
 #'
-#' @details
-#' The function getBetaMetrics computes three beta diversity metrics for a given
-#' community data frame, where \code{measure} is a character input specifying the
-#' abundance or biomass field used for the calculations. \code{getBetaMetrics}
-#' calls the \code{\link[vegan]{vegdist}} function which calculates for each row
-#' the following metrics: Jaccard dissimilarity (\code{method = "jaccard"}),
-#' Morisita-Horn dissimilarity (\code{method = "horn"}) and Bray-Curtis dissimilarity
-#' (\code{method = "bray"}). Here, the dissimilarity metrics are calculated against
-#' the baseline year of each assemblage time series i.e.
-#' the first year of each time series.
-#' Note that the input data frame needs to be in the format of the output of the
-#'  \code{\link{gridding}} and/or \code{\link{resampling}} functions, which
+#' @details The function getBetaMetrics computes three beta diversity metrics
+#' for a given community data frame, where \code{measure} is a character input
+#' specifying the abundance or biomass field used for the calculations.
+#' \code{getBetaMetrics} calls the \code{\link[vegan]{vegdist}} function which
+#' calculates for each row the following metrics: Jaccard dissimilarity
+#' (\code{method = "jaccard"}), Morisita-Horn dissimilarity (\code{method =
+#' "horn"}) and Bray-Curtis dissimilarity (\code{method = "bray"}). Here, the
+#' dissimilarity metrics are calculated against the baseline year of each
+#' assemblage time series i.e. the first year of each time series. Note that the
+#' input data frame needs to be in the format of the output of the
+#' \code{\link{gridding}} and/or \code{\link{resampling}} functions, which
 #' includes keeping the default BioTIME data column names. If such columns are
-#' not found an error is
-#'  issued and the computations are halted.
+#' not found an error is issued and the computations are halted. There is an
+#' exception for the \code{resamp} column: the function runs even without it.
 #'
 #' @returns Returns a \code{data.frame} with results for Jaccard dissimilarity
 #' (\code{JaccardDiss}), Morisita-Horn dissimilarity (\code{MorisitaHornDiss}),
 #' and Bray-Curtis dissimilarity (\code{BrayCurtsDiss}) for each year and
 #' \code{assemblageID}.
+#'
 #' @examples
-#' gridding(BTsubset_meta, BTsubset_data) |>
-#'   resampling(measure = "BIOMASS", verbose = FALSE, resamps = 2) |>
-#'   getBetaMetrics(measure = "BIOMASS") |>
-#'   head()
+#'   gridding(BTsubset_meta, BTsubset_data) |>
+#'     resampling(measure = "BIOMASS", verbose = FALSE, resamps = 2) |>
+#'     getBetaMetrics(measure = "BIOMASS") |>
+#'     head()
 
 getBetaMetrics <- function(x, measure) {
   base::stopifnot(
@@ -202,9 +212,9 @@ getBetaMetrics <- function(x, measure) {
   x <- na.omit(x, cols = measure)
 
   xd <- x |>
-    dplyr::group_by(resamp, assemblageID) |>
     dplyr::filter(
-      dplyr::n_distinct(YEAR) > 1L && dplyr::n_distinct(Species) > 1L
+      dplyr::n_distinct(YEAR) > 1L && dplyr::n_distinct(Species) > 1L,
+      .by = dplyr::any_of(c("resamp", "assemblageID"))
     ) |>
     dplyr::reframe(
       dplyr::pick("YEAR", "Species", dplyr::all_of(measure)) |>
@@ -213,7 +223,8 @@ getBetaMetrics <- function(x, measure) {
           values_from = dplyr::all_of(measure),
           values_fill = 0
         ) |>
-        getBeta()
+        getBeta(),
+      .by = dplyr::any_of(c("resamp", "assemblageID"))
     )
 
   class(xd) <- c("beta", class(xd))

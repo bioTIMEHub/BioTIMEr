@@ -5,7 +5,8 @@
  - check_win_devel passed
  - MacOS Builder mac.r-project.org passed
 
-Major update improving performances of the package.
+Fix of the getLinearRegressions function.
+Fix in the vignette formatting.
 
 Thank you for taking the time to review our package,
 
