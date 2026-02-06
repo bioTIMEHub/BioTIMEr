@@ -1,9 +1,11 @@
-# BioTIMEr 0.3.1 - 31.12.2025
+# BioTIMEr 0.3.1 - 28.02.2026
 
 ## Minor Improvements and Bug Fixes
 
  - getLinearRegressions() now handles data from getMetrics() with several
- resamplings.
+ resamplings
+ - getMetrics() and getLinearRegressions() now work without resamplings
+ allowing users to run them on their own data.
  - vignette YAML frontmatter fixed.
 
 

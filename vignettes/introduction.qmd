@@ -42,7 +42,7 @@ library(knitr)
 set.seed(19)
 ```
 
-```{r , warning=FALSE, message=FALSE, eval=TRUE}
+```{r}
 #| label: bt_package_loading
 #| cache: false
 # Install and load the latest version of BioTIMEr
