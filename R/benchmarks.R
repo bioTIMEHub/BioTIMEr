@@ -846,4 +846,19 @@ if (FALSE) {
   # 46 4     v5dt(dt$cod…   16.43s   16.43s    0.0609    3.11GB
   # 47 4     v6dp(dt$cod…   33.24s   33.24s    0.0301     9.3GB
   # 48 4     v5dp(dt$cod…   35.25s   35.25s    0.0284     9.3GB
+
+  subset_SAMPLE_DESC <- dplyr::left_join(
+    BTsubset_meta |> dplyr::select(STUDY_ID, SAMPLE_DESC_NAME),
+    BTsubset_data |>
+      dplyr::distinct(STUDY_ID, SAMPLE_DESC),
+    dplyr::join_by(STUDY_ID)
+  )
+
+  initial_time <- Sys.time()
+  parser_BioTIME(
+    subset_SAMPLE_DESC$SAMPLE_DESC,
+    subset_SAMPLE_DESC$SAMPLE_DESC_NAME,
+    "_"
+  )
+  Sys.time() - initial_time
 }

@@ -4,7 +4,11 @@
 \alias{parser_BioTIME}
 \title{Function splitting SAMPLE_DESC in various columns based on SAMPLE_DESC_NAME}
 \usage{
+<<<<<<< HEAD
+parser_BioTIME(x, format, pattern, verbose = TRUE)
+=======
 parser_BioTIME(x, format, pattern)
+>>>>>>> c44707e9b6912963553b5902c1cf86cec60ca30b
 }
 \arguments{
 \item{x}{SAMPLE_DESC or a column that contains data values to split}
@@ -16,7 +20,14 @@ to organise codes into columns.}
 \code{\link[stringi]{stri_split_fixed}}.}
 }
 \value{
+<<<<<<< HEAD
+A \code{data.frame} with column names extracted from the
+\code{format} strings. If there were mismatches between \code{x} and
+\code{format} strings, \code{error_x} and \code{error_format} columns show
+problematic values.
+=======
 A \code{data.frame}
+>>>>>>> c44707e9b6912963553b5902c1cf86cec60ca30b
 }
 \description{
 Function splitting SAMPLE_DESC in various columns based on SAMPLE_DESC_NAME
@@ -41,5 +52,8 @@ Function splitting SAMPLE_DESC in various columns based on SAMPLE_DESC_NAME
 
   dplyr::mutate(dt, parser_BioTIME(code, name, "_"))
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> c44707e9b6912963553b5902c1cf86cec60ca30b
 }

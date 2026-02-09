@@ -5,7 +5,10 @@
 #' @param pattern A string to split \code{x} and \code{format} by. Passed to
 #'     \code{\link[stringi]{stri_split_fixed}}.
 #'
-#' @returns A \code{data.frame}
+#' @returns A \code{data.frame} with column names extracted from the
+#' \code{format} strings. If there were mismatches between \code{x} and
+#' \code{format} strings, \code{error_x} and \code{error_format} columns show
+#' problematic values.
 #'
 #' @examples
 #'    x <- c("T1_23.1212_56.2346_1995_12_30", "786_-60.4567_0.346_2027")
@@ -27,28 +30,49 @@
 #'
 #'   dplyr::mutate(dt, parser_BioTIME(code, name, "_"))
 #'
-#'
+#' @importFrom checkmate assert_character
+#' @importFrom checkmate assert_logical
+#' @importFrom checkmate assert_string
 #' @importFrom data.table rbindlist
 #' @importFrom stats setNames
 #' @importFrom stringi stri_split_fixed
 #' @export
 # See benchmarks.R for a benchmarking of this function vs other versions
-parser_BioTIME <- function(x, format, pattern) {
-  checkmate::assert_character(x, any.missing = FALSE)
-  checkmate::assert_character(format, any.missing = FALSE)
-  checkmate::assert_string(pattern, na.ok = FALSE, null.ok = FALSE)
+
+parser_BioTIME <- function(x, format, pattern, verbose = TRUE) {
+  assert_character(x, any.missing = FALSE)
+  assert_character(format, any.missing = FALSE)
+  assert_string(pattern, na.ok = FALSE, null.ok = FALSE)
+  assert_logical(verbose, any.missing = FALSE, len = 1L)
 
   formats <- stri_split_fixed(str = format, pattern = pattern)
   x <- stri_split_fixed(str = x, pattern = pattern)
 
   res <- lapply(seq_along(x), function(i) {
-    x[[i]] |> t() |> as.data.frame() |> setNames(nm = formats[[i]])
+    if (length(x[[i]]) == length(formats[[i]])) {
+      x[[i]] |>
+        t() |>
+        as.data.frame() |>
+        setNames(nm = formats[[i]])
+    } else {
+      data.frame(
+        error_x = paste(x[[i]], collapse = pattern),
+        error_format = paste(formats[[i]], collapse = pattern)
+      )
+    }
   }) |>
     rbindlist(fill = TRUE) |>
     as.data.frame()
 
-  if (anyNA(colnames(res))) {
-    warning("Unmatched valus between x and format, NA column created.")
+  if (
+    verbose &&
+      (any(grepl(pattern = "error_", x = colnames(res), fixed = TRUE)) ||
+        # grepl(pattern = "error_format", x = colnames(res)) ||
+        anyNA(colnames(res)))
+  ) {
+    warning(
+      "Unmatched valus between x and format, inspect `error_x` and `error_format` columns."
+    )
   }
   return(res)
 }
