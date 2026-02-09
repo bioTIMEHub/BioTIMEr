@@ -59,6 +59,7 @@ Description: The 'BioTIME' database was first published in
 Depends:
     R (>= 4.3.0)
 Imports:
+    stringi,
     tidyr,
     dplyr,
     data.table,
