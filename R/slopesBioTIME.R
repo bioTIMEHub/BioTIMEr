@@ -1,39 +1,42 @@
 #' Get Linear Regressions BioTIME
 #'
-#' Fits linear regression models to \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} outputs
+#' Fits linear regression models to \code{\link{getAlphaMetrics}} or
+#' \code{\link{getBetaMetrics}} outputs
 #' @export
 #' @param x (\code{data.frame}) BioTIME data table in the format of the output
-#' of  \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} functions
-#' @param pThreshold (\code{numeric}) P-value threshold for statistical significance
+#' of \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} functions
+#' @param pThreshold (\code{numeric}) P-value threshold for statistical
+#' significance
 #'
-#' @returns Returns a single long \code{data.frame} with results of linear regressions
-#' (slope, p-value, significance, intercept) for each \code{assemblageID}.
+#' @returns Returns a single long \code{data.frame} with results of linear
+#' regressions (slope, p-value, significance, intercept) for each
+#' \code{assemblageID}.
 #'
-#' @details
-#' The function \code{getLinearRegression} fits simple linear regression models
-#' (see \code{\link[stats]{lm}} for details) for a given output ('data') of
-#' either \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} function.
-#' The typical model has the form \code{metric ~ year}. Note that assemblages with
-#' less than 3 time points and/or single species time series are removed.
+#' @details The function \code{getLinearRegression} fits simple linear
+#' regression models (see \code{\link[stats]{lm}} for details) for a given
+#' output ('data') of either \code{\link{getAlphaMetrics}} or
+#' \code{\link{getBetaMetrics}} function. The typical model has the form
+#' \code{metric ~ year}. Note that assemblages with less than 3 time points
+#' and/or single species time series are removed.
+#'
 #' @importFrom stats lm
 #' @importFrom stats na.omit
 #' @importFrom checkmate assert_choice
-#' @importFrom checkmate assert_number
 #' @importFrom checkmate assert_names
+#' @importFrom checkmate assert_number
 #'
 #' @examples
-#'   x <- data.frame(
-#'     resamp = 1L,
-#'     YEAR = rep(rep(2010:2015, each = 4), times = 4),
-#'     Species = c(replicate(n = 8L * 6L, sample(letters[1L:10L], 4L, replace = FALSE))),
-#'     ABUNDANCE = rpois(24 * 8, 10),
-#'     assemblageID = rep(LETTERS[1L:8L], each = 24)
-#'   )
-#'   alpham <- getAlphaMetrics(x, "ABUNDANCE")
-#'   getLinearRegressions(x = alpham, pThreshold = 0.01) |> head(10)
 #'
-#'   betam <- getBetaMetrics(x = x, "ABUNDANCE")
-#'   getLinearRegressions(x = betam) |> head(10)
+#' x <- gridding(BTsubset_meta, BTsubset_data) |>
+#' resampling(measure = "BIOMASS", verbose = FALSE, resamps = 2)
+#'
+#'   alpham <- getAlphaMetrics(x, "BIOMASS")
+#'
+#' getLinearRegressions(x = alpham, pThreshold = 0.01) |> head(10)
+#'
+#'   betam <- getBetaMetrics(x = x, "BIOMASS")
+#'
+#' getLinearRegressions(x = betam) |> head(10)
 #'
 getLinearRegressions <- function(x, pThreshold = 0.05) {
   UseMethod("getLinearRegressions")
@@ -69,7 +72,9 @@ getLinearRegressions.alpha <- function(x, pThreshold = 0.05) {
   )
   class(x) <- setdiff(class(x), "alpha")
   x <- base::subset(x, x$S != 1)
+
   dftx <- slopes_core(x, pThreshold)
+
   return(dftx |> as.data.frame())
 }
 
@@ -97,24 +102,31 @@ getLinearRegressions.beta <- function(x, pThreshold = 0.05) {
   return(dftx |> as.data.frame())
 }
 
+
 #' @keywords internal
 #' @importFrom broom tidy
-#' @importFrom dplyr filter
+#' @importFrom data.table fifelse
+#' @importFrom data.table uniqueN
+#' @importFrom dplyr any_of
 #' @importFrom dplyr bind_rows
-#' @importFrom dplyr mutate
-#' @importFrom dplyr select
-#' @importFrom dplyr rename
+#' @importFrom dplyr filter
 #' @importFrom dplyr lag
+#' @importFrom dplyr mutate
+#' @importFrom dplyr rename
+#' @importFrom dplyr select
+#' @importFrom stats lm
 #' @importFrom tidyr pivot_wider
+#' @importFrom tidyr nest
+#' @importFrom tidyr unnest
 
 slopes_core <- function(x, pThreshold) {
   # See benchmarks.R # counting one year studies
   three_year_assemblages <- tapply(x$YEAR, x$assemblageID, function(y) {
-    data.table::uniqueN(y) < 3L
+    uniqueN(y) < 3L
   })
 
   if (any(three_year_assemblages)) {
-    # See benchmarks.R  # Row filtering ----
+    # See benchmarks.R  # Row filtering
     x <- x |>
       filter(
         is.element(
@@ -124,24 +136,21 @@ slopes_core <- function(x, pThreshold) {
       )
   }
 
-  sapply(
-    unique(x$assemblageID),
-    function(id) {
-      string_formula <- sprintf(
-        "cbind(%s) ~ YEAR",
-        toString(setdiff(names(x), c("assemblageID", "YEAR")))
-      )
+  string_formula <- sprintf(
+    "cbind(%s) ~ YEAR",
+    toString(setdiff(names(x), c("assemblageID", "resamp", "YEAR")))
+  )
 
-      lm(
-        string_formula,
-        data = subset(x, x$assemblageID == id)
-      ) |>
-        tidy()
-    },
-    simplify = FALSE,
-    USE.NAMES = TRUE
-  ) |>
-    bind_rows(.id = "assemblageID") |>
+  x |>
+    nest(.by = any_of(c("assemblageID", "resamp"))) |>
+    rename("temporary_column" = "data") |>
+    mutate(
+      models = lapply(temporary_column, function(df) {
+        lm(string_formula, data = df) |> tidy()
+      })
+    ) |>
+    select(-"temporary_column") |>
+    unnest(cols = "models") |>
     pivot_wider(names_from = "term", values_from = "estimate") |>
     rename(
       metric = "response",
@@ -150,7 +159,7 @@ slopes_core <- function(x, pThreshold) {
       slope = "YEAR"
     ) |>
     mutate(
-      "significance" = data.table::fifelse(
+      "significance" = fifelse(
         test = pvalue < pThreshold,
         yes = 1L,
         no = 0L
@@ -159,12 +168,13 @@ slopes_core <- function(x, pThreshold) {
       intercept = lag(intercept)
     ) |>
     filter(!is.na(intercept)) |>
-    select(
+    select(any_of(c(
       "assemblageID",
+      "resamp",
       "metric",
       "slope",
       "pvalue",
       "significance",
       "intercept"
-    )
+    )))
 }

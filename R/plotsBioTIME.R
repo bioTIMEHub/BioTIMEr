@@ -6,9 +6,10 @@
 #'    "expShannon".
 #'    If \code{divtype} is beta, \code{metric} must be one of "JaccardDiss",
 #'    "MorisitaHornDiss" or "BrayCurtisDiss".
-#' @param cols Name of the column in x from which colouring groups will be based on.
+#' @param cols Name of the column in x from which colouring groups will be based
+#'   on.
 #' @param taxa Necessary if method = "taxa", one of: "Amphibians & reptiles",
-#' "Birds", "Chromista", "Fish", "Fungi", "Mammals", "Plants"
+#'   "Birds", "Chromista", "Fish", "Fungi", "Mammals", "Plants"
 #' @param method Character can be one of "metric", "taxa", "ind"
 #' @param assemblageID Parameter description
 #' @param divType "alpha" or "beta"
@@ -198,15 +199,15 @@ plotSlopes <- function(
 #' @param fontSize Deprecated in Favour of font.size
 #' @param colx Deprecated in favour of \code{axis.colour}.
 #' @param coly Deprecated in favour of \code{strip.background}.
-#' @importFrom ggplot2 theme_bw
-#' @importFrom ggplot2 theme
-#' @importFrom ggplot2 element_text
 #' @importFrom ggplot2 element_blank
 #' @importFrom ggplot2 element_line
 #' @importFrom ggplot2 element_rect
+#' @importFrom ggplot2 element_text
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 theme_bw
+#' @importFrom lifecycle deprecate_warn
 #' @importFrom lifecycle deprecated
 #' @importFrom lifecycle is_present
-#' @importFrom lifecycle deprecate_warn
 #'
 #' @examples \dontrun{
 #'   fig1 <- ggplot2::ggplot() +
