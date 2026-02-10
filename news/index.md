@@ -1,6 +1,6 @@
 # Changelog
 
-## BioTIMEr 0.3.1 - 28.02.2026
+## BioTIMEr 0.3.1 - 10.02.2026
 
 ### Minor Improvements and Bug Fixes
 

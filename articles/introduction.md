@@ -308,7 +308,7 @@ data: the fact that the number of samples may vary over time. When
 evaluating changes through time it’s important to be able to quantify
 change independently of the number of samples, i.e. we want to be able
 to assess whether e.g. alpha diversity has truly increased or decreased
-over time and that such signal is not a sampling artifact due to uneven
+over time and that such signal is not a sampling artefact due to uneven
 sampling effort – i.e. resulting from having more or fewer samples in
 different years or periods of the time series being compared.
 
