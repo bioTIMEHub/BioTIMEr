@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">BioTIMEr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,12 +51,14 @@
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>(<code>data.frame</code>) BioTIME data table in the format of the output of the
-<code><a href="resampling.html">resampling</a></code> functions.</p></dd>
+<dd><p>(<code>data.frame</code>) BioTIME data table in the format of the output
+of the <code><a href="resampling.html">resampling</a></code> functions. The <code>resamp</code> column is
+optional.</p></dd>
 
 
 <dt id="arg-measure">measure<a class="anchor" aria-label="anchor" href="#arg-measure"></a></dt>
-<dd><p>(<code>character</code>) chosen currency defined by a single column name.</p></dd>
+<dd><p>(<code>character</code>) chosen currency defined by a single column
+name.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -68,38 +70,36 @@ and Bray-Curtis dissimilarity (<code>BrayCurtsDiss</code>) for each year and
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The function getBetaMetrics computes three beta diversity metrics for a given
-community data frame, where <code>measure</code> is a character input specifying the
-abundance or biomass field used for the calculations. <code>getBetaMetrics</code>
-calls the <code><a href="https://vegandevs.github.io/vegan/reference/vegdist.html" class="external-link">vegdist</a></code> function which calculates for each row
-the following metrics: Jaccard dissimilarity (<code>method = "jaccard"</code>),
-Morisita-Horn dissimilarity (<code>method = "horn"</code>) and Bray-Curtis dissimilarity
-(<code>method = "bray"</code>). Here, the dissimilarity metrics are calculated against
-the baseline year of each assemblage time series i.e.
-the first year of each time series.
-Note that the input data frame needs to be in the format of the output of the
- <code><a href="gridding.html">gridding</a></code> and/or <code><a href="resampling.html">resampling</a></code> functions, which
+    <p>The function getBetaMetrics computes three beta diversity metrics
+for a given community data frame, where <code>measure</code> is a character input
+specifying the abundance or biomass field used for the calculations.
+<code>getBetaMetrics</code> calls the <code><a href="https://vegandevs.github.io/vegan/reference/vegdist.html" class="external-link">vegdist</a></code> function which
+calculates for each row the following metrics: Jaccard dissimilarity
+(<code>method = "jaccard"</code>), Morisita-Horn dissimilarity (<code>method =
+"horn"</code>) and Bray-Curtis dissimilarity (<code>method = "bray"</code>). Here, the
+dissimilarity metrics are calculated against the baseline year of each
+assemblage time series i.e. the first year of each time series. Note that the
+input data frame needs to be in the format of the output of the
+<code><a href="gridding.html">gridding</a></code> and/or <code><a href="resampling.html">resampling</a></code> functions, which
 includes keeping the default BioTIME data column names. If such columns are
-not found an error is
- issued and the computations are halted.</p>
+not found an error is issued and the computations are halted. There is an
+exception for the <code>resamp</code> column: the function runs even without it.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="gridding.html">gridding</a></span><span class="op">(</span><span class="va">BTsubset_meta</span>, <span class="va">BTsubset_data</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="resampling.html">resampling</a></span><span class="op">(</span>measure <span class="op">=</span> <span class="st">"BIOMASS"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, resamps <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">getBetaMetrics</span><span class="op">(</span>measure <span class="op">=</span> <span class="st">"BIOMASS"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span>  <span class="fu"><a href="gridding.html">gridding</a></span><span class="op">(</span><span class="va">BTsubset_meta</span>, <span class="va">BTsubset_data</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="resampling.html">resampling</a></span><span class="op">(</span>measure <span class="op">=</span> <span class="st">"BIOMASS"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, resamps <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>    <span class="fu">getBetaMetrics</span><span class="op">(</span>measure <span class="op">=</span> <span class="st">"BIOMASS"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> OK: all SL studies have 1 grid cell</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 6</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   resamp assemblageID  YEAR JaccardDiss MorisitaHornDiss BrayCurtisDiss</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>      1 211_504467    <span style="text-decoration: underline;">1</span>984       0.593           0.384           0.500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>      1 211_504467    <span style="text-decoration: underline;">1</span>985      <span style="color: #BB0000;">NA</span>              <span style="color: #BB0000;">NA</span>              <span style="color: #BB0000;">NA</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>      1 211_516855    <span style="text-decoration: underline;">1</span>982       0.741           0.107           0.372</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>      1 211_516855    <span style="text-decoration: underline;">1</span>983       0.726           0.092<span style="text-decoration: underline;">5</span>          0.941</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>      1 211_516855    <span style="text-decoration: underline;">1</span>984       0.700           0.025<span style="text-decoration: underline;">8</span>          0.794</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>      1 211_516855    <span style="text-decoration: underline;">1</span>985       0.661           0.159           0.926</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   resamp assemblageID YEAR JaccardDiss MorisitaHornDiss BrayCurtisDiss</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      1   211_504467 1984   0.5928486       0.38435410      0.4998241</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      1   211_504467 1985          NA               NA             NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      1   211_516855 1982   0.7413888       0.10720618      0.3723366</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      1   211_516855 1983   0.7263079       0.09252659      0.9407762</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      1   211_516855 1984   0.7004768       0.02577689      0.7943522</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      1   211_516855 1985   0.6608817       0.15917918      0.9261414</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -46,62 +46,59 @@ series are removed.
 ## Examples
 
 ``` r
-  x <- data.frame(
-    resamp = 1L,
-    YEAR = rep(rep(2010:2015, each = 4), times = 4),
-    Species = c(replicate(n = 8L * 6L, sample(letters[1L:10L], 4L, replace = FALSE))),
-    ABUNDANCE = rpois(24 * 8, 10),
-    assemblageID = rep(LETTERS[1L:8L], each = 24)
-  )
-  alpham <- getAlphaMetrics(x, "ABUNDANCE")
-  getLinearRegressions(x = alpham, pThreshold = 0.01) |> head(10)
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#>    assemblageID     metric         slope     pvalue significance   intercept
-#> 1             A     resamp -7.769943e-17 0.15830242            0    1.000000
-#> 2             A          S -3.107977e-16 0.15830242            0    4.000000
-#> 3             A          N -1.285714e+00 0.11140387            0 2628.666667
-#> 4             A       maxN -8.571429e-01 0.02754026            0 1738.333333
-#> 5             A    Shannon  7.882316e-03 0.02894903            0  -14.504070
-#> 6             A    Simpson  3.794763e-03 0.02419558            0   -6.900193
-#> 7             A invSimpson  5.412274e-02 0.02416741            0 -105.120103
-#> 8             A        PIE  4.459757e-03 0.01247305            0   -8.220043
-#> 9             A      DomMc -1.699026e-02 0.01814172            0   34.786969
-#> 10            A expShannon  3.056364e-02 0.02888373            0  -57.616190
+x <- gridding(BTsubset_meta, BTsubset_data) |>
+resampling(measure = "BIOMASS", verbose = FALSE, resamps = 2)
+#> OK: all SL studies have 1 grid cell
 
-  betam <- getBetaMetrics(x = x, "ABUNDANCE")
-  getLinearRegressions(x = betam) |> head(10)
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#> Warning: essentially perfect fit: summary may be unreliable
-#>    assemblageID           metric         slope    pvalue significance intercept
-#> 1             A           resamp -7.769943e-17 0.1583024            0   1.00000
-#> 2             A      JaccardDiss  5.442177e-03 0.8540797            0 -10.19048
-#> 3             A MorisitaHornDiss  2.926540e-02 0.5241308            0 -58.21054
-#> 4             A   BrayCurtisDiss  2.744839e-02 0.4200657            0 -54.54639
-#> 5             B           resamp -7.769943e-17 0.1583024            0   1.00000
-#> 6             B      JaccardDiss -5.551020e-02 0.2250488            0 112.32381
-#> 7             B MorisitaHornDiss -4.206310e-02 0.2035292            0  85.06557
-#> 8             B   BrayCurtisDiss -4.220078e-02 0.2102584            0  85.46654
-#> 9             C           resamp -7.769943e-17 0.1583024            0   1.00000
-#> 10            C      JaccardDiss  2.258503e-02 0.7028507            0 -44.71111
+  alpham <- getAlphaMetrics(x, "BIOMASS")
+
+getLinearRegressions(x = alpham, pThreshold = 0.01) |> head(10)
+#>    assemblageID resamp     metric        slope    pvalue significance
+#> 1    211_516855      1          S  1.500000000 0.1266662            0
+#> 2    211_516855      1          N 18.348500000 0.6357123            0
+#> 3    211_516855      1       maxN 14.902000000 0.6961681            0
+#> 4    211_516855      1    Shannon  0.055774734 0.8580449            0
+#> 5    211_516855      1    Simpson  0.017254117 0.9047428            0
+#> 6    211_516855      1 invSimpson  0.020322014 0.9645909            0
+#> 7    211_516855      1        PIE  0.009028165 0.9568211            0
+#> 8    211_516855      1      DomMc -0.017477562 0.7837327            0
+#> 9    211_516855      1 expShannon  0.122926561 0.8761060            0
+#> 10   211_517585      1          S -8.700000000 0.1725536            0
+#>       intercept
+#> 1   -2965.50000
+#> 2  -36331.13250
+#> 3  -29503.41200
+#> 4    -109.75711
+#> 5     -33.84553
+#> 6     -38.49779
+#> 7     -17.50177
+#> 8      35.53591
+#> 9    -241.19673
+#> 10  17255.80000
+
+  betam <- getBetaMetrics(x = x, "BIOMASS")
+
+getLinearRegressions(x = betam) |> head(10)
+#>    assemblageID resamp           metric        slope     pvalue significance
+#> 1    211_516855      1      JaccardDiss -0.006367447 0.74234834            0
+#> 2    211_516855      1 MorisitaHornDiss  0.011920612 0.78389600            0
+#> 3    211_516855      1   BrayCurtisDiss  0.004807841 0.97981053            0
+#> 4    211_517585      1      JaccardDiss  0.015416622 0.77731944            0
+#> 5    211_517585      1 MorisitaHornDiss  0.104372717 0.49531250            0
+#> 6    211_517585      1   BrayCurtisDiss  0.035029596 0.65180325            0
+#> 7    211_521960      1      JaccardDiss -0.008385096 0.49498658            0
+#> 8    211_521960      1 MorisitaHornDiss -0.043911928 0.26525963            0
+#> 9    211_521960      1   BrayCurtisDiss -0.012431358 0.35914543            0
+#> 10   211_523410      1      JaccardDiss  0.021379582 0.08672435            0
+#>      intercept
+#> 1    13.305944
+#> 2   -23.560350
+#> 3    -8.898865
+#> 4   -29.793800
+#> 5  -206.597644
+#> 6   -68.649001
+#> 7    17.423041
+#> 8    87.861314
+#> 9    25.497286
+#> 10  -41.693148
 ```

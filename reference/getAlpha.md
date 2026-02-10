@@ -26,8 +26,8 @@ encounter) and McNaughton's Dominance.
 
 ``` r
 if (FALSE) { # \dontrun{
-# 1 site, 1 year in long format, ordered by ABUNDANCE or BIOMASS
-x <- data.frame(species = letters[1:6], x = 6:1)
-getAlpha(x$x)
+  # 1 site, 1 year in long format, ordered by ABUNDANCE or BIOMASS
+  x <- data.frame(species = letters[1:6], x = 6:1)
+  getAlpha(x$x)
 } # }
 ```

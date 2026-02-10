@@ -51,8 +51,8 @@ resampling(
 
 - verbose:
 
-  if TRUE, a warning will be shown when one-year-long time series are
-  found in btf and excluded.
+  (`logical`). `TRUE` by default. If FALSE, warnings when NA values or
+  one-year-long time series are found in `x` and excluded are hidden.
 
 ## Value
 

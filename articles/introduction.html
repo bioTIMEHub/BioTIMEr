@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">BioTIMEr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,7 @@
       <h1>Introduction to BioTIMEr</h1>
 
       <p class="author">Inês S. Martins</p>
-      <p class="date">2026-02-03</p>
+      <p class="date">2026-02-10</p>
 
       <small class="dont-index">Source: <a href="https://github.com/bioTIMEHub/BioTIMEr/blob/main/vignettes/introduction.qmd" class="external-link"><code>vignettes/introduction.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -731,11 +731,24 @@ Table 3
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># What is the number of samples in the year with the lowest sampling effort?</span></span>
-<span><span class="fu">ggplot</span><span class="op">(</span>data <span class="op">=</span> <span class="va">check_samples</span><span class="op">[</span><span class="va">check_samples</span><span class="op">$</span><span class="va">assemblageID</span> <span class="op">==</span> <span class="st">"18_335699"</span>,<span class="op">]</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">n_samples</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu">ggplot</span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">check_samples</span><span class="op">[</span><span class="va">check_samples</span><span class="op">$</span><span class="va">assemblageID</span> <span class="op">==</span> <span class="st">"18_335699"</span>, <span class="op">]</span>,</span>
+<span>  <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">n_samples</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_col</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">YEAR</span>, y <span class="op">=</span> <span class="va">n_samples</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"red"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_segment</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1926</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">n_samples</span><span class="op">)</span> <span class="op">+</span> <span class="fl">3</span>,</span>
-<span>                   xend <span class="op">=</span> <span class="fl">1927</span>, yend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">n_samples</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>               arrow <span class="op">=</span> <span class="fu">arrow</span><span class="op">(</span>length <span class="op">=</span> <span class="fu">unit</span><span class="op">(</span><span class="fl">0.2</span>, <span class="st">"cm"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">annotate</span><span class="op">(</span></span>
+<span>    geom <span class="op">=</span> <span class="st">"segment"</span>,</span>
+<span>    x <span class="op">=</span> <span class="fl">1926</span>,</span>
+<span>    y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span></span>
+<span>      <span class="va">check_samples</span><span class="op">[</span><span class="va">check_samples</span><span class="op">$</span><span class="va">assemblageID</span> <span class="op">==</span> <span class="st">"18_335699"</span>, <span class="op">]</span><span class="op">$</span><span class="va">n_samples</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>      <span class="fl">3</span>,</span>
+<span>    xend <span class="op">=</span> <span class="fl">1927</span>,</span>
+<span>    yend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span></span>
+<span>      <span class="va">check_samples</span><span class="op">[</span><span class="va">check_samples</span><span class="op">$</span><span class="va">assemblageID</span> <span class="op">==</span> <span class="st">"18_335699"</span>, <span class="op">]</span><span class="op">$</span><span class="va">n_samples</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    arrow <span class="op">=</span> <span class="fu">arrow</span><span class="op">(</span>length <span class="op">=</span> <span class="fu">unit</span><span class="op">(</span><span class="fl">0.2</span>, <span class="st">"cm"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Year"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ylab</span><span class="op">(</span><span class="st">"Number of samples"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span>
@@ -1096,10 +1109,10 @@ Table 4
 <div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># NOTE the functions used the rarefied data with only one resampling iteration</span></span></code></pre></div>
 </div>
-<p>There are many metrics for measuring biodiversity in community ecology. Here, we focused on the more commonly used metrics when measuring temporal changes in biodiversity. getAlphaMetrics() estimates nine alpha diversity metrics: Species richness (<code>S</code>), numerical abundance (<code>N</code>), maximum numerical abundance (<code>maxN</code>), Shannon index, Simpson index, inverse Simpson, McNaughton dominance, probability of intraspecific encounter (<code>PIE</code>) and exponential Shannon. getBetaMetrics() estimates three beta diversity metrics: Jaccard dissimilarity, Bray-Curtis dissimilarity and Morisita-Horn dissimilarity, assuming the first year in the time series as the baseline. Note that <code>N</code> and <code>maxN</code> metrics return numerical abundance when <code>measure=ABUNDANCE</code>, and biomass values when <code>measure=BIOMASS</code>.</p>
+<p>There are many metrics for measuring biodiversity in community ecology. Here, we focused on the more commonly used metrics when measuring temporal changes in biodiversity. getAlphaMetrics() estimates nine alpha diversity metrics: Species richness (<code>S</code>), numerical abundance (<code>N</code>), maximum numerical abundance (<code>maxN</code>), Shannon index, Simpson index, inverse Simpson, McNaughton dominance, probability of intraspecific encounter (<code>PIE</code>) and exponential Shannon. getBetaMetrics() estimates three beta diversity metrics: Jaccard dissimilarity, Bray-Curtis dissimilarity and Morisita-Horn dissimilarity, assuming the first year in the time series as the baseline. Note that <code>N</code> and <code>maxN</code> metrics return numerical abundance when <code>measure = ABUNDANCE</code>, and biomass values when <code>measure = BIOMASS</code>.</p>
 </section><section class="level3"><h3 id="investigating-biodiversity-trends">Investigating biodiversity trends<a class="anchor" aria-label="anchor" href="#investigating-biodiversity-trends"></a>
 </h3>
-<p>Finally, when looking to measure biodiversity change using temporal data, it is common to estimate temporal trends in alpha diversity and beta diversity by fitting a simple linear regression to the diversity estimates over the duration of the time series. The <code><a href="../reference/getLinearRegressions.html">getLinearRegressions()</a></code> function implements linear models as a function of year and is designed to run smoothly over an output of either the <code><a href="../reference/getAlphaMetrics.html">getAlphaMetrics()</a></code> or <code><a href="../reference/getBetaMetrics.html">getBetaMetrics()</a></code> functions. Specifically, it provides the results of simple linear regressions (slope, p-value, significance, intercept) using lm(), and fit individually to the yearly diversity estimates of each metric within each assemblage time series in your dataset.</p>
+<p>Finally, when looking to measure biodiversity change using temporal data, it is common to estimate temporal trends in alpha diversity and beta diversity by fitting a simple linear regression to the diversity estimates over the duration of the time series. The <code><a href="../reference/getLinearRegressions.html">getLinearRegressions()</a></code> function implements linear models as a function of year and is designed to run smoothly over an output of either the <code><a href="../reference/getAlphaMetrics.html">getAlphaMetrics()</a></code> or <code><a href="../reference/getBetaMetrics.html">getBetaMetrics()</a></code> functions. Specifically, it provides the results of simple linear regressions (slope, p-value, significance, intercept) using <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code>, and fit individually to the yearly diversity estimates of each metric within each assemblage time series in your dataset.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Let's apply it then:</span></span>
@@ -1113,17 +1126,19 @@ Table 4
 <div id="tbl-trends1" class="cell quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-tbl"><div aria-describedby="tbl-trends1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<table class="table do-not-create-environment">
+<table class="table do-not-create-environment" style="width:100%;">
 <colgroup>
-<col style="width: 18%">
-<col style="width: 11%">
-<col style="width: 18%">
-<col style="width: 14%">
-<col style="width: 18%">
-<col style="width: 19%">
+<col style="width: 16%">
+<col style="width: 8%">
+<col style="width: 13%">
+<col style="width: 16%">
+<col style="width: 12%">
+<col style="width: 16%">
+<col style="width: 17%">
 </colgroup>
 <thead><tr class="header">
 <th style="text-align: left;">assemblageID</th>
+<th style="text-align: right;">resamp</th>
 <th style="text-align: left;">metric</th>
 <th style="text-align: right;">slope</th>
 <th style="text-align: right;">pvalue</th>
@@ -1133,51 +1148,57 @@ Table 4
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">10_359170</td>
-<td style="text-align: left;">resamp</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">NaN</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">1.000000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">10_359170</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: left;">S</td>
 <td style="text-align: right;">0.0892857</td>
 <td style="text-align: right;">0.2122956</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">-158.071429</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">10_359170</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: left;">N</td>
 <td style="text-align: right;">-111.1785714</td>
 <td style="text-align: right;">0.2927126</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">223878.142857</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">10_359170</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: left;">maxN</td>
 <td style="text-align: right;">-67.5535714</td>
 <td style="text-align: right;">0.3647395</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">135788.642857</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">10_359170</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: left;">Shannon</td>
 <td style="text-align: right;">0.0108605</td>
 <td style="text-align: right;">0.5460426</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">-19.960516</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">10_359170</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: left;">Simpson</td>
 <td style="text-align: right;">0.0032689</td>
 <td style="text-align: right;">0.6471082</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">-5.813447</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10_359170</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">invSimpson</td>
+<td style="text-align: right;">0.0329540</td>
+<td style="text-align: right;">0.6862096</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-62.299418</td>
 </tr>
 </tbody>
 </table>
@@ -1203,15 +1224,17 @@ Table 5
 <div class="cell-output-display">
 <table class="table do-not-create-environment">
 <colgroup>
-<col style="width: 17%">
-<col style="width: 22%">
-<col style="width: 14%">
-<col style="width: 13%">
-<col style="width: 17%">
 <col style="width: 15%">
+<col style="width: 8%">
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 12%">
+<col style="width: 15%">
+<col style="width: 14%">
 </colgroup>
 <thead><tr class="header">
 <th style="text-align: left;">assemblageID</th>
+<th style="text-align: right;">resamp</th>
 <th style="text-align: left;">metric</th>
 <th style="text-align: right;">slope</th>
 <th style="text-align: right;">pvalue</th>
@@ -1221,51 +1244,57 @@ Table 5
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">10_359170</td>
-<td style="text-align: left;">resamp</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">NaN</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">1.0000000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">10_359170</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: left;">JaccardDiss</td>
 <td style="text-align: right;">0.0196040</td>
 <td style="text-align: right;">0.3144615</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">-38.8200311</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">10_359170</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: left;">MorisitaHornDiss</td>
 <td style="text-align: right;">0.0000711</td>
 <td style="text-align: right;">0.9592150</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">-0.1260088</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">10_359170</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: left;">BrayCurtisDiss</td>
 <td style="text-align: right;">-0.0092066</td>
 <td style="text-align: right;">0.4300531</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">18.5557534</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">18_335699</td>
-<td style="text-align: left;">resamp</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">0.0580340</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1.0000000</td>
-</tr>
 <tr class="even">
 <td style="text-align: left;">18_335699</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: left;">JaccardDiss</td>
 <td style="text-align: right;">0.0009753</td>
 <td style="text-align: right;">0.5726912</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">-1.2950025</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">18_335699</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">MorisitaHornDiss</td>
+<td style="text-align: right;">0.0029359</td>
+<td style="text-align: right;">0.2008834</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-5.4309137</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">18_335699</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">BrayCurtisDiss</td>
+<td style="text-align: right;">0.0029430</td>
+<td style="text-align: right;">0.1553924</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-5.1934540</td>
 </tr>
 </tbody>
 </table>
@@ -1286,8 +1315,12 @@ Table 6
 <div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># First, how many assemblages in our dataset show a moderate evidence (P &lt; 0.05) of change in alpha diversity?</span></span>
 <span><span class="va">alpha_slopes</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span>   <span class="co"># or use filter(pvalue&lt;0.05)</span></span>
-<span>  <span class="fu">summarise</span><span class="op">(</span>n_sig <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span>, .by <span class="op">=</span> <span class="va">metric</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">significance</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># or use filter(pvalue&lt;0.05)</span></span>
+<span>  <span class="fu">summarise</span><span class="op">(</span></span>
+<span>    n_sig <span class="op">=</span> <span class="fu">n_distinct</span><span class="op">(</span><span class="va">assemblageID</span><span class="op">)</span>,</span>
+<span>    slope <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">slope</span><span class="op">)</span>,</span>
+<span>    .by <span class="op">=</span> <span class="va">metric</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">kable</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co"># We can see that only a few (&lt;40) of the assemblage time series actually show a significant</span></span>
 <span><span class="co"># trend of change over time, independently of the metric used. This indicates that in most</span></span>
@@ -1299,7 +1332,7 @@ Table 6
 <thead><tr class="header">
 <th style="text-align: left;">metric</th>
 <th style="text-align: right;">n_sig</th>
-<th style="text-align: right;">mean(slope)</th>
+<th style="text-align: right;">slope</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -1346,11 +1379,6 @@ Table 6
 <td style="text-align: left;">S</td>
 <td style="text-align: right;">23</td>
 <td style="text-align: right;">-0.1621397</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">resamp</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">0.0000000</td>
 </tr>
 </tbody>
 </table>

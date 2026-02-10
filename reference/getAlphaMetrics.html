@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">BioTIMEr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,49 +52,52 @@
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>(<code>data.frame</code>) BioTIME data in the format of the output of the
-<code><a href="resampling.html">resampling</a></code> function.</p></dd>
+<code><a href="resampling.html">resampling</a></code> function. The <code>resamp</code> column is optional.</p></dd>
 
 
 <dt id="arg-measure">measure<a class="anchor" aria-label="anchor" href="#arg-measure"></a></dt>
-<dd><p>(<code>character</code>) chosen currency defined by a single
-column name.</p></dd>
+<dd><p>(<code>character</code>) chosen currency defined by a single column
+name.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Returns a <code>data.frame</code> with results for species richness (<code>S</code>), numerical
- abundance (<code>N</code>), maximum numerical abundance (<code>maxN</code>), Shannon Index (<code>Shannon</code>),
- Exponential Shannon (<code>expShannon</code>), Simpson's Index (Simpson), Inverse Simpson
- (<code>InvSimpson</code>), Probability of intraspecific encounter (<code>PIE</code>) and McNaughton's
- Dominance (<code>DomMc</code>) for each year and <code>assemblageID</code>.</p>
+    <p>Returns a <code>data.frame</code> with results for species richness
+ (<code>S</code>), numerical abundance (<code>N</code>), maximum numerical abundance
+ (<code>maxN</code>), Shannon Index (<code>Shannon</code>), Exponential Shannon
+ (<code>expShannon</code>), Simpson's Index (Simpson), Inverse Simpson
+ (<code>InvSimpson</code>), Probability of intraspecific encounter (<code>PIE</code>) and
+ McNaughton's Dominance (<code>DomMc</code>) for each year and <code>assemblageID</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The function <code>getAlphaMetrics</code> computes nine alpha diversity metrics for
-a given community data frame, where <code>measure</code> is a character input
-specifying the abundance or biomass field used for the calculations. For each
-row of the data frame with data, <code>getAlphaMetrics</code> calculates
+    <p>The function <code>getAlphaMetrics</code> computes nine alpha diversity
+metrics for a given community data frame, where <code>measure</code> is a character
+input specifying the abundance or biomass field used for the calculations.
+For each row of the data frame with data, <code>getAlphaMetrics</code> calculates
 the following metrics:</p>
-<p>- Species richness (<code>S</code>) as the total number of species in each year with
-currency &gt; 0.</p>
+<p>- Species richness (<code>S</code>) as the total number of species in each year
+with currency &gt; 0.</p>
 <p>- Numerical abundance (<code>N</code>) as the total currency (sum) in each year
 (either total abundance or total biomass).</p>
 <p>- Maximum Numerical abundance (maxN) as the highest currency value reported
 in each year.</p>
-<p>- Shannon or Shannon–Weaver index is calculated as \(\sum_{i}p_{i}log_{b}p_{i}\),
-where \(p_{i}\) is the proportional abundance of species i and b is the base
-of the logarithm (natural logarithms), while exponential Shannon is given by
-<code>exp(Shannon)</code>.</p>
+<p>- Shannon or Shannon–Weaver index is calculated as
+\(\sum_{i}p_{i}log_{b}p_{i}\), where \(p_{i}\) is the proportional
+abundance of species i and b is the base of the logarithm (natural
+logarithms), while exponential Shannon is given by <code>exp(Shannon)</code>.</p>
 <p>- Simpson's index is calculated as \(1-sum(p_{i}^{2})\), while Inverse
 Simpson as \(1/sum(p_{i}^{2})\).</p>
 <p>- McNaughton's Dominance is calculated as the sum of the pi of the two most
 abundant species.</p>
 <p>- Probability of intraspecific encounter or PIE is calculated as
 \(\left(\frac{N}{N-1}\right)\left(1-\sum_{i=1}^{S}\pi_{i}^{2}\right)\).</p>
-<p>Note that the input data frame needs to be in the format of the output of the
- <code><a href="gridding.html">gridding</a></code> function and/or <code><a href="resampling.html">resampling</a></code> functions,
- which includes keeping the default BioTIME data column names. If such columns
- are not found an error is issued and the computations are halted.</p>
+<p>Note that the input data frame needs to be in the format of the output of
+ the <code><a href="gridding.html">gridding</a></code> function and/or <code><a href="resampling.html">resampling</a></code>
+ functions, which includes keeping the default BioTIME data column names. If
+ such columns are not found an error is issued and the computations are
+ halted. There is an exception for the <code>resamp</code> column: the function
+ runs even without it.</p>
     </div>
 
     <div class="section level2">
@@ -105,7 +108,7 @@ abundant species.</p>
 <span class="r-in"><span>    <span class="fu">getAlphaMetrics</span><span class="op">(</span>measure <span class="op">=</span> <span class="st">"BIOMASS"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>       <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>          .cols <span class="op">=</span> <span class="op">!</span><span class="va">resamp</span>,</span></span>
+<span class="r-in"><span>          .cols <span class="op">=</span> <span class="op">!</span><span class="va">resamp</span>, <span class="co"># FIXME</span></span></span>
 <span class="r-in"><span>          .fns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>mean <span class="op">=</span> <span class="va">mean</span>, sd <span class="op">=</span> <span class="va">sd</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>       .by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">assemblageID</span>, <span class="va">YEAR</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>    <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span></span></span>

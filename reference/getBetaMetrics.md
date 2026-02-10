@@ -14,7 +14,7 @@ getBetaMetrics(x, measure)
 
   (`data.frame`) BioTIME data table in the format of the output of the
   [`resampling`](https://biotimehub.github.io/BioTIMEr/reference/resampling.md)
-  functions.
+  functions. The `resamp` column is optional.
 
 - measure:
 
@@ -46,23 +46,22 @@ and/or
 [`resampling`](https://biotimehub.github.io/BioTIMEr/reference/resampling.md)
 functions, which includes keeping the default BioTIME data column names.
 If such columns are not found an error is issued and the computations
-are halted.
+are halted. There is an exception for the `resamp` column: the function
+runs even without it.
 
 ## Examples
 
 ``` r
-gridding(BTsubset_meta, BTsubset_data) |>
-  resampling(measure = "BIOMASS", verbose = FALSE, resamps = 2) |>
-  getBetaMetrics(measure = "BIOMASS") |>
-  head()
+  gridding(BTsubset_meta, BTsubset_data) |>
+    resampling(measure = "BIOMASS", verbose = FALSE, resamps = 2) |>
+    getBetaMetrics(measure = "BIOMASS") |>
+    head()
 #> OK: all SL studies have 1 grid cell
-#> # A tibble: 6 × 6
-#>   resamp assemblageID  YEAR JaccardDiss MorisitaHornDiss BrayCurtisDiss
-#>    <int> <chr>        <int>       <dbl>            <dbl>          <dbl>
-#> 1      1 211_504467    1984       0.593           0.384           0.500
-#> 2      1 211_504467    1985      NA              NA              NA    
-#> 3      1 211_516855    1982       0.741           0.107           0.372
-#> 4      1 211_516855    1983       0.726           0.0925          0.941
-#> 5      1 211_516855    1984       0.700           0.0258          0.794
-#> 6      1 211_516855    1985       0.661           0.159           0.926
+#>   resamp assemblageID YEAR JaccardDiss MorisitaHornDiss BrayCurtisDiss
+#> 1      1   211_504467 1984   0.5928486       0.38435410      0.4998241
+#> 2      1   211_504467 1985          NA               NA             NA
+#> 3      1   211_516855 1982   0.7413888       0.10720618      0.3723366
+#> 4      1   211_516855 1983   0.7263079       0.09252659      0.9407762
+#> 5      1   211_516855 1984   0.7004768       0.02577689      0.7943522
+#> 6      1   211_516855 1985   0.6608817       0.15917918      0.9261414
 ```

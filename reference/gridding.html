@@ -9,7 +9,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">BioTIMEr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,17 +54,19 @@
 
 
 <dl><dt id="arg-meta">meta<a class="anchor" aria-label="anchor" href="#arg-meta"></a></dt>
-<dd><p>(<code>data.frame</code>, <code>tibble</code> or <code>data.table</code>) BioTIME metadata.</p></dd>
+<dd><p>(<code>data.frame</code>, <code>tibble</code> or <code>data.table</code>) BioTIME
+metadata.</p></dd>
 
 
 <dt id="arg-btf">btf<a class="anchor" aria-label="anchor" href="#arg-btf"></a></dt>
-<dd><p>(<code>data.frame</code>, <code>tibble</code> or <code>data.table</code>) BioTIME data.</p></dd>
+<dd><p>(<code>data.frame</code>, <code>tibble</code> or <code>data.table</code>) BioTIME
+data.</p></dd>
 
 
 <dt id="arg-res">res<a class="anchor" aria-label="anchor" href="#arg-res"></a></dt>
-<dd><p>(<code>integer</code>) cell resolution. Must be in the range [0,30]. Larger values
-represent finer resolutions. Default: 12 (~96 sq km). Passed to
-<code><a href="https://rdrr.io/pkg/dggridR/man/dgconstruct.html" class="external-link">dgconstruct</a></code>.</p></dd>
+<dd><p>(<code>integer</code>) cell resolution. Must be in the range [0,30].
+Larger values represent finer resolutions. Default: 12 (~96 sq km). Passed
+to <code><a href="https://rdrr.io/pkg/dggridR/man/dgconstruct.html" class="external-link">dgconstruct</a></code>.</p></dd>
 
 
 <dt id="arg-resbydata">resByData<a class="anchor" aria-label="anchor" href="#arg-resbydata"></a></dt>
@@ -75,45 +77,44 @@ represent finer resolutions. Default: 12 (~96 sq km). Passed to
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
-<dd><p>if TRUE, a warning will be shown when one-year-long time series
-are found in btf and excluded.</p></dd>
+<dd><p>if TRUE, a warning will be shown when one-year-long time
+series are found in btf and excluded.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Returns a <code>'data.frame'</code>, with selected columns from the
 <code>btf</code> and <code>meta</code> data frames, an extra integer column called
-<code>'cell'</code> and two character columns called 'StudyMethod' and 'assemblageID'
-(concatenation of <code>STUDY_ID</code> and <code>cell</code>).</p>
+<code>'cell'</code> and two character columns called 'StudyMethod' and
+'assemblageID' (concatenation of <code>STUDY_ID</code> and <code>cell</code>).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Each BioTIME study contains distinct samples which were collected with a consistent
-methodology over time, and each with unique coordinates and date.
-These samples can be fixed plots (i.e. SL or
-'single-location' studies where measures are taken from a set of specific
-georeferenced sites at any given time) or wide-ranging surveys, transects,
-tows, and so on (i.e. ML or 'multi-location' studies where measures are taken
-from multiple sampling locations over large extents that may or may not align
-from year to year,
-see <code>runResampling</code>. <code>gridding</code> is a function designed to deal with the issue
-of varying spatial extent between studies by using a global grid of hexagonal cells
-derived from <code><a href="https://rdrr.io/pkg/dggridR/man/dgconstruct.html" class="external-link">dgconstruct</a></code> and assigning the individual
-samples to the cells across the grid based on its latitude and
-longitude. Specifically, each sample is assigned
-a different combination of study ID and grid cell resulting in a unique
-identifier for each assemblage time series within each cell
-(assemblageID). This allows for the integrity of each study and each sample
-to be maintained, while large extent studies are split into local time series
-at the grid cell level. By default meta represents a long form data frame
-containing the data information for BioTIME studies and <code>btf</code> is a data frame
-containing long form data from a main BioTIME query (see Example). <code>res</code>
-defines the global grid cell resolution, thus determining the size of the
-cells (see <code>vignette("dggridR")</code>). <code>res = 12</code> was found to be the most
-appropriate value when working on the whole BioTIME database(corresponding
-to ~96 km2 cell area), but the user can define their own grid resolution
-(e.g. <code>res = 14</code>, or when <code>resbyData = TRUE</code> allow the function to find the
-best <code>res</code> based on the average study extent.</p>
+    <p>Each BioTIME study contains distinct samples which were collected
+with a consistent methodology over time, and each with unique coordinates and
+date. These samples can be fixed plots (i.e. SL or 'single-location' studies
+where measures are taken from a set of specific georeferenced sites at any
+given time) or wide-ranging surveys, transects, tows, and so on (i.e. ML or
+'multi-location' studies where measures are taken from multiple sampling
+locations over large extents that may or may not align from year to year, see
+<code>runResampling</code>. <code>gridding</code> is a function designed to deal with the
+issue of varying spatial extent between studies by using a global grid of
+hexagonal cells derived from <code><a href="https://rdrr.io/pkg/dggridR/man/dgconstruct.html" class="external-link">dgconstruct</a></code> and assigning
+the individual samples to the cells across the grid based on its latitude and
+longitude. Specifically, each sample is assigned a different combination of
+study ID and grid cell resulting in a unique identifier for each assemblage
+time series within each cell (assemblageID). This allows for the integrity of
+each study and each sample to be maintained, while large extent studies are
+split into local time series at the grid cell level. By default meta
+represents a long form data frame containing the data information for BioTIME
+studies and <code>btf</code> is a data frame containing long form data from a main
+BioTIME query (see Example). <code>res</code> defines the global grid cell
+resolution, thus determining the size of the cells (see
+<code>vignette("dggridR")</code>). <code>res = 12</code> was found to be the most
+appropriate value when working on the whole BioTIME database(corresponding to
+~96 km2 cell area), but the user can define their own grid resolution (e.g.
+<code>res = 14</code>, or when <code>resbyData = TRUE</code> allow the function to find
+the best <code>res</code> based on the average study extent.</p>
     </div>
 
     <div class="section level2">

@@ -414,11 +414,24 @@ each year:
 
 ``` r
 # What is the number of samples in the year with the lowest sampling effort?
-ggplot(data = check_samples[check_samples$assemblageID == "18_335699",], aes(x = YEAR, y = n_samples)) +
+ggplot(
+  data = check_samples[check_samples$assemblageID == "18_335699", ],
+  aes(x = YEAR, y = n_samples)
+) +
   geom_col(aes(x = YEAR, y = n_samples), fill = "red", alpha = 0.5) +
-  geom_segment(aes(x = 1926, y = min(n_samples) + 3,
-                   xend = 1927, yend = min(n_samples)),
-               arrow = arrow(length = unit(0.2, "cm"))) +
+  annotate(
+    geom = "segment",
+    x = 1926,
+    y = min(
+      check_samples[check_samples$assemblageID == "18_335699", ]$n_samples
+    ) +
+      3,
+    xend = 1927,
+    yend = min(
+      check_samples[check_samples$assemblageID == "18_335699", ]$n_samples
+    ),
+    arrow = arrow(length = unit(0.2, "cm"))
+  ) +
   xlab("Year") +
   ylab("Number of samples") +
   theme_bw()
@@ -572,8 +585,8 @@ encounter (`PIE`) and exponential Shannon. getBetaMetrics() estimates
 three beta diversity metrics: Jaccard dissimilarity, Bray-Curtis
 dissimilarity and Morisita-Horn dissimilarity, assuming the first year
 in the time series as the baseline. Note that `N` and `maxN` metrics
-return numerical abundance when `measure=ABUNDANCE`, and biomass values
-when `measure=BIOMASS`.
+return numerical abundance when `measure = ABUNDANCE`, and biomass
+values when `measure = BIOMASS`.
 
 ### Investigating biodiversity trends
 
@@ -588,9 +601,10 @@ to run smoothly over an output of either the
 or
 [`getBetaMetrics()`](https://biotimehub.github.io/BioTIMEr/reference/getBetaMetrics.md)
 functions. Specifically, it provides the results of simple linear
-regressions (slope, p-value, significance, intercept) using lm(), and
-fit individually to the yearly diversity estimates of each metric within
-each assemblage time series in your dataset.
+regressions (slope, p-value, significance, intercept) using
+[`lm()`](https://rdrr.io/r/stats/lm.html), and fit individually to the
+yearly diversity estimates of each metric within each assemblage time
+series in your dataset.
 
 ``` r
 # Let's apply it then:
@@ -603,14 +617,14 @@ alpha_slopes <- getLinearRegressions(
 alpha_slopes |> head(6) |> kable()
 ```
 
-| assemblageID | metric  |        slope |    pvalue | significance |     intercept |
-|:-------------|:--------|-------------:|----------:|-------------:|--------------:|
-| 10_359170    | resamp  |    0.0000000 |       NaN |           NA |      1.000000 |
-| 10_359170    | S       |    0.0892857 | 0.2122956 |            0 |   -158.071429 |
-| 10_359170    | N       | -111.1785714 | 0.2927126 |            0 | 223878.142857 |
-| 10_359170    | maxN    |  -67.5535714 | 0.3647395 |            0 | 135788.642857 |
-| 10_359170    | Shannon |    0.0108605 | 0.5460426 |            0 |    -19.960516 |
-| 10_359170    | Simpson |    0.0032689 | 0.6471082 |            0 |     -5.813447 |
+| assemblageID | resamp | metric     |        slope |    pvalue | significance |     intercept |
+|:-------------|-------:|:-----------|-------------:|----------:|-------------:|--------------:|
+| 10_359170    |      1 | S          |    0.0892857 | 0.2122956 |            0 |   -158.071429 |
+| 10_359170    |      1 | N          | -111.1785714 | 0.2927126 |            0 | 223878.142857 |
+| 10_359170    |      1 | maxN       |  -67.5535714 | 0.3647395 |            0 | 135788.642857 |
+| 10_359170    |      1 | Shannon    |    0.0108605 | 0.5460426 |            0 |    -19.960516 |
+| 10_359170    |      1 | Simpson    |    0.0032689 | 0.6471082 |            0 |     -5.813447 |
+| 10_359170    |      1 | invSimpson |    0.0329540 | 0.6862096 |            0 |    -62.299418 |
 
 Table 5
 
@@ -625,14 +639,14 @@ beta_slopes <- getLinearRegressions(
 beta_slopes |> head(6) |> kable()
 ```
 
-| assemblageID | metric           |      slope |    pvalue | significance |   intercept |
-|:-------------|:-----------------|-----------:|----------:|-------------:|------------:|
-| 10_359170    | resamp           |  0.0000000 |       NaN |           NA |   1.0000000 |
-| 10_359170    | JaccardDiss      |  0.0196040 | 0.3144615 |            0 | -38.8200311 |
-| 10_359170    | MorisitaHornDiss |  0.0000711 | 0.9592150 |            0 |  -0.1260088 |
-| 10_359170    | BrayCurtisDiss   | -0.0092066 | 0.4300531 |            0 |  18.5557534 |
-| 18_335699    | resamp           |  0.0000000 | 0.0580340 |            0 |   1.0000000 |
-| 18_335699    | JaccardDiss      |  0.0009753 | 0.5726912 |            0 |  -1.2950025 |
+| assemblageID | resamp | metric           |      slope |    pvalue | significance |   intercept |
+|:-------------|-------:|:-----------------|-----------:|----------:|-------------:|------------:|
+| 10_359170    |      1 | JaccardDiss      |  0.0196040 | 0.3144615 |            0 | -38.8200311 |
+| 10_359170    |      1 | MorisitaHornDiss |  0.0000711 | 0.9592150 |            0 |  -0.1260088 |
+| 10_359170    |      1 | BrayCurtisDiss   | -0.0092066 | 0.4300531 |            0 |  18.5557534 |
+| 18_335699    |      1 | JaccardDiss      |  0.0009753 | 0.5726912 |            0 |  -1.2950025 |
+| 18_335699    |      1 | MorisitaHornDiss |  0.0029359 | 0.2008834 |            0 |  -5.4309137 |
+| 18_335699    |      1 | BrayCurtisDiss   |  0.0029430 | 0.1553924 |            0 |  -5.1934540 |
 
 Table 6
 
@@ -659,15 +673,19 @@ Right, let’s start will some overall summaries and trends:
 ``` r
 # First, how many assemblages in our dataset show a moderate evidence (P < 0.05) of change in alpha diversity?
 alpha_slopes |>
-  filter(significance == 1) |>   # or use filter(pvalue<0.05)
-  summarise(n_sig = n_distinct(assemblageID), mean(slope), .by = metric) |>
+  filter(significance == 1) |> # or use filter(pvalue<0.05)
+  summarise(
+    n_sig = n_distinct(assemblageID),
+    slope = mean(slope),
+    .by = metric
+  ) |>
   kable()
 # We can see that only a few (<40) of the assemblage time series actually show a significant
 # trend of change over time, independently of the metric used. This indicates that in most
 # time series in the studies we analysed alpha diversity is not really changing through time.
 ```
 
-| metric     | n_sig | mean(slope) |
+| metric     | n_sig |       slope |
 |:-----------|------:|------------:|
 | Simpson    |    38 |   0.0115106 |
 | invSimpson |    33 |   0.1542588 |
@@ -678,7 +696,6 @@ alpha_slopes |>
 | N          |    34 | -64.6258799 |
 | expShannon |    38 |  -0.1047391 |
 | S          |    23 |  -0.1621397 |
-| resamp     |     9 |   0.0000000 |
 
 Table 7
 

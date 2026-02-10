@@ -14,7 +14,7 @@ getAlphaMetrics(x, measure)
 
   (`data.frame`) BioTIME data in the format of the output of the
   [`resampling`](https://biotimehub.github.io/BioTIMEr/reference/resampling.md)
-  function.
+  function. The `resamp` column is optional.
 
 - measure:
 
@@ -67,7 +67,8 @@ function and/or
 [`resampling`](https://biotimehub.github.io/BioTIMEr/reference/resampling.md)
 functions, which includes keeping the default BioTIME data column names.
 If such columns are not found an error is issued and the computations
-are halted.
+are halted. There is an exception for the `resamp` column: the function
+runs even without it.
 
 ## Examples
 
@@ -78,7 +79,7 @@ are halted.
     getAlphaMetrics(measure = "BIOMASS") |>
     dplyr::summarise(
        dplyr::across(
-          .cols = !resamp,
+          .cols = !resamp, # FIXME
           .fns = c(mean = mean, sd = sd)),
        .by = c(assemblageID, YEAR)) |>
     tidyr::pivot_longer(
