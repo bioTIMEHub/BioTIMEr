@@ -56,7 +56,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/bioTIMEHub/BioTIMEr/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/bioTIMEHub/BioTIMEr/blob/v0.3.1-CRAN/inst/CITATION)
 
 Sagouis A, Moyes F, Martins IS, Blowes SA, Brambilla V, Chow CFY,
 Fontrodona-Eslava A, Antão L, Chase JM, Dornelas M, Magurran AE (2024).
