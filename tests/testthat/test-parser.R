@@ -15,7 +15,7 @@ test_that("Parser works as expected", code = {
     )
 
     checkmate::expect_data_frame(
-        x = parser_BioTIME(dt$code, dt$name, "_"),
+        x = parseBioTIME(dt$code, dt$name, "_"),
         types = "character",
         any.missing = TRUE,
         all.missing = FALSE,
@@ -41,7 +41,7 @@ test_that("Parser errors on NA values", code = {
         )
     )
 
-    expect_error(parser_BioTIME(dt$code, dt$name, "_"))
+    expect_error(parseBioTIME(dt$code, dt$name, "_"))
 })
 
 test_that("Parser handles codes and names that do not match", code = {
@@ -61,13 +61,13 @@ test_that("Parser handles codes and names that do not match", code = {
     )
 
     expect_warning(
-        parser_BioTIME(dt_extra_x$code, dt_extra_x$name, "_"),
+        parseBioTIME(dt_extra_x$code, dt_extra_x$name, "_"),
         "Unmatched valus between x and format, inspect `error_x` and `error_format` columns."
     )
 
     checkmate::expect_data_frame(
         x = suppressWarnings(
-            parser_BioTIME(dt_extra_x$code, dt_extra_x$name, "_")
+            parseBioTIME(dt_extra_x$code, dt_extra_x$name, "_")
         ),
         types = "character",
         any.missing = TRUE,
@@ -93,13 +93,13 @@ test_that("Parser handles codes and names that do not match", code = {
     )
 
     expect_warning(
-        parser_BioTIME(dt_extra_format$code, dt_extra_format$name, "_"),
+        parseBioTIME(dt_extra_format$code, dt_extra_format$name, "_"),
         "Unmatched valus between x and format, inspect `error_x` and `error_format` columns."
     )
 
     checkmate::expect_data_frame(
         x = suppressWarnings(
-            parser_BioTIME(
+            parseBioTIME(
                 dt_extra_format$code,
                 dt_extra_format$name,
                 "_"
@@ -112,5 +112,17 @@ test_that("Parser handles codes and names that do not match", code = {
         nrows = 20L,
         ncols = 7L + 1L,
         col.names = NULL
+    )
+})
+
+test_that("simplify_SAMPLE_DESC works as expected", {
+    x <- c("T1_23.1212_56.2346_1995_12_30", "786_-60.4567_0.346_2027")
+    format <- c("transect_lon_lat_year_month_day", "depth_lat_lon_year")
+    exclude <- c("YEAR", "year", "month", "day")
+    sep = "_"
+
+    expect_equal(
+        simplify_SAMPLE_DESC(x, format, "_", "year"),
+        c("T1_23.1212_56.2346_12_30", "786_-60.4567_0.346")
     )
 })
