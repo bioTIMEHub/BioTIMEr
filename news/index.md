@@ -2,6 +2,8 @@
 
 ## BioTIMEr 0.3.2 - 10.03.2026
 
+CRAN release: 2026-03-04
+
 ### Minor Improvements and Bug Fixes
 
 - Documentation for data sets BTsubset_data and BTsubset_meta was
