@@ -32,7 +32,7 @@ A data frame with 12 rows and 25 columns:
   \item{DATE_STUDY_ADDED}{Date that the study was added to the database}
   \item{ABUNDANCE_TYPE}{Type of abundance, i.e. count}
   \item{BIOMASS_TYPE}{Type of biomass, i.e. weight}
-  \item{SAMPLE_DESC}{Concatenation of descriptors comprising the unique sampling event}
+  \item{SAMPLE_DESC_NAME}{Structure of SAMPLE_DESC}
 }
 }
 \source{
