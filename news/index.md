@@ -1,11 +1,21 @@
 # Changelog
 
+## BioTIMEr 0.3.2 - 10.03.2026
+
+### Minor Improvements and Bug Fixes
+
+- Documentation for data sets BTsubset_data and BTsubset_meta was
+  improved.
+- Figures in the vignette were invisible.
+
 ## BioTIMEr 0.3.1 - 10.02.2026
+
+CRAN release: 2026-02-10
 
 ### Minor Improvements and Bug Fixes
 
 - getLinearRegressions() now handles data from getMetrics() with several
-  resamplings
+  resamplings.
 - getMetrics() and getLinearRegressions() now work without resamplings
   allowing users to run them on their own data.
 - vignette YAML frontmatter fixed.

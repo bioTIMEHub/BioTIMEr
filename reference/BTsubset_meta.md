@@ -112,9 +112,9 @@ BTsubset_meta
 
   Type of biomass, i.e. weight
 
-- SAMPLE_DESC:
+- SAMPLE_DESC_NAME:
 
-  Concatenation of descriptors comprising the unique sampling event
+  Structure of SAMPLE_DESC
 
 ## Source
 
