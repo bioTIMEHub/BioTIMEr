@@ -15,4 +15,4 @@
 ^codemeta\.json$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
-^R/benchmarks.R$
+^benchmarks$
