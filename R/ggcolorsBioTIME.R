@@ -3,6 +3,14 @@
 # Updated: 20 November 2020
 # Palette at the end of the script
 
+# Internal helper: validate args and return the palette function
+.biotime_palette <- function(palette, discrete, reverse) {
+  checkmate::assert_choice(x = palette, choices = names(biotime_palettes))
+  checkmate::assert_logical(x = discrete, max.len = 1L, null.ok = FALSE)
+  checkmate::assert_logical(x = reverse, max.len = 1L, null.ok = FALSE)
+  biotime_cols(palette = palette, reverse = reverse)
+}
+
 #' Scale construction for ggplot use
 #' @rdname BioTIME-palette
 #' @export
@@ -28,14 +36,7 @@ scale_color_biotime <- function(
   reverse = FALSE,
   ...
 ) {
-  checkmate::assert_choice(
-    x = palette,
-    choices = c("realms", "gradient", "cool", "warm")
-  )
-  checkmate::assert_logical(x = discrete, max.len = 1L, null.ok = FALSE)
-  checkmate::assert_logical(x = reverse, max.len = 1L, null.ok = FALSE)
-
-  pal <- biotime_cols(palette = palette, reverse = reverse)
+  pal <- .biotime_palette(palette, discrete, reverse)
   if (discrete) {
     ggplot2::discrete_scale(aesthetics = "color", palette = pal, ...)
   } else {
@@ -69,11 +70,7 @@ scale_fill_biotime <- function(
   reverse = FALSE,
   ...
 ) {
-  checkmate::assert_choice(x = palette, choices = names(biotime_palettes))
-  checkmate::assert_logical(x = discrete, max.len = 1L, null.ok = FALSE)
-  checkmate::assert_logical(x = reverse, max.len = 1L, null.ok = FALSE)
-
-  pal <- biotime_cols(palette = palette, reverse = reverse)
+  pal <- .biotime_palette(palette, discrete, reverse)
   if (discrete) {
     ggplot2::discrete_scale(aesthetics = "fill", palette = pal, ...)
   } else {
