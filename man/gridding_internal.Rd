@@ -4,26 +4,26 @@
 \alias{gridding_internal}
 \title{gridding BioTIME data}
 \usage{
-gridding_internal(meta, btf, res, resByData, verbose)
+gridding_internal(meta, x, res, res_by_data, verbose)
 }
 \arguments{
 \item{meta}{(\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME
 metadata.}
 
-\item{btf}{(\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME
+\item{x}{(\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME
 data.}
 
 \item{res}{(\code{integer}) cell resolution. Must be in the range [0,30].
 Larger values represent finer resolutions. Default: 12 (~96 sq km). Passed
 to \code{\link[dggridR]{dgconstruct}}.}
 
-\item{resByData}{(\code{logical}) FALSE by default. If TRUE, the function
+\item{res_by_data}{(\code{logical}) FALSE by default. If TRUE, the function
 \code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt \code{res}
  to the data extent. The new \code{res} value is used even if a value is
- provided byt the user.}
+ provided by the user.}
 
 \item{verbose}{if TRUE, a warning will be shown when one-year-long time
-series are found in btf and excluded.}
+series are found in x and excluded.}
 }
 \description{
 gridding BioTIME data

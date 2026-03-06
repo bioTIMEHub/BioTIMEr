@@ -6,18 +6,21 @@
 #' @export
 #'
 #' @param meta (\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME
-#' metadata.
-#' @param btf (\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME
-#' data.
+#'    metadata.
+#' @param x (\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME
+#'    data.
 #' @param res (\code{integer}) cell resolution. Must be in the range [0,30].
 #'   Larger values represent finer resolutions. Default: 12 (~96 sq km). Passed
 #'   to \code{\link[dggridR]{dgconstruct}}.
-#' @param resByData (\code{logical}) FALSE by default. If TRUE, the function
+#' @param res_by_data (\code{logical}) FALSE by default. If TRUE, the function
 #'   \code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt \code{res}
 #'    to the data extent. The new \code{res} value is used even if a value is
-#'    provided byt the user.
+#'    provided by the user.
 #' @param verbose if TRUE, a warning will be shown when one-year-long time
-#' series are found in btf and excluded.
+#'    series are found in x and excluded.
+#' @param resByData \code{r lifecycle::badge("deprecated")} Use \code{res_by_data}
+#'   instead.
+#' @param btf \code{r lifecycle::badge("deprecated")} Use \code{x} instead.
 #'
 #' @details Each BioTIME study contains distinct samples which were collected
 #' with a consistent methodology over time, and each with unique coordinates and
@@ -36,82 +39,74 @@
 #' each study and each sample to be maintained, while large extent studies are
 #' split into local time series at the grid cell level. By default meta
 #' represents a long form data frame containing the data information for BioTIME
-#' studies and \code{btf} is a data frame containing long form data from a main
+#' studies and \code{x} is a data frame containing long form data from a main
 #' BioTIME query (see Example). \code{res} defines the global grid cell
 #' resolution, thus determining the size of the cells (see
 #' \code{vignette("dggridR")}). \code{res = 12} was found to be the most
 #' appropriate value when working on the whole BioTIME database(corresponding to
 #' ~96 km2 cell area), but the user can define their own grid resolution (e.g.
-#' \code{res = 14}, or when \code{resbyData = TRUE} allow the function to find
+#' \code{res = 14}, or when \code{res_by_data = TRUE} allow the function to find
 #' the best \code{res} based on the average study extent.
 #'
 #' @returns Returns a \code{'data.frame'}, with selected columns from the
-#' \code{btf} and \code{meta} data frames, an extra integer column called
+#' \code{x} and \code{meta} data frames, an extra integer column called
 #' \code{'cell'} and two character columns called 'StudyMethod' and
 #' 'assemblageID' (concatenation of \code{STUDY_ID} and \code{cell}).
 #'
 #' @examples \dontrun{
-#'   gridded_data <- gridding(meta = BTsubset_meta, btf = BTsubset_data)
+#'   gridded_data <- gridding(meta = BTsubset_meta, x = BTsubset_data)
 #'   gridded_data <- gridding(meta = dplyr::as_tibble(BTsubset_meta),
-#'                            btf = dplyr::as_tibble(BTsubset_data))
+#'                            x = dplyr::as_tibble(BTsubset_data))
 #'   gridded_data <- gridding(meta = data.table::as.data.table(BTsubset_meta),
-#'                            btf = data.table::as.data.table(BTsubset_data))
+#'                            x = data.table::as.data.table(BTsubset_data))
 #' }
 #'
-gridding <- function(meta, btf, res = 12, resByData = FALSE, verbose = TRUE) {
-  UseMethod("gridding")
-}
-
-#' @export
-gridding.default <- function(
+#' @importFrom lifecycle deprecated deprecate_warn is_present
+gridding <- function(
   meta,
-  btf,
+  x,
   res = 12,
-  resByData = FALSE,
-  verbose = TRUE
+  res_by_data = FALSE,
+  verbose = TRUE,
+  resByData = deprecated(),
+  btf = deprecated()
 ) {
-  res <- gridding_internal(
+  if (is_present(btf)) {
+    deprecate_warn(
+      when = "0.3.3",
+      what = "gridding(btf)",
+      with = "gridding(x)"
+    )
+    x <- btf
+  }
+  if (is_present(resByData)) {
+    deprecate_warn(
+      when = "0.3.3",
+      what = "gridding(resByData)",
+      with = "gridding(res_by_data)"
+    )
+    res_by_data <- resByData
+  }
+  result <- gridding_internal(
     meta = meta,
-    btf = btf,
+    x = x,
     res = res,
-    resByData = resByData,
+    res_by_data = res_by_data,
     verbose = verbose
   )
-  return(res)
+  if (inherits(meta, "data.table")) {
+    return(data.table::setDT(result))
+  }
+  if (inherits(meta, "tbl_df")) {
+    return(dplyr::as_tibble(result))
+  }
+  return(result)
 }
-
-#' @export
-gridding.data.table <- function(
-  meta,
-  btf,
-  res = 12,
-  resByData = FALSE,
-  verbose = TRUE
-) {
-  res <- gridding_internal(
-    meta = meta,
-    btf = btf,
-    res = res,
-    resByData = resByData,
-    verbose = verbose
-  )
-  data.table::setDT(res)
-  return(res)
-}
-
-# #' @export
-# gridding.tbl_df <- function(
-
-# #' @export
-# gridding.matrix
-
-# #' @export
-# gridding.sf
 
 #' gridding BioTIME data
 #' @inheritParams gridding
 #' @keywords internal
-gridding_internal <- function(meta, btf, res, resByData, verbose) {
+gridding_internal <- function(meta, x, res, res_by_data, verbose) {
   checkmate::assert_names(
     x = colnames(meta),
     what = "colnames",
@@ -129,7 +124,7 @@ gridding_internal <- function(meta, btf, res, resByData, verbose) {
     )
   )
   checkmate::assert_names(
-    x = colnames(btf),
+    x = colnames(x),
     what = "colnames",
     must.include = c(
       "valid_name",
@@ -146,8 +141,8 @@ gridding_internal <- function(meta, btf, res, resByData, verbose) {
       "taxon"
     )
   )
-  checkmate::assert_numeric(btf$ABUNDANCE, lower = 0)
-  checkmate::assert_numeric(btf$BIOMASS, lower = 0)
+  checkmate::assert_numeric(x$ABUNDANCE, lower = 0)
+  checkmate::assert_numeric(x$BIOMASS, lower = 0)
   checkmate::assert_number(
     x = res,
     lower = 0,
@@ -156,7 +151,7 @@ gridding_internal <- function(meta, btf, res, resByData, verbose) {
     na.ok = FALSE
   )
   checkmate::assert_logical(
-    resByData,
+    res_by_data,
     len = 1L,
     any.missing = FALSE,
     null.ok = FALSE,
@@ -198,7 +193,7 @@ gridding_internal <- function(meta, btf, res, resByData, verbose) {
         "ABUNDANCE_TYPE",
         "BIOMASS_TYPE"
       ),
-    y = btf |>
+    y = x |>
       dplyr::select(
         "STUDY_ID",
         "SAMPLE_DESC",
@@ -229,13 +224,13 @@ gridding_internal <- function(meta, btf, res, resByData, verbose) {
     no = bt$LATITUDE
   )
 
-  # See benchmarks.R # counting one year studies
+  # See benchmarks/benchmarks.R # counting one year studies
   one_year_studies <- tapply(bt$YEAR, bt$STUDY_ID, function(y) {
     data.table::uniqueN(y) == 1L
   })
 
   if (any(one_year_studies)) {
-    # See benchmarks.R  # Row filtering ----
+    # See benchmarks/benchmarks.R  # Row filtering ----
     bt <- bt |>
       dplyr::filter(
         !is.element(STUDY_ID, names(one_year_studies)[which(one_year_studies)])
@@ -245,7 +240,7 @@ gridding_internal <- function(meta, btf, res, resByData, verbose) {
 
   dgg <- dggridR::dgconstruct(res = res)
 
-  if (resByData) {
+  if (res_by_data) {
     res <- dggridR::dg_closest_res_to_area(dgg, SL_extent)
     dgg <- dggridR::dgsetres(dgg, res)
   }

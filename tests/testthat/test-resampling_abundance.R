@@ -15,7 +15,7 @@ test_that("resampling runs correctly for Abundance", {
     result <- resampling(
       x = test_df,
       measure = "ABUNDANCE",
-      resamps = 1L,
+      n_resamples = 1L,
       conservative = FALSE
     )
   })

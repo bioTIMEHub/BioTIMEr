@@ -4,14 +4,17 @@
 \alias{getLinearRegressions}
 \title{Get Linear Regressions BioTIME}
 \usage{
-getLinearRegressions(x, pThreshold = 0.05)
+getLinearRegressions(x, p_threshold = 0.05, pThreshold = deprecated())
 }
 \arguments{
 \item{x}{(\code{data.frame}) BioTIME data table in the format of the output
 of \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} functions}
 
-\item{pThreshold}{(\code{numeric}) P-value threshold for statistical
+\item{p_threshold}{(\code{numeric}) P-value threshold for statistical
 significance}
+
+\item{pThreshold}{\code{r lifecycle::badge("deprecated")} Use
+\code{p_threshold} instead.}
 }
 \value{
 Returns a single long \code{data.frame} with results of linear
@@ -33,11 +36,11 @@ and/or single species time series are removed.
 \examples{
 
 x <- gridding(BTsubset_meta, BTsubset_data) |>
-resampling(measure = "BIOMASS", verbose = FALSE, resamps = 2)
+resampling(measure = "BIOMASS", verbose = FALSE, n_resamples = 2)
 
   alpham <- getAlphaMetrics(x, "BIOMASS")
 
-getLinearRegressions(x = alpham, pThreshold = 0.01) |> head(10)
+getLinearRegressions(x = alpham, p_threshold = 0.01) |> head(10)
 
   betam <- getBetaMetrics(x = x, "BIOMASS")
 

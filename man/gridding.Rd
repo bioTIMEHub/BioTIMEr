@@ -4,30 +4,43 @@
 \alias{gridding}
 \title{gridding BioTIME data}
 \usage{
-gridding(meta, btf, res = 12, resByData = FALSE, verbose = TRUE)
+gridding(
+  meta,
+  x,
+  res = 12,
+  res_by_data = FALSE,
+  verbose = TRUE,
+  resByData = deprecated(),
+  btf = deprecated()
+)
 }
 \arguments{
 \item{meta}{(\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME
 metadata.}
 
-\item{btf}{(\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME
+\item{x}{(\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME
 data.}
 
 \item{res}{(\code{integer}) cell resolution. Must be in the range [0,30].
 Larger values represent finer resolutions. Default: 12 (~96 sq km). Passed
 to \code{\link[dggridR]{dgconstruct}}.}
 
-\item{resByData}{(\code{logical}) FALSE by default. If TRUE, the function
+\item{res_by_data}{(\code{logical}) FALSE by default. If TRUE, the function
 \code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt \code{res}
  to the data extent. The new \code{res} value is used even if a value is
- provided byt the user.}
+ provided by the user.}
 
 \item{verbose}{if TRUE, a warning will be shown when one-year-long time
-series are found in btf and excluded.}
+series are found in x and excluded.}
+
+\item{resByData}{\code{r lifecycle::badge("deprecated")} Use \code{res_by_data}
+instead.}
+
+\item{btf}{\code{r lifecycle::badge("deprecated")} Use \code{x} instead.}
 }
 \value{
 Returns a \code{'data.frame'}, with selected columns from the
-\code{btf} and \code{meta} data frames, an extra integer column called
+\code{x} and \code{meta} data frames, an extra integer column called
 \code{'cell'} and two character columns called 'StudyMethod' and
 'assemblageID' (concatenation of \code{STUDY_ID} and \code{cell}).
 }
@@ -53,22 +66,22 @@ time series within each cell (assemblageID). This allows for the integrity of
 each study and each sample to be maintained, while large extent studies are
 split into local time series at the grid cell level. By default meta
 represents a long form data frame containing the data information for BioTIME
-studies and \code{btf} is a data frame containing long form data from a main
+studies and \code{x} is a data frame containing long form data from a main
 BioTIME query (see Example). \code{res} defines the global grid cell
 resolution, thus determining the size of the cells (see
 \code{vignette("dggridR")}). \code{res = 12} was found to be the most
 appropriate value when working on the whole BioTIME database(corresponding to
 ~96 km2 cell area), but the user can define their own grid resolution (e.g.
-\code{res = 14}, or when \code{resbyData = TRUE} allow the function to find
+\code{res = 14}, or when \code{res_by_data = TRUE} allow the function to find
 the best \code{res} based on the average study extent.
 }
 \examples{
 \dontrun{
-  gridded_data <- gridding(meta = BTsubset_meta, btf = BTsubset_data)
+  gridded_data <- gridding(meta = BTsubset_meta, x = BTsubset_data)
   gridded_data <- gridding(meta = dplyr::as_tibble(BTsubset_meta),
-                           btf = dplyr::as_tibble(BTsubset_data))
+                           x = dplyr::as_tibble(BTsubset_data))
   gridded_data <- gridding(meta = data.table::as.data.table(BTsubset_meta),
-                           btf = data.table::as.data.table(BTsubset_data))
+                           x = data.table::as.data.table(BTsubset_data))
 }
 
 }

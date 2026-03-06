@@ -40016,10 +40016,10 @@
       24589 1774606254 372_1774606254
        [ reached 'max' / getOption("max.print") -- omitted 76085 rows ]
 
-# gridding respects resByData argument
+# gridding respects res_by_data argument
 
     Code
-      gridding(meta, btf, resByData = TRUE)
+      gridding(meta, btf, res_by_data = TRUE)
     Output
       Resolution: 15, Area (km^2): 3.55473501726709, Spacing (km): 1.86210705534756, CLS (km): 2.12744663988395
     Message

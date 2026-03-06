@@ -5,8 +5,10 @@
 #' @export
 #' @param x (\code{data.frame}) BioTIME data table in the format of the output
 #' of \code{\link{getAlphaMetrics}} or \code{\link{getBetaMetrics}} functions
-#' @param pThreshold (\code{numeric}) P-value threshold for statistical
+#' @param p_threshold (\code{numeric}) P-value threshold for statistical
 #' significance
+#' @param pThreshold \code{r lifecycle::badge("deprecated")} Use
+#'   \code{p_threshold} instead.
 #'
 #' @returns Returns a single long \code{data.frame} with results of linear
 #' regressions (slope, p-value, significance, intercept) for each
@@ -24,82 +26,86 @@
 #' @importFrom checkmate assert_choice
 #' @importFrom checkmate assert_names
 #' @importFrom checkmate assert_number
+#' @importFrom lifecycle deprecated deprecate_warn is_present
 #'
 #' @examples
 #'
 #' x <- gridding(BTsubset_meta, BTsubset_data) |>
-#' resampling(measure = "BIOMASS", verbose = FALSE, resamps = 2)
+#' resampling(measure = "BIOMASS", verbose = FALSE, n_resamples = 2)
 #'
 #'   alpham <- getAlphaMetrics(x, "BIOMASS")
 #'
-#' getLinearRegressions(x = alpham, pThreshold = 0.01) |> head(10)
+#' getLinearRegressions(x = alpham, p_threshold = 0.01) |> head(10)
 #'
 #'   betam <- getBetaMetrics(x = x, "BIOMASS")
 #'
 #' getLinearRegressions(x = betam) |> head(10)
 #'
-getLinearRegressions <- function(x, pThreshold = 0.05) {
-  UseMethod("getLinearRegressions")
-}
-
-#' @export
-getLinearRegressions.alpha <- function(x, pThreshold = 0.05) {
-  assert_number(
-    pThreshold,
-    na.ok = FALSE,
-    null.ok = FALSE,
-    finite = TRUE,
-    lower = 0,
-    upper = 1
-  )
-
-  assert_names(
-    x = colnames(x),
-    what = "colnames",
-    must.include = c(
-      "assemblageID",
-      "YEAR",
-      "S",
-      "N",
-      "maxN",
-      "Shannon",
-      "expShannon",
-      "Simpson",
-      "invSimpson",
-      "PIE",
-      "DomMc"
+getLinearRegressions <- function(
+  x,
+  p_threshold = 0.05,
+  pThreshold = deprecated()
+) {
+  if (lifecycle::is_present(pThreshold)) {
+    lifecycle::deprecate_warn(
+      when = "0.3.3",
+      what = "getLinearRegressions(pThreshold)",
+      with = "getLinearRegressions(p_threshold)"
     )
-  )
-  class(x) <- setdiff(class(x), "alpha")
-  x <- base::subset(x, x$S != 1)
-
-  dftx <- slopes_core(x, pThreshold)
-
-  return(dftx |> as.data.frame())
-}
-
-#' @export
-getLinearRegressions.beta <- function(x, pThreshold = 0.05) {
-  assert_names(
-    x = colnames(x),
-    what = "colnames",
-    must.include = c(
-      "assemblageID",
-      "YEAR",
-      "JaccardDiss",
-      "MorisitaHornDiss",
-      "BrayCurtisDiss"
+    p_threshold <- pThreshold
+  }
+  if (inherits(x, "alpha")) {
+    assert_number(
+      p_threshold,
+      na.ok = FALSE,
+      null.ok = FALSE,
+      finite = TRUE,
+      lower = 0,
+      upper = 1
     )
-  )
-  class(x) <- setdiff(class(x), "beta")
-  x <- na.omit(
-    x,
-    cols = c("JaccardDiss", "MorisitaHornDiss", "BrayCurtisDiss")
-  )
+    assert_names(
+      x = colnames(x),
+      what = "colnames",
+      must.include = c(
+        "assemblageID",
+        "YEAR",
+        "S",
+        "N",
+        "maxN",
+        "Shannon",
+        "expShannon",
+        "Simpson",
+        "invSimpson",
+        "PIE",
+        "DomMc"
+      )
+    )
+    class(x) <- setdiff(class(x), "alpha")
+    x <- base::subset(x, x$S != 1)
+    return(slopes_core(x, p_threshold) |> as.data.frame())
+  }
 
-  dftx <- slopes_core(x, pThreshold)
+  if (inherits(x, "beta")) {
+    assert_names(
+      x = colnames(x),
+      what = "colnames",
+      must.include = c(
+        "assemblageID",
+        "YEAR",
+        "JaccardDiss",
+        "MorisitaHornDiss",
+        "BrayCurtisDiss"
+      )
+    )
+    class(x) <- setdiff(class(x), "beta")
+    x <- na.omit(
+      x,
+      cols = c("JaccardDiss", "MorisitaHornDiss", "BrayCurtisDiss")
+    )
+    return(slopes_core(x, p_threshold) |> as.data.frame())
+  }
 
-  return(dftx |> as.data.frame())
+  stop("x must be of class 'alpha' or 'beta'")
 }
 
 
@@ -119,14 +125,14 @@ getLinearRegressions.beta <- function(x, pThreshold = 0.05) {
 #' @importFrom tidyr nest
 #' @importFrom tidyr unnest
 
-slopes_core <- function(x, pThreshold) {
-  # See benchmarks.R # counting one year studies
+slopes_core <- function(x, p_threshold) {
+  # See benchmarks/benchmarks.R # counting one year studies
   three_year_assemblages <- tapply(x$YEAR, x$assemblageID, function(y) {
     uniqueN(y) < 3L
   })
 
   if (any(three_year_assemblages)) {
-    # See benchmarks.R  # Row filtering
+    # See benchmarks/benchmarks.R  # Row filtering
     x <- x |>
       filter(
         is.element(
@@ -160,11 +166,14 @@ slopes_core <- function(x, pThreshold) {
     ) |>
     mutate(
       "significance" = fifelse(
-        test = pvalue < pThreshold,
+        test = pvalue < p_threshold,
         yes = 1L,
         no = 0L
       ),
       metric = as.factor(metric),
+      # lag() moves the intercept (row N) to align with the slope (row N+1),
+      # because pivot_wider produces two rows per metric: one for "(Intercept)"
+      # and one for "YEAR", with the other estimate column as NA in each row.
       intercept = lag(intercept)
     ) |>
     filter(!is.na(intercept)) |>

@@ -15,7 +15,7 @@ test_that("resampling runs correctly for Abundance and Biomass together", {
     result <- resampling(
       x = test_df,
       measure = c("ABUNDANCE", "BIOMASS"),
-      resamps = 1L,
+      n_resamples = 1L,
       conservative = FALSE
     )
   })

@@ -9,17 +9,18 @@
 #' @param measure (\code{character}) currency to be retained during the
 #' sample-based rarefaction. Can be either defined by a single column name or a
 #' vector of two or more column names.
-#' @param resamps (\code{integer}) number of repetitions. Default is 1.
+#' @param n_resamples (\code{integer}) number of repetitions. Default is 1.
 #' @param conservative (\code{logical}). \code{FALSE} by default. If
 #' \code{TRUE}, whenever a \code{NA} is found in the measure field(s), the whole
 #' sample is removed instead of the missing observations only.
 #' @param summarise (\code{logical}). \code{TRUE} by default. If \code{FALSE},
 #' the function returns abundance and/or biomass summed at the SAMPLE_DESC level
-#' git pull(i.e., per sample), rather than per species per year.
-#'
+#' (i.e., per sample), rather than per species per year.
 #' @param verbose (\code{logical}). \code{TRUE} by default. If FALSE, warnings
 #' when NA values or one-year-long time series are found in \code{x} and
 #' excluded are hidden.
+#' @param resamps \code{r lifecycle::badge("deprecated")} Use
+#'   \code{n_resamples} instead.
 #'
 #' @returns Returns a single long form \code{data.frame} containing the total
 #' currency or currencies of interest (sum) for each species in each year within
@@ -36,7 +37,7 @@
 #' and then uses this minimum to randomly resample each year down to that
 #' number. Thus, standardising the sampling effort between years, standard
 #' biodiversity metrics can be calculated based on an equal number of samples
-#' (e.g. using \code{\link{getAlphaMetrics}}, \code{\link{getAlphaMetrics}}).
+#' (e.g. using \code{\link{getAlphaMetrics}}, \code{\link{getBetaMetrics}}).
 #' \code{measure} is a \code{character} input specifying the chosen currency to
 #'  be used during the sample-based rarefaction. It can be a single column name
 #' or a vector of two or more column names - e.g. for BioTIME,
@@ -45,13 +46,14 @@
 #'
 #' By default, any observations with \code{NA} within the currency field(s) are
 #' removed. You can choose to remove the full sample where such observations are
-#' present by setting \code{conservative} to \code{TRUE}. \code{resamps} can be
-#' used to define multiple iterations, effectively creating multiple alternative
-#' datasets as in each iteration different samples will be randomly selected for
-#' the years where number of samples > minimum. Note that the function always
-#' returns a single data frame, i.e. if \code{resamps} > 1, the returned data
-#' frame is the result of individual data frames concatenated together, one from
-#' each iteration identified by a numerical unique identifier 1:resamps.
+#' present by setting \code{conservative} to \code{TRUE}. \code{n_resamples}
+#' can be used to define multiple iterations, effectively creating multiple
+#' alternative datasets as in each iteration different samples will be randomly
+#' selected for the years where number of samples > minimum. Note that the
+#' function always returns a single data frame, i.e. if \code{n_resamples} > 1,
+#' the returned data frame is the result of individual data frames concatenated
+#' together, one from each iteration identified by a numerical unique identifier
+#' 1:n_resamples.
 #'
 #' @export
 #'
@@ -65,85 +67,50 @@
 #'   resampling(x, measure = "BIOMASS", summarise = FALSE, conservative = FALSE)
 #' }
 #'
+#' @importFrom lifecycle deprecated deprecate_warn is_present
 resampling <- function(
   x,
   measure,
-  resamps = 1L,
+  n_resamples = 1L,
   conservative = FALSE,
   summarise = TRUE,
-  verbose = TRUE
+  verbose = TRUE,
+  resamps = deprecated()
 ) {
-  UseMethod("resampling")
-}
+  if (lifecycle::is_present(resamps)) {
+    lifecycle::deprecate_warn(
+      when = "0.3.3",
+      what = "resampling(resamps)",
+      with = "resampling(n_resamples)"
+    )
+    n_resamples <- resamps
+  }
+  if (inherits(x, "data.table")) {
+    return(resampling_internal(
+      x = x,
+      measure = measure,
+      n_resamples = n_resamples,
+      conservative = conservative,
+      summarise = summarise,
+      verbose = verbose
+    ))
+  }
 
-#' @export
-resampling.default <- function(
-  x,
-  measure,
-  resamps = 1L,
-  conservative = FALSE,
-  summarise = TRUE,
-  verbose = TRUE
-) {
   gridded <- data.table::copy(x)
   data.table::setDT(gridded)
 
   res <- resampling_internal(
     x = gridded,
     measure = measure,
-    resamps = resamps,
+    n_resamples = n_resamples,
     conservative = conservative,
     summarise = summarise,
     verbose = verbose
   )
 
+  if (inherits(x, "tbl_df")) return(dplyr::as_tibble(res))
   data.table::setDF(res)
-
   return(res)
-}
-
-#' @export
-resampling.tbl_df <- function(
-  x,
-  measure,
-  resamps = 1L,
-  conservative = FALSE,
-  summarise = TRUE,
-  verbose = TRUE
-) {
-  gridded <- data.table::copy(x)
-  data.table::setDT(gridded)
-
-  res <- resampling_internal(
-    x = gridded,
-    measure = measure,
-    resamps = resamps,
-    conservative = conservative,
-    summarise = summarise,
-    verbose = verbose
-  ) |>
-    dplyr::as_tibble()
-
-  return(res)
-}
-
-#' @export
-resampling.data.table <- function(
-  x,
-  measure,
-  resamps = 1L,
-  conservative = FALSE,
-  summarise = TRUE,
-  verbose = TRUE
-) {
-  resampling_internal(
-    x = x,
-    measure = measure,
-    resamps = resamps,
-    conservative = conservative,
-    summarise = summarise,
-    verbose = verbose
-  )
 }
 
 
@@ -152,7 +119,7 @@ resampling.data.table <- function(
 resampling_internal <- function(
   x,
   measure,
-  resamps,
+  n_resamples,
   conservative,
   summarise,
   verbose
@@ -166,7 +133,7 @@ resampling_internal <- function(
     "measure must be > 0" = all(x[, ..measure] > 0, na.rm = TRUE)
   )
   checkmate::assert_number(
-    x = resamps,
+    x = n_resamples,
     lower = 1L,
     na.ok = FALSE,
     null.ok = FALSE
@@ -197,8 +164,8 @@ resampling_internal <- function(
   )
   if (anyNA(x[, ..measure])) {
     if (conservative) {
-      # See benchmarks.R   # dplyr::semi_join vs data.table antijoin
-      x |>
+      # See benchmarks/benchmarks.R   # dplyr::semi_join vs data.table antijoin
+      x <- x |>
         dplyr::semi_join(
           y = x |>
             dplyr::summarise(
@@ -235,7 +202,7 @@ resampling_internal <- function(
     data.table::uniqueN(y) == 1L
   })
   if (any(one_year_studies)) {
-    # See benchmarks.R  # Row filtering ----
+    # See benchmarks/benchmarks.R  # Row filtering ----
     x <- x |>
       dplyr::filter(
         !is.element(STUDY_ID, names(one_year_studies)[which(one_year_studies)])
@@ -250,8 +217,8 @@ resampling_internal <- function(
     keyby = c("assemblageID", "YEAR")
   ][j = minsamp := min(minsamp), keyby = "assemblageID"]
 
-  # Loop on resamps
-  x <- lapply(X = 1L:resamps, FUN = function(resamp) {
+  # Loop on n_resamples
+  x <- lapply(X = 1L:n_resamples, FUN = function(resamp) {
     resampling_core(
       x |>
         dplyr::select(
@@ -268,7 +235,7 @@ resampling_internal <- function(
   }) |>
     data.table::rbindlist(idcol = "resamp")
 
-  # See benchmarks.R # tidyr::separate vs data.table::tstrsplit (by reference)
+  # See benchmarks/benchmarks.R # tidyr::separate vs data.table::tstrsplit (by reference)
   x[
     j = c("STUDY_ID", "cell") := data.table::tstrsplit(
       assemblageID,
@@ -300,7 +267,7 @@ resampling_internal <- function(
 #' @keywords internal
 
 resampling_core <- function(x, measure, summarise) {
-  # See benchmarks.R   # lapply vs data.table keyby ## resampling_core 1
+  # See benchmarks/benchmarks.R   # lapply vs data.table keyby ## resampling_core 1
   selected_indices <- x[
     j = .(
       sel = sample(
@@ -313,7 +280,7 @@ resampling_core <- function(x, measure, summarise) {
   ]$sel
 
   if (summarise) {
-    # See benchmarks.R   # lapply vs data.table keyby ## resampling_core 2
+    # See benchmarks/benchmarks.R   # lapply vs data.table keyby ## resampling_core 2
     raref <- x[
       i = is.element(SAMPLE_DESC, selected_indices),
       j = lapply(X = .SD, FUN = sum),

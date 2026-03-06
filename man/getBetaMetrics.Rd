@@ -17,7 +17,7 @@ name.}
 \value{
 Returns a \code{data.frame} with results for Jaccard dissimilarity
 (\code{JaccardDiss}), Morisita-Horn dissimilarity (\code{MorisitaHornDiss}),
-and Bray-Curtis dissimilarity (\code{BrayCurtsDiss}) for each year and
+and Bray-Curtis dissimilarity (\code{BrayCurtisDiss}) for each year and
 \code{assemblageID}.
 }
 \description{
@@ -41,7 +41,7 @@ exception for the \code{resamp} column: the function runs even without it.
 }
 \examples{
   gridding(BTsubset_meta, BTsubset_data) |>
-    resampling(measure = "BIOMASS", verbose = FALSE, resamps = 2) |>
+    resampling(measure = "BIOMASS", verbose = FALSE, n_resamples = 2) |>
     getBetaMetrics(measure = "BIOMASS") |>
     head()
 }

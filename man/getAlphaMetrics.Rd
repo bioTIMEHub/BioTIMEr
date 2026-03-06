@@ -18,7 +18,7 @@ Returns a \code{data.frame} with results for species richness
  (\code{S}), numerical abundance (\code{N}), maximum numerical abundance
  (\code{maxN}), Shannon Index (\code{Shannon}), Exponential Shannon
  (\code{expShannon}), Simpson's Index (Simpson), Inverse Simpson
- (\code{InvSimpson}), Probability of intraspecific encounter (\code{PIE}) and
+ (\code{invSimpson}), Probability of intraspecific encounter (\code{PIE}) and
  McNaughton's Dominance (\code{DomMc}) for each year and \code{assemblageID}.
 }
 \description{
@@ -64,7 +64,7 @@ abundant species.
 \examples{
   # Mean and sd values of the metrics for several resamplings
   gridding(BTsubset_meta, BTsubset_data) |>
-    resampling(measure = "BIOMASS", resamps = 2) |>
+    resampling(measure = "BIOMASS", n_resamples = 2) |>
     getAlphaMetrics(measure = "BIOMASS") |>
     dplyr::summarise(
        dplyr::across(

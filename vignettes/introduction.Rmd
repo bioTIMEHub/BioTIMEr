@@ -81,9 +81,9 @@ Let's apply `gridding()` to a subset of BioTIME data and see what happens:
 ```{r gridding-ex1}
 grid_samples <- gridding(
   meta = BTsubset_meta,
-  btf = BTsubset_data,
+  x = BTsubset_data,
   res = 12,
-  resByData = FALSE
+  res_by_data = FALSE
 )
 
 # Get a look at the output
@@ -125,17 +125,17 @@ By default, the function separates studies into hexagonal cells of ~96 km2 (`res
 # define an alternative resolution of 14 (~10.7 km2 cells)
 grid_samples_14 <- gridding(
   meta = BTsubset_meta,
-  btf = BTsubset_data,
+  x = BTsubset_data,
   res = 14,
-  resByData = FALSE
+  res_by_data = FALSE
 )
 
 # allow the spatial extent of the data to define the resolution
 grid_samples_auto <- gridding(
   meta = BTsubset_meta,
-  btf = BTsubset_data,
+  x = BTsubset_data,
   res = 12,
-  resByData = TRUE
+  res_by_data = TRUE
 )
 # this option also returns a message with the automatically picked resolution:
 ```
@@ -219,7 +219,7 @@ inset <- grid::viewport(width = 0.4, height = 0.4, x = 0.82, y = 0.45)  # the in
 print(zoom_in_map, vp = main)
 print(map_uk_locations, vp = inset)
 ```
-We can see that the higher the resolution set the higher the number of cells into which samples get assigned. There is thus the risk of the resulting assemblages time series becoming too small to have any ecological meaning. A good rule of thumb is to never set `res` higher than the resolution you get when `resByData = TRUE`.
+We can see that the higher the resolution set the higher the number of cells into which samples get assigned. There is thus the risk of the resulting assemblages time series becoming too small to have any ecological meaning. A good rule of thumb is to never set `res` higher than the resolution you get when `res_by_data = TRUE`.
 
 
 ### Why rarefaction is a must!
@@ -248,7 +248,7 @@ Looking at the `n_samples` column we can already see for the few assemblages in 
 grid_rare <- resampling(
   x = grid_samples,
   measure = "ABUNDANCE",
-  resamps = 1,
+  n_resamples = 1,
   conservative = FALSE
 )
 ```
@@ -257,7 +257,7 @@ grid_rare <- resampling(
 # Let's apply it then:
 
 # grid_samples_temp <- subset(grid_samples, !grid_samples$BIOMASS==0) #to be deleted after Faye reviews the data and makes all 0=NAs
-# grid_rare <- resampling( x= grid_samples_test, measure ="BIOMASS", resamps = 1, conservative = FALSE)
+# grid_rare <- resampling( x= grid_samples_test, measure ="BIOMASS", n_resamples = 1, conservative = FALSE)
 ```
 
 The function returns a single long-form data frame containing the total currency of interest (i.e. summed across all samples) for each species in each year within each assemblage time series. You can specify what the currency field is: Abundance, Biomass or both (BioTIME studies can include records for either or both). Note that resampling() also tests and removes any `NAs` within the selected currency field(s) before implementing the sample-based rarefaction. Thus, if you choose to use both currency fields, only observations (when `conservative = FALSE`) or full sampling events (when `conservative = TRUE`) in which BOTH Abundance and Biomass were recorded are retained and a warning is issued as follows:
@@ -267,7 +267,7 @@ The function returns a single long-form data frame containing the total currency
 grid_rare_ab <- resampling(
   x = grid_samples,
   measure = c("ABUNDANCE", "BIOMASS"),
-  resamps = 1,
+  n_resamples = 1,
   conservative = FALSE
 )
 
@@ -275,7 +275,7 @@ grid_rare_ab <- resampling(
 grid_rare_abT <- resampling(
   x = grid_samples,
   measure = c("ABUNDANCE", "BIOMASS"),
-  resamps = 1,
+  n_resamples = 1,
   conservative = TRUE)
 ```
 
@@ -317,7 +317,7 @@ One option to deal with this issue is to repeat this random sampling process mul
 grid_rare_n10 <- resampling(
   x = grid_samples,
   measure = "ABUNDANCE",
-  resamps = 10,
+  n_resamples = 10,
   conservative = FALSE
 )
 
@@ -393,7 +393,7 @@ Finally, when looking to measure biodiversity change using temporal data, it is 
 # Let's apply it then:
 alpha_slopes <- getLinearRegressions(
   x = alpha_metrics,
-  pThreshold = 0.05
+  p_threshold = 0.05
 ) #for alpha metrics
 
 # Have a quick look at the output
@@ -403,7 +403,7 @@ alpha_slopes |> head(6) |> kable()
 # Let's apply it then:
 beta_slopes <- getLinearRegressions(
   x = beta_metrics,
-  pThreshold = 0.05
+  p_threshold = 0.05
 ) #for beta metrics
 
 # Have a quick look at the output

@@ -9,7 +9,7 @@ test_that("Whole workflow works consistently", {
   g <- gridding(meta, btf)
   set.seed(42)
   regressions_abundance <- g |>
-    resampling(measure = "ABUNDANCE", resamps = 1L) |>
+    resampling(measure = "ABUNDANCE", n_resamples = 1L) |>
     getBetaMetrics(measure = "ABUNDANCE") |>
     dplyr::select(-resamp) |>
     getLinearRegressions()
@@ -18,7 +18,7 @@ test_that("Whole workflow works consistently", {
 
   set.seed(42)
   regressions_biomass <- g |>
-    resampling(measure = "BIOMASS", resamps = 1L) |>
+    resampling(measure = "BIOMASS", n_resamples = 1L) |>
     getBetaMetrics(measure = "BIOMASS") |>
     dplyr::select(-resamp) |>
     getLinearRegressions()

@@ -1,7 +1,7 @@
 # resampling runs correctly for Biomass
 
     Code
-      result <- resampling(x = test_df, measure = "BIOMASS", resamps = 1L,
+      result <- resampling(x = test_df, measure = "BIOMASS", n_resamples = 1L,
         conservative = FALSE)
     Condition
       Warning:

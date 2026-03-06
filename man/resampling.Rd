@@ -7,10 +7,11 @@
 resampling(
   x,
   measure,
-  resamps = 1L,
+  n_resamples = 1L,
   conservative = FALSE,
   summarise = TRUE,
-  verbose = TRUE
+  verbose = TRUE,
+  resamps = deprecated()
 )
 }
 \arguments{
@@ -21,7 +22,7 @@ format of the output of the \code{\link{gridding}} function).}
 sample-based rarefaction. Can be either defined by a single column name or a
 vector of two or more column names.}
 
-\item{resamps}{(\code{integer}) number of repetitions. Default is 1.}
+\item{n_resamples}{(\code{integer}) number of repetitions. Default is 1.}
 
 \item{conservative}{(\code{logical}). \code{FALSE} by default. If
 \code{TRUE}, whenever a \code{NA} is found in the measure field(s), the whole
@@ -29,11 +30,14 @@ sample is removed instead of the missing observations only.}
 
 \item{summarise}{(\code{logical}). \code{TRUE} by default. If \code{FALSE},
 the function returns abundance and/or biomass summed at the SAMPLE_DESC level
-git pull(i.e., per sample), rather than per species per year.}
+(i.e., per sample), rather than per species per year.}
 
 \item{verbose}{(\code{logical}). \code{TRUE} by default. If FALSE, warnings
 when NA values or one-year-long time series are found in \code{x} and
 excluded are hidden.}
+
+\item{resamps}{\code{r lifecycle::badge("deprecated")} Use
+\code{n_resamples} instead.}
 }
 \value{
 Returns a single long form \code{data.frame} containing the total
@@ -57,7 +61,7 @@ an equal number of samples across all years in a time series.
 and then uses this minimum to randomly resample each year down to that
 number. Thus, standardising the sampling effort between years, standard
 biodiversity metrics can be calculated based on an equal number of samples
-(e.g. using \code{\link{getAlphaMetrics}}, \code{\link{getAlphaMetrics}}).
+(e.g. using \code{\link{getAlphaMetrics}}, \code{\link{getBetaMetrics}}).
 \code{measure} is a \code{character} input specifying the chosen currency to
  be used during the sample-based rarefaction. It can be a single column name
 or a vector of two or more column names - e.g. for BioTIME,
@@ -66,13 +70,14 @@ c("ABUNDANCE", "BIOMASS")}.
 
 By default, any observations with \code{NA} within the currency field(s) are
 removed. You can choose to remove the full sample where such observations are
-present by setting \code{conservative} to \code{TRUE}. \code{resamps} can be
-used to define multiple iterations, effectively creating multiple alternative
-datasets as in each iteration different samples will be randomly selected for
-the years where number of samples > minimum. Note that the function always
-returns a single data frame, i.e. if \code{resamps} > 1, the returned data
-frame is the result of individual data frames concatenated together, one from
-each iteration identified by a numerical unique identifier 1:resamps.
+present by setting \code{conservative} to \code{TRUE}. \code{n_resamples}
+can be used to define multiple iterations, effectively creating multiple
+alternative datasets as in each iteration different samples will be randomly
+selected for the years where number of samples > minimum. Note that the
+function always returns a single data frame, i.e. if \code{n_resamples} > 1,
+the returned data frame is the result of individual data frames concatenated
+together, one from each iteration identified by a numerical unique identifier
+1:n_resamples.
 }
 \examples{
 \dontrun{

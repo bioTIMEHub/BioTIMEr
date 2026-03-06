@@ -74,3 +74,26 @@ test_that("getLinearRegressions works consistently", {
 
   expect_snapshot(regressions_beta)
 })
+
+test_that("getLinearRegressions deprecated resByData argument still works with a warning", {
+  set.seed(42)
+  xa <- data.frame(
+    resamp = rep(1L:2L, each = 192),
+    assemblageID = base::rep(LETTERS[1L:8L], each = 24),
+    YEAR = base::rep(base::rep(2010:2015, each = 4), times = 4),
+    Species = c(replicate(
+      n = 8L * 6L,
+      sample(letters[1L:10L], 4L, replace = FALSE)
+    )),
+    ABUNDANCE = stats::rpois(24 * 8, 10)
+  )
+
+  # Alpha diversity metrics
+  alpham <- getAlphaMetrics(xa, measure = "ABUNDANCE")
+
+  withr::local_options(lifecycle_verbosity = "warning")
+  expect_warning(
+    getLinearRegressions(x = alpham, pThreshold = 0.05),
+    regexp = "pThreshold.*is deprecated"
+  )
+})

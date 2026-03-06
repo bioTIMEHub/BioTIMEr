@@ -107,3 +107,11 @@ test_that("resampling correctly manages data.table, tibble and data.frame object
   expect_s3_class(object = test_object, class = c("data.table", "data.frame"))
   # if test_df is a tibble, test_object has to be a tibble
 })
+
+test_that("resampling deprecated resamps argument still works with a warning", {
+  withr::local_options(lifecycle_verbosity = "warning")
+  expect_warning(
+    resampling(x = test_df, measure = "BIOMASS", resamps = 2L),
+    regexp = "resamps.*is deprecated"
+  )
+})

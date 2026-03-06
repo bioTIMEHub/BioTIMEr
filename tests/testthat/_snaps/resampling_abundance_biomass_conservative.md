@@ -2,5 +2,5 @@
 
     Code
       suppressWarnings(result <- resampling(x = test_df, measure = c("ABUNDANCE",
-        "BIOMASS"), resamps = 2L, conservative = TRUE))
+        "BIOMASS"), n_resamples = 2L, conservative = TRUE))
 
