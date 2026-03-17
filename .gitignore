@@ -1,3 +1,7 @@
+# Agents
+.agents/
+.claude/settings.local.json
+
 # Benchmarking
 data/benchmarking/
 
@@ -6,6 +10,7 @@ data/benchmarking/
 .Rhistory
 .RData
 .Ruserdata
+README.html
 
 # Backups
 ignored
@@ -15,6 +20,8 @@ inst/CITATION_article
 inst/doc
 doc/
 Meta/
+/doc/
+/Meta/
 vignettes/*_files/
 vignettes/*_cache/
 
@@ -99,5 +106,3 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux
-/doc/
-/Meta/
