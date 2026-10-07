@@ -108,7 +108,9 @@ resampling <- function(
     verbose = verbose
   )
 
-  if (inherits(x, "tbl_df")) return(dplyr::as_tibble(res))
+  if (inherits(x, "tbl_df")) {
+    return(dplyr::as_tibble(res))
+  }
   data.table::setDF(res)
   return(res)
 }
