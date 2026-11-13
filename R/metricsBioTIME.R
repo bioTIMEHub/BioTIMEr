@@ -24,7 +24,7 @@
 #' in each year.
 #'
 #' - Shannon or Shannon–Weaver index is calculated as
-#' \eqn{\sum_{i}p_{i}log_{b}p_{i}}, where \eqn{p_{i}} is the proportional
+#' \eqn{-\sum_{i}p_{i}\log_{b}p_{i}}, where \eqn{p_{i}} is the proportional
 #' abundance of species i and b is the base of the logarithm (natural
 #' logarithms), while exponential Shannon is given by \code{exp(Shannon)}.
 #'
@@ -35,7 +35,10 @@
 #' abundant species.
 #'
 #' - Probability of intraspecific encounter or PIE is calculated as
-#' \eqn{\left(\frac{N}{N-1}\right)\left(1-\sum_{i=1}^{S}\pi_{i}^{2}\right)}.
+#' \eqn{\left(\frac{N}{N-1}\right)\left(1-\sum_{i=1}^{S}p_{i}^{2}\right)}.
+#' PIE assumes that \code{N} is a count of individuals, so it is only
+#' meaningful for \code{measure = "ABUNDANCE"}. It is \code{NA} when
+#' \code{N <= 1}, where the formula is undefined.
 #'
 #'  Note that the input data frame needs to be in the format of the output of
 #'  the \code{\link{gridding}} function and/or \code{\link{resampling}}
@@ -139,7 +142,7 @@ getAlpha <- function(x) {
 
   DomMc <- if (length(x) != 1L) (x[[1L]] + x[[2L]]) / N else 1
 
-  PIE <- (N / (N - 1)) * (1 - sum((x / N)^2))
+  PIE <- if (N > 1) (N / (N - 1)) * (1 - sum((x / N)^2)) else NA_real_
 
   x <- x / N
   Shannon <- sum(-x * log(x), na.rm = TRUE)
