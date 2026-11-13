@@ -31,38 +31,45 @@ test_that("resampling returns an object of same class as meta", {
 })
 
 test_that("gridded object passed to resampling is not changed by reference", {
-  expect_no_error({
+  # ABUNDANCE has no NAs: no internal copy is made by NA removal
+  # BIOMASS has NAs: an internal copy is made by NA removal
+  for (measure in c("ABUNDANCE", "BIOMASS")) {
     gdf <- gridding(BTsubset_meta, BTsubset_data)
-    resampling(gdf, measure = "BIOMASS")
-  })
-  expect_s3_class(gdf, "data.frame", exact = TRUE)
+    gdf_before <- data.table::copy(gdf)
+    suppressWarnings(resampling(gdf, measure = measure))
+    expect_s3_class(gdf, "data.frame", exact = TRUE)
+    expect_identical(gdf, gdf_before)
 
-  expect_no_error({
     gtbl <- gridding(
       BTsubset_meta |> dplyr::as_tibble(),
       BTsubset_data |> dplyr::as_tibble()
     )
-    resampling(gtbl, measure = "BIOMASS")
-  })
-  expect_s3_class(
-    gtbl,
-    c("tbl_df", "tbl", "data.frame"),
-    exact = TRUE
-  )
+    gtbl_before <- data.table::copy(gtbl)
+    suppressWarnings(resampling(gtbl, measure = measure))
+    expect_s3_class(
+      gtbl,
+      c("tbl_df", "tbl", "data.frame"),
+      exact = TRUE
+    )
+    expect_identical(gtbl, gtbl_before)
 
-  expect_no_error({
     gdt <- gridding(
       BTsubset_meta |> data.table::as.data.table(),
       BTsubset_data |> data.table::as.data.table()
     )
-
-    resampling(gdt, measure = "BIOMASS")
-  })
-  expect_s3_class(
-    gdt,
-    c("data.table", "data.frame"),
-    exact = TRUE
-  )
+    gdt_before <- data.table::copy(gdt)
+    suppressWarnings(resampling(gdt, measure = measure))
+    expect_s3_class(
+      gdt,
+      c("data.table", "data.frame"),
+      exact = TRUE
+    )
+    expect_identical(gdt, gdt_before)
+    # No leftover column, key or reordering
+    expect_false(is.element("minsamp", colnames(gdt)))
+    expect_null(data.table::key(gdt))
+    expect_identical(colnames(gdt), colnames(gdt_before))
+  }
 })
 
 test_that("resampling correctly excludes 1 year long studies", {

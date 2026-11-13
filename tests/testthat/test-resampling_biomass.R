@@ -44,5 +44,5 @@ test_that("resampling runs correctly for Biomass", {
   ) # STUDY_ID
 
   expect_false(anyNA(result))
-  expect_lte(sum(result$Biomass), sum(biomass_test_df$BIOMASS))
+  expect_lte(sum(result$BIOMASS), sum(biomass_test_df$BIOMASS))
 })
