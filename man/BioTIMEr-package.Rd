@@ -26,6 +26,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Alban Sagouis \email{alban.sagouis@idiv.de} (\href{https://orcid.org/0000-0002-3827-1063}{ORCID})
   \item Faye Moyes (\href{https://orcid.org/0000-0001-9687-0593}{ORCID})
   \item Inês S. Martins (\href{https://orcid.org/0000-0003-4328-7286}{ORCID}) [reviewer]
 }

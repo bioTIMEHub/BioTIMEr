@@ -16,3 +16,8 @@
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
 ^benchmarks$
+^\.claude$
+^\.agents$
+^\.posit$
+^README\.Rmd$
+^README\.html$

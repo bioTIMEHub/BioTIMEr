@@ -7,13 +7,13 @@
   "codeRepository": "https://github.com/bioTIMEHub/BioTIMEr",
   "issueTracker": "https://github.com/bioTIMEHub/BioTIMEr/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.5.2 (2025-10-31)",
+  "runtimePlatform": "R version 4.6.1 (2026-06-24)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -153,15 +153,15 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "quarto",
-      "name": "quarto",
+      "identifier": "rmarkdown",
+      "name": "rmarkdown",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=quarto"
+      "sameAs": "https://CRAN.R-project.org/package=rmarkdown"
     },
     {
       "@type": "SoftwareApplication",
@@ -187,6 +187,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=testthat"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "withr",
+      "name": "withr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=withr"
     },
     {
       "@type": "SoftwareApplication",
@@ -331,7 +343,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "6812.245KB",
+  "fileSize": "6901.886KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
@@ -401,9 +413,9 @@
     }
   ],
   "relatedLink": "https://biotimehub.github.io/BioTIMEr/",
-  "releaseNotes": "https://github.com/bioTIMEHub/BioTIMEr/blob/master/NEWS.md",
+  "releaseNotes": "https://github.com/bioTIMEHub/BioTIMEr/blob/main/NEWS.md",
   "readme": "https://github.com/bioTIMEHub/BioTIMEr/blob/main/README.md",
-  "contIntegration": ["https://github.com/bioTIMEHub/BioTIMEr/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/github/bioTIMEHub/BioTIMEr?branch=main"],
+  "contIntegration": "https://github.com/bioTIMEHub/BioTIMEr/actions/workflows/R-CMD-check.yaml",
   "developmentStatus": "https://lifecycle.r-lib.org/articles/stages.html#stable",
   "keywords": ["ecology", "geospatial", "r", "r-package", "rstats"]
 }

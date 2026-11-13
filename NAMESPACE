@@ -10,32 +10,46 @@ export(scale_colour_biotime)
 export(scale_fill_biotime)
 export(themeBioTIME)
 importFrom(broom,tidy)
-importFrom(checkmate,assert_choice)
-importFrom(checkmate,assert_names)
-importFrom(checkmate,assert_number)
-importFrom(data.table,fifelse)
-importFrom(data.table,uniqueN)
-importFrom(dplyr,any_of)
-importFrom(dplyr,bind_rows)
-importFrom(dplyr,filter)
-importFrom(dplyr,lag)
-importFrom(dplyr,mutate)
-importFrom(dplyr,rename)
-importFrom(dplyr,select)
-importFrom(ggplot2,discrete_scale)
-importFrom(ggplot2,element_blank)
-importFrom(ggplot2,element_line)
-importFrom(ggplot2,element_rect)
-importFrom(ggplot2,element_text)
-importFrom(ggplot2,scale_fill_gradientn)
-importFrom(ggplot2,theme)
-importFrom(ggplot2,theme_bw)
-importFrom(lifecycle,deprecate_warn)
-importFrom(lifecycle,deprecated)
-importFrom(lifecycle,is_present)
-importFrom(stats,lm)
-importFrom(stats,na.omit)
-importFrom(tidyr,nest)
-importFrom(tidyr,pivot_wider)
-importFrom(tidyr,unnest)
+importFrom(checkmate,
+  assert_choice,
+  assert_names,
+  assert_number
+)
+importFrom(data.table,
+  fifelse,
+  uniqueN
+)
+importFrom(dplyr,
+  any_of,
+  bind_rows,
+  filter,
+  lag,
+  mutate,
+  rename,
+  select
+)
+importFrom(ggplot2,
+  discrete_scale,
+  element_blank,
+  element_line,
+  element_rect,
+  element_text,
+  scale_fill_gradientn,
+  theme,
+  theme_bw
+)
+importFrom(lifecycle,
+  deprecate_warn,
+  deprecated,
+  is_present
+)
+importFrom(stats,
+  lm,
+  na.omit
+)
+importFrom(tidyr,
+  nest,
+  pivot_wider,
+  unnest
+)
 importFrom(vegan,vegdist)
