@@ -30,8 +30,12 @@ The function \code{getLinearRegression} fits simple linear
 regression models (see \code{\link[stats]{lm}} for details) for a given
 output ('data') of either \code{\link{getAlphaMetrics}} or
 \code{\link{getBetaMetrics}} function. The typical model has the form
-\code{metric ~ year}. Note that assemblages with less than 3 time points
-and/or single species time series are removed.
+\code{metric ~ year}. For alpha metrics, years with a single species
+(\code{S == 1}) are removed first. Assemblages with less than 3 time points
+(after this removal) are then removed. Each metric is fitted separately, so a
+missing value in one metric (for example \code{PIE}) does not remove that
+year from the other metrics. A metric with fewer than 3 non-missing years has
+no regression and is left out of the result.
 }
 \examples{
 

@@ -282,18 +282,6 @@
     },
     "6": {
       "@type": "SoftwareApplication",
-      "identifier": "broom",
-      "name": "broom",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=broom"
-    },
-    "7": {
-      "@type": "SoftwareApplication",
       "identifier": "vegan",
       "name": "vegan",
       "provider": {
@@ -304,7 +292,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=vegan"
     },
-    "8": {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "dggridR",
       "name": "dggridR",
@@ -317,7 +305,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=dggridR"
     },
-    "9": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "checkmate",
       "name": "checkmate",
@@ -329,7 +317,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=checkmate"
     },
-    "10": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "lifecycle",
       "name": "lifecycle",
@@ -343,7 +331,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "6901.886KB",
+  "fileSize": "6818.359KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",

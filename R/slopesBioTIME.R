@@ -18,11 +18,14 @@
 #' regression models (see \code{\link[stats]{lm}} for details) for a given
 #' output ('data') of either \code{\link{getAlphaMetrics}} or
 #' \code{\link{getBetaMetrics}} function. The typical model has the form
-#' \code{metric ~ year}. Note that assemblages with less than 3 time points
-#' and/or single species time series are removed.
+#' \code{metric ~ year}. For alpha metrics, years with a single species
+#' (\code{S == 1}) are removed first. Assemblages with less than 3 time points
+#' (after this removal) are then removed. Each metric is fitted separately, so a
+#' missing value in one metric (for example \code{PIE}) does not remove that
+#' year from the other metrics. A metric with fewer than 3 non-missing years has
+#' no regression and is left out of the result.
 #'
 #' @importFrom stats lm
-#' @importFrom stats na.omit
 #' @importFrom checkmate assert_choice
 #' @importFrom checkmate assert_names
 #' @importFrom checkmate assert_number
@@ -54,15 +57,15 @@ getLinearRegressions <- function(
     )
     p_threshold <- pThreshold
   }
+  assert_number(
+    p_threshold,
+    na.ok = FALSE,
+    null.ok = FALSE,
+    finite = TRUE,
+    lower = 0,
+    upper = 1
+  )
   if (inherits(x, "alpha")) {
-    assert_number(
-      p_threshold,
-      na.ok = FALSE,
-      null.ok = FALSE,
-      finite = TRUE,
-      lower = 0,
-      upper = 1
-    )
     assert_names(
       x = colnames(x),
       what = "colnames",
@@ -81,6 +84,8 @@ getLinearRegressions <- function(
       )
     )
     class(x) <- setdiff(class(x), "alpha")
+    # Years with a single species are not used for alpha metrics (rule present
+    # since the first version of this function, 2023-09-28)
     x <- base::subset(x, x$S != 1)
     return(slopes_core(x, p_threshold) |> as.data.frame())
   }
@@ -98,10 +103,11 @@ getLinearRegressions <- function(
       )
     )
     class(x) <- setdiff(class(x), "beta")
-    x <- na.omit(
-      x,
-      cols = c("JaccardDiss", "MorisitaHornDiss", "BrayCurtisDiss")
-    )
+    x <- x[
+      !is.na(x[["JaccardDiss"]]) &
+        !is.na(x[["MorisitaHornDiss"]]) &
+        !is.na(x[["BrayCurtisDiss"]]),
+    ]
     return(slopes_core(x, p_threshold) |> as.data.frame())
   }
 
@@ -110,18 +116,14 @@ getLinearRegressions <- function(
 
 
 #' @keywords internal
-#' @importFrom broom tidy
 #' @importFrom data.table fifelse
 #' @importFrom data.table uniqueN
 #' @importFrom dplyr any_of
-#' @importFrom dplyr bind_rows
 #' @importFrom dplyr filter
-#' @importFrom dplyr lag
 #' @importFrom dplyr mutate
 #' @importFrom dplyr rename
 #' @importFrom dplyr select
 #' @importFrom stats lm
-#' @importFrom tidyr pivot_wider
 #' @importFrom tidyr nest
 #' @importFrom tidyr unnest
 
@@ -142,41 +144,44 @@ slopes_core <- function(x, p_threshold) {
       )
   }
 
-  string_formula <- sprintf(
-    "cbind(%s) ~ YEAR",
-    toString(setdiff(names(x), c("assemblageID", "resamp", "YEAR")))
-  )
+  metrics <- setdiff(names(x), c("assemblageID", "resamp", "YEAR"))
+
+  # One model per metric: a joint cbind() model drops a year from every metric
+  # as soon as one metric is NA in that year (e.g. PIE when N <= 1). One row per
+  # metric is built directly from the coefficients, so constant series (NaN
+  # p-value) cannot break the pairing of intercept and slope.
+  fit_metrics <- function(df) {
+    lapply(metrics, function(metric) {
+      if (sum(!is.na(df[[metric]])) < 3L) {
+        return(NULL)
+      }
+      # summary()$coefficients instead of broom::tidy(): same numbers, but
+      # tidy() was about 75% of the run time
+      coefficients <- summary(lm(df[[metric]] ~ YEAR, data = df))$coefficients
+      list(
+        metric = metric,
+        slope = coefficients["YEAR", "Estimate"],
+        pvalue = coefficients["YEAR", "Pr(>|t|)"],
+        intercept = coefficients["(Intercept)", "Estimate"]
+      )
+    }) |>
+      data.table::rbindlist()
+  }
 
   x |>
     nest(.by = any_of(c("assemblageID", "resamp"))) |>
     rename("temporary_column" = "data") |>
-    mutate(
-      models = lapply(temporary_column, function(df) {
-        lm(string_formula, data = df) |> tidy()
-      })
-    ) |>
+    mutate(models = lapply(temporary_column, fit_metrics)) |>
     select(-"temporary_column") |>
     unnest(cols = "models") |>
-    pivot_wider(names_from = "term", values_from = "estimate") |>
-    rename(
-      metric = "response",
-      pvalue = "p.value",
-      intercept = "(Intercept)",
-      slope = "YEAR"
-    ) |>
     mutate(
       "significance" = fifelse(
         test = pvalue < p_threshold,
         yes = 1L,
         no = 0L
       ),
-      metric = as.factor(metric),
-      # lag() moves the intercept (row N) to align with the slope (row N+1),
-      # because pivot_wider produces two rows per metric: one for "(Intercept)"
-      # and one for "YEAR", with the other estimate column as NA in each row.
-      intercept = lag(intercept)
+      metric = as.factor(metric)
     ) |>
-    filter(!is.na(intercept)) |>
     select(any_of(c(
       "assemblageID",
       "resamp",

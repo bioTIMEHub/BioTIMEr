@@ -9,7 +9,6 @@ export(scale_color_biotime)
 export(scale_colour_biotime)
 export(scale_fill_biotime)
 export(themeBioTIME)
-importFrom(broom,tidy)
 importFrom(checkmate,
   assert_choice,
   assert_names,
@@ -21,9 +20,7 @@ importFrom(data.table,
 )
 importFrom(dplyr,
   any_of,
-  bind_rows,
   filter,
-  lag,
   mutate,
   rename,
   select
@@ -43,13 +40,9 @@ importFrom(lifecycle,
   deprecated,
   is_present
 )
-importFrom(stats,
-  lm,
-  na.omit
-)
+importFrom(stats,lm)
 importFrom(tidyr,
   nest,
-  pivot_wider,
   unnest
 )
 importFrom(vegan,vegdist)
