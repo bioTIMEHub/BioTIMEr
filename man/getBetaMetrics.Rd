@@ -15,7 +15,8 @@ optional.}
 name.}
 }
 \value{
-Returns a \code{data.frame} with results for Jaccard dissimilarity
+Returns a \code{data.frame} (classes \code{beta},
+\code{data.frame}), whatever the class of \code{x}, with results for Jaccard dissimilarity
 (\code{JaccardDiss}), Morisita-Horn dissimilarity (\code{MorisitaHornDiss}),
 and Bray-Curtis dissimilarity (\code{BrayCurtisDiss}) for each year and
 \code{assemblageID}.

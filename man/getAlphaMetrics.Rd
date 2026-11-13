@@ -14,7 +14,8 @@ getAlphaMetrics(x, measure)
 name.}
 }
 \value{
-Returns a \code{data.frame} with results for species richness
+Returns a \code{data.frame} (classes \code{alpha},
+ \code{data.frame}), whatever the class of \code{x}, with results for species richness
  (\code{S}), numerical abundance (\code{N}), maximum numerical abundance
  (\code{maxN}), Shannon Index (\code{Shannon}), Exponential Shannon
  (\code{expShannon}), Simpson's Index (Simpson), Inverse Simpson

@@ -52,6 +52,12 @@
  value in `measure`, for data frames and tibbles as well as data.tables. Before,
  a missing value in any other column removed the row for data frames.
  - `getLinearRegressions()` checks `p_threshold` for beta tables too.
+ - `getAlphaMetrics()` and `getBetaMetrics()` now always return a data frame
+ (classes `alpha` or `beta`, then `data.frame`), whatever the class of the
+ input. Before, `getAlphaMetrics()` returned a tibble, and `getBetaMetrics()`
+ returned a data frame, or a tibble for tibble input. The returned classes are
+ now documented and tested: `gridding()` and `resampling()` return the class of
+ their input, the metric tables and the slopes are data frames.
  - `themeBioTIME()` can be called without arguments (defaults: `legend.position
  = "right"`, `font.size = 12`, `axis.colour = "black"`, `strip.background =
  "grey90"`) and `axis.color` now works.

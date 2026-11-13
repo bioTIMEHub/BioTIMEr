@@ -47,7 +47,8 @@
 #'  halted. There is an exception for the \code{resamp} column: the function
 #'  runs even without it.
 #'
-#' @returns Returns a \code{data.frame} with results for species richness
+#' @returns Returns a \code{data.frame} (classes \code{alpha},
+#'  \code{data.frame}), whatever the class of \code{x}, with results for species richness
 #'  (\code{S}), numerical abundance (\code{N}), maximum numerical abundance
 #'  (\code{maxN}), Shannon Index (\code{Shannon}), Exponential Shannon
 #'  (\code{expShannon}), Simpson's Index (Simpson), Inverse Simpson
@@ -114,6 +115,9 @@ getAlphaMetrics <- function(x, measure) {
   #   names_transform = as.factor
   # )
 
+  # A new summary table, not the table of the user: always a data.frame, as
+  # getBetaMetrics() (unnest_wider() returns a tibble)
+  res <- as.data.frame(res)
   class(res) <- c("alpha", class(res))
 
   return(res)
@@ -189,7 +193,8 @@ getAlpha <- function(x) {
 #' not found an error is issued and the computations are halted. There is an
 #' exception for the \code{resamp} column: the function runs even without it.
 #'
-#' @returns Returns a \code{data.frame} with results for Jaccard dissimilarity
+#' @returns Returns a \code{data.frame} (classes \code{beta},
+#' \code{data.frame}), whatever the class of \code{x}, with results for Jaccard dissimilarity
 #' (\code{JaccardDiss}), Morisita-Horn dissimilarity (\code{MorisitaHornDiss}),
 #' and Bray-Curtis dissimilarity (\code{BrayCurtisDiss}) for each year and
 #' \code{assemblageID}.
@@ -230,6 +235,9 @@ getBetaMetrics <- function(x, measure) {
       .by = dplyr::any_of(c("resamp", "assemblageID"))
     )
 
+  # A new summary table, not the table of the user: always a data.frame, as
+  # getAlphaMetrics()
+  xd <- as.data.frame(xd)
   class(xd) <- c("beta", class(xd))
   return(xd)
 }

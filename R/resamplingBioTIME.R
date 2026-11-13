@@ -22,7 +22,8 @@
 #' @param resamps \code{r lifecycle::badge("deprecated")} Use
 #'   \code{n_resamples} instead.
 #'
-#' @returns Returns a single long form \code{data.frame} containing the total
+#' @returns Returns a single long form table, of the same class as \code{x}
+#' (\code{data.frame}, \code{tibble} or \code{data.table}), containing the total
 #' currency or currencies of interest (sum) for each species in each year within
 #' each rarefied time series (i.e. \code{assemblageID}). An extra integer column
 #' called \code{resamp} indicates the specific iteration.
