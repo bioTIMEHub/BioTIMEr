@@ -16,22 +16,26 @@ gridding(
 }
 \arguments{
 \item{meta}{(\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME
-metadata.}
+metadata, one row per study. It should be the metadata of the whole
+BioTIME database: the limit between single-location and multi-location
+studies is computed from all its rows (see Details).}
 
 \item{x}{(\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME
 data.}
 
-\item{res}{(\code{integer}) cell resolution. Must be in the range [0,30].
-Larger values represent finer resolutions. Default: 12 (~96 sq km). Passed
-to \code{\link[dggridR]{dgconstruct}}.}
+\item{res}{(\code{integer}) cell resolution. Must be an integer in the range
+[0,30]. Larger values represent finer resolutions. Default: 12 (~96 sq km).
+Passed to \code{\link[dggridR]{dgconstruct}}.}
 
-\item{res_by_data}{(\code{logical}) FALSE by default. If TRUE, the function
-\code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt \code{res}
- to the data extent. The new \code{res} value is used even if a value is
- provided by the user.}
+\item{res_by_data}{(\code{logical}) FALSE by default. If TRUE, \code{res} is
+replaced by the resolution whose cell area is closest to the limit between
+single-location and multi-location studies (see Details), found with
+\code{\link[dggridR]{dg_closest_res_to_area}}. The new \code{res} value is
+used even if a value is provided by the user.}
 
-\item{verbose}{if TRUE, a warning will be shown when one-year-long time
-series are found in x and excluded.}
+\item{verbose}{(\code{logical}) TRUE by default. If FALSE, the resolution
+chosen when \code{res_by_data = TRUE} is not printed. Warnings about
+removed studies and rows are always shown.}
 
 \item{resByData}{\code{r lifecycle::badge("deprecated")} Use \code{res_by_data}
 instead.}
@@ -39,14 +43,19 @@ instead.}
 \item{btf}{\code{r lifecycle::badge("deprecated")} Use \code{x} instead.}
 }
 \value{
-Returns a \code{'data.frame'}, with selected columns from the
-\code{x} and \code{meta} data frames, an extra integer column called
-\code{'cell'} and two character columns called 'StudyMethod' and
-'assemblageID' (concatenation of \code{STUDY_ID} and \code{cell}).
+Returns an object of the same class as \code{meta} (a
+\code{data.frame}, \code{tibble} or \code{data.table}) with selected columns
+from \code{x} and \code{meta} (\code{valid_name} of \code{x} is renamed
+\code{Species}), a numeric (double) column \code{cell} with the cell number,
+a character column \code{StudyMethod} (\code{"SL"} or \code{"ML"}) and a
+character column \code{assemblageID} (concatenation of \code{STUDY_ID} and
+\code{cell}). Rows are ordered by \code{StudyMethod} (ML first). Studies with
+a single year are removed.
 }
 \description{
-grids BioTIME data into a discrete global grid based on the
-   location of the samples (latitude/longitude).
+grids BioTIME data into a discrete global grid. Multi-location
+   studies are gridded by the latitude/longitude of their samples,
+   single-location studies by the centroid of the study (see Details).
 }
 \details{
 Each BioTIME study contains distinct samples which were collected
@@ -56,24 +65,51 @@ where measures are taken from a set of specific georeferenced sites at any
 given time) or wide-ranging surveys, transects, tows, and so on (i.e. ML or
 'multi-location' studies where measures are taken from multiple sampling
 locations over large extents that may or may not align from year to year, see
-\code{runResampling}. \code{gridding} is a function designed to deal with the
-issue of varying spatial extent between studies by using a global grid of
-hexagonal cells derived from \code{\link[dggridR]{dgconstruct}} and assigning
-the individual samples to the cells across the grid based on its latitude and
-longitude. Specifically, each sample is assigned a different combination of
-study ID and grid cell resulting in a unique identifier for each assemblage
-time series within each cell (assemblageID). This allows for the integrity of
-each study and each sample to be maintained, while large extent studies are
-split into local time series at the grid cell level. By default meta
-represents a long form data frame containing the data information for BioTIME
-studies and \code{x} is a data frame containing long form data from a main
-BioTIME query (see Example). \code{res} defines the global grid cell
-resolution, thus determining the size of the cells (see
-\code{vignette("dggridR")}). \code{res = 12} was found to be the most
-appropriate value when working on the whole BioTIME database(corresponding to
-~96 km2 cell area), but the user can define their own grid resolution (e.g.
-\code{res = 14}, or when \code{res_by_data = TRUE} allow the function to find
-the best \code{res} based on the average study extent.
+\code{\link{resampling}}). \code{gridding} is a function designed to deal
+with the issue of varying spatial extent between studies by using a global
+grid of hexagonal cells derived from \code{\link[dggridR]{dgconstruct}} and
+assigning the individual samples to the cells across the grid. Each sample is
+assigned a different combination of study ID and grid cell resulting in a
+unique identifier for each assemblage time series within each cell
+(assemblageID). This allows for the integrity of each study and each sample
+to be maintained, while large extent studies are split into local time series
+at the grid cell level.
+
+\strong{SL and ML studies.} A study is SL if \code{NUMBER_LAT_LONG == 1} or
+if \code{AREA_SQ_KM} is below a limit, and ML otherwise. The limit is the
+mean plus one standard deviation of \code{AREA_SQ_KM} over the studies of
+\code{meta} with \code{NUMBER_LAT_LONG == 1} and \code{AREA_SQ_KM <= 500}.
+It is computed from all rows of \code{meta}, not only from the studies in
+\code{x}: the same study can be SL or ML depending on the other rows of
+\code{meta}, so pass the metadata of the whole database. With less than 2
+such studies in \code{meta} the limit cannot be computed, and the function
+stops if a study of \code{x} needs it or if \code{res_by_data = TRUE}. SL
+studies are gridded by the centroid of the study (\code{CENT_LAT},
+\code{CENT_LONG} of \code{meta}), so each has one cell; the sample
+coordinates of SL studies are not used. ML studies are gridded by the
+\code{LATITUDE} and \code{LONGITUDE} of each sample.
+
+\code{res} defines the global grid cell resolution, thus determining the size
+of the cells (see \code{vignette("dggridR")}). \code{res = 12} was found to
+be the most appropriate value when working on the whole BioTIME database
+(corresponding to ~96 km2 cell area), but the user can define their own grid
+resolution (e.g. \code{res = 14}). With \code{res_by_data = TRUE} the
+resolution is the one whose cell area is closest to the SL/ML limit above
+(not to the extent of the data).
+
+\strong{Checks.} The function stops when \code{STUDY_ID} is missing in
+\code{meta} or \code{x}, and when \code{STUDY_ID} is duplicated in
+\code{meta} (also for studies that are not in \code{x}, since a duplicated
+study would also change the SL/ML limit). It stops when a study of \code{x}
+with at least 2 years cannot be classified: the limit cannot be computed, or
+\code{NUMBER_LAT_LONG} or \code{AREA_SQ_KM} is missing and the study cannot
+be classified without it (a study with \code{NUMBER_LAT_LONG == 1} needs no
+area). It stops when a coordinate used for gridding is missing or invalid
+(latitude outside [-90, 90], longitude outside [-360, 360]; longitudes
+beyond [-180, 180] are wrapped by dggridR), and when no row is left to grid.
+It warns, with the study IDs, when rows of \code{x} have no row in
+\code{meta} (they are dropped) and when studies with a single year are
+removed.
 }
 \examples{
 \dontrun{

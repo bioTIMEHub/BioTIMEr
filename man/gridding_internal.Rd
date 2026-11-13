@@ -8,22 +8,26 @@ gridding_internal(meta, x, res, res_by_data, verbose)
 }
 \arguments{
 \item{meta}{(\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME
-metadata.}
+metadata, one row per study. It should be the metadata of the whole
+BioTIME database: the limit between single-location and multi-location
+studies is computed from all its rows (see Details).}
 
 \item{x}{(\code{data.frame}, \code{tibble} or \code{data.table}) BioTIME
 data.}
 
-\item{res}{(\code{integer}) cell resolution. Must be in the range [0,30].
-Larger values represent finer resolutions. Default: 12 (~96 sq km). Passed
-to \code{\link[dggridR]{dgconstruct}}.}
+\item{res}{(\code{integer}) cell resolution. Must be an integer in the range
+[0,30]. Larger values represent finer resolutions. Default: 12 (~96 sq km).
+Passed to \code{\link[dggridR]{dgconstruct}}.}
 
-\item{res_by_data}{(\code{logical}) FALSE by default. If TRUE, the function
-\code{\link[dggridR]{dg_closest_res_to_area}} is called to adapt \code{res}
- to the data extent. The new \code{res} value is used even if a value is
- provided by the user.}
+\item{res_by_data}{(\code{logical}) FALSE by default. If TRUE, \code{res} is
+replaced by the resolution whose cell area is closest to the limit between
+single-location and multi-location studies (see Details), found with
+\code{\link[dggridR]{dg_closest_res_to_area}}. The new \code{res} value is
+used even if a value is provided by the user.}
 
-\item{verbose}{if TRUE, a warning will be shown when one-year-long time
-series are found in x and excluded.}
+\item{verbose}{(\code{logical}) TRUE by default. If FALSE, the resolution
+chosen when \code{res_by_data = TRUE} is not printed. Warnings about
+removed studies and rows are always shown.}
 }
 \description{
 gridding BioTIME data
