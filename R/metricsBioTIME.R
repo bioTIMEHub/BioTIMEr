@@ -240,23 +240,22 @@ getBetaMetrics <- function(x, measure) {
 #' @keywords internal
 
 getBeta <- function(x) {
-  yr <- unique(x[, 1L])
-  x <- x[, -1L]
-  xb <- x
-  xb[xb > 1] <- 1
-  getj <- vegan::vegdist(xb, "jaccard") #10
-  getmh <- vegan::vegdist(x, "horn") #8
-  getbc <- vegan::vegdist(x, "bray") #4
+  # The baseline is the earliest year, whatever the row order of the input.
+  x <- x[order(x[[1L]]), ]
+  yr <- x[[1L]]
+  x <- as.matrix(x[, -1L])
 
-  jacc <- c(1, getj[1L:nrow(x)])[-1]
-  mh <- c(1, getmh[1L:nrow(x)])[-1]
-  bc <- c(1, getbc[1L:nrow(x)])[-1]
+  # First column of the full dissimilarity matrix: baseline vs each year, so
+  # the baseline year itself is 0.
+  from_baseline <- function(method, binary = FALSE) {
+    as.matrix(vegan::vegdist(x, method = method, binary = binary))[, 1L]
+  }
 
   xf <- data.frame(
     YEAR = yr,
-    JaccardDiss = jacc,
-    MorisitaHornDiss = mh,
-    BrayCurtisDiss = bc
+    JaccardDiss = from_baseline(method = "jaccard", binary = TRUE),
+    MorisitaHornDiss = from_baseline(method = "horn"),
+    BrayCurtisDiss = from_baseline(method = "bray")
   )
   return(xf)
 }
