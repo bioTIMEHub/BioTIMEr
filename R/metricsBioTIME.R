@@ -86,7 +86,7 @@ getAlphaMetrics <- function(x, measure) {
     must.include = c(measure, "YEAR", "Species", "assemblageID")
   )
 
-  x <- na.omit(x, cols = measure)
+  x <- x[!is.na(x[[measure]]), ] # na.omit(cols =) only works for data.table
   # When measure = c("ABUNDANCE","BIOMASS"), only sites and years where there
   # are values for both biomass and abundance are kept.
 
@@ -212,7 +212,7 @@ getBetaMetrics <- function(x, measure) {
     must.include = c(measure, "YEAR", "Species", "assemblageID")
   )
 
-  x <- na.omit(x, cols = measure)
+  x <- x[!is.na(x[[measure]]), ] # na.omit(cols =) only works for data.table
 
   xd <- x |>
     dplyr::filter(
