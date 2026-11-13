@@ -42,7 +42,7 @@ test_that("getLinearRegressions works consistently", {
       dplyr::select(-resamp)
   )
 
-  expect_snapshot(regressions_alpha)
+  expect_snapshot(.round_for_snapshot(regressions_alpha))
 
   expect_snapshot(regressions_beta)
 
@@ -58,7 +58,7 @@ test_that("getLinearRegressions works consistently", {
     x = betam |> dplyr::filter(resamp == 1L)
   )
 
-  expect_snapshot(regressions_alpha)
+  expect_snapshot(.round_for_snapshot(regressions_alpha))
 
   expect_snapshot(regressions_beta)
 
@@ -70,7 +70,7 @@ test_that("getLinearRegressions works consistently", {
 
   regressions_beta <- getLinearRegressions(x = betam)
 
-  expect_snapshot(regressions_alpha)
+  expect_snapshot(.round_for_snapshot(regressions_alpha))
 
   expect_snapshot(regressions_beta)
 })

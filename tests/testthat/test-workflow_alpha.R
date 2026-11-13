@@ -14,7 +14,7 @@ test_that("Whole workflow works consistently", {
     dplyr::select(-resamp) |>
     getLinearRegressions()
 
-  expect_snapshot(regressions_abundance)
+  expect_snapshot(.round_for_snapshot(regressions_abundance))
 
   set.seed(42)
   regressions_biomass <- g |>
@@ -23,5 +23,5 @@ test_that("Whole workflow works consistently", {
     dplyr::select(-resamp) |>
     getLinearRegressions()
 
-  expect_snapshot(regressions_biomass)
+  expect_snapshot(.round_for_snapshot(regressions_biomass))
 })
