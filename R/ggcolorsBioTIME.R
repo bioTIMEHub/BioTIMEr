@@ -118,7 +118,8 @@ intPalette <- function(colors, ...) {
         grDevices::rgb(x[, 1L], x[, 2L], x[, 3L], maxColorValue = 255)
       }
     } else {
-      colors[sort(sample(x = c(seq_along(colors)), size = n, replace = FALSE))]
+      # evenly spaced and deterministic: no random colours, no RNG use
+      colors[round(seq(from = 1L, to = length(colors), length.out = n))]
     }
   }
 }

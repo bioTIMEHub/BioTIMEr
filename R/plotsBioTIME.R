@@ -4,7 +4,8 @@
 #' @param font.size Size of axes labels, legend text and title (+1), and
 #' title (+2).
 #' @param axis.colour Colour name for the axes, ticks and axis labels.
-#' @param axis.color US spelling for \code{axis.colour}.
+#' @param axis.color US spelling for \code{axis.colour}. Takes precedence over
+#' \code{axis.colour} when both are given.
 #' @param strip.background Colour name. Passed to \code{\link[ggplot2]{theme}}
 #' as \code{fill} colour for the \code{strip.background} element.
 #' @param lp Deprecated in favour of \code{legend.position}.
@@ -28,10 +29,10 @@
 #' }
 
 themeBioTIME <- function(
-  legend.position,
-  font.size,
-  axis.colour,
-  strip.background,
+  legend.position = "right",
+  font.size = 12,
+  axis.colour = "black",
+  strip.background = "grey90",
   axis.color = axis.colour,
   fontSize = deprecated(),
   colx = deprecated(),
@@ -70,6 +71,10 @@ themeBioTIME <- function(
       with = "themeBioTIME(strip.background)"
     )
     strip.background <- coly
+  }
+
+  if (!missing(axis.color)) {
+    axis.colour <- axis.color
   }
 
   checkmate::assert_choice(

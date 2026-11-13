@@ -84,3 +84,17 @@ test_that("themeBioTIME - argument deprecation works as expected", {
     )
   )
 })
+
+test_that("themeBioTIME has working defaults and axis.color alias", {
+  expect_no_error(default_theme <- themeBioTIME())
+  expect_equal(default_theme$legend.position, "right")
+  expect_equal(default_theme$axis.line$colour, "black")
+
+  # US spelling is used, and wins when both are given
+  expect_equal(themeBioTIME(axis.color = "red")$axis.line$colour, "red")
+  expect_equal(
+    themeBioTIME(axis.colour = "blue", axis.color = "red")$axis.line$colour,
+    "red"
+  )
+  expect_equal(themeBioTIME(axis.colour = "blue")$axis.line$colour, "blue")
+})

@@ -127,3 +127,23 @@ test_that("intPalette handles edge cases", {
   expect_length(pal_fn(1), 1)
   expect_length(pal_fn(10), 10)
 })
+
+test_that("biotime_cols is deterministic and does not use the random number generator", {
+  for (pal in test_palettes) {
+    for (n in 1:4) {
+      expect_identical(biotime_cols(pal)(n), biotime_cols(pal)(n))
+    }
+  }
+
+  set.seed(1)
+  expected <- runif(1)
+  set.seed(1)
+  invisible(biotime_cols("gradient")(4))
+  expect_equal(runif(1), expected)
+
+  # evenly spaced picks from the 6 gradient colours
+  expect_equal(
+    biotime_cols("gradient")(4),
+    c("#00483d", "#31b9c2", "#86db9c", "#ffff67")
+  )
+})

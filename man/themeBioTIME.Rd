@@ -5,10 +5,10 @@
 \title{ggplot2 theme for BioTIME plots}
 \usage{
 themeBioTIME(
-  legend.position,
-  font.size,
-  axis.colour,
-  strip.background,
+  legend.position = "right",
+  font.size = 12,
+  axis.colour = "black",
+  strip.background = "grey90",
   axis.color = axis.colour,
   fontSize = deprecated(),
   colx = deprecated(),
@@ -28,7 +28,8 @@ title (+2).}
 \item{strip.background}{Colour name. Passed to \code{\link[ggplot2]{theme}}
 as \code{fill} colour for the \code{strip.background} element.}
 
-\item{axis.color}{US spelling for \code{axis.colour}.}
+\item{axis.color}{US spelling for \code{axis.colour}. Takes precedence over
+\code{axis.colour} when both are given.}
 
 \item{fontSize}{Deprecated in Favour of font.size}
 
