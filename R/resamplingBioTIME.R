@@ -85,17 +85,7 @@ resampling <- function(
     )
     n_resamples <- resamps
   }
-  if (inherits(x, "data.table")) {
-    return(resampling_internal(
-      x = x,
-      measure = measure,
-      n_resamples = n_resamples,
-      conservative = conservative,
-      summarise = summarise,
-      verbose = verbose
-    ))
-  }
-
+  # Always work on a copy: resampling_internal() modifies its input by reference
   gridded <- data.table::copy(x)
   data.table::setDT(gridded)
 
@@ -108,7 +98,12 @@ resampling <- function(
     verbose = verbose
   )
 
-  if (inherits(x, "tbl_df")) return(dplyr::as_tibble(res))
+  if (inherits(x, "data.table")) {
+    return(res)
+  }
+  if (inherits(x, "tbl_df")) {
+    return(dplyr::as_tibble(res))
+  }
   data.table::setDF(res)
   return(res)
 }
@@ -170,10 +165,10 @@ resampling_internal <- function(
           y = x |>
             dplyr::summarise(
               dplyr::across(dplyr::all_of(measure), .fns = anyNA),
-              .by = "SAMPLE_DESC"
+              .by = c("assemblageID", "YEAR", "SAMPLE_DESC")
             ) |>
             dplyr::filter(rowSums(dplyr::pick(dplyr::all_of(measure))) == 0L),
-          by = "SAMPLE_DESC"
+          by = c("assemblageID", "YEAR", "SAMPLE_DESC")
         )
       if (nrow(x) == 0L) {
         stop(paste("Only NA values in column(s)", measure))
@@ -267,39 +262,47 @@ resampling_internal <- function(
 #' @keywords internal
 
 resampling_core <- function(x, measure, summarise) {
+  # A sample is identified by (assemblageID, YEAR, SAMPLE_DESC): the same
+  # SAMPLE_DESC can be reused in other years or cells.
+  sample_key <- c("assemblageID", "YEAR", "SAMPLE_DESC")
+
   # See benchmarks/benchmarks.R   # lapply vs data.table keyby ## resampling_core 1
-  selected_indices <- x[
+  selected_samples <- x[
     j = .(
-      sel = sample(
-        x = unique(SAMPLE_DESC),
-        size = unique(minsamp),
-        replace = FALSE
-      )
+      # sample.int() on indices: sample(x) with a length-1 numeric x draws from 1:x
+      SAMPLE_DESC = {
+        # sorted: the draw does not depend on the row order of x
+        u <- sort(unique(SAMPLE_DESC))
+        u[sample.int(n = length(u), size = unique(minsamp))]
+      }
     ),
     keyby = c("assemblageID", "YEAR")
-  ]$sel
+  ]
+  # Row numbers of x, in the order of x, belonging to the selected samples
+  selected_rows <- sort(x[
+    i = selected_samples,
+    on = sample_key,
+    which = TRUE,
+    nomatch = NULL
+  ])
 
+  # See benchmarks/benchmarks.R   # lapply vs data.table keyby ## resampling_core 2
   if (summarise) {
-    # See benchmarks/benchmarks.R   # lapply vs data.table keyby ## resampling_core 2
-    raref <- x[
-      i = is.element(SAMPLE_DESC, selected_indices),
-      j = lapply(X = .SD, FUN = sum),
-      .SDcols = measure,
-      by = c("assemblageID", "YEAR", "Species")
-    ]
+    by_cols <- c("assemblageID", "YEAR", "Species")
   } else {
-    raref <- x[
-      i = is.element(SAMPLE_DESC, selected_indices),
-      j = lapply(X = .SD, FUN = sum),
-      .SDcols = measure,
-      by = c(
-        "assemblageID",
-        "minsamp",
-        "SAMPLE_DESC",
-        "YEAR",
-        "Species"
-      )
-    ]
+    by_cols <- c(
+      "assemblageID",
+      "minsamp",
+      "SAMPLE_DESC",
+      "YEAR",
+      "Species"
+    )
   }
+  raref <- x[
+    i = selected_rows,
+    j = lapply(X = .SD, FUN = sum),
+    .SDcols = measure,
+    by = by_cols
+  ]
   return(raref)
 } # end of function
