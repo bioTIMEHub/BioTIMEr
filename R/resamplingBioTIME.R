@@ -207,6 +207,9 @@ resampling_internal <- function(
 
   # Computing minimal effort per year per assemblageID
   x <- data.table::setDT(x)
+  # One sort here (radix, C-locale) instead of one per draw: the same seed then
+  # gives the same resample whatever the row order or the locale.
+  data.table::setorderv(x, c("assemblageID", "YEAR", "SAMPLE_DESC"))
   x[
     j = minsamp := data.table::uniqueN(SAMPLE_DESC),
     keyby = c("assemblageID", "YEAR")
@@ -266,15 +269,18 @@ resampling_core <- function(x, measure, summarise) {
   # SAMPLE_DESC can be reused in other years or cells.
   sample_key <- c("assemblageID", "YEAR", "SAMPLE_DESC")
 
+  # One row per sample, taken in a single vectorised pass (unique() by columns
+  # is done in C): calling unique() inside the grouped j instead costs one R
+  # call per assemblage-year and draw. x is sorted by SAMPLE_DESC within
+  # assemblage and year (see resampling_internal()), so this order, and hence the
+  # draw, does not depend on the row order of x.
+  samples <- unique(x, by = sample_key)
+
   # See benchmarks/benchmarks.R   # lapply vs data.table keyby ## resampling_core 1
-  selected_samples <- x[
+  selected_samples <- samples[
     j = .(
       # sample.int() on indices: sample(x) with a length-1 numeric x draws from 1:x
-      SAMPLE_DESC = {
-        # sorted: the draw does not depend on the row order of x
-        u <- sort(unique(SAMPLE_DESC))
-        u[sample.int(n = length(u), size = unique(minsamp))]
-      }
+      SAMPLE_DESC = SAMPLE_DESC[sample.int(n = .N, size = minsamp[[1L]])]
     ),
     keyby = c("assemblageID", "YEAR")
   ]

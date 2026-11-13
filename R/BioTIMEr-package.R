@@ -15,6 +15,7 @@ utils::globalVariables(c(
   ".",
   ".data",
   "..measure",
+  ".N",
   ".SD",
   ":=",
   "assemblageID",
